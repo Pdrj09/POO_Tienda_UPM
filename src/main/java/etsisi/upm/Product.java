@@ -1,7 +1,7 @@
 package etsisi.upm;
 
 
-public class Productos {
+public class Product {
   ///Asignamos las variables
   private int id;
   private String name;
