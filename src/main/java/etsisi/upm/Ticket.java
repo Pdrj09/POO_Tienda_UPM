@@ -5,5 +5,10 @@ import java.util.List;
 
 public class Ticket {
     public List<Product> list = new ArrayList<>();
+    public int add(int id){
 
+
+
+        return 0;
+    }
 }
