@@ -2,21 +2,47 @@ package etsisi.upm;
 
 
 public class Product {
-  ///Asignamos las variables
+  ///We asign the variables
   private int id;
   private String name;
   private float price;
   private String nameOfCategory;
-  //constructor
+  private int amount;
 
+  //this is the constructor that creates a product
   public void Product(int id,String name , float price , String nameOfCategory ){
       this.id = id;
       this.name= name;
       this.price = price ;
       this.nameOfCategory = nameOfCategory;
+      System.out.println(toString());
+  }
+  /// update certain characteristics of product
+    public int update(String name, String category, float price){
+        this.name = name;
+        this.nameOfCategory = category;
+        this.price = price;
+        this.amount = 0;
+        return id;
+    }
+
+/// toString method
+@Override
+  public String toString(){
+    StringBuilder builder = new StringBuilder();
+    builder.append("{");
+    builder.append("class:Product");
+    builder.append(", id:").append(id);
+    builder.append(", name:'").append(name).append("'");
+    builder.append(", category:").append(nameOfCategory);
+    builder.append(", price:").append(price);
+    builder.append("}");
+    return builder.toString();
+
   }
 
-  //getters y setters
+  //getters and setters
+
   public void setId ( int id){
   this.id = id;
   }
@@ -41,6 +67,8 @@ public class Product {
   public String getnameOfCategory(){
     return nameOfCategory ;
   }
+  public void setAmount(int amount){this.amount= amount;}
+  public int getAmount(){return amount;}
 
 
   
