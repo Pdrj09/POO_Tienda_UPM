@@ -15,6 +15,7 @@ public class Product {
       this.name= name;
       this.price = price ;
       this.nameOfCategory = nameOfCategory;
+      this.amount = 0;
       System.out.println(toString());
   }
   /// update certain characteristics of product
@@ -22,7 +23,6 @@ public class Product {
         this.name = name;
         this.nameOfCategory = category;
         this.price = price;
-        this.amount = 0;
         return id;
     }
 
