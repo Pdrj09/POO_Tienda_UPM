@@ -1,27 +1,38 @@
 package etsisi.upm;
 
 public class Menu {
-    public void Menu () {
-        System.out.println("Welcome to the ticket module App.\nTicket module. Type 'help' to see commands.");
+
+    private static final int QUERY_SUCCESS = 0;
+
+    private static final String WELCOME_MESSAGE =
+            "Welcome to the ticket module App.\nTicket module. Type 'help' to see commands.";
+
+    private static final String COMMANDS_LIST = """
+        Commands:
+            prod add <id> "<name>" <category> <price>
+            prod list
+            prod update <id> NAME|CATEGORY|PRICE <value>
+            prod remove <id>
+            ticket new
+            ticket add <prodId> <quantity>
+            ticket remove <prodId>
+            ticket print
+            echo "<texto>"
+            help
+            exit
+        """;
+
+    public void menu() {
+        System.out.println(WELCOME_MESSAGE);
     }
 
-    public void newQuery(String query) {
+    public int newQuery(String query) {
         help();
+        return QUERY_SUCCESS;
     }
 
     private void help() {
-        System.out.println("Commands:");
-        System.out.println("\tprod add <id> \"<name>\" <category> <price>");
-        System.out.println("\tprod list");
-        System.out.println("\tprod update <id> NAME|CATEGORY|PRICE <value>");
-        System.out.println("\tprod remove <id>");
-        System.out.println("\tticket new");
-        System.out.println("\tticket add <prodId> <quantity>");
-        System.out.println("\tticket remove <prodId>");
-        System.out.println("\tticket print");
-        System.out.println("\techo \"<texto>\"");
-        System.out.println("\thelp");
-        System.out.println("\texit");
+        System.out.println(COMMANDS_LIST);
     }
 
     private void echoCommand(String command) {
