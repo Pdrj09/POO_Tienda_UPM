@@ -5,16 +5,15 @@ import java.util.Objects;
 
 //We asign the variables
 public class Product {
-    private final int id;
+    private int id;
     private String name;
     private double price;
     private Categories category;
-    private static int nextId = 1;
 
 
     //this is the constructor that creates a product
-    public Product(String name, double price, Categories category) {
-        this.id = nextId++;
+    public Product(int id, String name, double price, Categories category) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.category = category;
