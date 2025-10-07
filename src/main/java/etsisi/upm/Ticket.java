@@ -10,7 +10,7 @@ public class Ticket {
     public void clear (){
         list.clear();
     }
-
+    // ticket add <prodId> <cantidad> (agrega al ticket la cantidad de ese producto)
     /// Add a created product to the Ticket with the amount. It goes to the end of the list.
     public void add(Product p, int amount){
         // First we have to search if there's an instance of the product (id) in the ticket.
@@ -22,7 +22,7 @@ public class Ticket {
 
 
     }
-    // ticket add <prodId> <cantidad> (agrega al ticket la cantidad de ese producto)
+    
     // ticket remove <prodId> (elimina todas las apariciones del producto, revisa si existe el id )
     // ticket print (imprime factura)
 }
