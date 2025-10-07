@@ -22,7 +22,7 @@ public class Ticket {
 
 
     }
-    
+
     // ticket remove <prodId> (elimina todas las apariciones del producto, revisa si existe el id )
     // ticket print (imprime factura)
 }
