@@ -3,44 +3,45 @@ package etsisi.upm.models;
 
 import java.util.Objects;
 
+//We asign the variables
 public class Product {
-  ///We asign the variables
-  private int id;
-  private String name;
-  private float price;
-  private String nameOfCategory;
+    private int id;
+    private String name;
+    private float price;
+    private Categories category;
+    private static int nextId = 1;
 
 
-  //this is the constructor that creates a product
-  public Product(int id,String name , float price , String nameOfCategory ){
-      this.id = id;
-      this.name= name;
-      this.price = price ;
-      this.nameOfCategory = nameOfCategory;
-      System.out.println(toString());
-  }
-  /// update certain characteristics of product
-    public int update(String name, String category, float price){
+    //this is the constructor that creates a product
+    public Product(String name, float price, Categories category) {
+        this.id = nextId++;
         this.name = name;
-        this.nameOfCategory = category;
+        this.price = price;
+        this.category = category;
+    }
+
+    // update certain characteristics of product
+    public int update(String name, Categories category, float price) {
+        this.name = name;
+        this.category = category;
         this.price = price;
         return id;
     }
 
-/// toString method
-@Override
-  public String toString(){
-    StringBuilder builder = new StringBuilder();
-    builder.append("{");
-    builder.append("class:Product");
-    builder.append(", id:").append(id);
-    builder.append(", name:'").append(name).append("'");
-    builder.append(", category:").append(nameOfCategory);
-    builder.append(", price:").append(price);
-    builder.append("}");
-    return builder.toString();
 
-  }
+    //toString method
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append("class:Product");
+        builder.append(", id:").append(id);
+        builder.append(", name:'").append(name).append("'");
+        builder.append(", category:").append(category);
+        builder.append(", price:").append(price);
+        builder.append("}");
+        return builder.toString();
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -55,33 +56,35 @@ public class Product {
     }
 
     //getters and setters
+    public void setId(int id) {
+        this.id = id;
+    }
 
-  public void setId ( int id){
-  this.id = id;
-  }
-  public int getId (){
-    return id;
-  }
-  public void setName(String name){
-    this.name = name; 
-  }
-  public String getName(){
-    return name;
-  }
-  public void setPrice(float price){
-    this.price = price;
-  }
-  public float getPrice(){
-    return price;
-  }
-  public void setnameOfCategory( String category){
-    this.nameOfCategory = category;
-  }
-  public String getnameOfCategory(){
-    return nameOfCategory ;
-  }
+    public int getId() {
+        return id;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
+    public String getName() {
+        return name;
+    }
 
-  
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public Categories getCategory() {
+        return category;
+    }
+
+    public void setCategory(Categories category) {
+        this.category = category;
+    }
 }
