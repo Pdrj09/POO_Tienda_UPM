@@ -16,7 +16,7 @@ public class Ticket {
         // First we have to search if there's an instance of the product (id) in the ticket.
         for(Product prod : list){       // (loop through each element of the current list...)
             if(prod.getId() == p.getId()){
-                prod.setAmount(prod.getAmount += amount);
+                prod.setAmount(prod.getAmount() + amount);
             }
         }
 
