@@ -1,6 +1,8 @@
 package etsisi.upm;
 
 
+import java.util.Objects;
+
 public class Product {
   ///We asign the variables
   private int id;
@@ -41,7 +43,19 @@ public class Product {
 
   }
 
-  //getters and setters
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return id == product.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    //getters and setters
 
   public void setId ( int id){
   this.id = id;
