@@ -1,4 +1,4 @@
-package etsisi.upm;
+package etsisi.upm.models;
 
 
 import java.util.Objects;

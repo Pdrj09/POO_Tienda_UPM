@@ -1,9 +1,7 @@
-package etsisi.upm;
+package etsisi.upm.models;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 
 public class Ticket {
     public HashMap<Product,Integer> list = new HashMap<>();
