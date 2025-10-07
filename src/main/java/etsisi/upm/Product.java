@@ -10,6 +10,7 @@ public class Product {
   private float price;
   private String nameOfCategory;
 
+
   //this is the constructor that creates a product
   public Product(int id,String name , float price , String nameOfCategory ){
       this.id = id;
