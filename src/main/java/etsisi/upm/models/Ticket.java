@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 public class Ticket {
     private HashMap<Product,Integer> list = new HashMap<>();
-    private HashMap<String,Integer> categories = new HashMap<>(); //Cambiar por categorias UwU
+    private HashMap<Categories,Integer> categories = new HashMap<>();
 
     // The ticket goes empty despite the products it has.
     public void clear (){
@@ -34,8 +34,13 @@ public class Ticket {
     private double totalDiscount(){
         return list.entrySet()
                 .stream()
-                .mapToDouble()
+                .mapToDouble(
+                        entry ->
+                                categories.get(entry.getKey().getCategory())>1 ?
+                                        entry.getKey().getPrice()*entry.getKey().getCategory().getDiscount():0)
+                .sum();
     }
+
 
     @Override
     public String toString() {
