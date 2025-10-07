@@ -1,5 +1,7 @@
-package etsisi.upm;
+package etsisi.upm.models;
 
+
+import java.util.Objects;
 
 public class Product {
   ///We asign the variables
@@ -7,10 +9,10 @@ public class Product {
   private String name;
   private float price;
   private String nameOfCategory;
-  private int amount;
+
 
   //this is the constructor that creates a product
-  public void Product(int id,String name , float price , String nameOfCategory ){
+  public Product(int id,String name , float price , String nameOfCategory ){
       this.id = id;
       this.name= name;
       this.price = price ;
@@ -22,7 +24,6 @@ public class Product {
         this.name = name;
         this.nameOfCategory = category;
         this.price = price;
-        this.amount = 0;
         return id;
     }
 
@@ -41,7 +42,19 @@ public class Product {
 
   }
 
-  //getters and setters
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return id == product.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    //getters and setters
 
   public void setId ( int id){
   this.id = id;
@@ -67,8 +80,7 @@ public class Product {
   public String getnameOfCategory(){
     return nameOfCategory ;
   }
-  public void setAmount(int amount){this.amount= amount;}
-  public int getAmount(){return amount;}
+
 
 
   
