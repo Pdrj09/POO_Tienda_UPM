@@ -9,15 +9,13 @@ public class Product {
   private String name;
   private float price;
   private String nameOfCategory;
-  private int amount;
 
   //this is the constructor that creates a product
-  public void Product(int id,String name , float price , String nameOfCategory ){
+  public Product(int id,String name , float price , String nameOfCategory ){
       this.id = id;
       this.name= name;
       this.price = price ;
       this.nameOfCategory = nameOfCategory;
-      this.amount = 0;
       System.out.println(toString());
   }
   /// update certain characteristics of product
@@ -81,8 +79,7 @@ public class Product {
   public String getnameOfCategory(){
     return nameOfCategory ;
   }
-  public void setAmount(int amount){this.amount= amount;}
-  public int getAmount(){return amount;}
+
 
 
   
