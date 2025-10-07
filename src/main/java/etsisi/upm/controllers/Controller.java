@@ -18,10 +18,10 @@ public class Controller {
 
     //here we add a new product to the hashmap of products
     //return true if it didn't exist, else false
-    public boolean addProduct (String name, String category, double price) {
+    public boolean addProduct (String name, String category, double price,int id) {
         Product product;
         if(Categories.existCategory(category)){
-            product=new Product(name,price,Categories.valueOf(category));
+            product=new Product(id,name,price,Categories.valueOf(category));
             products.put(product.getId(), product);
             return true;
         }else return false;
@@ -56,11 +56,11 @@ public class Controller {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         System.out.println("CATALOG");
-        for (Product prod : products) {
+        for (Product prod : products.values()) {
             builder.append("{");
             builder.append("class:Product");
             builder.append(", id:").append(prod.getId());
-            builder.append(", name:'").append(prod.getName()).append("'");
+            builder.append(", name:'").append(prod.getCategory()).append("'");
             builder.append(", category:").append(prod.getName());
             builder.append(", price:").append(prod.getPrice());
             builder.append("}");
