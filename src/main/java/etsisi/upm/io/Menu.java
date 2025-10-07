@@ -32,22 +32,28 @@ public class Menu {
             Goodbye!
             """;
 
+    // MENU CONST
     private static final String EXIT = "exit";
     private static final String PROD =  "prod";
     private static final String TICKET =  "ticket";
     private static final String ECHO =  "echo";
     private static final String HELP = "help";
 
-    private static final String TICKET_ADD =  "add";
-    private static final String TICKET_PRINT =  "print";
-    private static final String TICKET_NEW = "new";
-    private static final String TICKET_REMOVE = "remove";
+    // REGEX CONST
+    private static final String REGEX_INIT = "^";
+    private static final String REGEX_BLANK_SPACE = "\\s*";
 
-
+    // PRODUCTS CONST
     private static final String PRODUCT_ADD =  "add";
     private static final String PRODUCT_LIST =  "list";
     private static final String PRODUCT_UPDATE = "update";
     private static final String PRODUCT_REMOVE = "remove";
+
+    // TICKET CONST
+    private static final String TICKET_ADD =  "add";
+    private static final String TICKET_PRINT =  "print";
+    private static final String TICKET_NEW = "new";
+    private static final String TICKET_REMOVE = "remove";
 
     public void menu() {
         System.out.println(WELCOME_MESSAGE);
@@ -56,13 +62,22 @@ public class Menu {
     public int newQuery(String query) {
         if (query.startsWith(PROD)) {
 
+            this.prodQuery(deleteSubstring(query, createGeneralRegex(PROD)));
+
         } else if (query.startsWith(TICKET)) {
-            this.ticketQuery(query);
+
+            this.ticketQuery(deleteSubstring(query, createGeneralRegex(TICKET)));
+
         } else if (query.startsWith(ECHO)) {
+
             this.echoCommand(query);
+
         } else if (query.startsWith(HELP)) {
+
             this.help();
+
         } else if (query.startsWith(EXIT)) {
+
             System.out.println(BYE);
             return QUERY_EXIT;
         }
@@ -72,8 +87,8 @@ public class Menu {
     }
 
     private void prodQuery(String query) {
+        System.out.println(query);
         if (query.contains(PRODUCT_ADD)){
-
         }else if (query.contains(PRODUCT_LIST)){
 
         }else if (query.contains(PRODUCT_REMOVE)){
@@ -101,5 +116,20 @@ public class Menu {
 
     private void echoCommand(String command) {
         System.out.println(command);
+    }
+
+    private String deleteSubstring(String query, String regex) {
+        return query.replaceFirst(regex, "");
+    }
+
+    private String createGeneralRegex(String query) {
+        StringBuilder stringBuilder;
+        stringBuilder = new StringBuilder();
+
+        stringBuilder.append(REGEX_INIT)
+                .append(query)
+                .append(REGEX_BLANK_SPACE);
+
+        return stringBuilder.toString();
     }
 }
