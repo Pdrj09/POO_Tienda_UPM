@@ -1,6 +1,11 @@
 package etsisi.upm.io;
 
+import etsisi.upm.controllers.ProductsController;
+import etsisi.upm.models.Product;
+
 public class Menu {
+
+    private ProductsController prodController;
 
     private static final int QUERY_SUCCESS = 0;
     private static final int QUERY_EXIT = 1;
@@ -34,14 +39,15 @@ public class Menu {
 
     // MENU CONST
     private static final String EXIT = "exit";
-    private static final String PROD =  "prod";
-    private static final String TICKET =  "ticket";
-    private static final String ECHO =  "echo";
+    private static final String PROD = "prod";
+    private static final String TICKET = "ticket";
+    private static final String ECHO = "echo";
     private static final String HELP = "help";
 
     // REGEX CONST
     private static final String REGEX_INIT = "^";
     private static final String REGEX_BLANK_SPACE = "\\s*";
+    private static final String REGEX_TO_SPLIT = " (?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)";
 
     // PRODUCTS CONST
     private static final String PRODUCT_ADD =  "add";
@@ -50,13 +56,15 @@ public class Menu {
     private static final String PRODUCT_REMOVE = "remove";
 
     // TICKET CONST
-    private static final String TICKET_ADD =  "add";
-    private static final String TICKET_PRINT =  "print";
+    private static final String TICKET_ADD = "add";
+    private static final String TICKET_PRINT = "print";
     private static final String TICKET_NEW = "new";
     private static final String TICKET_REMOVE = "remove";
 
+    // TODO use controlers
     public void menu() {
         System.out.println(WELCOME_MESSAGE);
+        this.prodController = new ProductsController();
     }
 
     public int newQuery(String query) {
@@ -89,9 +97,26 @@ public class Menu {
     private void prodQuery(String query) {
         System.out.println(query);
         if (query.contains(PRODUCT_ADD)){
+
+            String[] querySplit = query.split(REGEX_TO_SPLIT);
+
+            int id = Integer.parseInt(querySplit[1]);
+
+            // Quitar comillas del nombre
+            String nombre = querySplit[2].replace("\"", "");
+
+            // Reemplazar coma por punto para convertirlo a float
+            float precio = Float.parseFloat(querySplit[3].replace(",", "."));
+
+
+
         }else if (query.contains(PRODUCT_LIST)){
 
+            System.out.println(prodController.toString());
+
         }else if (query.contains(PRODUCT_REMOVE)){
+
+
 
         }else if(query.contains(PRODUCT_UPDATE)){
 
