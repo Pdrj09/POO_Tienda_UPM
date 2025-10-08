@@ -1,16 +1,25 @@
 package etsisi.upm.io;
 
-import etsisi.upm.controllers.ProductsController;
+import etsisi.upm.controllers.Controller;
 import etsisi.upm.models.Product;
 
 public class Menu {
 
-    private ProductsController prodController;
+    private Controller controller;
 
+    // status code
     private static final int QUERY_SUCCESS = 0;
     private static final int QUERY_EXIT = 1;
 
+    // numbers
+    private static final int ZERO = 0;
+    private static final int ONE = 1;
+    private static final int TWO = 2;
+    private static final int THREE = 3;
+    private static final int FOUR = 4;
 
+
+    // messages and help
     private static final String WELCOME_MESSAGE =
             "Welcome to the ticket module App.\nTicket module. Type 'help' to see commands.";
 
@@ -37,25 +46,32 @@ public class Menu {
             Goodbye!
             """;
 
-    // MENU CONST
+    // menu const
     private static final String EXIT = "exit";
     private static final String PROD = "prod";
     private static final String TICKET = "ticket";
     private static final String ECHO = "echo";
     private static final String HELP = "help";
 
-    // REGEX CONST
+    // str const
+    private static final String STR_EMPTY = "";
+    private static final String STR_DOT = ".";
+    private static final String STR_COMMA = ",";
+
+
+    // regex const
     private static final String REGEX_INIT = "^";
     private static final String REGEX_BLANK_SPACE = "\\s*";
+    private static final String REGEX_DOUBLE_QUOTE = "\"";
     private static final String REGEX_TO_SPLIT = " (?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)";
 
-    // PRODUCTS CONST
+    // products const
     private static final String PRODUCT_ADD =  "add";
     private static final String PRODUCT_LIST =  "list";
     private static final String PRODUCT_UPDATE = "update";
     private static final String PRODUCT_REMOVE = "remove";
 
-    // TICKET CONST
+    // ticket const
     private static final String TICKET_ADD = "add";
     private static final String TICKET_PRINT = "print";
     private static final String TICKET_NEW = "new";
@@ -64,7 +80,7 @@ public class Menu {
     // TODO use controlers
     public void menu() {
         System.out.println(WELCOME_MESSAGE);
-        this.prodController = new ProductsController();
+        this.controller = new Controller();
     }
 
     public int newQuery(String query) {
@@ -95,24 +111,21 @@ public class Menu {
     }
 
     private void prodQuery(String query) {
-        System.out.println(query);
         if (query.contains(PRODUCT_ADD)){
 
             String[] querySplit = query.split(REGEX_TO_SPLIT);
 
-            int id = Integer.parseInt(querySplit[1]);
+            int id = Integer.parseInt(querySplit[ONE]);
+            String name = querySplit[TWO].replace(REGEX_DOUBLE_QUOTE, STR_EMPTY);
 
-            // Quitar comillas del nombre
-            String nombre = querySplit[2].replace("\"", "");
-
-            // Reemplazar coma por punto para convertirlo a float
-            float precio = Float.parseFloat(querySplit[3].replace(",", "."));
+            float price = Float.parseFloat(querySplit[FOUR].replace(STR_COMMA, STR_DOT));
 
 
+            String request = controller.addProduct(name, querySplit[THREE], price, id);
+            System.out.println(request);
 
         }else if (query.contains(PRODUCT_LIST)){
 
-            System.out.println(prodController.toString());
 
         }else if (query.contains(PRODUCT_REMOVE)){
 
@@ -144,7 +157,7 @@ public class Menu {
     }
 
     private String deleteSubstring(String query, String regex) {
-        return query.replaceFirst(regex, "");
+        return query.replaceFirst(regex, STR_EMPTY);
     }
 
     private String createGeneralRegex(String query) {
