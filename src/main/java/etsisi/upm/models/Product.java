@@ -17,6 +17,7 @@ public class Product {
     private static final String STR_CATEGORY = ", category:";
     private static final String STR_PRICE = ", price:";
     private static final String CLOSE_BRACE = "}";
+    private static final String SINGLE_QUOTE = "'";
 
 
 
@@ -44,7 +45,7 @@ public class Product {
         builder.append(OPEN_BRACE);
         builder.append(STR_PRODUCT);
         builder.append(STR_ID).append(id);
-        builder.append(STR_NAME).append(name).append("'");
+        builder.append(STR_NAME).append(name).append(SINGLE_QUOTE);
         builder.append(STR_CATEGORY).append(category);
         builder.append(STR_PRICE).append(price);
         builder.append(CLOSE_BRACE);
