@@ -127,10 +127,10 @@ public class Menu {
             float price = Float.parseFloat(querySplit[FOUR].replace(STR_COMMA, STR_DOT));
 
 
-            String request = controller.addProduct(name, querySplit[THREE], price, id);
-            System.out.println(request);
+            String response = controller.addProduct(name, querySplit[THREE], price, id);
+            System.out.println(response);
 
-            if (!request.startsWith(STR_ERROR)) {
+            if (!response.startsWith(STR_ERROR)) {
                 System.out.println(okStatus(PROD, PRODUCT_ADD));
             }
 
