@@ -27,6 +27,27 @@ public class Controller {
         }else return false;
     }
 
+    public Product updateProduct(int id, String field, String newContent){
+        if (this.products.get(id)==null) return null;
+        switch (field){
+            case "NAME":
+                this.products.get(id).setName(newContent);
+                break;
+            case "CATEGORY":
+                if(Categories.existCategory(newContent)){
+                    Categories cat = Categories.valueOf(newContent);
+                    this.products.get(id).setCategory(cat);
+                }else return null;
+                break;
+            case "PRICE":
+                this.products.get(id).setPrice(Double.parseDouble(newContent));
+                break;
+            default:
+                return null;
+        }
+        return this.products.get(id);
+    }
+
     //here we delete a product from the hashmap of products
     //return true if delete succeed, else false
     public Product deleteProduct (int prodId) {
@@ -50,21 +71,16 @@ public class Controller {
        }else return false;
    }
 
+   public boolean ticketNew(){
+        return this.ticket.clear();
+   }
 
-    //with this method we list all the products that we have in our catalog
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        System.out.println("CATALOG");
-        for (Product prod : products.values()) {
-            builder.append("{");
-            builder.append("class:Product");
-            builder.append(", id:").append(prod.getId());
-            builder.append(", name:'").append(prod.getCategory()).append("'");
-            builder.append(", category:").append(prod.getName());
-            builder.append(", price:").append(prod.getPrice());
-            builder.append("}");
-        }
-        return builder.toString();
+
+    public String ticketPrint(){
+        return this.ticket.toString();
+    }
+
+    public String prodList(){
+        return this.products.toString();
     }
 }
