@@ -78,7 +78,7 @@ public class Menu {
     private static final String TICKET_REMOVE = "remove";
 
     // TODO use controlers
-    public void menu() {
+    public Menu() {
         System.out.println(WELCOME_MESSAGE);
         this.controller = new Controller();
     }
