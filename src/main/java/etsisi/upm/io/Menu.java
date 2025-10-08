@@ -135,6 +135,8 @@ public class Menu {
 
             System.out.println(controller.prodList());
 
+            System.out.println(okStatus(PROD, PRODUCT_LIST));
+
         }else if (query.contains(PRODUCT_REMOVE)){
 
 
