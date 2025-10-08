@@ -2,6 +2,7 @@ package etsisi.upm.io;
 
 import etsisi.upm.controllers.Controller;
 import etsisi.upm.models.Product;
+import etsisi.upm.models.Ticket;
 
 public class Menu {
 
@@ -127,10 +128,10 @@ public class Menu {
             float price = Float.parseFloat(querySplit[FOUR].replace(STR_COMMA, STR_DOT));
 
 
-            String request = controller.addProduct(name, querySplit[THREE], price, id);
-            System.out.println(request);
+            String response = controller.addProduct(name, querySplit[THREE], price, id);
+            System.out.println(response);
 
-            if (!request.startsWith(STR_ERROR)) {
+            if (!response.startsWith(STR_ERROR)) {
                 System.out.println(okStatus(PROD, PRODUCT_ADD));
             }
 
@@ -168,9 +169,9 @@ public class Menu {
 
             if (productEdited != null) {
                 System.out.println(productEdited.toString());
-                System.out.println(okStatus(PROD, PRODUCT_UPDATE));
+                System.out.println(okStatus(TICKET, TICKET_NEW));
             } else {
-                System.out.println(errorStatus(PROD, PRODUCT_UPDATE));
+                System.out.println(errorStatus(TICKET, TICKET_NEW));
             }
 
         }
@@ -179,15 +180,46 @@ public class Menu {
     private void ticketQuery(String query) {
         if (query.contains(TICKET_ADD)){
 
+            String[] querySplit = query.split(REGEX_TO_SPLIT);
+
+            int id = Integer.parseInt(querySplit[ONE]);
+
+            int quantity = Integer.parseInt(querySplit[TWO]);
+
+            //TODO preguntar
+            // Lo mismo de la cohesión
+            Ticket newTicket = controller.addProductToTicket(id, quantity);
+
+            if (newTicket != null) {
+                System.out.println(newTicket.toString());
+                System.out.println(okStatus(TICKET, TICKET_ADD));
+            } else {
+                System.out.println(errorStatus(TICKET, TICKET_ADD));
+            }
+
         }else if (query.contains(TICKET_NEW)){
+
+            controller.ticketNew();
+            System.out.println(okStatus(TICKET, TICKET_ADD));
+
 
         }else if (query.contains(TICKET_PRINT)){
 
-        }else if(query.contains(TICKET_REMOVE)){
+            controller.ticketPrint();
+            System.out.println(okStatus(TICKET, TICKET_ADD));
 
+        }else if(query.contains(TICKET_REMOVE)){
+            int id = Integer.parseInt(deleteSubstring(query, createGeneralRegex(PRODUCT_REMOVE)));
+
+            if (controller.removeProductFromTicket(id)) {
+                System.out.println(okStatus(TICKET, TICKET_REMOVE));
+            } else {
+                System.out.println(errorStatus(TICKET, TICKET_REMOVE));
+            }
         }
     }
 
+    // TODO terminar el help
     private void help() {
         System.out.println(COMMANDS_LIST);
     }

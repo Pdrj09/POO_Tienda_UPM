@@ -8,6 +8,13 @@ public class Ticket {
     private HashMap<Product,Integer> list;
     private HashMap<Categories,Integer> categories;
 
+    private static final String DISCOUNT = "**discount -";
+    private static final String TOTAL_PRICE = "\nTotal price: ";
+    private static final String TOTAL_DISCOUNT = "\nTotal discount: ";
+    private static final String FINAL_PRICE = "\nFinal price: ";
+    private static final String NEXT_LINE = "\n";
+
+
     public Ticket(){
         this.list = new HashMap<>();
         this.categories = new HashMap<>();
@@ -57,11 +64,12 @@ public class Ticket {
         for (Map.Entry<Product, Integer> entry : list.entrySet()){
             res.append(entry.getKey().toString());
             if (categories.get(entry.getKey().getCategory()) > 1)
-                res.append("**discount -").append(entry.getKey().getPrice() * entry.getKey().getCategory().getDiscount());
+                res.append(DISCOUNT).append(entry.getKey().getPrice() * entry.getKey().getCategory().getDiscount());
         }
-        res.append("\nTotal price: ").append(totalPrice());
-        res.append("\nTotal discount: ").append(totalDiscount());
-        res.append("\nFinal price: ").append(totalPrice() - totalDiscount());
+        res.append(TOTAL_PRICE).append(totalPrice());
+        res.append(TOTAL_DISCOUNT).append(totalDiscount());
+        res.append(FINAL_PRICE).append(totalPrice() - totalDiscount());
+        res.append(NEXT_LINE);
         return res.toString();
     }
 

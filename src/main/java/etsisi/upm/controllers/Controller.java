@@ -12,6 +12,10 @@ public class Controller {
     private Ticket ticket;
 
     private static final String ERROR_CREATTE_PRODUCT = "Error al crear el producto";
+    private static final String NAME = "NAME";
+    private static final String CATEGORY = "CATEGORY";
+    private static final String PRICE = "PRICE";
+
 
     private static final String CATALOG = "Catalog:\n";
     private static final String NEXT_LINE = "\n";
@@ -36,16 +40,16 @@ public class Controller {
     public Product updateProduct(int id, String field, String newContent){
         if (this.products.get(id)==null) return null;
         switch (field){
-            case "NAME":
+            case NAME:
                 this.products.get(id).setName(newContent);
                 break;
-            case "CATEGORY":
+            case CATEGORY:
                 if(Categories.existCategory(newContent)){
                     Categories cat = Categories.valueOf(newContent);
                     this.products.get(id).setCategory(cat);
                 }else return null;
                 break;
-            case "PRICE":
+            case PRICE:
                 this.products.get(id).setPrice(Double.parseDouble(newContent));
                 break;
             default:
@@ -63,11 +67,11 @@ public class Controller {
         }else return null;
     }
 
-   public boolean addProductToTicket(int prodId, int amount){
+   public Ticket addProductToTicket(int prodId, int amount){
         if(products.containsKey(prodId)){
             ticket.add(products.get(prodId),amount);
-            return true;
-        }else return false;
+            return ticket;
+        }else return ticket;
    }
 
    public boolean removeProductFromTicket(int prodId){

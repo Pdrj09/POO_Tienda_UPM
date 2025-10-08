@@ -5,7 +5,7 @@ package etsisi.upm.models;
 public enum Categories {
     MERCH(0.0),
     STATIONERY(0.05),
-    CLOTHING(0.07),
+    CLOTHES(0.07),
     BOOK(0.1),
     ELECTRONICS(0.03);
     private final double discount;
