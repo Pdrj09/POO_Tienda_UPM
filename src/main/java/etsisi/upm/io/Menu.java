@@ -181,6 +181,10 @@ public class Menu {
 
         }else if (query.contains(TICKET_NEW)){
 
+            controller.ticketNew();
+            System.out.println(okStatus(TICKET_ADD, TICKET_ADD));
+
+
         }else if (query.contains(TICKET_PRINT)){
 
         }else if(query.contains(TICKET_REMOVE)){
