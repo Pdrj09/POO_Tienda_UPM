@@ -7,21 +7,20 @@ import java.util.Objects;
 public class Product {
     private int id;
     private String name;
-    private float price;
+    private double price;
     private Categories category;
-    private static int nextId = 1;
 
 
     //this is the constructor that creates a product
-    public Product(String name, float price, Categories category) {
-        this.id = nextId++;
+    public Product(int id, String name, double price, Categories category) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.category = category;
     }
 
     // update certain characteristics of product
-    public int update(String name, Categories category, float price) {
+    public int update(String name, Categories category, double price) {
         this.name = name;
         this.category = category;
         this.price = price;
@@ -56,10 +55,6 @@ public class Product {
     }
 
     //getters and setters
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public int getId() {
         return id;
     }
@@ -72,11 +67,11 @@ public class Product {
         return name;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 
