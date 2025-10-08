@@ -13,6 +13,10 @@ public class Controller {
 
     private static final String ERROR_CREATTE_PRODUCT = "Error al crear el producto";
 
+    private static final String CATALOG = "Catalog:\n";
+    private static final String NEXT_LINE = "\n";
+    private static final String TAB_SPACE = "\t";
+
     public Controller() {
         this.products = new HashMap<>();
         this.ticket = new Ticket();
@@ -83,6 +87,16 @@ public class Controller {
     }
 
     public String prodList(){
-        return this.products.toString();
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(CATALOG);
+
+        for( Product p : products.values()){
+            builder.append(TAB_SPACE)
+                    .append(p.toString())
+                    .append(NEXT_LINE);
+        }
+
+        return builder.toString();
     }
 }
