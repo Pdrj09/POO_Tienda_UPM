@@ -5,7 +5,9 @@ import etsisi.upm.models.Product;
 
 public class Menu {
 
-    private Controller controller;
+    // TODO Preguntat
+    // Son necesarias tantas o nos podemos ahorras alguna incumpliendo el estilo de codigo
+    private final Controller controller;
 
     // status code
     private static final int QUERY_SUCCESS = 1;
@@ -46,6 +48,8 @@ public class Menu {
             """;
 
     private static final String OK_STATUS = "ok";
+    private static final String ERROR_STATUS = "Error";
+
 
     // menu const
     private static final String EXIT = "exit";
@@ -66,7 +70,7 @@ public class Menu {
     private static final String REGEX_INIT = "^";
     private static final String REGEX_BLANK_SPACE = "\\s*";
     private static final String REGEX_DOUBLE_QUOTE = "\"";
-    private static final String REGEX_TO_SPLIT = " (?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)";
+    private static final String REGEX_TO_SPLIT = " (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
 
     // products const
     private static final String PRODUCT_ADD =  "add";
@@ -80,7 +84,6 @@ public class Menu {
     private static final String TICKET_NEW = "new";
     private static final String TICKET_REMOVE = "remove";
 
-    // TODO use controlers
     public Menu() {
         System.out.println(WELCOME_MESSAGE);
         this.controller = new Controller();
@@ -139,9 +142,36 @@ public class Menu {
 
         }else if (query.contains(PRODUCT_REMOVE)){
 
+            int id = Integer.parseInt(deleteSubstring(query, createGeneralRegex(PRODUCT_REMOVE)));
+
+            // TODO Preguntar
+            // Esto aumenta la cohesión??
+            Product deletedProd = controller.deleteProduct(id);
+
+            if (deletedProd != null) {
+                System.out.println(deletedProd.toString());
+                System.out.println(okStatus(PROD, PRODUCT_REMOVE));
+            } else  {
+                System.out.println(errorStatus(PROD, PRODUCT_REMOVE));
+            }
 
 
         }else if(query.contains(PRODUCT_UPDATE)){
+
+            String[] querySplit = query.split(REGEX_TO_SPLIT);
+
+            int id = Integer.parseInt(querySplit[ONE]);
+
+            //TODO preguntar
+            // Lo mismo de la cohesión
+            Product productEdited = controller.updateProduct(id, querySplit[TWO], querySplit[THREE]);
+
+            if (productEdited != null) {
+                System.out.println(productEdited.toString());
+                System.out.println(okStatus(PROD, PRODUCT_UPDATE));
+            } else {
+                System.out.println(errorStatus(PROD, PRODUCT_UPDATE));
+            }
 
         }
     }
@@ -190,6 +220,36 @@ public class Menu {
                 .append(STR_DOUBLE_DOT)
                 .append(STR_BLANK_SPACE)
                 .append(OK_STATUS);
+
+        return builder.toString();
+    }
+
+    // TODO add error codes
+    private String errorStatus(String type, String comand, String message) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(type)
+                .append(STR_BLANK_SPACE)
+                .append(comand)
+                .append(STR_DOUBLE_DOT)
+                .append(STR_BLANK_SPACE)
+                .append(ERROR_STATUS)
+                .append(STR_DOUBLE_DOT)
+                .append(STR_BLANK_SPACE)
+                .append(message);
+
+        return builder.toString();
+    }
+
+    private String errorStatus(String type, String comand) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(type)
+                .append(STR_BLANK_SPACE)
+                .append(comand)
+                .append(STR_DOUBLE_DOT)
+                .append(STR_BLANK_SPACE)
+                .append(ERROR_STATUS);
 
         return builder.toString();
     }
