@@ -209,7 +209,13 @@ public class Menu {
             System.out.println(okStatus(TICKET_PRINT, TICKET_ADD));
 
         }else if(query.contains(TICKET_REMOVE)){
+            int id = Integer.parseInt(deleteSubstring(query, createGeneralRegex(PRODUCT_REMOVE)));
 
+            if (controller.removeProductFromTicket(id)) {
+                System.out.println(okStatus(TICKET_REMOVE, TICKET_REMOVE));
+            } else {
+                System.out.println(errorStatus(TICKET_REMOVE, TICKET_REMOVE));
+            }
         }
     }
 
