@@ -2,6 +2,7 @@ package etsisi.upm.models;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class Ticket {
     private HashMap<Product,Integer> list;
@@ -13,8 +14,12 @@ public class Ticket {
     }
 
     // The ticket goes empty despite the products it has.
-    public void clear (){
+    public boolean clear (){
         list.clear();
+        categories.clear();
+        if (list.isEmpty() && categories.isEmpty())
+            return true;
+        return false;
     }
 
     // Add a product to the ticket, if the product already exists increments its amount
@@ -29,7 +34,7 @@ public class Ticket {
         this.list.remove(prod);
     }
 
-    private double totaPrice(){
+    private double totalPrice(){
         return list.entrySet()
                 .stream()
                 .mapToDouble(entry -> entry.getKey().getPrice() * entry.getValue())
@@ -49,10 +54,15 @@ public class Ticket {
     @Override
     public String toString() {
         StringBuilder res = new StringBuilder();
-
+        for (Map.Entry<Product, Integer> entry : list.entrySet()){
+            res.append(entry.getKey().toString());
+            if (categories.get(entry.getKey().getCategory()) > 1)
+                res.append("**discount -").append(entry.getKey().getPrice() * entry.getKey().getCategory().getDiscount());
+        }
+        res.append("\nTotal price: ").append(totalPrice());
+        res.append("\nTotal discount: ").append(totalDiscount());
+        res.append("\nFinal price: ").append(totalPrice() - totalDiscount());
         return res.toString();
     }
 
-    // ticket print (imprime factura)
-    ///  Decirle a Pedro que para el add en ticket tiene que imprimir el producto y su descripcion = al amount.
 }
