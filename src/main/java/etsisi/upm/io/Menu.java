@@ -194,31 +194,32 @@ public class Menu {
                 System.out.println(newTicket.toString());
                 System.out.println(okStatus(TICKET, TICKET_ADD));
             } else {
-                System.out.println(errorStatus(PROD, TICKET_ADD));
+                System.out.println(errorStatus(TICKET, TICKET_ADD));
             }
 
         }else if (query.contains(TICKET_NEW)){
 
             controller.ticketNew();
-            System.out.println(okStatus(TICKET_ADD, TICKET_ADD));
+            System.out.println(okStatus(TICKET, TICKET_ADD));
 
 
         }else if (query.contains(TICKET_PRINT)){
 
             controller.ticketPrint();
-            System.out.println(okStatus(TICKET_PRINT, TICKET_ADD));
+            System.out.println(okStatus(TICKET, TICKET_ADD));
 
         }else if(query.contains(TICKET_REMOVE)){
             int id = Integer.parseInt(deleteSubstring(query, createGeneralRegex(PRODUCT_REMOVE)));
 
             if (controller.removeProductFromTicket(id)) {
-                System.out.println(okStatus(TICKET_REMOVE, TICKET_REMOVE));
+                System.out.println(okStatus(TICKET, TICKET_REMOVE));
             } else {
-                System.out.println(errorStatus(TICKET_REMOVE, TICKET_REMOVE));
+                System.out.println(errorStatus(TICKET, TICKET_REMOVE));
             }
         }
     }
 
+    // TODO terminar el help
     private void help() {
         System.out.println(COMMANDS_LIST);
     }
