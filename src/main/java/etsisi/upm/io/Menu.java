@@ -2,6 +2,7 @@ package etsisi.upm.io;
 
 import etsisi.upm.controllers.Controller;
 import etsisi.upm.models.Product;
+import etsisi.upm.models.Ticket;
 
 public class Menu {
 
@@ -168,9 +169,9 @@ public class Menu {
 
             if (productEdited != null) {
                 System.out.println(productEdited.toString());
-                System.out.println(okStatus(PROD, PRODUCT_UPDATE));
+                System.out.println(okStatus(TICKET, TICKET_NEW));
             } else {
-                System.out.println(errorStatus(PROD, PRODUCT_UPDATE));
+                System.out.println(errorStatus(TICKET, TICKET_NEW));
             }
 
         }
@@ -179,6 +180,23 @@ public class Menu {
     private void ticketQuery(String query) {
         if (query.contains(TICKET_ADD)){
 
+            String[] querySplit = query.split(REGEX_TO_SPLIT);
+
+            int id = Integer.parseInt(querySplit[ONE]);
+
+            int quantity = Integer.parseInt(querySplit[TWO]);
+
+            //TODO preguntar
+            // Lo mismo de la cohesión
+            Ticket newTicket = controller.addProductToTicket(id, quantity);
+
+            if (newTicket != null) {
+                System.out.println(newTicket.toString());
+                System.out.println(okStatus(TICKET, TICKET_ADD));
+            } else {
+                System.out.println(errorStatus(PROD, TICKET_ADD));
+            }
+
         }else if (query.contains(TICKET_NEW)){
 
             controller.ticketNew();
@@ -186,6 +204,9 @@ public class Menu {
 
 
         }else if (query.contains(TICKET_PRINT)){
+
+            controller.ticketPrint();
+            System.out.println(okStatus(TICKET_PRINT, TICKET_ADD));
 
         }else if(query.contains(TICKET_REMOVE)){
 

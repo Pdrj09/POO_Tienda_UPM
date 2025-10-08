@@ -67,11 +67,11 @@ public class Controller {
         }else return null;
     }
 
-   public boolean addProductToTicket(int prodId, int amount){
+   public Ticket addProductToTicket(int prodId, int amount){
         if(products.containsKey(prodId)){
             ticket.add(products.get(prodId),amount);
-            return true;
-        }else return false;
+            return ticket;
+        }else return ticket;
    }
 
    public boolean removeProductFromTicket(int prodId){
