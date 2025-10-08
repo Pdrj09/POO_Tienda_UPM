@@ -11,6 +11,12 @@ public class Controller {
     private HashMap<Integer,Product> products;
     private Ticket ticket;
 
+    private static final String ERROR_CREATTE_PRODUCT = "Error al crear el producto";
+
+    private static final String CATALOG = "Catalog:\n";
+    private static final String NEXT_LINE = "\n";
+    private static final String TAB_SPACE = "\t";
+
     public Controller() {
         this.products = new HashMap<>();
         this.ticket = new Ticket();
@@ -18,13 +24,13 @@ public class Controller {
 
     //here we add a new product to the hashmap of products
     //return true if it didn't exist, else false
-    public boolean addProduct (String name, String category, double price,int id) {
+    public String addProduct (String name, String category, double price,int id) {
         Product product;
         if(Categories.existCategory(category)){
             product=new Product(id,name,price,Categories.valueOf(category));
             products.put(product.getId(), product);
-            return true;
-        }else return false;
+            return product.toString();
+        }else return ERROR_CREATTE_PRODUCT;
     }
 
     public Product updateProduct(int id, String field, String newContent){
@@ -81,6 +87,16 @@ public class Controller {
     }
 
     public String prodList(){
-        return this.products.toString();
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(CATALOG);
+
+        for( Product p : products.values()){
+            builder.append(TAB_SPACE)
+                    .append(p.toString())
+                    .append(NEXT_LINE);
+        }
+
+        return builder.toString();
     }
 }

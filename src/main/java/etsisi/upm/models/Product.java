@@ -10,6 +10,15 @@ public class Product {
     private double price;
     private Categories category;
 
+    private static final String OPEN_BRACE = "{";
+    private static final String STR_PRODUCT = "class:Product";
+    private static final String STR_NAME = ", name:'";
+    private static final String STR_ID = ", id:";
+    private static final String STR_CATEGORY = ", category:";
+    private static final String STR_PRICE = ", price:";
+    private static final String CLOSE_BRACE = "}";
+
+
 
     //this is the constructor that creates a product
     public Product(int id, String name, double price, Categories category) {
@@ -32,13 +41,13 @@ public class Product {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("{");
-        builder.append("class:Product");
-        builder.append(", id:").append(id);
-        builder.append(", name:'").append(name).append("'");
-        builder.append(", category:").append(category);
-        builder.append(", price:").append(price);
-        builder.append("}");
+        builder.append(OPEN_BRACE);
+        builder.append(STR_PRODUCT);
+        builder.append(STR_ID).append(id);
+        builder.append(STR_NAME).append(name).append("'");
+        builder.append(STR_CATEGORY).append(category);
+        builder.append(STR_PRICE).append(price);
+        builder.append(CLOSE_BRACE);
         return builder.toString();
     }
 
