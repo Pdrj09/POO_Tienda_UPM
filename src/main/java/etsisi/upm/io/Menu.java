@@ -8,8 +8,8 @@ public class Menu {
     private Controller controller;
 
     // status code
-    private static final int QUERY_SUCCESS = 0;
-    private static final int QUERY_EXIT = 1;
+    private static final int QUERY_SUCCESS = 1;
+    private static final int QUERY_EXIT = 0;
 
     // numbers
     private static final int ZERO = 0;
@@ -17,7 +17,6 @@ public class Menu {
     private static final int TWO = 2;
     private static final int THREE = 3;
     private static final int FOUR = 4;
-
 
     // messages and help
     private static final String WELCOME_MESSAGE =
@@ -46,6 +45,8 @@ public class Menu {
             Goodbye!
             """;
 
+    private static final String OK_STATUS = "ok";
+
     // menu const
     private static final String EXIT = "exit";
     private static final String PROD = "prod";
@@ -57,7 +58,9 @@ public class Menu {
     private static final String STR_EMPTY = "";
     private static final String STR_DOT = ".";
     private static final String STR_COMMA = ",";
-
+    private static final String STR_ERROR = "Error";
+    private static final String STR_BLANK_SPACE = " ";
+    private static final String STR_DOUBLE_DOT = ":";
 
     // regex const
     private static final String REGEX_INIT = "^";
@@ -124,6 +127,10 @@ public class Menu {
             String request = controller.addProduct(name, querySplit[THREE], price, id);
             System.out.println(request);
 
+            if (!request.startsWith(STR_ERROR)) {
+                System.out.println(okStatus(PROD, PRODUCT_ADD));
+            }
+
         }else if (query.contains(PRODUCT_LIST)){
 
             System.out.println(controller.prodList());
@@ -170,5 +177,18 @@ public class Menu {
                 .append(REGEX_BLANK_SPACE);
 
         return stringBuilder.toString();
+    }
+
+    private String okStatus(String type, String comand) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(type)
+                .append(STR_BLANK_SPACE)
+                .append(comand)
+                .append(STR_DOUBLE_DOT)
+                .append(STR_BLANK_SPACE)
+                .append(OK_STATUS);
+
+        return builder.toString();
     }
 }
