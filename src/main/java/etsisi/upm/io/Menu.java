@@ -6,24 +6,27 @@ import etsisi.upm.models.Ticket;
 
 public class Menu {
 
-
-    private final Controller controller;
+    /// Global variables
+    private final Controller controller;  //gobal variable called controller
 
     // status code
     private static final int QUERY_SUCCESS = 1;
     private static final int QUERY_EXIT = 0;
 
     // numbers
-    private static final int ZERO = 0;
     private static final int ONE = 1;
     private static final int TWO = 2;
     private static final int THREE = 3;
     private static final int FOUR = 4;
 
-    // messages and help
+    /// messages and help
+    //This is the welcome message it is printed when you start the program
     private static final String WELCOME_MESSAGE =
-            "Welcome to the ticket module App.\nTicket module. Type 'help' to see commands.";
+            """
+                    Welcome to the ticket module App.
+                    Ticket module. Type 'help' to see commands.""";
 
+    //this is printed when you call 'help'
     private static final String COMMANDS_LIST = """
         Commands:
           prod add <id> "<name>" <category> <price>
