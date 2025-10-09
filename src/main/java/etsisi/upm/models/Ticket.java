@@ -5,8 +5,10 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class Ticket {
+    //Stores the list of products and their quantities in the current transaction
     private HashMap<Product,Integer> list;
     private HashMap<Categories,Integer> categories;
+
 
     private static final String DISCOUNT = "**discount -";
     private static final String TOTAL_PRICE = "\nTotal price: ";
