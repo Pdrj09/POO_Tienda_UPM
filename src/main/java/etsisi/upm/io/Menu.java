@@ -1,8 +1,6 @@
 package etsisi.upm.io;
 
 import etsisi.upm.controllers.Controller;
-import etsisi.upm.models.Product;
-import etsisi.upm.models.Ticket;
 
 public class Menu {
 
@@ -21,30 +19,30 @@ public class Menu {
 
     /// messages and help
     //This is the welcome message it is printed when you start the program
-    private static final String WELCOME_MESSAGE =
-            """
-                    Welcome to the ticket module App.
-                    Ticket module. Type 'help' to see commands.""";
+    private static final String WELCOME_MESSAGE = """
+            Welcome to the ticket module App.
+            Ticket module. Type 'help' to see commands.
+        """;
 
     //this is printed when you call 'help'
     private static final String COMMANDS_LIST = """
-        Commands:
-          prod add <id> "<name>" <category> <price>
-          prod list
-          prod update <id> NAME|CATEGORY|PRICE <value>
-          prod remove <id>
-          ticket new
-          ticket add <prodId><quantity>
-          ticket remove <prodId>
-          ticket print
-          echo "<texto>"
-          help
-          exit
-          
-         Categories: MERCH,STATIONERY,CLOTHES,BOOK,ELECTRONICS
-         Discounts if there are ≥2 units in the category: MERCH 0%,STATIONERY 5%,CLOTHES 7%,BOOK 10%,
-         ELECTRONICS 3%.
-        """;
+            Commands:
+              prod add <id> "<name>" <category> <price>
+              prod list
+              prod update <id> NAME|CATEGORY|PRICE <value>
+              prod remove <id>
+              ticket new
+              ticket add <prodId><quantity>
+              ticket remove <prodId>
+              ticket print
+              echo "<texto>"
+              help
+              exit
+            
+             Categories: MERCH,STATIONERY,CLOTHES,BOOK,ELECTRONICS
+             Discounts if there are ≥2 units in the category: MERCH 0%,STATIONERY 5%,CLOTHES 7%,BOOK 10%,
+             ELECTRONICS 3%.
+            """;
     //printed when you exit the program
     private static final String BYE = """
             Closing application.
@@ -53,7 +51,6 @@ public class Menu {
 
     private static final String OK_STATUS = "ok";  //Ok
     private static final String ERROR_STATUS = "Error"; //error
-
 
     // menu const
     private static final String EXIT = "exit";
@@ -77,8 +74,8 @@ public class Menu {
     private static final String REGEX_TO_SPLIT = " (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
 
     // products const
-    private static final String PRODUCT_ADD =  "add";
-    private static final String PRODUCT_LIST =  "list";
+    private static final String PRODUCT_ADD = "add";
+    private static final String PRODUCT_LIST = "list";
     private static final String PRODUCT_UPDATE = "update";
     private static final String PRODUCT_REMOVE = "remove";
 
@@ -93,22 +90,20 @@ public class Menu {
         this.controller = new Controller();
     }
 
-
-
     public int newQuery(String query) {
         //Check if the query starts with PROD command keyword
         if (query.startsWith(PROD)) {
             this.prodQuery(deleteSubstring(query, createGeneralRegex(PROD)));
-        //if the query starts with TICKET, we handle using ticketQuery().
+            //if the query starts with TICKET, we handle using ticketQuery().
         } else if (query.startsWith(TICKET)) {
             this.ticketQuery(deleteSubstring(query, createGeneralRegex(TICKET)));
-        //if query starts with ECHO,it echoes back the input
+            //if query starts with ECHO,it echoes back the input
         } else if (query.startsWith(ECHO)) {
             this.echoCommand(query);
-        //if query starts with HELP, displays help information available
+            //if query starts with HELP, displays help information available
         } else if (query.startsWith(HELP)) {
             this.help();
-        //if query starts with EXIT prints goodbye message
+            //if query starts with EXIT prints goodbye message
         } else if (query.startsWith(EXIT)) {
             System.out.println(BYE);
             return QUERY_EXIT;
@@ -120,7 +115,7 @@ public class Menu {
     }
 
     private void prodQuery(String query) {
-        if (query.contains(PRODUCT_ADD)){
+        if (query.contains(PRODUCT_ADD)) {
             try {
 
                 String[] querySplit = query.split(REGEX_TO_SPLIT);
@@ -137,60 +132,60 @@ public class Menu {
                 if (!response.startsWith(STR_ERROR)) {
                     System.out.println(okStatus(PROD, PRODUCT_ADD));
                 }
-            }catch (Exception e){
-                System.out.println(errorStatus(PROD,PRODUCT_ADD,e.toString()));
+            } catch (Exception e) {
+                System.out.println(errorStatus(PROD, PRODUCT_ADD, e.toString()));
             }
 
-        }else if (query.contains(PRODUCT_LIST)){
+        } else if (query.contains(PRODUCT_LIST)) {
             try {
 
                 System.out.println(controller.prodList());
 
                 System.out.println(okStatus(PROD, PRODUCT_LIST));
-            }catch (Exception e ){
-                System.out.println(errorStatus(PROD,PRODUCT_ADD,e.toString()));
+            } catch (Exception e) {
+                System.out.println(errorStatus(PROD, PRODUCT_ADD, e.toString()));
             }
 
-        }else if (query.contains(PRODUCT_REMOVE)){
+        } else if (query.contains(PRODUCT_REMOVE)) {
             try {
                 int id = Integer.parseInt(deleteSubstring(query, createGeneralRegex(PRODUCT_REMOVE)));
 
 
-                Product deletedProd = controller.deleteProduct(id);
+                String deletedProd = controller.deleteProduct(id);
 
                 if (deletedProd != null) {
-                    System.out.println(deletedProd.toString());
+                    System.out.println(deletedProd);
                     System.out.println(okStatus(PROD, PRODUCT_REMOVE));
                 } else {
                     System.out.println(errorStatus(PROD, PRODUCT_REMOVE));
                 }
 
-            }catch (Exception e){
-                System.out.println(errorStatus(PROD,PRODUCT_REMOVE,e.toString()));
+            } catch (Exception e) {
+                System.out.println(errorStatus(PROD, PRODUCT_REMOVE, e.toString()));
             }
-        }else if(query.contains(PRODUCT_UPDATE)){
+        } else if (query.contains(PRODUCT_UPDATE)) {
             try {
                 String[] querySplit = query.split(REGEX_TO_SPLIT);
 
                 int id = Integer.parseInt(querySplit[ONE]);
 
 
-                Product productEdited = controller.updateProduct(id, querySplit[TWO], querySplit[THREE]);
+                String productEdited = controller.updateProduct(id, querySplit[TWO], querySplit[THREE]);
 
                 if (productEdited != null) {
-                    System.out.println(productEdited.toString());
+                    System.out.println(productEdited);
                     System.out.println(okStatus(TICKET, TICKET_NEW));
                 } else {
                     System.out.println(errorStatus(TICKET, TICKET_NEW));
                 }
-            }catch (Exception e){
-                System.out.println(errorStatus(PROD,PRODUCT_UPDATE,e.toString()));
+            } catch (Exception e) {
+                System.out.println(errorStatus(PROD, PRODUCT_UPDATE, e.toString()));
             }
         }
     }
 
     private void ticketQuery(String query) {
-        if (query.contains(TICKET_ADD)){
+        if (query.contains(TICKET_ADD)) {
 
             String[] querySplit = query.split(REGEX_TO_SPLIT);
 
@@ -199,27 +194,27 @@ public class Menu {
             int quantity = Integer.parseInt(querySplit[TWO]);
 
 
-            Ticket newTicket = controller.addProductToTicket(id, quantity);
+            String newTicket = controller.addProductToTicket(id, quantity);
 
             if (newTicket != null) {
-                System.out.println(newTicket.toString());
+                System.out.println(newTicket);
                 System.out.println(okStatus(TICKET, TICKET_ADD));
             } else {
                 System.out.println(errorStatus(TICKET, TICKET_ADD));
             }
 
-        }else if (query.contains(TICKET_NEW)){
+        } else if (query.contains(TICKET_NEW)) {
 
             controller.ticketNew();
             System.out.println(okStatus(TICKET, TICKET_ADD));
 
 
-        }else if (query.contains(TICKET_PRINT)){
+        } else if (query.contains(TICKET_PRINT)) {
 
             controller.ticketPrint();
             System.out.println(okStatus(TICKET, TICKET_ADD));
 
-        }else if(query.contains(TICKET_REMOVE)){
+        } else if (query.contains(TICKET_REMOVE)) {
             int id = Integer.parseInt(deleteSubstring(query, createGeneralRegex(PRODUCT_REMOVE)));
 
             if (controller.removeProductFromTicket(id)) {
@@ -254,7 +249,8 @@ public class Menu {
     }
 
     private String okStatus(String type, String comand) {
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder;
+        builder = new StringBuilder();
 
         builder.append(type)
                 .append(STR_BLANK_SPACE)
@@ -266,9 +262,9 @@ public class Menu {
         return builder.toString();
     }
 
-
     private String errorStatus(String type, String comand, String message) {
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder;
+        builder = new StringBuilder();
 
         builder.append(type)
                 .append(STR_BLANK_SPACE)
