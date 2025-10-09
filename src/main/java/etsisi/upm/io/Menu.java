@@ -32,7 +32,7 @@ public class Menu {
           prod update <id> NAME|CATEGORY|PRICE <value>
           prod remove <id>
           ticket new
-          ticket add <prodId> <quantity>
+          ticket add <prodId><quantity>
           ticket remove <prodId>
           ticket print
           echo "<texto>"
@@ -92,6 +92,7 @@ public class Menu {
     }
 
     public int newQuery(String query) {
+
         if (query.startsWith(PROD)) {
 
             this.prodQuery(deleteSubstring(query, createGeneralRegex(PROD)));
@@ -120,61 +121,73 @@ public class Menu {
 
     private void prodQuery(String query) {
         if (query.contains(PRODUCT_ADD)){
+            try {
 
-            String[] querySplit = query.split(REGEX_TO_SPLIT);
+                String[] querySplit = query.split(REGEX_TO_SPLIT);
 
-            int id = Integer.parseInt(querySplit[ONE]);
-            String name = querySplit[TWO].replace(REGEX_DOUBLE_QUOTE, STR_EMPTY);
+                int id = Integer.parseInt(querySplit[ONE]);
+                String name = querySplit[TWO].replace(REGEX_DOUBLE_QUOTE, STR_EMPTY);
 
-            float price = Float.parseFloat(querySplit[FOUR].replace(STR_COMMA, STR_DOT));
+                float price = Float.parseFloat(querySplit[FOUR].replace(STR_COMMA, STR_DOT));
 
 
-            String response = controller.addProduct(name, querySplit[THREE], price, id);
-            System.out.println(response);
+                String response = controller.addProduct(name, querySplit[THREE], price, id);
+                System.out.println(response);
 
-            if (!response.startsWith(STR_ERROR)) {
-                System.out.println(okStatus(PROD, PRODUCT_ADD));
+                if (!response.startsWith(STR_ERROR)) {
+                    System.out.println(okStatus(PROD, PRODUCT_ADD));
+                }
+            }catch (Exception e){
+                System.out.println(errorStatus(PROD,PRODUCT_ADD,e.toString()));
             }
 
         }else if (query.contains(PRODUCT_LIST)){
+            try {
 
-            System.out.println(controller.prodList());
+                System.out.println(controller.prodList());
 
-            System.out.println(okStatus(PROD, PRODUCT_LIST));
+                System.out.println(okStatus(PROD, PRODUCT_LIST));
+            }catch (Exception e ){
+                System.out.println(errorStatus(PROD,PRODUCT_ADD,e.toString()));
+            }
 
         }else if (query.contains(PRODUCT_REMOVE)){
+            try {
+                int id = Integer.parseInt(deleteSubstring(query, createGeneralRegex(PRODUCT_REMOVE)));
 
-            int id = Integer.parseInt(deleteSubstring(query, createGeneralRegex(PRODUCT_REMOVE)));
+                // TODO Preguntar
+                // Esto aumenta la cohesión??
+                Product deletedProd = controller.deleteProduct(id);
 
-            // TODO Preguntar
-            // Esto aumenta la cohesión??
-            Product deletedProd = controller.deleteProduct(id);
+                if (deletedProd != null) {
+                    System.out.println(deletedProd.toString());
+                    System.out.println(okStatus(PROD, PRODUCT_REMOVE));
+                } else {
+                    System.out.println(errorStatus(PROD, PRODUCT_REMOVE));
+                }
 
-            if (deletedProd != null) {
-                System.out.println(deletedProd.toString());
-                System.out.println(okStatus(PROD, PRODUCT_REMOVE));
-            } else  {
-                System.out.println(errorStatus(PROD, PRODUCT_REMOVE));
+            }catch (Exception e){
+                System.out.println(errorStatus(PROD,PRODUCT_REMOVE,e.toString()));
             }
-
-
         }else if(query.contains(PRODUCT_UPDATE)){
+            try {
+                String[] querySplit = query.split(REGEX_TO_SPLIT);
 
-            String[] querySplit = query.split(REGEX_TO_SPLIT);
+                int id = Integer.parseInt(querySplit[ONE]);
 
-            int id = Integer.parseInt(querySplit[ONE]);
+                //TODO preguntar
+                // Lo mismo de la cohesión
+                Product productEdited = controller.updateProduct(id, querySplit[TWO], querySplit[THREE]);
 
-            //TODO preguntar
-            // Lo mismo de la cohesión
-            Product productEdited = controller.updateProduct(id, querySplit[TWO], querySplit[THREE]);
-
-            if (productEdited != null) {
-                System.out.println(productEdited.toString());
-                System.out.println(okStatus(TICKET, TICKET_NEW));
-            } else {
-                System.out.println(errorStatus(TICKET, TICKET_NEW));
+                if (productEdited != null) {
+                    System.out.println(productEdited.toString());
+                    System.out.println(okStatus(TICKET, TICKET_NEW));
+                } else {
+                    System.out.println(errorStatus(TICKET, TICKET_NEW));
+                }
+            }catch (Exception e){
+                System.out.println(errorStatus(PROD,PRODUCT_UPDATE,e.toString()));
             }
-
         }
     }
 
