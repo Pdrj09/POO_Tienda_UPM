@@ -42,19 +42,21 @@ public class Ticket {
     }
 
     private double totalPrice(){
-        return list.entrySet()
-                .stream()
-                .mapToDouble(entry -> entry.getKey().getPrice() * entry.getValue())
-                .sum();
+        double sum=0;
+        for(Map.Entry<Product,Integer> entry : list.entrySet()){
+            sum+=entry.getKey().getPrice() * entry.getValue();
+        }
+        return sum;
     }
 
     private double totalDiscount(){
-        return list.keySet()
-                .stream()
-                .mapToDouble(
-                        product -> categories.get(product.getCategory()) > 1 ?
-                                    product.getPrice() * product.getCategory().getDiscount() : 0)
-                .sum();
+        double sum=0;
+        for (Product product : list.keySet()){
+            if (categories.get(product.getCategory()) >1){
+                sum+=product.getPrice() * product.getCategory().getDiscount();
+            }
+        }
+        return sum;
     }
 
 
