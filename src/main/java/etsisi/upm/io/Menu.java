@@ -6,8 +6,7 @@ import etsisi.upm.models.Ticket;
 
 public class Menu {
 
-    // TODO Preguntat
-    // Son necesarias tantas o nos podemos ahorras alguna incumpliendo el estilo de codigo
+
     private final Controller controller;
 
     // status code
@@ -155,8 +154,7 @@ public class Menu {
             try {
                 int id = Integer.parseInt(deleteSubstring(query, createGeneralRegex(PRODUCT_REMOVE)));
 
-                // TODO Preguntar
-                // Esto aumenta la cohesión??
+
                 Product deletedProd = controller.deleteProduct(id);
 
                 if (deletedProd != null) {
@@ -175,8 +173,7 @@ public class Menu {
 
                 int id = Integer.parseInt(querySplit[ONE]);
 
-                //TODO preguntar
-                // Lo mismo de la cohesión
+
                 Product productEdited = controller.updateProduct(id, querySplit[TWO], querySplit[THREE]);
 
                 if (productEdited != null) {
@@ -200,8 +197,7 @@ public class Menu {
 
             int quantity = Integer.parseInt(querySplit[TWO]);
 
-            //TODO preguntar
-            // Lo mismo de la cohesión
+
             Ticket newTicket = controller.addProductToTicket(id, quantity);
 
             if (newTicket != null) {
@@ -233,7 +229,6 @@ public class Menu {
         }
     }
 
-    // TODO terminar el help
     private void help() {
         System.out.println(COMMANDS_LIST);
     }
@@ -270,7 +265,7 @@ public class Menu {
         return builder.toString();
     }
 
-    // TODO add error codes
+
     private String errorStatus(String type, String comand, String message) {
         StringBuilder builder = new StringBuilder();
 
