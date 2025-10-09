@@ -6,50 +6,53 @@ import etsisi.upm.models.Ticket;
 
 public class Menu {
 
-    // TODO Preguntat
-    // Son necesarias tantas o nos podemos ahorras alguna incumpliendo el estilo de codigo
-    private final Controller controller;
+    /// Global variables
+    private final Controller controller;  //gobal variable called controller
 
     // status code
     private static final int QUERY_SUCCESS = 1;
     private static final int QUERY_EXIT = 0;
 
     // numbers
-    private static final int ZERO = 0;
     private static final int ONE = 1;
     private static final int TWO = 2;
     private static final int THREE = 3;
     private static final int FOUR = 4;
 
-    // messages and help
+    /// messages and help
+    //This is the welcome message it is printed when you start the program
     private static final String WELCOME_MESSAGE =
-            "Welcome to the ticket module App.\nTicket module. Type 'help' to see commands.";
+            """
+                    Welcome to the ticket module App.
+                    Ticket module. Type 'help' to see commands.""";
 
+    //this is printed when you call 'help'
     private static final String COMMANDS_LIST = """
         Commands:
-            prod add <id> "<name>" <category> <price>
-            prod list
-            prod update <id> NAME|CATEGORY|PRICE <value>
-            prod remove <id>
-            ticket new
-            ticket add <prodId> <quantity>
-            ticket remove <prodId>
-            ticket print
-            echo "<texto>"
-            help
-            exit
-            Categories: MERCH, STATIONERY, CLOTHES, BOOK, ELECTRONICS
-                Discounts if there are ≥2 units in the category: MERCH 0%, STATIONERY 5%, CLOTHES 7%, BOOK 10%,
-                ELECTRONICS 3%.
+          prod add <id> "<name>" <category> <price>
+          prod list
+          prod update <id> NAME|CATEGORY|PRICE <value>
+          prod remove <id>
+          ticket new
+          ticket add <prodId><quantity>
+          ticket remove <prodId>
+          ticket print
+          echo "<texto>"
+          help
+          exit
+          
+         Categories: MERCH,STATIONERY,CLOTHES,BOOK,ELECTRONICS
+         Discounts if there are ≥2 units in the category: MERCH 0%,STATIONERY 5%,CLOTHES 7%,BOOK 10%,
+         ELECTRONICS 3%.
         """;
-
+    //printed when you exit the program
     private static final String BYE = """
             Closing application.
             Goodbye!
             """;
 
-    private static final String OK_STATUS = "ok";
-    private static final String ERROR_STATUS = "Error";
+    private static final String OK_STATUS = "ok";  //Ok
+    private static final String ERROR_STATUS = "Error"; //error
 
 
     // menu const
@@ -90,90 +93,99 @@ public class Menu {
         this.controller = new Controller();
     }
 
+
+
     public int newQuery(String query) {
+        //Check if the query starts with PROD command keyword
         if (query.startsWith(PROD)) {
-
             this.prodQuery(deleteSubstring(query, createGeneralRegex(PROD)));
-
+        //if the query starts with TICKET, we handle using ticketQuery().
         } else if (query.startsWith(TICKET)) {
-
             this.ticketQuery(deleteSubstring(query, createGeneralRegex(TICKET)));
-
+        //if query starts with ECHO,it echoes back the input
         } else if (query.startsWith(ECHO)) {
-
             this.echoCommand(query);
-
+        //if query starts with HELP, displays help information available
         } else if (query.startsWith(HELP)) {
-
             this.help();
-
+        //if query starts with EXIT prints goodbye message
         } else if (query.startsWith(EXIT)) {
-
             System.out.println(BYE);
             return QUERY_EXIT;
+            //returns 0
         }
 
-
         return QUERY_SUCCESS;
+        //returns 1
     }
 
     private void prodQuery(String query) {
         if (query.contains(PRODUCT_ADD)){
+            try {
 
-            String[] querySplit = query.split(REGEX_TO_SPLIT);
+                String[] querySplit = query.split(REGEX_TO_SPLIT);
 
-            int id = Integer.parseInt(querySplit[ONE]);
-            String name = querySplit[TWO].replace(REGEX_DOUBLE_QUOTE, STR_EMPTY);
+                int id = Integer.parseInt(querySplit[ONE]);
+                String name = querySplit[TWO].replace(REGEX_DOUBLE_QUOTE, STR_EMPTY);
 
-            float price = Float.parseFloat(querySplit[FOUR].replace(STR_COMMA, STR_DOT));
+                float price = Float.parseFloat(querySplit[FOUR].replace(STR_COMMA, STR_DOT));
 
 
-            String response = controller.addProduct(name, querySplit[THREE], price, id);
-            System.out.println(response);
+                String response = controller.addProduct(name, querySplit[THREE], price, id);
+                System.out.println(response);
 
-            if (!response.startsWith(STR_ERROR)) {
-                System.out.println(okStatus(PROD, PRODUCT_ADD));
+                if (!response.startsWith(STR_ERROR)) {
+                    System.out.println(okStatus(PROD, PRODUCT_ADD));
+                }
+            }catch (Exception e){
+                System.out.println(errorStatus(PROD,PRODUCT_ADD,e.toString()));
             }
 
         }else if (query.contains(PRODUCT_LIST)){
+            try {
 
-            System.out.println(controller.prodList());
+                System.out.println(controller.prodList());
 
-            System.out.println(okStatus(PROD, PRODUCT_LIST));
+                System.out.println(okStatus(PROD, PRODUCT_LIST));
+            }catch (Exception e ){
+                System.out.println(errorStatus(PROD,PRODUCT_ADD,e.toString()));
+            }
 
         }else if (query.contains(PRODUCT_REMOVE)){
+            try {
+                int id = Integer.parseInt(deleteSubstring(query, createGeneralRegex(PRODUCT_REMOVE)));
 
-            int id = Integer.parseInt(deleteSubstring(query, createGeneralRegex(PRODUCT_REMOVE)));
 
-            // TODO Preguntar
-            // Esto aumenta la cohesión??
-            Product deletedProd = controller.deleteProduct(id);
+                Product deletedProd = controller.deleteProduct(id);
 
-            if (deletedProd != null) {
-                System.out.println(deletedProd.toString());
-                System.out.println(okStatus(PROD, PRODUCT_REMOVE));
-            } else  {
-                System.out.println(errorStatus(PROD, PRODUCT_REMOVE));
+                if (deletedProd != null) {
+                    System.out.println(deletedProd.toString());
+                    System.out.println(okStatus(PROD, PRODUCT_REMOVE));
+                } else {
+                    System.out.println(errorStatus(PROD, PRODUCT_REMOVE));
+                }
+
+            }catch (Exception e){
+                System.out.println(errorStatus(PROD,PRODUCT_REMOVE,e.toString()));
             }
-
-
         }else if(query.contains(PRODUCT_UPDATE)){
+            try {
+                String[] querySplit = query.split(REGEX_TO_SPLIT);
 
-            String[] querySplit = query.split(REGEX_TO_SPLIT);
+                int id = Integer.parseInt(querySplit[ONE]);
 
-            int id = Integer.parseInt(querySplit[ONE]);
 
-            //TODO preguntar
-            // Lo mismo de la cohesión
-            Product productEdited = controller.updateProduct(id, querySplit[TWO], querySplit[THREE]);
+                Product productEdited = controller.updateProduct(id, querySplit[TWO], querySplit[THREE]);
 
-            if (productEdited != null) {
-                System.out.println(productEdited.toString());
-                System.out.println(okStatus(TICKET, TICKET_NEW));
-            } else {
-                System.out.println(errorStatus(TICKET, TICKET_NEW));
+                if (productEdited != null) {
+                    System.out.println(productEdited.toString());
+                    System.out.println(okStatus(TICKET, TICKET_NEW));
+                } else {
+                    System.out.println(errorStatus(TICKET, TICKET_NEW));
+                }
+            }catch (Exception e){
+                System.out.println(errorStatus(PROD,PRODUCT_UPDATE,e.toString()));
             }
-
         }
     }
 
@@ -186,8 +198,7 @@ public class Menu {
 
             int quantity = Integer.parseInt(querySplit[TWO]);
 
-            //TODO preguntar
-            // Lo mismo de la cohesión
+
             Ticket newTicket = controller.addProductToTicket(id, quantity);
 
             if (newTicket != null) {
@@ -219,7 +230,6 @@ public class Menu {
         }
     }
 
-    // TODO terminar el help
     private void help() {
         System.out.println(COMMANDS_LIST);
     }
@@ -256,7 +266,7 @@ public class Menu {
         return builder.toString();
     }
 
-    // TODO add error codes
+
     private String errorStatus(String type, String comand, String message) {
         StringBuilder builder = new StringBuilder();
 
