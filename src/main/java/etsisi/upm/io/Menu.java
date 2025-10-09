@@ -45,14 +45,14 @@ public class Menu {
          Discounts if there are ≥2 units in the category: MERCH 0%,STATIONERY 5%,CLOTHES 7%,BOOK 10%,
          ELECTRONICS 3%.
         """;
-
+    //printed when you exit the program
     private static final String BYE = """
             Closing application.
             Goodbye!
             """;
 
-    private static final String OK_STATUS = "ok";
-    private static final String ERROR_STATUS = "Error";
+    private static final String OK_STATUS = "ok";  //Ok
+    private static final String ERROR_STATUS = "Error"; //error
 
 
     // menu const
@@ -93,32 +93,30 @@ public class Menu {
         this.controller = new Controller();
     }
 
+
+
     public int newQuery(String query) {
-
+        //Check if the query starts with PROD command keyword
         if (query.startsWith(PROD)) {
-
             this.prodQuery(deleteSubstring(query, createGeneralRegex(PROD)));
-
+        //if the query starts with TICKET, we handle using ticketQuery().
         } else if (query.startsWith(TICKET)) {
-
             this.ticketQuery(deleteSubstring(query, createGeneralRegex(TICKET)));
-
+        //if query starts with ECHO,it echoes back the input
         } else if (query.startsWith(ECHO)) {
-
             this.echoCommand(query);
-
+        //if query starts with HELP, displays help information available
         } else if (query.startsWith(HELP)) {
-
             this.help();
-
+        //if query starts with EXIT prints goodbye message
         } else if (query.startsWith(EXIT)) {
-
             System.out.println(BYE);
             return QUERY_EXIT;
+            //returns 0
         }
 
-
         return QUERY_SUCCESS;
+        //returns 1
     }
 
     private void prodQuery(String query) {
