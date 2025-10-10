@@ -37,6 +37,7 @@ public class Ticket {
         for(int value: this.list.values()){
             total = total + value;
         }
+        //we see how many products are in list
         if(total + amount <= 100) {
             this.list.put(prod, this.list.containsKey(prod) ? this.list.get(prod) + amount : amount);
             Categories category = prod.getCategory();
