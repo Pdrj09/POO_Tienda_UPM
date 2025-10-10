@@ -4,7 +4,7 @@ package etsisi.upm.models;
 import java.util.Objects;
 
 //We asign the variables
-public class Product {
+public class Product implements Comparable<Product> {
     private int id;
     private String name;
     private double price;
@@ -91,5 +91,11 @@ public class Product {
 
     public void setCategory(Categories category) {
         this.category = category;
+    }
+
+
+    @Override
+    public int compareTo(Product other) {
+        return this.name.compareToIgnoreCase(other.name);
     }
 }
