@@ -33,9 +33,16 @@ public class Ticket {
 
     // Add a product to the ticket, if the product already exists increments its amount
     public void add(Product prod, int amount){
-        this.list.put(prod,this.list.containsKey(prod) ? this.list.get(prod)+amount : amount );
-        Categories category = prod.getCategory();
-        this.categories.put(category,this.categories.containsKey(category) ? this.categories.get(category)+1:1);
+        int total = 0;
+        for(int value: this.list.values()){
+            total = total + value;
+        }
+        if(total + amount <= 100) {
+            this.list.put(prod, this.list.containsKey(prod) ? this.list.get(prod) + amount : amount);
+            Categories category = prod.getCategory();
+            this.categories.put(category, this.categories.containsKey(category) ? this.categories.get(category) + 1 : 1);
+        }
+
     }
 
     // Remove a product from the ticket
