@@ -5,11 +5,10 @@ import etsisi.upm.models.Product;
 import etsisi.upm.models.Ticket;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class Controller {
-    private HashMap<Integer, Product> products;
-    private Ticket ticket;
+    private final HashMap<Integer, Product> products;
+    private final Ticket ticket;
 
     private static final String ERROR_CREATTE_PRODUCT = "Error al crear el producto";
     private static final String NAME = "NAME";
@@ -37,7 +36,7 @@ public class Controller {
         } else return ERROR_CREATTE_PRODUCT;
     }
 
-    public Product updateProduct(int id, String field, String newContent) {
+    public String updateProduct(int id, String field, String newContent) {
         if (this.products.get(id) == null) return null;
         switch (field) {
             case NAME:
@@ -55,23 +54,23 @@ public class Controller {
             default:
                 return null;
         }
-        return this.products.get(id);
+        return this.products.get(id).toString();
     }
 
     //here we delete a product from the hashmap of products
     //return true if delete succeed, else false
-    public Product deleteProduct(int prodId) {
+    public String deleteProduct(int prodId) {
         if (products.containsKey(prodId)) {
             ticket.remove(products.get(prodId));
-            return products.remove(prodId);
+            return products.remove(prodId).toString();
         } else return null;
     }
 
-    public Ticket addProductToTicket(int prodId, int amount) {
+    public String addProductToTicket(int prodId, int amount) {
         if (products.containsKey(prodId)) {
             ticket.add(products.get(prodId), amount);
-            return ticket;
-        } else return ticket;
+        }
+        return ticket.toString();
     }
 
     public boolean removeProductFromTicket(int prodId) {
