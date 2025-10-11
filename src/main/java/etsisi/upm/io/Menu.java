@@ -206,13 +206,13 @@ public class Menu {
         } else if (query.contains(TICKET_NEW)) {
 
             controller.ticketNew();
-            System.out.println(okStatus(TICKET, TICKET_ADD));
+            System.out.println(okStatus(TICKET, TICKET_NEW));
 
 
         } else if (query.contains(TICKET_PRINT)) {
 
-            controller.ticketPrint();
-            System.out.println(okStatus(TICKET, TICKET_ADD));
+            System.out.println(controller.ticketPrint());
+            System.out.println(okStatus(TICKET, TICKET_PRINT));
 
         } else if (query.contains(TICKET_REMOVE)) {
             int id = Integer.parseInt(deleteSubstring(query, createGeneralRegex(PRODUCT_REMOVE)));
