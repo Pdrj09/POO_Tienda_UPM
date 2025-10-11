@@ -7,6 +7,7 @@ import etsisi.upm.models.Ticket;
 import java.util.HashMap;
 
 public class Controller {
+
     private final HashMap<Integer, Product> products;
     private final Ticket ticket;
 
