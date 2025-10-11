@@ -4,12 +4,12 @@ package etsisi.upm.models;
 import java.util.Objects;
 
 //We asign the variables
-public class Product {
-    private int id;
+public class Product implements Comparable<Product> {
+    private final int id; // It is a global variable as the id cant change once the object is created
     private String name;
     private double price;
     private Categories category;
-
+//Variables to avoid magic numbers
     private static final String OPEN_BRACE = "{";
     private static final String STR_PRODUCT = "class:Product";
     private static final String STR_NAME = ", name:'";
@@ -53,7 +53,7 @@ public class Product {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o) { //equals function to see if we are refering to the same object
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
         return id == product.id;
@@ -63,6 +63,7 @@ public class Product {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+    //It returns the value of id characters
 
     //getters and setters
     public int getId() {
@@ -91,5 +92,15 @@ public class Product {
 
     public void setCategory(Categories category) {
         this.category = category;
+    }
+
+    //Its used to compare alfabeticaly this name and the other products name (it is case insensitive)
+    //returns value < 0 if this name comes before other name alfabetically
+    //        value = 0 if its equal this name and other name
+    //        value > 0 if this name comes after other name alfabetically
+
+    @Override
+    public int compareTo(Product other) {
+        return this.name.compareToIgnoreCase(other.name);
     }
 }
