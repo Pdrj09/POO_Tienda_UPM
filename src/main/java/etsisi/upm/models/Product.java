@@ -5,7 +5,7 @@ import java.util.Objects;
 
 //We asign the variables
 public class Product implements Comparable<Product> {
-    private int id;
+    private final int id;
     private String name;
     private double price;
     private Categories category;
