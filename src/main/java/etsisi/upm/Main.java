@@ -16,5 +16,7 @@ public class Main {
             System.out.print(CURSOR);
             status = menu.newQuery(sc.nextLine());
          } while (status == 1);
+
+        sc.close();
     }
 }
