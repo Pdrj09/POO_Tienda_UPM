@@ -29,15 +29,6 @@ public class Product implements Comparable<Product> {
         this.category = category;
     }
 
-    // update certain characteristics of product
-    public int update(String name, Categories category, double price) {
-        this.name = name;
-        this.category = category;
-        this.price = price;
-        return id;
-    }
-
-
     //toString method
     @Override
     public String toString() {

@@ -45,13 +45,14 @@ public class Ticket {
         if(total + amount <= MAX_SIZE) {
             this.list.put(prod, this.list.containsKey(prod) ? this.list.get(prod) + amount : amount);
             Categories category = prod.getCategory();
-            this.categories.put(category, this.categories.containsKey(category) ? this.categories.get(category) + 1 : 1);
+            this.categories.put(category, this.categories.containsKey(category) ? this.categories.get(category) + amount : amount);
         }
 
     }
 
     // Remove a product from the ticket
     public void remove(Product prod){
+        this.categories.put(prod.getCategory(),this.categories.get(prod.getCategory())-list.get(prod));
         this.list.remove(prod);
     }
 
