@@ -33,6 +33,29 @@ public class Ticket {
     }
 
     // Add a product to the ticket, if the product already exists increments its amount
+    //if ticket add (Product prod, int amount) -p <personalizacion>
+    public void addPersonalized(Product prod, int amount, String [] personalized)
+    {
+        //if the product can be personalized
+        if (prod.isPersonalizable()){
+            if (amount == ZERO){
+                return;
+            }
+            double total = ZERO;
+            for(int value: this.list.values()){
+                total = total + value + (0.1 * value);
+             }
+            //we see how many products are in list
+            if(total + amount <= MAX_SIZE) {
+                this.list.put(prod, this.list.containsKey(prod) ? this.list.get(prod) + amount : amount);
+                Categories category = prod.getCategory();
+                this.categories.put(category, this.categories.containsKey(category) ? this.categories.get(category) + 1 : 1);
+            }
+        }
+
+    }
+
+    // Add a product to the ticket, if the product already exists increments its amount
     public void add(Product prod, int amount){
         if (amount == ZERO){
             return;
