@@ -1,4 +1,6 @@
-package etsisi.upm.models;
+package etsisi.upm.models.users;
+
+import etsisi.upm.util.IdGenerator;
 
 import java.util.Objects;
 import java.util.Set;
