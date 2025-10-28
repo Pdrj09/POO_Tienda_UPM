@@ -72,6 +72,7 @@ public class Menu {
     private static final String REGEX_BLANK_SPACE = "\\s*";
     private static final String REGEX_DOUBLE_QUOTE = "\"";
     private static final String REGEX_TO_SPLIT = " (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
+    private static final String REGEX_PERSONALIZED = "(?=(?:[--p]*))";
 
 
     // products const
