@@ -200,7 +200,6 @@ public class Menu {
             if (querySplit [ querySplit.length -1].contains("-p") ){
                 for(int i = THREE; i < querySplit.length ; i++){
                     //TODO NECESITAMOS UN NUEVO QUERY que elimine el --p y que separe por ellos
-
                 }
                 //TODO controller.addPersonalizedProductToTicket
 
