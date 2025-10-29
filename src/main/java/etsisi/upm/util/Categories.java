@@ -1,4 +1,4 @@
-package etsisi.upm.models;
+package etsisi.upm.util;
 
 
 public enum Categories {
