@@ -72,6 +72,8 @@ public class Menu {
     private static final String REGEX_BLANK_SPACE = "\\s*";
     private static final String REGEX_DOUBLE_QUOTE = "\"";
     private static final String REGEX_TO_SPLIT = " (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
+    private static final String REGEX_PERSONALIZED = "(?=(?:[--p]*))";
+
 
     // products const
     private static final String PRODUCT_ADD = "add";
@@ -183,7 +185,7 @@ public class Menu {
             }
         }
     }
-
+    //TODO MIRAR PORQUE VA A HABER UN NUEVO PARAMETRO SIENDO EL TICKET CON EL QUE ESTAMOS TRABAJANDO
     private void ticketQuery(String query) {
         if (query.contains(TICKET_ADD)) {
 
@@ -193,9 +195,17 @@ public class Menu {
 
             int quantity = Integer.parseInt(querySplit[TWO]);
 
+            String newTicket = "";
+            //if it is a personalized prod
+            if (querySplit [ querySplit.length -1].contains("-p") ){
+                for(int i = THREE; i < querySplit.length ; i++){
+                    //TODO NECESITAMOS UN NUEVO QUERY que elimine el --p y que separe por ellos
+                }
+                //TODO controller.addPersonalizedProductToTicket
 
-            String newTicket = controller.addProductToTicket(id, quantity);
-
+            }else {
+                 newTicket =  controller.addProductToTicket(id, quantity);
+            }
             if (newTicket != null) {
                 System.out.println(newTicket);
                 System.out.println(okStatus(TICKET, TICKET_ADD));

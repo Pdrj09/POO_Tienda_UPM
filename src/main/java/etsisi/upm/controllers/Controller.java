@@ -73,6 +73,12 @@ public class Controller {
         }
         return ticket.toString();
     }
+    public String addPersonalicedProductToTicket(int prodId , int amount, String[] personalizations){
+        if (products.containsKey(prodId)) {
+            ticket.addPersonalized(products.get(prodId), amount,personalizations);
+        }
+        return ticket.toString();
+    }
 
     public boolean removeProductFromTicket(int prodId) {
         if (products.containsKey(prodId)) {
