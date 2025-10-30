@@ -1,8 +1,6 @@
 package etsisi.upm.models;
 
-
 import etsisi.upm.util.Categories;
-
 import java.util.Objects;
 
 //We asign the variables
@@ -11,6 +9,9 @@ public class Product implements Comparable<Product> {
     private String name;
     private double price;
     private Categories category;
+    private boolean personalizable;
+    private int maxPers;
+
 //Variables to avoid magic numbers
     private static final String OPEN_BRACE = "{";
     private static final String STR_PRODUCT = "class:Product";
@@ -29,8 +30,18 @@ public class Product implements Comparable<Product> {
         this.name = name;
         this.price = price;
         this.category = category;
+        this.personalizable = false;
     }
-
+    //if it has maxpers we consider that the product can be personalized
+    public Product(int id, String name, double price, Categories category, int maxPers ) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.category = category;
+        this.personalizable = false;
+        this.maxPers = maxPers;
+        this.personalizable = true;
+    }
     // update certain characteristics of product
     public int update(String name, Categories category, double price) {
         this.name = name;
@@ -66,7 +77,9 @@ public class Product implements Comparable<Product> {
         return Objects.hashCode(id);
     }
     //It returns the value of id characters
-
+    public boolean isPersonalizable(){
+       return  this.personalizable;
+    }
     //getters and setters
     public int getId() {
         return id;
