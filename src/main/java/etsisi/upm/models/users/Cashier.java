@@ -7,11 +7,9 @@ import java.util.Set;
 import java.util.TreeSet;
 
 //REPRESENTS A CASHIER IN THE SYSTEM
-public class Cashier implements Comparable<Cashier>{
-    private final String id; //unique id (UW + 7digits)
-    private String name;
-    private String emailCompany;
+public class Cashier extends User implements Comparable<Cashier>{
     private final Set<String> tickets; //tickets' IDs created by the cashier
+    private final Set<Client> associatedClients;
 
     //CONSTANT FOR THE toSTRING
     private static final String OPEN_BRACE = "{";
@@ -27,56 +25,44 @@ public class Cashier implements Comparable<Cashier>{
 
     //CONSTRUCTOR W/ AUTOMATIC ID GENERATION
     public Cashier(String emailCompany, String name) {
-        this.id = IdGenerator.generateCashierId();
-        this.name = name;
-        this.emailCompany = emailCompany;
+        super(IdGenerator.generateCashierId(), name, emailCompany);
         this.tickets = new TreeSet<>(); //for sorted it
+        this.associatedClients = new TreeSet<>();
     }
 
     //CONSTRUCTOR W/ MANUAL ID
     public Cashier(String id, Set<String> tickets, String emailCompany, String name) {
-        if (id == null || id.isEmpty())
-            this.id = IdGenerator.generateCashierId();
-        else{
-            if (IdGenerator.isUsed(id))
-                throw new IllegalArgumentException("Ya existe un cajero con ID: " + id);
-            this.id = id;
-            IdGenerator.registerId(id);
-        }
-        this.tickets = new TreeSet<>();
-        this.emailCompany = emailCompany;
-        this.name = name;
+        super((id == null || id.isEmpty()) ? IdGenerator.generateCashierId() : id, name, emailCompany);
+        if (IdGenerator.isUsed(getId()))
+            throw new IllegalArgumentException("Ya existe un cajero con ID: " + getId());
+        IdGenerator.registerId(getId());
+        if (tickets == null)
+            this.tickets = new TreeSet<>();
+        else
+            this.tickets = new TreeSet<>(tickets);
+        this.associatedClients = new TreeSet<>();
     }
 
     //PUBLIC METHODS
-    public String getId() {
-        return id;
-    }
-
     public Set<String> getTickets() {
         return tickets;
     }
 
-    public String getEmailCompany() {
-        return emailCompany;
+    public Set<Client> getAssociatedClients() {
+        return associatedClients;
     }
 
-    public void setEmailCompany(String emailCompany) {
-        this.emailCompany = emailCompany;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void addClient(Client client) {
+        if (client != null) {
+            associatedClients.add(client);
+            client.setCashier(this); // relación bidireccional
+        }
     }
 
     //COMPARABLE (name)
     @Override
     public int compareTo(Cashier o) {
-        return this.name.compareToIgnoreCase(o.name);
+        return this.getName().compareToIgnoreCase(o.getName());
     }
 
     //EQUALS AND HASHCODE
@@ -87,22 +73,22 @@ public class Cashier implements Comparable<Cashier>{
         if (o == null || getClass() != o.getClass())
             return false;
         Cashier c = (Cashier) o;
-        return id.equals(c.id);
+        return getId().equals(c.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(getId());
     }
 
-    //TO STRING
+    //TO STRING, getter for mantaining "encapsulacion"
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(OPEN_BRACE)
-                .append(STR_CASHIER).append(STR_ID).append(id)
-                .append(STR_NAME).append(name).append(QUOTE)
-                .append(STR_EMAIL).append(emailCompany).append(QUOTE)
+                .append(STR_CASHIER).append(STR_ID).append(getId())
+                .append(STR_NAME).append(getName()).append(QUOTE)
+                .append(STR_EMAIL).append(getEmail()).append(QUOTE)
                 .append(STR_TICKETS).append(tickets)
                 .append(CLOSE_BRACE);
         return sb.toString();
