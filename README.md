@@ -1,6 +1,6 @@
-Aqui voy a poner las cosas que hay que hacer:<br>
+COSITAS QUE HACER:<br>
 + Arreglar problemas antiguos<br>
-+ Corregir UML errores defensa<br> <strong>HECHO</strong>
++ Corregir UML errores defensa <strong>HECHO</strong><br>
 + Nuevas clases - clientes <strong>HECHO</strong><br>
                 - cajeros <strong>HECHO</strong><br>
                  se tienen que poder dar de alta y de baja <br>      
