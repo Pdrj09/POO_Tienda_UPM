@@ -1,6 +1,6 @@
 package etsisi.upm.models;
 
-
+import etsisi.upm.util.Categories;
 import java.util.Objects;
 
 //We asign the variables

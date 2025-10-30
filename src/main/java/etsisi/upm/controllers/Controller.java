@@ -1,6 +1,6 @@
 package etsisi.upm.controllers;
 
-import etsisi.upm.models.Categories;
+import etsisi.upm.util.Categories;
 import etsisi.upm.models.Product;
 import etsisi.upm.models.Ticket;
 
