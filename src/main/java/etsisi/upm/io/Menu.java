@@ -16,6 +16,7 @@ public class Menu {
     private static final int TWO = 2;
     private static final int THREE = 3;
     private static final int FOUR = 4;
+    private static final int FIVE = 5;
 
     /// messages and help
     //This is the welcome message it is printed when you start the program
@@ -126,11 +127,18 @@ public class Menu {
                 String name = querySplit[TWO].replace(REGEX_DOUBLE_QUOTE, STR_EMPTY);
 
                 float price = Float.parseFloat(querySplit[FOUR].replace(STR_COMMA, STR_DOT));
+                String response = new String();
 
+                //if (querySplit.length >= FIVE){
+                //    int maxPers = Integer.parseInt(querySplit[FIVE]);
+                    //TODO addProductPersonaliced(name, querySplit[THREE], price, id, maxPers)
+                   // response = controller.addProductPersonalized(name, querySplit[THREE], price, id, maxPers);
+                //    System.out.println(response);
+                //}else {
 
-                String response = controller.addProduct(name, querySplit[THREE], price, id);
-                System.out.println(response);
-
+                    response = controller.addProduct(name, querySplit[THREE], price, id);
+                    System.out.println(response);
+                //}
                 if (!response.startsWith(STR_ERROR)) {
                     System.out.println(okStatus(PROD, PRODUCT_ADD));
                 }
@@ -199,7 +207,7 @@ public class Menu {
             //if it is a personalized prod
             if (querySplit [querySplit.length-1].contains("--p") ){
                 String[] queryPersonalized = querySplit[THREE].split(REGEX_TO_SPLIT);
-                controller.addPersonalicedProductToTicket(id, quantity,queryPersonalized);
+                newTicket = controller.addPersonalicedProductToTicket(id, quantity,queryPersonalized);
             }else {
                  newTicket =  controller.addProductToTicket(id, quantity);
             }

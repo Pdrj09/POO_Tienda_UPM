@@ -33,7 +33,7 @@ public class Product implements Comparable<Product> {
         this.personalizable = false;
     }
     //if it has maxpers we consider that the product can be personalized
-    public Product(int id, String name, double price, Categories category,int maxPers ) {
+    public Product(int id, String name, double price, Categories category, int maxPers ) {
         this.id = id;
         this.name = name;
         this.price = price;
