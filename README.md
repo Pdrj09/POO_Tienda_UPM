@@ -1,4 +1,4 @@
-Aqui voy a poner las cosas que hay que hacer:
+Aqui voy a poner las cosas que hay que hacer:<br>
 Arreglar problemas antiguos
 Nueva clase Usuario con - clientes
                         - usuarios
