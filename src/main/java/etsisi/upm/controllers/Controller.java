@@ -12,7 +12,7 @@ public class Controller {
     private final Ticket ticket;
     private int totalProducts;
 
-    private static final String ERROR_CREATTE_PRODUCT = "Error al crear el producto";
+    private static final String ERROR_CREATE_PRODUCT = "Error al crear el producto";
     private static final String NAME = "NAME";
     private static final String CATEGORY = "CATEGORY";
     private static final String PRICE = "PRICE";
@@ -39,8 +39,17 @@ public class Controller {
             products.put(product.getId(), product);
             this.totalProducts++;
             return product.toString();
-        } else return ERROR_CREATTE_PRODUCT;
+        } else return ERROR_CREATE_PRODUCT;
     }
+    public String addProductPersonaliced(String name, String category, double price, int id , int maxPers) {
+        Product product;
+        if (Categories.existCategory(category)) {
+            product = new Product(id, name, price, Categories.valueOf(category),maxPers);
+            products.put(product.getId(), product);
+            return product.toString();
+        } else return ERROR_CREATE_PRODUCT;
+    }
+
 
     public String updateProduct(int id, String field, String newContent) {
         if (this.products.get(id) == null) return null;
@@ -81,7 +90,7 @@ public class Controller {
     }
     public String addPersonalicedProductToTicket(int prodId , int amount, String[] personalizations){
         if (products.containsKey(prodId)) {
-            ticket.addPersonalized(products.get(prodId), amount,personalizations);
+            ticket.addPersonalized(products.get(prodId), amount ,personalizations);
         }
         return ticket.toString();
     }
