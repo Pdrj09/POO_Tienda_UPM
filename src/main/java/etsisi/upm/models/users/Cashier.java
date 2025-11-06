@@ -44,18 +44,19 @@ public class Cashier extends User implements Comparable<Cashier>{
     }
 
     //PUBLIC METHODS
+    //this two methods returns an INMUTABLE copy for more protection
     public Set<String> getTickets() {
-        return tickets;
+        return Set.copyOf(tickets);
     }
-
     public Set<Client> getAssociatedClients() {
-        return associatedClients;
+        return Set.copyOf(associatedClients);
     }
 
     public void addClient(Client client) {
-        if (client != null) {
+        if (client != null && !associatedClients.contains(client)) {
             associatedClients.add(client);
-            client.setCashier(this); // relación bidireccional
+            if (client.getCashier() != this)
+                client.assignCashier(this); // relación bidireccional
         }
     }
 
