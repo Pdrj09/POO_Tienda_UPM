@@ -129,16 +129,16 @@ public class Menu {
                 float price = Float.parseFloat(querySplit[FOUR].replace(STR_COMMA, STR_DOT));
                 String response = new String();
 
-                //if (querySplit.length >= FIVE){
-                //    int maxPers = Integer.parseInt(querySplit[FIVE]);
+                if (querySplit.length >= FIVE){
+                    int maxPers = Integer.parseInt(querySplit[FIVE]);
                     //TODO addProductPersonaliced(name, querySplit[THREE], price, id, maxPers)
-                   // response = controller.addProductPersonalized(name, querySplit[THREE], price, id, maxPers);
-                //    System.out.println(response);
-                //}else {
+                    response = controller.addProductPersonaliced(name, querySplit[THREE], price, id, maxPers);
+                   System.out.println(response);
+                }else {
 
                     response = controller.addProduct(name, querySplit[THREE], price, id);
                     System.out.println(response);
-                //}
+                }
                 if (!response.startsWith(STR_ERROR)) {
                     System.out.println(okStatus(PROD, PRODUCT_ADD));
                 }
@@ -207,7 +207,7 @@ public class Menu {
             //if it is a personalized prod
             if (querySplit [querySplit.length-1].contains("--p") ){
                 String[] queryPersonalized = querySplit[THREE].split(REGEX_TO_SPLIT);
-                newTicket = controller.addPersonalicedProductToTicket(id, quantity,queryPersonalized);
+                newTicket = controller.addPersonalicedProductToTicket(id, quantity, queryPersonalized);
             }else {
                  newTicket =  controller.addProductToTicket(id, quantity);
             }
