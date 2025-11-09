@@ -10,8 +10,9 @@ public class Controller {
 
     private final HashMap<Integer, Product> products;
     private final Ticket ticket;
+    private int totalProducts;
 
-    private static final String ERROR_CREATTE_PRODUCT = "Error al crear el producto";
+    private static final String ERROR_CREATE_PRODUCT = "Error al crear el producto";
     private static final String NAME = "NAME";
     private static final String CATEGORY = "CATEGORY";
     private static final String PRICE = "PRICE";
@@ -20,22 +21,35 @@ public class Controller {
     private static final String CATALOG = "Catalog:\n";
     private static final String NEXT_LINE = "\n";
     private static final String TAB_SPACE = "\t";
+    private static final int MAX_SIZE = 200;
+
 
     public Controller() {
         this.products = new HashMap<>();
         this.ticket = new Ticket();
+        this.totalProducts=0;
     }
 
     //here we add a new product to the hashmap of products
     //return true if it didn't exist, else false
     public String addProduct(String name, String category, double price, int id) {
         Product product;
-        if (Categories.existCategory(category)) {
+        if (Categories.existCategory(category) && this.totalProducts<MAX_SIZE) {
             product = new Product(id, name, price, Categories.valueOf(category));
             products.put(product.getId(), product);
+            this.totalProducts++;
             return product.toString();
-        } else return ERROR_CREATTE_PRODUCT;
+        } else return ERROR_CREATE_PRODUCT;
     }
+    public String addProductPersonaliced(String name, String category, double price, int id , int maxPers) {
+        Product product;
+        if (Categories.existCategory(category)) {
+            product = new Product(id, name, price, Categories.valueOf(category),maxPers);
+            products.put(product.getId(), product);
+            return product.toString();
+        } else return ERROR_CREATE_PRODUCT;
+    }
+
 
     public String updateProduct(int id, String field, String newContent) {
         if (this.products.get(id) == null) return null;
@@ -63,6 +77,7 @@ public class Controller {
     public String deleteProduct(int prodId) {
         if (products.containsKey(prodId)) {
             ticket.remove(products.get(prodId));
+            this.totalProducts--;
             return products.remove(prodId).toString();
         } else return null;
     }
@@ -75,7 +90,7 @@ public class Controller {
     }
     public String addPersonalicedProductToTicket(int prodId , int amount, String[] personalizations){
         if (products.containsKey(prodId)) {
-            ticket.addPersonalized(products.get(prodId), amount,personalizations);
+            ticket.addPersonalized(products.get(prodId), amount ,personalizations);
         }
         return ticket.toString();
     }
