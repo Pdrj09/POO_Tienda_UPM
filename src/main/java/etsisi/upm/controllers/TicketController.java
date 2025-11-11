@@ -1,0 +1,56 @@
+package etsisi.upm.controllers;
+
+import etsisi.upm.models.Product;
+import etsisi.upm.models.Ticket;
+import etsisi.upm.models.repositories.TicketRepository;
+
+import java.util.List;
+
+public class TicketController {
+    private final TicketRepository ticketRepository;
+    //TODO implement -- añadir los repositorios de user y product
+    private final UserRepository userRepository;
+    private final ProductRepository productRepository;
+
+    public TicketController(TicketRepository ticketRepository, UserRepository userRepository, ProductRepository productRepository) {
+        this.ticketRepository = ticketRepository;
+        this.userRepository = userRepository;
+        this.productRepository = productRepository;
+    }
+
+    public void newTicket(String ticketId, String cashierId, String clientId){
+        Ticket ticket = new Ticket(ticketId);
+        this.ticketRepository.add(ticket);
+    }
+
+    public void newTicket(String cashierId, String clientId){
+        Ticket ticket = new Ticket();
+        this.ticketRepository.add(ticket);
+    }
+
+    public void addProductToTicket(String ticketId, String cahsierId, String productId, int amount, List<String> customizations){
+     //TODO implement -- crear el repositorio de products y llamar findById
+        // -- customitations?
+        Ticket ticket = this.ticketRepository.findById(cahsierId);
+        Product product = this.productRepository.findById(productId);
+        ticket.add(product,amount);
+    }
+
+    public void removeProductFromTicket(String ticketId, String cahsierId, String productId){
+        //TODO implement -- crear el repositorio de products y llamar a findById
+        Ticket ticket = this.ticketRepository.findById(cahsierId);
+        Product product = this.productRepository.findById(productId);
+        ticket.remove(product);
+    }
+
+    public String printTicket(String ticketId, String cahsierId){
+        Ticket ticket = this.ticketRepository.findById(cahsierId);
+        closeTicket(ticket);
+        return ticket.toString();
+    }
+
+    private void closeTicket(Ticket ticket){
+        ticket.close();
+    }
+
+}

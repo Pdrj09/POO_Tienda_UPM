@@ -37,18 +37,29 @@ public class Client extends User implements Comparable<Client> {
         this.cashier.addClient(this);
     }
 
-    //GETTERS AND SETTERS, public methods
+    //GETTERS, public methods
     public Set<Ticket> getAssociatedTickets() {
         return associatedTickets;
     }
-
     public Cashier getCashier() {
         return cashier;
     }
 
-    public void setCashier(Cashier cashier) {
-        this.cashier = cashier;
+    //METHODS FOR MANAGING TICKETS
+    public void addTicket(Ticket ticket){
+        if (ticket != null)
+            associatedTickets.add(ticket);
     }
+
+    public void removeTicket(Ticket ticket){
+        associatedTickets.remove(ticket);
+    }
+
+    void assignCashier (Cashier cashier){
+        if (this.cashier == null)
+            this.cashier = cashier;
+    }
+
 
     //COMPARABLE BY NAME
     @Override
