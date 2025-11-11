@@ -11,7 +11,6 @@ public class Ticket {
 
     //Stores the list of products and their quantities in the current transaction
     private String id;
-    private final LocalDateTime creationDate;
     private LocalDateTime closeDate;
     private TicketStates state;
 
