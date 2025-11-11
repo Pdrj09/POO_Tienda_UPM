@@ -30,20 +30,23 @@ public class Ticket {
 
     public Ticket() {
         this(String.format("%05d", (int) (Math.random() * 100000)));
+        //ESTO SOLO DEVUELVE UN NUMERO ALEATORIO COMO ID SIN LA FECHA; SIN TREEMAP, SIN HASHMAP Y SIN STATE
+        //Por lo que este tichet una vez creado es inutil ya que no puedes llamar luego al otro constructor
+
     }
 
+
     public Ticket(String id){
-        this.creationDate = LocalDateTime.now();
-        String formattedDate = formatDate(this.creationDate);
-        this.id = formattedDate+"-"+id;
+
+        LocalDateTime now = LocalDateTime.now();
+        String formatted = formatDate(now);
+        this.id = formatted + "-" +id;
         this.list = new TreeMap<>();
         this.categories = new HashMap<>();
         this.state = TicketStates.EMPTY;
 
     }
 
-    //TODO: reformatear -- convertir el formato de fecha en una constante
-    // ¿pasar el método a clase utilidades?
     public static String formatDate(LocalDateTime date){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd-HH:mm");
         return date.format(formatter);
