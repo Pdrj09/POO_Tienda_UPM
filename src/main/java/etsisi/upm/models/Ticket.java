@@ -69,16 +69,26 @@ public class Ticket {
                 return;
             }
             double total = ZERO;
+
             for(int value: this.list.values()){
                 total = total + value + (0.1 * value);
              }
+            StringBuilder personalizations = new StringBuilder();
+
+            for (int i = 0; i < personalized.length; i++) {
+                personalizations.append(personalized[i]);
+                personalizations.append(" ");
+            }
             //we see how many products are in list
             if(total + amount <= MAX_SIZE) {
-                this.list.put(prod, this.list.containsKey(prod) ? this.list.get(prod) + amount : amount);
+                //TODO Hacer que un producto tenga las personalizaciones guardadas en el ticket
+                this.list.put(prod, this.list.getOrDefault(prod, ZERO) + amount);
                 Categories category = prod.getCategory();
-                this.categories.put(category, this.categories.containsKey(category) ? this.categories.get(category) + 1 : 1);
+                this.categories.put(category, this.categories.getOrDefault(category, ZERO) + amount);
                 this.state=TicketStates.ACTIVE;
             }
+        }else{
+            throw new IllegalArgumentException("You cant personalice a product that is not personalizable");
         }
 
     }
@@ -95,9 +105,9 @@ public class Ticket {
         }
         //we see how many products are in list
         if(total + amount <= MAX_SIZE) {
-            this.list.put(prod, this.list.containsKey(prod) ? this.list.get(prod) + amount : amount);
+            this.list.put(prod, this.list.getOrDefault(prod, ZERO) + amount);
             Categories category = prod.getCategory();
-            this.categories.put(category, this.categories.containsKey(category) ? this.categories.get(category) + 1 : 1);
+            this.categories.put(category, this.categories.getOrDefault(category, ZERO) + amount);
             this.state=TicketStates.ACTIVE;
         }
 
