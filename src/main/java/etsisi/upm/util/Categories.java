@@ -7,7 +7,8 @@ public enum Categories {
     STATIONERY(0.05),//5%
     CLOTHES(0.07),//7%
     BOOK(0.1),//10%
-    ELECTRONICS(0.03);//3%
+    ELECTRONICS(0.03),//3%
+    EMPTY(0.0);
     private final double discount;
 
     Categories(double discount) {
