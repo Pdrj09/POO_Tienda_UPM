@@ -1,5 +1,6 @@
 package etsisi.upm.controllers;
 
+import etsisi.upm.models.Ticket;
 import etsisi.upm.models.repositories.CashierRepository;
 import etsisi.upm.models.repositories.Repository;
 import etsisi.upm.models.repositories.RepositoryInterface;
@@ -7,6 +8,7 @@ import etsisi.upm.models.users.Cashier;
 
 import java.util.Collection;
 import java.util.Random;
+import java.util.Set;
 
 public class CashierController {
     private static final Random ramdon = new Random();
@@ -49,6 +51,10 @@ public class CashierController {
 
     public Collection<Cashier> listCashiers() {
         return repository.findAll();
+    }
+
+    public Set<String> listTickets(String cashierId) {
+        return repository.findById(cashierId).getTickets();
     }
 
     private String generateCashierId(){
