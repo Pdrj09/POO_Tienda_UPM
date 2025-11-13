@@ -131,7 +131,7 @@ public class Menu {
 
                 if (querySplit.length > FIVE){
                     int maxPers = Integer.parseInt(querySplit[FIVE]);
-                    response = controller.addProductPersonaliced(name, querySplit[THREE], price, id, maxPers);
+                    response = controller.addProduct(name, querySplit[THREE], price, id, maxPers);
                    System.out.println(response);
                 }else {
 

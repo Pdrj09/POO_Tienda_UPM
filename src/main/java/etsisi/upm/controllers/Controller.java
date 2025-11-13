@@ -41,7 +41,7 @@ public class Controller {
             return product.toString();
         } else return ERROR_CREATE_PRODUCT;
     }
-    public String addProductPersonaliced(String name, String category, double price, int id , int maxPers) {
+    public String addProduct(String name, String category, double price, int id , int maxPers) {
         Product product;
         if (Categories.existCategory(category)) {
             product = new Product(id, name, price, Categories.valueOf(category),maxPers);
