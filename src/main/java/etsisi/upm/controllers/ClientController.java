@@ -34,4 +34,8 @@ public class ClientController {
     public Client removeClients(String id) {
         return repository.removeById(id);
     }
+
+    public Collection<Client> listClients() {
+        return repository.findAll();
+    }
 }
