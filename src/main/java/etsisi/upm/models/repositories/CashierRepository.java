@@ -6,10 +6,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CashRepository implements RepositoryInterface<Cashier> {
+public class CashierRepository implements RepositoryInterface<Cashier> {
     private final Map<String, Cashier> cashierMap;
 
-    public CashRepository() {
+    public CashierRepository() {
         this.cashierMap = new HashMap<>();
     }
 
