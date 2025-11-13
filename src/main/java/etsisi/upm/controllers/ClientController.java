@@ -31,4 +31,7 @@ public class ClientController {
     }
 
 
+    public Client removeClients(String id) {
+        return repository.removeById(id);
+    }
 }
