@@ -11,4 +11,5 @@ COSITAS QUE HACER:<br>
 + Ahora puede haber mas de un ticket a la vez<br> 
 
 + Productos Originales PERSONALIZACION <br> 
-+ aumenta un 10% el precio<br> 
++ aumenta un 10% el precio<br>
++ Manejo de errores 
