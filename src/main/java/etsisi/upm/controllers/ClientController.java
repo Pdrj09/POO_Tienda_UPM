@@ -1,13 +1,12 @@
 package etsisi.upm.controllers;
 
 import etsisi.upm.models.repositories.Repository;
-import etsisi.upm.models.users.Cashier;
 import etsisi.upm.models.users.Client;
 
 import java.util.Collection;
 
 public class ClientController {
-    private static final Repository<String, Client> repository new Repository<>();
+    private static final Repository<String, Client> repository = new Repository<>();
     private static final String DUPLICATED_ID_ERROR  = "El id pasado como pararametro ya existe, añada otro";
     private static final String CASIER_NOT_EXIST  = "El casier dado no existe";
 
