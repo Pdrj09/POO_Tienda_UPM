@@ -125,6 +125,7 @@ public class Ticket {
         this.closeDate = LocalDateTime.now();
         String date = formatDate(this.closeDate);
         this.id+="-"+date;
+        this.state = TicketStates.CLOSED;
         return this.getId();
     }
 
