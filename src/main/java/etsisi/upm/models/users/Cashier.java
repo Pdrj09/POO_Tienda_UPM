@@ -46,6 +46,10 @@ public class Cashier extends User implements Comparable<Cashier>{
 
     //PUBLIC METHODS
     //this two methods returns an INMUTABLE copy for more protection
+    // TODO use other class as ED like SortedSet<String> to get a order list of tickets
+    // TODO fuera de usar ingles q se me da mal, seguramente y tal y como tenemos aqui todo
+    // TODO metería que esto fuera una relacon con la calse ticket real ya que necesitamos ordenar por id
+    // TODO y va a ser 1000 veces más facil asi y por lo q nos han dicho hoy la cohesion (creo q se llamaba xd) de las cosas ñe
     public Set<String> getTickets() {
         return Set.copyOf(tickets);
     }
