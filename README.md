@@ -1,5 +1,5 @@
 COSITAS QUE HACER:<br>
-+ Arreglar problemas antiguos<br>
++ Arreglar problemas antiguos <strong>HECHO</strong><br>
 + Corregir UML errores defensa <strong>HECHO</strong><br>
 + Nuevas clases - clientes <strong>HECHO</strong><br>
                 - cajeros <strong>HECHO</strong><br>
