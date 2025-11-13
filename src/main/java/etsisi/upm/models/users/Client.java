@@ -8,7 +8,7 @@ import java.util.TreeSet;
 
 //REPRESENTS DE CLIENT IN THE SYSTEM
 public class Client extends User implements Comparable<Client> {
-    private Cashier cashier;
+    private String strIdCashier;
     private final Set<Ticket> associatedTickets;
 
     //CONSTANTS
@@ -23,43 +23,22 @@ public class Client extends User implements Comparable<Client> {
 
 
     //CONSTRUCTOR W/ ALL PARAMETERS
-    public Client(String dni, String name, String email, Cashier cashier, Set<Ticket> associatedTickets) {
+    public Client(String dni, String name, String email, String idCashier) {
         super(dni, name, email);
         if(dni == null || dni.isEmpty())
             throw new IllegalArgumentException("El DNI no puede estar vacío");
-        if (cashier == null)
-            throw new IllegalArgumentException("El cajero asociado no puede ser nulo");
-        if (associatedTickets == null)
-            this.associatedTickets = new TreeSet<>();
-        else
-            this.associatedTickets = new TreeSet<>(associatedTickets);
-        this.cashier = cashier;
-        this.cashier.addClient(this);
+        this.associatedTickets = new TreeSet<>();
+        this.strIdCashier = idCashier;
     }
 
     //GETTERS, public methods
     public Set<Ticket> getAssociatedTickets() {
         return associatedTickets;
     }
-    public Cashier getCashier() {
-        return cashier;
-    }
 
-    //METHODS FOR MANAGING TICKETS
-    public void addTicket(Ticket ticket){
-        if (ticket != null)
-            associatedTickets.add(ticket);
+    public String getStrIdCashier() {
+        return strIdCashier;
     }
-
-    public void removeTicket(Ticket ticket){
-        associatedTickets.remove(ticket);
-    }
-
-    void assignCashier (Cashier cashier){
-        if (this.cashier == null)
-            this.cashier = cashier;
-    }
-
 
     //COMPARABLE BY NAME
     @Override
@@ -89,7 +68,7 @@ public class Client extends User implements Comparable<Client> {
                 .append(STR_CLIENT).append(STR_DNI).append(getId()).append(SINGLE_QUOTE)
                 .append(STR_NAME).append(getName()).append(SINGLE_QUOTE)
                 .append(STR_EMAIL).append(getEmail()).append(SINGLE_QUOTE)
-                .append(STR_CASH).append(getCashier().getId()).append(SINGLE_QUOTE)
+                .append(STR_CASH).append(getStrIdCashier()).append(SINGLE_QUOTE)
                 .append(CLOSE_BRACE);
         return sb.toString();
     }

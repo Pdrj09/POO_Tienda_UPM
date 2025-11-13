@@ -52,13 +52,6 @@ public class Cashier extends User implements Comparable<Cashier>{
         return Set.copyOf(associatedClients);
     }
 
-    public void addClient(Client client) {
-        if (client != null && !associatedClients.contains(client)) {
-            associatedClients.add(client);
-            if (client.getCashier() != this)
-                client.assignCashier(this); // relación bidireccional
-        }
-    }
 
     //COMPARABLE (name)
     @Override
