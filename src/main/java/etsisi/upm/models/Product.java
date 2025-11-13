@@ -77,6 +77,8 @@ public class Product implements Comparable<Product> {
         return Objects.hashCode(id);
     }
     //It returns the value of id characters
+
+
     public boolean isPersonalizable(){
        return  this.personalizable;
     }
@@ -87,10 +89,6 @@ public class Product implements Comparable<Product> {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public void setPrice(double price) {

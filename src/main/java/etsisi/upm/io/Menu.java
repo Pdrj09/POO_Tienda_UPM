@@ -129,9 +129,8 @@ public class Menu {
                 float price = Float.parseFloat(querySplit[FOUR].replace(STR_COMMA, STR_DOT));
                 String response = new String();
 
-                if (querySplit.length >= FIVE){
+                if (querySplit.length > FIVE){
                     int maxPers = Integer.parseInt(querySplit[FIVE]);
-                    //TODO addProductPersonaliced(name, querySplit[THREE], price, id, maxPers)
                     response = controller.addProductPersonaliced(name, querySplit[THREE], price, id, maxPers);
                    System.out.println(response);
                 }else {
@@ -193,7 +192,6 @@ public class Menu {
             }
         }
     }
-    //TODO MIRAR PORQUE VA A HABER UN NUEVO PARAMETRO SIENDO EL TICKET CON EL QUE ESTAMOS TRABAJANDO
     private void ticketQuery(String query) {
         if (query.contains(TICKET_ADD)) {
 
@@ -205,6 +203,7 @@ public class Menu {
 
             String newTicket = "";
             //if it is a personalized prod
+
             if (querySplit [querySplit.length-1].contains("--p") ){
                 String[] queryPersonalized = querySplit[THREE].split(REGEX_TO_SPLIT);
                 newTicket = controller.addPersonalicedProductToTicket(id, quantity, queryPersonalized);
