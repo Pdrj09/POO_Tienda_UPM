@@ -25,6 +25,7 @@ public class Cashier extends User implements Comparable<Cashier>{
 
     //CONSTRUCTOR W/ AUTOMATIC ID GENERATION
     public Cashier(String emailCompany, String name) {
+        //TODO esto tiene que ir por fuera, aqui no tiene sentido aumentas una clase que ya existe en el controller
         super(IdGenerator.generateCashierId(), name, emailCompany);
         this.tickets = new TreeSet<>(); //for sorted it
         this.associatedClients = new TreeSet<>();
