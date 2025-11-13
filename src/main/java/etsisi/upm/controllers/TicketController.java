@@ -2,19 +2,21 @@ package etsisi.upm.controllers;
 
 import etsisi.upm.models.Product;
 import etsisi.upm.models.Ticket;
-import etsisi.upm.models.repositories.TicketRepository;
+import etsisi.upm.models.repositories.*;
 
 import java.util.List;
 
 public class TicketController {
     private final TicketRepository ticketRepository;
     //TODO implement -- añadir los repositorios de user y product
-    private final UserRepository userRepository;
+    private final ClientRepository clientRepository;
+    private final CashierRepository cashierRepository;
     private final ProductRepository productRepository;
 
-    public TicketController(TicketRepository ticketRepository, UserRepository userRepository, ProductRepository productRepository) {
+    public TicketController(TicketRepository ticketRepository, ClientRepository clientRepository, CashierRepository cashierRepository, ProductRepository productRepository) {
         this.ticketRepository = ticketRepository;
-        this.userRepository = userRepository;
+        this.clientRepository = clientRepository;
+        this.cashierRepository = cashierRepository;
         this.productRepository = productRepository;
     }
 
@@ -37,14 +39,13 @@ public class TicketController {
     }
 
     public void removeProductFromTicket(String ticketId, String cahsierId, String productId){
-        //TODO implement -- crear el repositorio de products y llamar a findById
         Ticket ticket = this.ticketRepository.findById(cahsierId);
         Product product = this.productRepository.findById(productId);
         ticket.remove(product);
     }
 
     public String printTicket(String ticketId, String cahsierId){
-        Ticket ticket = this.ticketRepository.findById(cahsierId);
+        Ticket ticket = this.ticketRepository.findById(ticketId);
         closeTicket(ticket);
         return ticket.toString();
     }
