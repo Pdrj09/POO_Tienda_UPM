@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class CashierController {
     private static final Random ramdon = new Random();
-    private final Repository<String, Cashier> repository;
+    private static final Repository<String, Cashier> repository = new Repository<>();
 
     private static final String CASHIER_PREFIX = "UW";
     private static final String CASH_REGEX = "%s%07d";
@@ -17,7 +17,6 @@ public class CashierController {
     private static final String DUPLICATED_ID_ERROR  = "El id pasado como pararametro ya existe, añada otro";
 
     public CashierController() {
-        repository = new Repository<>();
     }
 
     public Cashier addCash(String emailCompany, String name) {
@@ -54,7 +53,7 @@ public class CashierController {
         return repository.findById(cashierId).getTickets();
     }
 
-    public Boolean existCashier(String cashierId) {
+    public static Boolean existCashier(String cashierId) {
         return repository.findById(cashierId) != null;
     }
 
