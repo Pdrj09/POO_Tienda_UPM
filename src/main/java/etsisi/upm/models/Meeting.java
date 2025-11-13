@@ -7,12 +7,11 @@ class Meeting extends ServiceProduct {
         super(id, name, price, category);
     }
 
-    @Override
+
     public String getName() {
         return "";
     }
 
-    @Override
     String getDescription() {
         return "";
     }
