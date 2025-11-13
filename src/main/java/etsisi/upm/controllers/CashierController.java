@@ -1,9 +1,6 @@
 package etsisi.upm.controllers;
 
-import etsisi.upm.models.Ticket;
-import etsisi.upm.models.repositories.CashierRepository;
 import etsisi.upm.models.repositories.Repository;
-import etsisi.upm.models.repositories.RepositoryInterface;
 import etsisi.upm.models.users.Cashier;
 
 import java.util.Collection;
@@ -55,6 +52,10 @@ public class CashierController {
 
     public Set<String> listTickets(String cashierId) {
         return repository.findById(cashierId).getTickets();
+    }
+
+    public Boolean existCashier(String cashierId) {
+        return repository.findById(cashierId) != null;
     }
 
     private String generateCashierId(){
