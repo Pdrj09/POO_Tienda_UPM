@@ -14,5 +14,5 @@ COSITAS QUE HACER:<br>
 + aumenta un 10% el precio<br>
 + Manejo de errores
 + permite repeticion de iDS NO AVISA DEL ERROR
-+ Cambiar help
++ Cambiar help HECHO
 + Cambiar swich de update ??
