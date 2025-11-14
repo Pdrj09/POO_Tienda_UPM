@@ -48,4 +48,12 @@ public class ViewCLI {
     public static void printWellcomeMessage(){
         System.out.println(WELCOME_MESSAGE);
     }
+
+    public static void printHelp(){
+        System.out.println(COMMANDS_LIST);
+    }
+
+    public static void printExit(){
+        System.out.println(BYE);
+    }
 }

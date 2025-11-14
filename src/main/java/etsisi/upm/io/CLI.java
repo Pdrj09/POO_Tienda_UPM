@@ -73,10 +73,10 @@ public class CLI {
             this.echoCommand(query);
             //if query starts with HELP, displays help information available
         } else if (query.startsWith(HELP)) {
-            this.help();
+            ViewCLI.printHelp();
             //if query starts with EXIT prints goodbye message
         } else if (query.startsWith(EXIT)) {
-            System.out.println(BYE);
+            ViewCLI.printExit();
             return QUERY_EXIT;
             //returns 0
         }
@@ -207,9 +207,7 @@ public class CLI {
         }
     }
 
-    private void help() {
-        System.out.println(COMMANDS_LIST);
-    }
+
 
     private void echoCommand(String command) {
         System.out.println(command);
