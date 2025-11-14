@@ -18,45 +18,6 @@ public class CLI {
     private static final int FOUR = 4;
     private static final int FIVE = 5;
 
-    /// messages and help
-    //This is the welcome message it is printed when you start the program
-    private static final String WELCOME_MESSAGE = """
-            Welcome to the ticket module App.
-            Ticket module. Type 'help' to see commands.
-        """;
-
-    //this is printed when you call 'help'
-    private static final String COMMANDS_LIST = """
-            Commands:
-                    client add "<nombre>" <DNI> <email> <cashId>
-                    client remove <DNI>
-                    client list
-                    cash add [<id>] "<nombre>"<email>
-                    cash remove <id>
-                    cash list
-                    cash tickets <id>
-                    ticket new [<id>] <cashId> <userId>
-                    ticket add <ticketId><cashId> <prodId> <amount> [--p<txt> --p<txt>]\s
-                    ticket remove <ticketId><cashId> <prodId>\s
-                    ticket print <ticketId> <cashId>\s
-                    ticket list
-                    prod add <id> "<name>" <category> <price>
-                    prod update <id> NAME|CATEGORY|PRICE <value>
-                    prod addFood [<id>] "<name>" <price> <expiration:yyyy-MM-dd> <max_people>
-                    prod addMeeting [<id>] "<name>" <price> <expiration:yyyy-MM-dd> <max_people>
-                    prod list
-                    prod remove <id>
-                    help
-                    echo “<text>”
-                    exit
-            
-            """;
-    //printed when you exit the program
-    private static final String BYE = """
-            Closing application.
-            Goodbye!
-            """;
-
     private static final String OK_STATUS = "ok";  //Ok
     private static final String ERROR_STATUS = "Error"; //error
 
@@ -96,7 +57,7 @@ public class CLI {
     private static final String TICKET_REMOVE = "remove";
 
     public CLI() {
-        System.out.println(WELCOME_MESSAGE);
+        ViewCLI.printWellcomeMessage();
         this.controller = new Controller();
     }
 
