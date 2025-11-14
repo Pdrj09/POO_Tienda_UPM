@@ -15,3 +15,4 @@ COSITAS QUE HACER:<br>
 + Manejo de errores
 + permite repeticion de iDS NO AVISA DEL ERROR
 + Cambiar help
++ Cambiar swich de update ??
