@@ -17,6 +17,7 @@ public class CLI {
     private static final int THREE = 3;
     private static final int FOUR = 4;
     private static final int FIVE = 5;
+    private static final int SIX = 6;
 
     private static final String OK_STATUS = "ok";  //Ok
     private static final String ERROR_STATUS = "Error"; //error
@@ -157,23 +158,33 @@ public class CLI {
             }
         }
     }
+    /*ticket new [<id>] <cashId> <userId>
+    ticket add <ticketId><cashId> <prodId> <amount> [--p<txt> --p<txt>]
+    ticket remove <ticketId><cashId> <prodId>
+    ticket print <ticketId> <cashId>
+    ticket list*/
+
     private void ticketQuery(String query) {
+
         if (query.contains(TICKET_ADD)) {
 
+            //ticket add <ticketId><cashId> <prodId> <amount> [--p<txt> --p<txt>]
+
             String[] querySplit = query.split(REGEX_TO_SPLIT);
+            String ticketId = querySplit[ONE];
+            String cashId = querySplit[TWO];
+            int id = Integer.parseInt(querySplit[THREE]);
 
-            int id = Integer.parseInt(querySplit[ONE]);
-
-            int quantity = Integer.parseInt(querySplit[TWO]);
+            int quantity = Integer.parseInt(querySplit[FOUR]);
 
             String newTicket = "";
             //if it is a personalized prod
 
             if (querySplit [querySplit.length-1].contains("--p") ){
-                String[] queryPersonalized = querySplit[THREE].split(REGEX_TO_SPLIT);
-                newTicket = controller.addPersonalicedProductToTicket(id, quantity, queryPersonalized);
+                String[] queryPersonalized = querySplit[FIVE].split(REGEX_TO_SPLIT);
+                /// newTicket = controller.addPersonalicedProductToTicket(ticketId, cashId, id, quantity, queryPersonalized);
             }else {
-                 newTicket =  controller.addProductToTicket(id, quantity);
+                /// newTicket =  controller.addProductToTicket(ticketId, cashId, id, quantity);
             }
             if (newTicket != null) {
                 System.out.println(newTicket);
