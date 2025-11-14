@@ -28,6 +28,8 @@ public class CLI {
     private static final String TICKET = "ticket";
     private static final String ECHO = "echo";
     private static final String HELP = "help";
+    private static final String CLIENT = "client";
+    private static final String CASH = "cash";
 
     // str const
     private static final String STR_EMPTY = "";
@@ -57,6 +59,11 @@ public class CLI {
     private static final String TICKET_NEW = "new";
     private static final String TICKET_REMOVE = "remove";
 
+    // client const
+    private static final String CLIENT_ADD = "add";
+    private static final String CLIENT_REMOVE = "remove";
+    private static final String CLIENT_LIST = "list";
+
     public CLI() {
         ViewCLI.printWellcomeMessage();
         this.controller = new Controller();
@@ -80,10 +87,29 @@ public class CLI {
             ViewCLI.printExit();
             return QUERY_EXIT;
             //returns 0
+        }else if (query.startsWith(CLIENT)){
+            this.clientQuery(query);
+        }else if (query.startsWith(CASH)){
+            this.cashQuery(query);
         }
 
         return QUERY_SUCCESS;
         //returns 1
+    }
+    //client add "<nombre>" <DNI> <email> <cashId>
+    //client remove <DNI>
+    //client list
+
+    private void clientQuery(String query){
+        String[] querySplit = query.split(REGEX_TO_SPLIT);
+        if(query.contains(CLIENT_ADD)){
+            
+        }else if (query.contains(CLIENT_REMOVE)){
+
+        }else if (query.contains(CLIENT_LIST)){
+
+
+        }
     }
 
     private void prodQuery(String query) {
