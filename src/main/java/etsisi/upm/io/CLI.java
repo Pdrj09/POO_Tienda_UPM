@@ -86,16 +86,14 @@ public class CLI {
     }
 
     private void prodQuery(String query) {
+        String[] querySplit = query.split(REGEX_TO_SPLIT);
         if (query.contains(PRODUCT_ADD)) {
             try {
-
-                String[] querySplit = query.split(REGEX_TO_SPLIT);
-
                 int id = Integer.parseInt(querySplit[ONE]);
                 String name = querySplit[TWO].replace(REGEX_DOUBLE_QUOTE, STR_EMPTY);
 
                 float price = Float.parseFloat(querySplit[FOUR].replace(STR_COMMA, STR_DOT));
-                String response = new String();
+                String response;
 
                 if (querySplit.length > FIVE){
                     int maxPers = Integer.parseInt(querySplit[FIVE]);
@@ -142,7 +140,6 @@ public class CLI {
             }
         } else if (query.contains(PRODUCT_UPDATE)) {
             try {
-                String[] querySplit = query.split(REGEX_TO_SPLIT);
 
                 int id = Integer.parseInt(querySplit[ONE]);
 
