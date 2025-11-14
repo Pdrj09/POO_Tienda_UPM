@@ -165,13 +165,14 @@ public class CLI {
     ticket list*/
 
     private void ticketQuery(String query) {
+        String[] querySplit = query.split(REGEX_TO_SPLIT);
+        String ticketId = querySplit[ONE];
 
         if (query.contains(TICKET_ADD)) {
 
             //ticket add <ticketId><cashId> <prodId> <amount> [--p<txt> --p<txt>]
 
-            String[] querySplit = query.split(REGEX_TO_SPLIT);
-            String ticketId = querySplit[ONE];
+
             String cashId = querySplit[TWO];
             int id = Integer.parseInt(querySplit[THREE]);
 
@@ -207,11 +208,11 @@ public class CLI {
         } else if (query.contains(TICKET_REMOVE)) {
             int id = Integer.parseInt(deleteSubstring(query, createGeneralRegex(PRODUCT_REMOVE)));
 
-            if (controller.removeProductFromTicket(id)) {
-                System.out.println(okStatus(TICKET, TICKET_REMOVE));
-            } else {
-                System.out.println(errorStatus(TICKET, TICKET_REMOVE));
-            }
+           // if (controller.removeProductFromTicket(ticketId,id)) {
+           //     System.out.println(okStatus(TICKET, TICKET_REMOVE));
+           // } else {
+            //    System.out.println(errorStatus(TICKET, TICKET_REMOVE));
+            //}
         }
     }
 
