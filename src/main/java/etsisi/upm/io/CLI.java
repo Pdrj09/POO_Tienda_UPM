@@ -90,7 +90,7 @@ public class CLI {
         }else if (query.startsWith(CLIENT)){
             this.clientQuery(query);
         }else if (query.startsWith(CASH)){
-            this.cashQuery(query);
+            //this.cashQuery(query);
         }
 
         return QUERY_SUCCESS;
