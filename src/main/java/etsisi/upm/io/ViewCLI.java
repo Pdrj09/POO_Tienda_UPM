@@ -56,4 +56,9 @@ public class ViewCLI {
     public static void printExit(){
         System.out.println(BYE);
     }
+
+    public static void echoCommand(String command) {
+        System.out.println(command);
+    }
+
 }

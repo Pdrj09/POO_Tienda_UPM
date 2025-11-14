@@ -70,7 +70,7 @@ public class CLI {
             this.ticketQuery(deleteSubstring(query, createGeneralRegex(TICKET)));
             //if query starts with ECHO,it echoes back the input
         } else if (query.startsWith(ECHO)) {
-            this.echoCommand(query);
+            ViewCLI.echoCommand(query);
             //if query starts with HELP, displays help information available
         } else if (query.startsWith(HELP)) {
             ViewCLI.printHelp();
@@ -208,10 +208,6 @@ public class CLI {
     }
 
 
-
-    private void echoCommand(String command) {
-        System.out.println(command);
-    }
 
     private String deleteSubstring(String query, String regex) {
         return query.replaceFirst(regex, STR_EMPTY);
