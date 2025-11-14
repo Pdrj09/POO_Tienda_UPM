@@ -2,7 +2,7 @@ package etsisi.upm.io;
 
 import etsisi.upm.controllers.Controller;
 
-public class Menu {
+public class CLI {
 
     /// Global variables
     private final Controller controller;  //gobal variable called controller
@@ -28,21 +28,28 @@ public class Menu {
     //this is printed when you call 'help'
     private static final String COMMANDS_LIST = """
             Commands:
-              prod add <id> "<name>" <category> <price>
-              prod list
-              prod update <id> NAME|CATEGORY|PRICE <value>
-              prod remove <id>
-              ticket new
-              ticket add <prodId><quantity>
-              ticket remove <prodId>
-              ticket print
-              echo "<texto>"
-              help
-              exit
+                    client add "<nombre>" <DNI> <email> <cashId>
+                    client remove <DNI>
+                    client list
+                    cash add [<id>] "<nombre>"<email>
+                    cash remove <id>
+                    cash list
+                    cash tickets <id>
+                    ticket new [<id>] <cashId> <userId>
+                    ticket add <ticketId><cashId> <prodId> <amount> [--p<txt> --p<txt>]\s
+                    ticket remove <ticketId><cashId> <prodId>\s
+                    ticket print <ticketId> <cashId>\s
+                    ticket list
+                    prod add <id> "<name>" <category> <price>
+                    prod update <id> NAME|CATEGORY|PRICE <value>
+                    prod addFood [<id>] "<name>" <price> <expiration:yyyy-MM-dd> <max_people>
+                    prod addMeeting [<id>] "<name>" <price> <expiration:yyyy-MM-dd> <max_people>
+                    prod list
+                    prod remove <id>
+                    help
+                    echo “<text>”
+                    exit
             
-             Categories: MERCH,STATIONERY,CLOTHES,BOOK,ELECTRONICS
-             Discounts if there are ≥2 units in the category: MERCH 0%,STATIONERY 5%,CLOTHES 7%,BOOK 10%,
-             ELECTRONICS 3%.
             """;
     //printed when you exit the program
     private static final String BYE = """
@@ -88,7 +95,7 @@ public class Menu {
     private static final String TICKET_NEW = "new";
     private static final String TICKET_REMOVE = "remove";
 
-    public Menu() {
+    public CLI() {
         System.out.println(WELCOME_MESSAGE);
         this.controller = new Controller();
     }

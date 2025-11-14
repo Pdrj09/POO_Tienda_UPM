@@ -8,6 +8,7 @@ class Meeting extends ServiceProduct {
     }
 
 
+
     public String getName() {
         return "";
     }
