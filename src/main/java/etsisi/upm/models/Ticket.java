@@ -27,14 +27,6 @@ public class Ticket {
     private static final int MAX_SIZE = 100;
 
 
-    public Ticket() {
-        this(String.format("%05d", (int) (Math.random() * 100000)));
-        //ESTO SOLO DEVUELVE UN NUMERO ALEATORIO COMO ID SIN LA FECHA; SIN TREEMAP, SIN HASHMAP Y SIN STATE
-        //Por lo que este tichet una vez creado es inutil ya que no puedes llamar luego al otro constructor
-
-    }
-
-
     public Ticket(String id){
 
         LocalDateTime now = LocalDateTime.now();
