@@ -74,10 +74,17 @@ public class ProductController {
 
 
     public static String productAdd(String[] querySplit, ProductController productController) {
+        if ((querySplit[ONE].isEmpty())||(querySplit[ONE ].equals(" ")) ){
+            throw new IllegalArgumentException("there is no id for product ");
+        }
         int id = Integer.parseInt(querySplit[ONE]);
         String name = querySplit[TWO].replace(REGEX_DOUBLE_QUOTE, STR_EMPTY);
 
+        if ((querySplit[THREE].isEmpty())||(querySplit[THREE].equals(" ")) ){
+            throw new IllegalArgumentException("The product has to have a price");
+        }
         float price = Float.parseFloat(querySplit[FOUR].replace(STR_COMMA, STR_DOT));
+
         String response;
 
         if (querySplit.length > FIVE) {
