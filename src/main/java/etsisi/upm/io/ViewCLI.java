@@ -90,7 +90,20 @@ public class ViewCLI {
                 .append(STR_BLANK_SPACE)
                 .append(message);
 
-        System.out.println(builder);
+        print(builder.toString());
+    }
+
+    protected static void errorStatus(String type, String comand) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(type)
+                .append(STR_BLANK_SPACE)
+                .append(comand)
+                .append(STR_DOUBLE_DOT)
+                .append(STR_BLANK_SPACE)
+                .append(ERROR_STATUS);
+
+       print(builder.toString());
     }
 
 }

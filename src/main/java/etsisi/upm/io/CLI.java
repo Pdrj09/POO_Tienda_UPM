@@ -136,7 +136,7 @@ public class CLI {
                     System.out.println(deletedProd);
                     System.out.println(okStatus(PROD, PRODUCT_REMOVE));
                 } else {
-                    errorStatus(PROD, PRODUCT_REMOVE);
+                    ViewCLI.errorStatus(PROD, PRODUCT_REMOVE);
                 }
 
 
@@ -152,7 +152,7 @@ public class CLI {
                     System.out.println(productEdited);
                     System.out.println(okStatus(TICKET, TICKET_NEW));
                 } else {
-                    errorStatus(TICKET, TICKET_NEW);
+                    ViewCLI.errorStatus(TICKET, TICKET_NEW);
                 }
 
             }
@@ -193,7 +193,7 @@ public class CLI {
                 System.out.println(newTicket);
                 System.out.println(okStatus(TICKET, TICKET_ADD));
             } else {
-                errorStatus(TICKET, TICKET_ADD);
+                ViewCLI.errorStatus(TICKET, TICKET_ADD);
             }
 
         } else if (query.contains(TICKET_NEW)) {
@@ -249,18 +249,4 @@ public class CLI {
         return builder.toString();
     }
 
-
-
-    private void errorStatus(String type, String comand) {
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(type)
-                .append(STR_BLANK_SPACE)
-                .append(comand)
-                .append(STR_DOUBLE_DOT)
-                .append(STR_BLANK_SPACE)
-                .append(ERROR_STATUS);
-
-        System.out.println(builder);
-    }
 }
