@@ -25,11 +25,6 @@ public class TicketController {
         this.ticketRepository.add(ticket);
     }
 
-    public void newTicket(String cashierId, String clientId){
-        Ticket ticket = new Ticket();
-        this.ticketRepository.add(ticket);
-    }
-
     public void addProductToTicket(String ticketId, String cahsierId, String productId, int amount, List<String> customizations){
      //TODO implement -- crear el repositorio de products y llamar findById
         // -- customitations?
