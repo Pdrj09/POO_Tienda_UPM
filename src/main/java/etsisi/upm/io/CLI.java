@@ -1,6 +1,7 @@
 package etsisi.upm.io;
 
 import etsisi.upm.controllers.ProductController;
+import etsisi.upm.controllers.TicketController;
 
 public class CLI {
 
@@ -115,6 +116,8 @@ public class CLI {
     private void prodQuery(String query) {
         String[] querySplit = query.split(REGEX_TO_SPLIT);
         if (query.contains(PRODUCT_ADD)) {
+            System.out.println(
+            ProductController.productAdd(querySplit , productController));
         } else if (query.contains(PRODUCT_LIST)) {
             try {
 
