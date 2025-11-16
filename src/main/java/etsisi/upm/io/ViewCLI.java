@@ -43,7 +43,9 @@ public class ViewCLI {
                     exit
             
             """;
-
+    public static void print(String results){
+        System.out.println(results);
+    }
 
     public static void printWellcomeMessage(){
         System.out.println(WELCOME_MESSAGE);
