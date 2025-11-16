@@ -8,7 +8,7 @@ import java.util.TreeSet;
 
 //REPRESENTS DE CLIENT IN THE SYSTEM
 public class Client extends User implements Comparable<Client> {
-    private String strIdCashier;
+    private final String strIdCashier;
     private final Set<Ticket> associatedTickets;
 
     //CONSTANTS
@@ -25,8 +25,8 @@ public class Client extends User implements Comparable<Client> {
     //CONSTRUCTOR W/ ALL PARAMETERS
     public Client(String dni, String name, String email, String idCashier) {
         super(dni, name, email);
-        if(dni == null || dni.isEmpty())
-            throw new IllegalArgumentException("El DNI no puede estar vacío");
+        if(dni.length() != 9)
+            throw new IllegalArgumentException("El DNI tiene que tener 9 digitos");
         this.associatedTickets = new TreeSet<>();
         this.strIdCashier = idCashier;
     }

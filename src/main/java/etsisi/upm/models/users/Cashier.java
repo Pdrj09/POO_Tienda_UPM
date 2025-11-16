@@ -4,11 +4,12 @@ import etsisi.upm.util.IdGenerator;
 
 import java.util.Objects;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 //REPRESENTS A CASHIER IN THE SYSTEM
 public class Cashier extends User implements Comparable<Cashier>{
-    private final Set<String> tickets; //tickets' IDs created by the cashier
+    private final SortedSet<String> tickets; //tickets' IDs created by the cashier
     private final Set<Client> associatedClients;
 
     //CONSTANT FOR THE toSTRING
@@ -24,32 +25,14 @@ public class Cashier extends User implements Comparable<Cashier>{
 
 
     //CONSTRUCTOR W/ AUTOMATIC ID GENERATION
-    public Cashier(String emailCompany, String name) {
-        //TODO esto tiene que ir por fuera, aqui no tiene sentido aumentas una clase que ya existe en el controller
-        super(IdGenerator.generateCashierId(), name, emailCompany);
+    public Cashier(String id, String emailCompany, String name) {
+        super(id, name, emailCompany);
         this.tickets = new TreeSet<>(); //for sorted it
-        this.associatedClients = new TreeSet<>();
-    }
-
-    //CONSTRUCTOR W/ MANUAL ID
-    public Cashier(String id, Set<String> tickets, String emailCompany, String name) {
-        super((id == null || id.isEmpty()) ? IdGenerator.generateCashierId() : id, name, emailCompany);
-        if (IdGenerator.isUsed(getId()))
-            throw new IllegalArgumentException("Ya existe un cajero con ID: " + getId());
-        IdGenerator.registerId(getId());
-        if (tickets == null)
-            this.tickets = new TreeSet<>();
-        else
-            this.tickets = new TreeSet<>(tickets);
         this.associatedClients = new TreeSet<>();
     }
 
     //PUBLIC METHODS
     //this two methods returns an INMUTABLE copy for more protection
-    // TODO use other class as ED like SortedSet<String> to get a order list of tickets
-    // TODO fuera de usar ingles q se me da mal, seguramente y tal y como tenemos aqui todo
-    // TODO metería que esto fuera una relacon con la calse ticket real ya que necesitamos ordenar por id
-    // TODO y va a ser 1000 veces más facil asi y por lo q nos han dicho hoy la cohesion (creo q se llamaba xd) de las cosas ñe
     public Set<String> getTickets() {
         return Set.copyOf(tickets);
     }
