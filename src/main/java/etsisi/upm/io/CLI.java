@@ -157,7 +157,7 @@ public class CLI {
 
             }
         } catch (Exception e) {
-            errorStatus(PROD, PRODUCT_ADD, e.toString());
+            ViewCLI.errorStatus(PROD, PRODUCT_ADD, e.toString());
         }
     }
     /*ticket new [<id>] <cashId> <userId>
@@ -249,22 +249,7 @@ public class CLI {
         return builder.toString();
     }
 
-    private void errorStatus(String type, String comand, String message) {
-        StringBuilder builder;
-        builder = new StringBuilder();
 
-        builder.append(type)
-                .append(STR_BLANK_SPACE)
-                .append(comand)
-                .append(STR_DOUBLE_DOT)
-                .append(STR_BLANK_SPACE)
-                .append(ERROR_STATUS)
-                .append(STR_DOUBLE_DOT)
-                .append(STR_BLANK_SPACE)
-                .append(message);
-
-        System.out.println(builder);
-    }
 
     private void errorStatus(String type, String comand) {
         StringBuilder builder = new StringBuilder();

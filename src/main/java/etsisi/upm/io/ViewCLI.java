@@ -2,6 +2,19 @@ package etsisi.upm.io;
 
 public class ViewCLI {
 
+    // str const
+    private static final String STR_EMPTY = "";
+    private static final String STR_DOT = ".";
+    private static final String STR_COMMA = ",";
+    private static final String STR_ERROR = "Error";
+    private static final String STR_BLANK_SPACE = " ";
+    private static final String STR_DOUBLE_DOT = ":";
+
+
+
+    private static final String OK_STATUS = "ok";  //Ok
+    private static final String ERROR_STATUS = "Error"; //error
+
     /// messages and help
     //This is the welcome message it is printed when you start the program
     private static final String WELCOME_MESSAGE = """
@@ -61,6 +74,23 @@ public class ViewCLI {
 
     public static void echoCommand(String command) {
         System.out.println(command);
+    }
+
+    protected static void errorStatus(String type, String comand, String message) {
+        StringBuilder builder;
+        builder = new StringBuilder();
+
+        builder.append(type)
+                .append(STR_BLANK_SPACE)
+                .append(comand)
+                .append(STR_DOUBLE_DOT)
+                .append(STR_BLANK_SPACE)
+                .append(ERROR_STATUS)
+                .append(STR_DOUBLE_DOT)
+                .append(STR_BLANK_SPACE)
+                .append(message);
+
+        System.out.println(builder);
     }
 
 }
