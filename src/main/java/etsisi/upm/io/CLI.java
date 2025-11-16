@@ -116,7 +116,7 @@ public class CLI {
     private void prodQuery(String query) {
         String[] querySplit = query.split(REGEX_TO_SPLIT);
         if (query.contains(PRODUCT_ADD)) {
-            ViewCLI.print(ProductController.productAdd(querySplit , productController));
+            ViewCLI.print(ProductController.productAdder(querySplit , productController));
         } else if (query.contains(PRODUCT_LIST)) {
             try {
                 System.out.println(productController.prodList());

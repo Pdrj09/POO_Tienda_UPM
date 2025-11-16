@@ -73,7 +73,7 @@ public class ProductController {
     private static final String REGEX_PERSONALIZED = "(?<=--p)";
 
 
-    public static String productAdd(String[] querySplit, ProductController productController) {
+    public static String productAdder(String[] querySplit, ProductController productController) {
         if ((querySplit[ONE].isEmpty())||(querySplit[ONE ].equals(" ")) ){
             throw new IllegalArgumentException("there is no id for product ");
         }
