@@ -1,13 +1,12 @@
 package etsisi.upm.controllers;
 
-import etsisi.upm.io.CLI;
 import etsisi.upm.util.Categories;
 import etsisi.upm.models.Product;
 import etsisi.upm.models.Ticket;
 
 import java.util.HashMap;
 
-public class Controller {
+public class ProductController {
 
     private final HashMap<Integer, Product> products;
     private Ticket ticket;
@@ -74,7 +73,7 @@ public class Controller {
     private static final String REGEX_PERSONALIZED = "(?<=--p)";
 
 
-    public static String productAdd(String[] querySplit, Controller controller) {
+    public static String productAdd(String[] querySplit, ProductController productController) {
         int id = Integer.parseInt(querySplit[ONE]);
         String name = querySplit[TWO].replace(REGEX_DOUBLE_QUOTE, STR_EMPTY);
 
@@ -83,10 +82,10 @@ public class Controller {
 
         if (querySplit.length > FIVE) {
             int maxPers = Integer.parseInt(querySplit[FIVE]);
-            response = controller.addProduct(name, querySplit[THREE], price, id, maxPers);
+            response = productController.addProduct(name, querySplit[THREE], price, id, maxPers);
         } else {
 
-            response = controller.addProduct(name, querySplit[THREE], price, id);
+            response = productController.addProduct(name, querySplit[THREE], price, id);
             System.out.println(response);
         }
         if (!response.startsWith(STR_ERROR)) {
@@ -95,7 +94,7 @@ public class Controller {
         return response;
     }
 
-    public Controller() {
+    public ProductController() {
         this.products = new HashMap<>();
       //  this.ticket = new Ticket();
         this.totalProducts=0;

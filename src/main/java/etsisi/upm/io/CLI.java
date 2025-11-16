@@ -1,11 +1,11 @@
 package etsisi.upm.io;
 
-import etsisi.upm.controllers.Controller;
+import etsisi.upm.controllers.ProductController;
 
 public class CLI {
 
     /// Global variables
-    private final Controller controller;  //gobal variable called controller
+    private final ProductController productController;  //gobal variable called controller
 
     // status code
     private static final int QUERY_SUCCESS = 1;
@@ -66,7 +66,7 @@ public class CLI {
 
     public CLI() {
         ViewCLI.printWellcomeMessage();
-        this.controller = new Controller();
+        this.productController = new ProductController();
     }
 
     public int newQuery(String query) {
@@ -118,7 +118,7 @@ public class CLI {
         } else if (query.contains(PRODUCT_LIST)) {
             try {
 
-                System.out.println(controller.prodList());
+                System.out.println(productController.prodList());
 
                 System.out.println(okStatus(PROD, PRODUCT_LIST));
             } catch (Exception e) {
@@ -130,7 +130,7 @@ public class CLI {
                 int id = Integer.parseInt(deleteSubstring(query, createGeneralRegex(PRODUCT_REMOVE)));
 
 
-                String deletedProd = controller.deleteProduct(id);
+                String deletedProd = productController.deleteProduct(id);
 
                 if (deletedProd != null) {
                     System.out.println(deletedProd);
@@ -148,7 +148,7 @@ public class CLI {
                 int id = Integer.parseInt(querySplit[ONE]);
 
 
-                String productEdited = controller.updateProduct(id, querySplit[TWO], querySplit[THREE]);
+                String productEdited = productController.updateProduct(id, querySplit[TWO], querySplit[THREE]);
 
                 if (productEdited != null) {
                     System.out.println(productEdited);
@@ -199,13 +199,13 @@ public class CLI {
 
         } else if (query.contains(TICKET_NEW)) {
 
-            controller.ticketNew();
+            productController.ticketNew();
             System.out.println(okStatus(TICKET, TICKET_NEW));
 
 
         } else if (query.contains(TICKET_PRINT)) {
 
-            System.out.println(controller.ticketPrint());
+            System.out.println(productController.ticketPrint());
             System.out.println(okStatus(TICKET, TICKET_PRINT));
 
         } else if (query.contains(TICKET_REMOVE)) {
