@@ -12,12 +12,12 @@ public class CLI {
     private static final int QUERY_EXIT = 0;
 
     // numbers
-    private static final int ONE = 1;
-    private static final int TWO = 2;
-    private static final int THREE = 3;
-    private static final int FOUR = 4;
-    private static final int FIVE = 5;
-    private static final int SIX = 6;
+    public static final int ONE = 1;
+    public static final int TWO = 2;
+    public static final int THREE = 3;
+    public static final int FOUR = 4;
+    public static final int FIVE = 5;
+    public static final int SIX = 6;
 
     private static final String OK_STATUS = "ok";  //Ok
     private static final String ERROR_STATUS = "Error"; //error
@@ -115,29 +115,6 @@ public class CLI {
     private void prodQuery(String query) {
         String[] querySplit = query.split(REGEX_TO_SPLIT);
         if (query.contains(PRODUCT_ADD)) {
-            try {
-                int id = Integer.parseInt(querySplit[ONE]);
-                String name = querySplit[TWO].replace(REGEX_DOUBLE_QUOTE, STR_EMPTY);
-
-                float price = Float.parseFloat(querySplit[FOUR].replace(STR_COMMA, STR_DOT));
-                String response;
-
-                if (querySplit.length > FIVE){
-                    int maxPers = Integer.parseInt(querySplit[FIVE]);
-                    response = controller.addProduct(name, querySplit[THREE], price, id, maxPers);
-                   System.out.println(response);
-                }else {
-
-                    response = controller.addProduct(name, querySplit[THREE], price, id);
-                    System.out.println(response);
-                }
-                if (!response.startsWith(STR_ERROR)) {
-                    System.out.println(okStatus(PROD, PRODUCT_ADD));
-                }
-            } catch (Exception e) {
-                System.out.println(errorStatus(PROD, PRODUCT_ADD, e.toString()));
-            }
-
         } else if (query.contains(PRODUCT_LIST)) {
             try {
 
