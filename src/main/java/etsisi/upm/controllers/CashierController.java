@@ -20,10 +20,8 @@ public class CashierController {
     }
 
     public Cashier addCash(String emailCompany, String name) {
-        //TODO change cashier
-        //TODO comprobar que el id sea correcto
         String cashierId = generateCashierId();
-        Cashier cashier =  new Cashier(emailCompany, name);
+        Cashier cashier =  new Cashier(cashierId, emailCompany, name);
 
         repository.add(cashierId, cashier);
 
