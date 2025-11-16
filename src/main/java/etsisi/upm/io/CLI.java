@@ -115,19 +115,18 @@ public class CLI {
 
     private void prodQuery(String query) {
         String[] querySplit = query.split(REGEX_TO_SPLIT);
-        if (query.contains(PRODUCT_ADD)) {
-            ViewCLI.print(ProductController.productAdder(querySplit , productController));
-        } else if (query.contains(PRODUCT_LIST)) {
-            try {
+        try {
+            if (query.contains(PRODUCT_ADD)) {
+
+                 ViewCLI.print(ProductController.productAdder(querySplit , productController));
+
+            } else if (query.contains(PRODUCT_LIST)) {
+
                 System.out.println(productController.prodList());
 
                 System.out.println(okStatus(PROD, PRODUCT_LIST));
-            } catch (Exception e) {
-                System.out.println(errorStatus(PROD, PRODUCT_ADD, e.toString()));
-            }
 
-        } else if (query.contains(PRODUCT_REMOVE)) {
-            try {
+            } else if (query.contains(PRODUCT_REMOVE)) {
                 int id = Integer.parseInt(deleteSubstring(query, createGeneralRegex(PRODUCT_REMOVE)));
 
 
@@ -137,14 +136,12 @@ public class CLI {
                     System.out.println(deletedProd);
                     System.out.println(okStatus(PROD, PRODUCT_REMOVE));
                 } else {
-                    System.out.println(errorStatus(PROD, PRODUCT_REMOVE));
+                    errorStatus(PROD, PRODUCT_REMOVE);
                 }
 
-            } catch (Exception e) {
-                System.out.println(errorStatus(PROD, PRODUCT_REMOVE, e.toString()));
-            }
-        } else if (query.contains(PRODUCT_UPDATE)) {
-            try {
+
+            } else if (query.contains(PRODUCT_UPDATE)) {
+
 
                 int id = Integer.parseInt(querySplit[ONE]);
 
@@ -155,11 +152,12 @@ public class CLI {
                     System.out.println(productEdited);
                     System.out.println(okStatus(TICKET, TICKET_NEW));
                 } else {
-                    System.out.println(errorStatus(TICKET, TICKET_NEW));
+                    errorStatus(TICKET, TICKET_NEW);
                 }
-            } catch (Exception e) {
-                System.out.println(errorStatus(PROD, PRODUCT_UPDATE, e.toString()));
+
             }
+        } catch (Exception e) {
+            errorStatus(PROD, PRODUCT_ADD, e.toString());
         }
     }
     /*ticket new [<id>] <cashId> <userId>
@@ -195,7 +193,7 @@ public class CLI {
                 System.out.println(newTicket);
                 System.out.println(okStatus(TICKET, TICKET_ADD));
             } else {
-                System.out.println(errorStatus(TICKET, TICKET_ADD));
+                errorStatus(TICKET, TICKET_ADD);
             }
 
         } else if (query.contains(TICKET_NEW)) {
@@ -215,7 +213,7 @@ public class CLI {
            // if (controller.removeProductFromTicket(ticketId,id)) {
            //     System.out.println(okStatus(TICKET, TICKET_REMOVE));
            // } else {
-            //    System.out.println(errorStatus(TICKET, TICKET_REMOVE));
+            //    errorStatus(TICKET, TICKET_REMOVE);
             //}
         }
     }
@@ -251,7 +249,7 @@ public class CLI {
         return builder.toString();
     }
 
-    private String errorStatus(String type, String comand, String message) {
+    private void errorStatus(String type, String comand, String message) {
         StringBuilder builder;
         builder = new StringBuilder();
 
@@ -265,10 +263,10 @@ public class CLI {
                 .append(STR_BLANK_SPACE)
                 .append(message);
 
-        return builder.toString();
+        System.out.println(builder);
     }
 
-    private String errorStatus(String type, String comand) {
+    private void errorStatus(String type, String comand) {
         StringBuilder builder = new StringBuilder();
 
         builder.append(type)
@@ -278,6 +276,6 @@ public class CLI {
                 .append(STR_BLANK_SPACE)
                 .append(ERROR_STATUS);
 
-        return builder.toString();
+        System.out.println(builder);
     }
 }
