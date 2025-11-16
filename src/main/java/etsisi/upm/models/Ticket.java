@@ -11,7 +11,6 @@ public class Ticket {
 
     //Stores the list of products and their quantities in the current transaction
     private String id;
-    private final LocalDateTime creationDate;
     private LocalDateTime closeDate;
     private TicketStates state;
 
@@ -28,22 +27,17 @@ public class Ticket {
     private static final int MAX_SIZE = 100;
 
 
-    public Ticket() {
-        this(String.format("%05d", (int) (Math.random() * 100000)));
-    }
-
     public Ticket(String id){
-        this.creationDate = LocalDateTime.now();
-        String formattedDate = formatDate(this.creationDate);
-        this.id = formattedDate+"-"+id;
+
+        LocalDateTime now = LocalDateTime.now();
+        String formatted = formatDate(now);
+        this.id = formatted + "-" +id;
         this.list = new TreeMap<>();
         this.categories = new HashMap<>();
         this.state = TicketStates.EMPTY;
 
     }
 
-    //TODO: reformatear -- convertir el formato de fecha en una constante
-    // ¿pasar el método a clase utilidades?
     public static String formatDate(LocalDateTime date){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd-HH:mm");
         return date.format(formatter);
@@ -60,7 +54,7 @@ public class Ticket {
 
     // Add a product to the ticket, if the product already exists increments its amount
     //if ticket add (Product prod, int amount) -p <personalizacion>
-    /*
+
     public void addPersonalized(Product prod, int amount, String [] personalized)
     {
         //if the product can be personalized
@@ -69,20 +63,30 @@ public class Ticket {
                 return;
             }
             double total = ZERO;
+
             for(int value: this.list.values()){
                 total = total + value + (0.1 * value);
              }
+            StringBuilder personalizations = new StringBuilder();
+
+            for (int i = 0; i < personalized.length; i++) {
+                personalizations.append(personalized[i]);
+                personalizations.append(" ");
+            }
             //we see how many products are in list
             if(total + amount <= MAX_SIZE) {
-                this.list.put(prod, this.list.containsKey(prod) ? this.list.get(prod) + amount : amount);
+                //TODO Hacer que un producto tenga las personalizaciones guardadas en el ticket
+                this.list.put(prod, this.list.getOrDefault(prod, ZERO) + amount);
                 Categories category = prod.getCategory();
-                this.categories.put(category, this.categories.containsKey(category) ? this.categories.get(category) + 1 : 1);
+                this.categories.put(category, this.categories.getOrDefault(category, ZERO) + amount);
                 this.state=TicketStates.ACTIVE;
             }
+        }else{
+            throw new IllegalArgumentException("You cant personalice a product that is not personalizable");
         }
 
     }
-     */
+
 
     // Add a product to the ticket, if the product already exists increments its amount
     public void add(Product prod, int amount){
@@ -95,9 +99,9 @@ public class Ticket {
         }
         //we see how many products are in list
         if(total + amount <= MAX_SIZE) {
-            this.list.put(prod, this.list.containsKey(prod) ? this.list.get(prod) + amount : amount);
+            this.list.put(prod, this.list.getOrDefault(prod, ZERO) + amount);
             Categories category = prod.getCategory();
-            this.categories.put(category, this.categories.containsKey(category) ? this.categories.get(category) + 1 : 1);
+            this.categories.put(category, this.categories.getOrDefault(category, ZERO) + amount);
             this.state=TicketStates.ACTIVE;
         }
 

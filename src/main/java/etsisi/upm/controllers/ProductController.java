@@ -6,16 +6,19 @@ import etsisi.upm.models.Ticket;
 
 import java.util.HashMap;
 
-public class Controller {
+public class ProductController {
 
     private final HashMap<Integer, Product> products;
-    private final Ticket ticket;
+    private Ticket ticket;
     private int totalProducts;
+
 
     private static final String ERROR_CREATE_PRODUCT = "Error al crear el producto";
     private static final String NAME = "NAME";
     private static final String CATEGORY = "CATEGORY";
     private static final String PRICE = "PRICE";
+    private static final String OK_STATUS = "ok";  //Ok
+    private static final String ERROR_STATUS = "Error"; //error
 
 
     private static final String CATALOG = "Catalog:\n";
@@ -24,9 +27,83 @@ public class Controller {
     private static final int MAX_SIZE = 200;
 
 
-    public Controller() {
+
+    private static String okStatus(String type, String comand) {
+        StringBuilder builder;
+        builder = new StringBuilder();
+
+        builder.append(type)
+                .append(STR_BLANK_SPACE)
+                .append(comand)
+                .append(STR_DOUBLE_DOT)
+                .append(STR_BLANK_SPACE)
+                .append(OK_STATUS);
+
+        return builder.toString();
+    }
+
+
+    // numbers
+    private static final int ONE = 1;
+    private static final int TWO = 2;
+    private static final int THREE = 3;
+    private static final int FOUR = 4;
+    private static final int FIVE = 5;
+    private static final int SIX = 6;
+
+    // str const
+    private static final String STR_EMPTY = "";
+    private static final String STR_DOT = ".";
+    private static final String STR_COMMA = ",";
+    private static final String STR_ERROR = "Error";
+    private static final String STR_BLANK_SPACE = " ";
+    private static final String STR_DOUBLE_DOT = ":";
+    // products const
+    private static final String PROD = "prod";
+    private static final String PRODUCT_ADD = "add";
+    private static final String PRODUCT_LIST = "list";
+    private static final String PRODUCT_UPDATE = "update";
+    private static final String PRODUCT_REMOVE = "remove";
+
+    // regex const
+    private static final String REGEX_INIT = "^";
+    private static final String REGEX_BLANK_SPACE = "\\s*";
+    private static final String REGEX_DOUBLE_QUOTE = "\"";
+    private static final String REGEX_TO_SPLIT = " (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
+    private static final String REGEX_PERSONALIZED = "(?<=--p)";
+
+
+    public static String productAdder(String[] querySplit, ProductController productController) {
+        if ((querySplit[ONE].isEmpty())||(querySplit[ONE ].equals(" ")) ){
+            throw new IllegalArgumentException("there is no id for product ");
+        }
+        int id = Integer.parseInt(querySplit[ONE]);
+        String name = querySplit[TWO].replace(REGEX_DOUBLE_QUOTE, STR_EMPTY);
+
+        if ((querySplit[THREE].isEmpty())||(querySplit[THREE].equals(" ")) ){
+            throw new IllegalArgumentException("The product has to have a price");
+        }
+        float price = Float.parseFloat(querySplit[FOUR].replace(STR_COMMA, STR_DOT));
+
+        String response;
+
+        if (querySplit.length > FIVE) {
+            int maxPers = Integer.parseInt(querySplit[FIVE]);
+            response = productController.addProduct(name, querySplit[THREE], price, id, maxPers);
+        } else {
+
+            response = productController.addProduct(name, querySplit[THREE], price, id);
+            System.out.println(response);
+        }
+        if (!response.startsWith(STR_ERROR)) {
+            response = okStatus(PROD, PRODUCT_ADD);
+        }
+        return response;
+    }
+
+    public ProductController() {
         this.products = new HashMap<>();
-        this.ticket = new Ticket();
+      //  this.ticket = new Ticket();
         this.totalProducts=0;
     }
 
@@ -41,7 +118,7 @@ public class Controller {
             return product.toString();
         } else return ERROR_CREATE_PRODUCT;
     }
-    public String addProductPersonaliced(String name, String category, double price, int id , int maxPers) {
+    public String addProduct(String name, String category, double price, int id , int maxPers) {
         Product product;
         if (Categories.existCategory(category)) {
             product = new Product(id, name, price, Categories.valueOf(category),maxPers);
