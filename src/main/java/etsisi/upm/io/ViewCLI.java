@@ -56,23 +56,23 @@ public class ViewCLI {
                     exit
             
             """;
-    public static void print(String results){
+    protected static void print(String results){
         System.out.println(results);
     }
 
-    public static void printWellcomeMessage(){
+    protected static void printWellcomeMessage(){
         System.out.println(WELCOME_MESSAGE);
     }
 
-    public static void printHelp(){
+    protected static void printHelp(){
         System.out.println(COMMANDS_LIST);
     }
 
-    public static void printExit(){
+    protected static void printExit(){
         System.out.println(BYE);
     }
 
-    public static void echoCommand(String command) {
+    protected static void echoCommand(String command) {
         System.out.println(command);
     }
 
