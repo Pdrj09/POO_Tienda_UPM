@@ -1,5 +1,6 @@
 package etsisi.upm.controllers;
 
+import etsisi.upm.Constants;
 import etsisi.upm.io.CLI;
 import etsisi.upm.util.Categories;
 import etsisi.upm.models.Product;
@@ -15,11 +16,6 @@ public class ProductController {
 
 
     private static final String ERROR_CREATE_PRODUCT = "Error al crear el producto";
-    private static final String NAME = "NAME";
-    private static final String CATEGORY = "CATEGORY";
-    private static final String PRICE = "PRICE";
-    private static final String OK_STATUS = "ok";  //Ok
-    private static final String ERROR_STATUS = "Error"; //error
 
 
     private static final String CATALOG = "Catalog:\n";
@@ -27,49 +23,27 @@ public class ProductController {
     private static final String TAB_SPACE = "\t";
     private static final int MAX_SIZE = 200;
 
-    // numbers
-    private static final int ONE = 1;
-    private static final int TWO = 2;
-    private static final int THREE = 3;
-    private static final int FOUR = 4;
-    private static final int FIVE = 5;
-    private static final int SIX = 6;
+    private static final String NAME = "NAME";
+    private static final String CATEGORY = "CATEGORY";
+    private static final String PRICE = "PRICE";
 
-    // str const
-    private static final String STR_EMPTY = "";
-    private static final String STR_DOT = ".";
-    private static final String STR_COMMA = ",";
-    private static final String STR_ERROR = "Error";
-    private static final String STR_BLANK_SPACE = " ";
-    private static final String STR_DOUBLE_DOT = ":";
-    // products const
-    private static final String PROD = "prod";
-    private static final String PRODUCT_ADD = "add";
-    private static final String PRODUCT_LIST = "list";
-    private static final String PRODUCT_UPDATE = "update";
-    private static final String PRODUCT_REMOVE = "remove";
 
-    // regex const
-    private static final String REGEX_INIT = "^";
-    private static final String REGEX_BLANK_SPACE = "\\s*";
-    private static final String REGEX_DOUBLE_QUOTE = "\"";
-    private static final String REGEX_TO_SPLIT = " (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
-    private static final String REGEX_PERSONALIZED = "(?<=--p)";
+
 
     private static String createGeneralRegex(String query) {
         StringBuilder stringBuilder;
         stringBuilder = new StringBuilder();
 
-        stringBuilder.append(REGEX_INIT)
+        stringBuilder.append(Constants.REGEX_INIT)
                 .append(query)
-                .append(REGEX_BLANK_SPACE);
+                .append(Constants.REGEX_BLANK_SPACE);
 
         return stringBuilder.toString();
     }
 
 
     private static String deleteSubstring(String query, String regex) {
-        return query.replaceFirst(regex, STR_EMPTY);
+        return query.replaceFirst(regex, Constants.STR_EMPTY);
     }
 
 
@@ -78,51 +52,51 @@ public class ProductController {
         builder = new StringBuilder();
 
         builder.append(type)
-                .append(STR_BLANK_SPACE)
+                .append(Constants.STR_BLANK_SPACE)
                 .append(comand)
-                .append(STR_DOUBLE_DOT)
-                .append(STR_BLANK_SPACE)
-                .append(OK_STATUS);
+                .append(Constants.STR_DOUBLE_DOT)
+                .append(Constants.STR_BLANK_SPACE)
+                .append(Constants.OK_STATUS);
 
         return builder.toString();
     }
 
 
     public static String productAdder(String[] querySplit, ProductController productController) {
-        if ((querySplit[ONE].isEmpty())||(querySplit[ONE ].equals(STR_BLANK_SPACE )) ){
+        if ((querySplit[Constants.ONE].isEmpty())||(querySplit[Constants.ONE ].equals(Constants.STR_BLANK_SPACE )) ){
             throw new IllegalArgumentException("there is no id for product ");
         }
-        int id = Integer.parseInt(querySplit[ONE]);
-        String name = querySplit[TWO].replace(REGEX_DOUBLE_QUOTE, STR_EMPTY);
+        int id = Integer.parseInt(querySplit[Constants.ONE]);
+        String name = querySplit[Constants.TWO].replace(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
 
-        if ((querySplit[THREE].isEmpty())||(querySplit[THREE].equals(STR_BLANK_SPACE )) ){
+        if ((querySplit[Constants.THREE].isEmpty())||(querySplit[Constants.THREE].equals(Constants.STR_BLANK_SPACE )) ){
             throw new IllegalArgumentException("The product has to have a price");
         }
-        float price = Float.parseFloat(querySplit[FOUR].replace(STR_COMMA, STR_DOT));
+        float price = Float.parseFloat(querySplit[Constants.FOUR].replace(Constants.STR_COMMA, Constants.STR_DOT));
 
         String response;
 
-        if (querySplit.length > FIVE) {
-            int maxPers = Integer.parseInt(querySplit[FIVE]);
-            response = productController.addProduct(name, querySplit[THREE], price, id, maxPers);
+        if (querySplit.length > Constants.FIVE) {
+            int maxPers = Integer.parseInt(querySplit[Constants.FIVE]);
+            response = productController.addProduct(name, querySplit[Constants.THREE], price, id, maxPers);
         } else {
 
-            response = productController.addProduct(name, querySplit[THREE], price, id);
+            response = productController.addProduct(name, querySplit[Constants.THREE], price, id);
             System.out.println(response);
         }
-        if (!response.startsWith(STR_ERROR)) {
-            response = okStatus(PROD, PRODUCT_ADD);
+        if (!response.startsWith(Constants.STR_ERROR)) {
+            response = okStatus(Constants.PROD, Constants.PRODUCT_ADD);
         }
         return response;
     }
 
     public static String prodDelete (ProductController productController, String query) {
-        int id = Integer.parseInt(deleteSubstring(query, createGeneralRegex(PRODUCT_REMOVE)));
+        int id = Integer.parseInt(deleteSubstring(query, createGeneralRegex(Constants.PRODUCT_REMOVE)));
         String deletedProd = productController.deleteProduct(id);
         String response = "";
         if (deletedProd != null) {
             System.out.println(deletedProd);
-            response = okStatus(PROD, PRODUCT_REMOVE);
+            response = okStatus(Constants.PROD, Constants.PRODUCT_REMOVE);
         } else {
            // CLI.errorStatus(PROD, PRODUCT_REMOVE);
         }
