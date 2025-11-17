@@ -20,9 +20,6 @@ public class CLI {
     public static final int FIVE = 5;
     public static final int SIX = 6;
 
-    private static final String OK_STATUS = "ok";  //Ok
-    private static final String ERROR_STATUS = "Error"; //error
-
     // menu const
     private static final String EXIT = "exit";
     private static final String PROD = "prod";
@@ -124,7 +121,7 @@ public class CLI {
 
                 System.out.println(productController.prodList());
 
-                System.out.println(okStatus(PROD, PRODUCT_LIST));
+                ViewCLI.okStatus(PROD, PRODUCT_LIST);
 
             } else if (query.contains(PRODUCT_REMOVE)) {
                 int id = Integer.parseInt(deleteSubstring(query, createGeneralRegex(PRODUCT_REMOVE)));
@@ -134,9 +131,9 @@ public class CLI {
 
                 if (deletedProd != null) {
                     System.out.println(deletedProd);
-                    System.out.println(okStatus(PROD, PRODUCT_REMOVE));
+                    ViewCLI.okStatus(PROD, PRODUCT_REMOVE);
                 } else {
-                    errorStatus(PROD, PRODUCT_REMOVE);
+                    ViewCLI.errorStatus(PROD, PRODUCT_REMOVE);
                 }
 
 
@@ -150,14 +147,14 @@ public class CLI {
 
                 if (productEdited != null) {
                     System.out.println(productEdited);
-                    System.out.println(okStatus(TICKET, TICKET_NEW));
+                    ViewCLI.okStatus(TICKET, TICKET_NEW);
                 } else {
-                    errorStatus(TICKET, TICKET_NEW);
+                    ViewCLI.errorStatus(TICKET, TICKET_NEW);
                 }
 
             }
         } catch (Exception e) {
-            errorStatus(PROD, PRODUCT_ADD, e.toString());
+            ViewCLI.errorStatus(PROD, PRODUCT_ADD, e.toString());
         }
     }
     /*ticket new [<id>] <cashId> <userId>
@@ -191,21 +188,21 @@ public class CLI {
             }
             if (newTicket != null) {
                 System.out.println(newTicket);
-                System.out.println(okStatus(TICKET, TICKET_ADD));
+                ViewCLI.okStatus(TICKET, TICKET_ADD);
             } else {
-                errorStatus(TICKET, TICKET_ADD);
+                ViewCLI.errorStatus(TICKET, TICKET_ADD);
             }
 
         } else if (query.contains(TICKET_NEW)) {
 
             productController.ticketNew();
-            System.out.println(okStatus(TICKET, TICKET_NEW));
+            ViewCLI.okStatus(TICKET, TICKET_NEW);
 
 
         } else if (query.contains(TICKET_PRINT)) {
 
             System.out.println(productController.ticketPrint());
-            System.out.println(okStatus(TICKET, TICKET_PRINT));
+            ViewCLI.okStatus(TICKET, TICKET_PRINT);
 
         } else if (query.contains(TICKET_REMOVE)) {
             int id = Integer.parseInt(deleteSubstring(query, createGeneralRegex(PRODUCT_REMOVE)));
@@ -235,47 +232,4 @@ public class CLI {
         return stringBuilder.toString();
     }
 
-    private String okStatus(String type, String comand) {
-        StringBuilder builder;
-        builder = new StringBuilder();
-
-        builder.append(type)
-                .append(STR_BLANK_SPACE)
-                .append(comand)
-                .append(STR_DOUBLE_DOT)
-                .append(STR_BLANK_SPACE)
-                .append(OK_STATUS);
-
-        return builder.toString();
-    }
-
-    private void errorStatus(String type, String comand, String message) {
-        StringBuilder builder;
-        builder = new StringBuilder();
-
-        builder.append(type)
-                .append(STR_BLANK_SPACE)
-                .append(comand)
-                .append(STR_DOUBLE_DOT)
-                .append(STR_BLANK_SPACE)
-                .append(ERROR_STATUS)
-                .append(STR_DOUBLE_DOT)
-                .append(STR_BLANK_SPACE)
-                .append(message);
-
-        System.out.println(builder);
-    }
-
-    private void errorStatus(String type, String comand) {
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(type)
-                .append(STR_BLANK_SPACE)
-                .append(comand)
-                .append(STR_DOUBLE_DOT)
-                .append(STR_BLANK_SPACE)
-                .append(ERROR_STATUS);
-
-        System.out.println(builder);
-    }
 }
