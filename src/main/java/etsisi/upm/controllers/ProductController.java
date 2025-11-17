@@ -77,7 +77,7 @@ public class ProductController {
     }
 
     public static String prodDelete (ProductController productController, String query) {
-        int id = Integer.parseInt(deleteSubstring(query, createGeneralRegex(Constants.PRODUCT_REMOVE)));
+        int id = Integer.parseInt(deleteSubstring(query, Constants.createGeneralRegex(Constants.PRODUCT_REMOVE)));
         String deletedProd = productController.deleteProduct(id);
         String response = "";
         if (deletedProd != null) {
