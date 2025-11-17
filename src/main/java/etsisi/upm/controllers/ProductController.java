@@ -28,6 +28,7 @@ public class ProductController {
 
 
 
+
     private static String okStatus(String type, String comand) {
         StringBuilder builder;
         builder = new StringBuilder();
@@ -74,13 +75,13 @@ public class ProductController {
 
 
     public static String productAdder(String[] querySplit, ProductController productController) {
-        if ((querySplit[ONE].isEmpty())||(querySplit[ONE ].equals(" ")) ){
+        if ((querySplit[ONE].isEmpty())||(querySplit[ONE ].equals(STR_BLANK_SPACE )) ){
             throw new IllegalArgumentException("there is no id for product ");
         }
         int id = Integer.parseInt(querySplit[ONE]);
         String name = querySplit[TWO].replace(REGEX_DOUBLE_QUOTE, STR_EMPTY);
 
-        if ((querySplit[THREE].isEmpty())||(querySplit[THREE].equals(" ")) ){
+        if ((querySplit[THREE].isEmpty())||(querySplit[THREE].equals(STR_BLANK_SPACE )) ){
             throw new IllegalArgumentException("The product has to have a price");
         }
         float price = Float.parseFloat(querySplit[FOUR].replace(STR_COMMA, STR_DOT));
