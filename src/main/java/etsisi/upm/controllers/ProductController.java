@@ -28,20 +28,6 @@ public class ProductController {
     private static final String PRICE = "PRICE";
 
 
-
-
-    private static String createGeneralRegex(String query) {
-        StringBuilder stringBuilder;
-        stringBuilder = new StringBuilder();
-
-        stringBuilder.append(Constants.REGEX_INIT)
-                .append(query)
-                .append(Constants.REGEX_BLANK_SPACE);
-
-        return stringBuilder.toString();
-    }
-
-
     private static String deleteSubstring(String query, String regex) {
         return query.replaceFirst(regex, Constants.STR_EMPTY);
     }
@@ -111,7 +97,7 @@ public class ProductController {
 
     //here we add a new product to the hashmap of products
     //return true if it didn't exist, else false
-    public String addProduct(String name, String category, double price, int id) {
+    private String addProduct(String name, String category, double price, int id) {
         Product product;
         if (Categories.existCategory(category) && this.totalProducts<MAX_SIZE) {
             product = new Product(id, name, price, Categories.valueOf(category));
@@ -120,7 +106,7 @@ public class ProductController {
             return product.toString();
         } else return ERROR_CREATE_PRODUCT;
     }
-    public String addProduct(String name, String category, double price, int id , int maxPers) {
+    private String addProduct(String name, String category, double price, int id , int maxPers) {
         Product product;
         if (Categories.existCategory(category)) {
             product = new Product(id, name, price, Categories.valueOf(category),maxPers);
@@ -161,7 +147,7 @@ public class ProductController {
         } else return null;
     }
 
-    public String addProductToTicket(int prodId, int amount) {
+    public String addProductToTicket(int ticketId , int prodId, int amount) {
         if (products.containsKey(prodId)) {
             ticket.add(products.get(prodId), amount);
         }

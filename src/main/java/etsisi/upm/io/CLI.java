@@ -152,18 +152,6 @@ public class CLI {
         }
     }
 
-    private String createGeneralRegex(String query) {
-        StringBuilder stringBuilder;
-        stringBuilder = new StringBuilder();
-
-        stringBuilder.append(Constants.REGEX_INIT)
-                .append(query)
-                .append(Constants.REGEX_BLANK_SPACE);
-
-        return stringBuilder.toString();
-    }
-
-
 
     protected static void okStatus(String type, String comand) {
         StringBuilder builder;

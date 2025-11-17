@@ -62,4 +62,16 @@ public class Constants {
     public static final String CLIENT_REMOVE = "remove";
     public static final String CLIENT_LIST = "list";
 
+
+    public static String createGeneralRegex(String query) {
+        StringBuilder stringBuilder;
+        stringBuilder = new StringBuilder();
+
+        stringBuilder.append(Constants.REGEX_INIT)
+                .append(query)
+                .append(Constants.REGEX_BLANK_SPACE);
+
+        return stringBuilder.toString();
+    }
+
 }
