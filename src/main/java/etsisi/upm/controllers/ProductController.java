@@ -1,5 +1,6 @@
 package etsisi.upm.controllers;
 
+import etsisi.upm.io.ViewCLI;
 import etsisi.upm.util.Categories;
 import etsisi.upm.models.Product;
 import etsisi.upm.models.Ticket;
@@ -100,6 +101,17 @@ public class ProductController {
             response = okStatus(PROD, PRODUCT_ADD);
         }
         return response;
+    }
+
+    protected static String prodDelete () {
+        int id = Integer.parseInt(deleteSubstring(query, createGeneralRegex(PRODUCT_REMOVE)));
+        String deletedProd = productController.deleteProduct(id);
+        if (deletedProd != null) {
+            System.out.println(deletedProd);
+            ViewCLI.okStatus(PROD, PRODUCT_REMOVE);
+        } else {
+            ViewCLI.errorStatus(PROD, PRODUCT_REMOVE);
+        }
     }
 
     public ProductController() {

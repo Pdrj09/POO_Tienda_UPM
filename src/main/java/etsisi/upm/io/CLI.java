@@ -37,6 +37,12 @@ public class CLI {
     private static final String STR_BLANK_SPACE = " ";
     private static final String STR_DOUBLE_DOT = ":";
 
+
+
+    private static final String OK_STATUS = "ok";  //Ok
+    private static final String ERROR_STATUS = "Error"; //error
+
+
     // regex const
     private static final String REGEX_INIT = "^";
     private static final String REGEX_BLANK_SPACE = "\\s*";
@@ -120,22 +126,10 @@ public class CLI {
             } else if (query.contains(PRODUCT_LIST)) {
 
                 System.out.println(productController.prodList());
-
-                ViewCLI.okStatus(PROD, PRODUCT_LIST);
+                okStatus(PROD, PRODUCT_LIST);
 
             } else if (query.contains(PRODUCT_REMOVE)) {
-                int id = Integer.parseInt(deleteSubstring(query, createGeneralRegex(PRODUCT_REMOVE)));
-
-
-                String deletedProd = productController.deleteProduct(id);
-
-                if (deletedProd != null) {
-                    System.out.println(deletedProd);
-                    ViewCLI.okStatus(PROD, PRODUCT_REMOVE);
-                } else {
-                    ViewCLI.errorStatus(PROD, PRODUCT_REMOVE);
-                }
-
+                kjh
 
             } else if (query.contains(PRODUCT_UPDATE)) {
 
@@ -147,14 +141,14 @@ public class CLI {
 
                 if (productEdited != null) {
                     System.out.println(productEdited);
-                    ViewCLI.okStatus(TICKET, TICKET_NEW);
+                    okStatus(TICKET, TICKET_NEW);
                 } else {
-                    ViewCLI.errorStatus(TICKET, TICKET_NEW);
+                    errorStatus(TICKET, TICKET_NEW);
                 }
 
             }
         } catch (Exception e) {
-            ViewCLI.errorStatus(PROD, PRODUCT_ADD, e.toString());
+            errorStatus(PROD, PRODUCT_ADD, e.toString());
         }
     }
     /*ticket new [<id>] <cashId> <userId>
@@ -188,21 +182,21 @@ public class CLI {
             }
             if (newTicket != null) {
                 System.out.println(newTicket);
-                ViewCLI.okStatus(TICKET, TICKET_ADD);
+                okStatus(TICKET, TICKET_ADD);
             } else {
-                ViewCLI.errorStatus(TICKET, TICKET_ADD);
+                errorStatus(TICKET, TICKET_ADD);
             }
 
         } else if (query.contains(TICKET_NEW)) {
 
             productController.ticketNew();
-            ViewCLI.okStatus(TICKET, TICKET_NEW);
+            okStatus(TICKET, TICKET_NEW);
 
 
         } else if (query.contains(TICKET_PRINT)) {
 
             System.out.println(productController.ticketPrint());
-            ViewCLI.okStatus(TICKET, TICKET_PRINT);
+            okStatus(TICKET, TICKET_PRINT);
 
         } else if (query.contains(TICKET_REMOVE)) {
             int id = Integer.parseInt(deleteSubstring(query, createGeneralRegex(PRODUCT_REMOVE)));
@@ -230,6 +224,52 @@ public class CLI {
                 .append(REGEX_BLANK_SPACE);
 
         return stringBuilder.toString();
+    }
+
+
+
+    protected static void okStatus(String type, String comand) {
+        StringBuilder builder;
+        builder = new StringBuilder();
+
+        builder.append(type)
+                .append(STR_BLANK_SPACE)
+                .append(comand)
+                .append(STR_DOUBLE_DOT)
+                .append(STR_BLANK_SPACE)
+                .append(OK_STATUS);
+
+        ViewCLI.print(builder.toString());
+    }
+
+    protected static void  errorStatus(String type, String comand, String message) {
+        StringBuilder builder;
+        builder = new StringBuilder();
+
+        builder.append(type)
+                .append(STR_BLANK_SPACE)
+                .append(comand)
+                .append(STR_DOUBLE_DOT)
+                .append(STR_BLANK_SPACE)
+                .append(ERROR_STATUS)
+                .append(STR_DOUBLE_DOT)
+                .append(STR_BLANK_SPACE)
+                .append(message);
+
+        ViewCLI.print(builder.toString());
+    }
+
+    protected static void errorStatus(String type, String comand) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(type)
+                .append(STR_BLANK_SPACE)
+                .append(comand)
+                .append(STR_DOUBLE_DOT)
+                .append(STR_BLANK_SPACE)
+                .append(ERROR_STATUS);
+
+        ViewCLI.print(builder.toString());
     }
 
 }

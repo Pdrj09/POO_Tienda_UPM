@@ -3,17 +3,6 @@ package etsisi.upm.io;
 public class ViewCLI {
 
 
-    private static final String OK_STATUS = "ok";  //Ok
-    private static final String ERROR_STATUS = "Error"; //error
-
-
-    private static final String STR_EMPTY = "";
-    private static final String STR_DOT = ".";
-    private static final String STR_COMMA = ",";
-    private static final String STR_ERROR = "Error";
-    private static final String STR_BLANK_SPACE = " ";
-    private static final String STR_DOUBLE_DOT = ":";
-
     /// messages and help
     //This is the welcome message it is printed when you start the program
     private static final String WELCOME_MESSAGE = """
@@ -77,48 +66,5 @@ public class ViewCLI {
 
 
 
-    protected static void okStatus(String type, String comand) {
-        StringBuilder builder;
-        builder = new StringBuilder();
-
-        builder.append(type)
-                .append(STR_BLANK_SPACE)
-                .append(comand)
-                .append(STR_DOUBLE_DOT)
-                .append(STR_BLANK_SPACE)
-                .append(OK_STATUS);
-
-        print (builder.toString());
-    }
-
-    protected static void  errorStatus(String type, String comand, String message) {
-        StringBuilder builder;
-        builder = new StringBuilder();
-
-        builder.append(type)
-                .append(STR_BLANK_SPACE)
-                .append(comand)
-                .append(STR_DOUBLE_DOT)
-                .append(STR_BLANK_SPACE)
-                .append(ERROR_STATUS)
-                .append(STR_DOUBLE_DOT)
-                .append(STR_BLANK_SPACE)
-                .append(message);
-
-        print(builder.toString());
-    }
-
-    protected static void errorStatus(String type, String comand) {
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(type)
-                .append(STR_BLANK_SPACE)
-                .append(comand)
-                .append(STR_DOUBLE_DOT)
-                .append(STR_BLANK_SPACE)
-                .append(ERROR_STATUS);
-
-        print(builder.toString());
-    }
 
 }
