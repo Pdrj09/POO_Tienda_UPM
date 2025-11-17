@@ -129,7 +129,7 @@ public class CLI {
                 okStatus(PROD, PRODUCT_LIST);
 
             } else if (query.contains(PRODUCT_REMOVE)) {
-                kjh
+                productController.prodDelete(productController, query);
 
             } else if (query.contains(PRODUCT_UPDATE)) {
 
@@ -209,12 +209,6 @@ public class CLI {
         }
     }
 
-
-
-    private String deleteSubstring(String query, String regex) {
-        return query.replaceFirst(regex, STR_EMPTY);
-    }
-
     private String createGeneralRegex(String query) {
         StringBuilder stringBuilder;
         stringBuilder = new StringBuilder();
@@ -271,5 +265,11 @@ public class CLI {
 
         ViewCLI.print(builder.toString());
     }
+
+
+    private static String deleteSubstring(String query, String regex) {
+        return query.replaceFirst(regex, STR_EMPTY);
+    }
+
 
 }

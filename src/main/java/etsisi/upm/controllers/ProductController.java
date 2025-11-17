@@ -1,6 +1,6 @@
 package etsisi.upm.controllers;
 
-import etsisi.upm.io.ViewCLI;
+import etsisi.upm.io.CLI;
 import etsisi.upm.util.Categories;
 import etsisi.upm.models.Product;
 import etsisi.upm.models.Ticket;
@@ -26,24 +26,6 @@ public class ProductController {
     private static final String NEXT_LINE = "\n";
     private static final String TAB_SPACE = "\t";
     private static final int MAX_SIZE = 200;
-
-
-
-
-    private static String okStatus(String type, String comand) {
-        StringBuilder builder;
-        builder = new StringBuilder();
-
-        builder.append(type)
-                .append(STR_BLANK_SPACE)
-                .append(comand)
-                .append(STR_DOUBLE_DOT)
-                .append(STR_BLANK_SPACE)
-                .append(OK_STATUS);
-
-        return builder.toString();
-    }
-
 
     // numbers
     private static final int ONE = 1;
@@ -74,6 +56,37 @@ public class ProductController {
     private static final String REGEX_TO_SPLIT = " (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
     private static final String REGEX_PERSONALIZED = "(?<=--p)";
 
+    private static String createGeneralRegex(String query) {
+        StringBuilder stringBuilder;
+        stringBuilder = new StringBuilder();
+
+        stringBuilder.append(REGEX_INIT)
+                .append(query)
+                .append(REGEX_BLANK_SPACE);
+
+        return stringBuilder.toString();
+    }
+
+
+    private static String deleteSubstring(String query, String regex) {
+        return query.replaceFirst(regex, STR_EMPTY);
+    }
+
+
+    private static String okStatus(String type, String comand) {
+        StringBuilder builder;
+        builder = new StringBuilder();
+
+        builder.append(type)
+                .append(STR_BLANK_SPACE)
+                .append(comand)
+                .append(STR_DOUBLE_DOT)
+                .append(STR_BLANK_SPACE)
+                .append(OK_STATUS);
+
+        return builder.toString();
+    }
+
 
     public static String productAdder(String[] querySplit, ProductController productController) {
         if ((querySplit[ONE].isEmpty())||(querySplit[ONE ].equals(STR_BLANK_SPACE )) ){
@@ -103,15 +116,17 @@ public class ProductController {
         return response;
     }
 
-    protected static String prodDelete () {
+    public static String prodDelete (ProductController productController, String query) {
         int id = Integer.parseInt(deleteSubstring(query, createGeneralRegex(PRODUCT_REMOVE)));
         String deletedProd = productController.deleteProduct(id);
+        String response = "";
         if (deletedProd != null) {
             System.out.println(deletedProd);
-            ViewCLI.okStatus(PROD, PRODUCT_REMOVE);
+            response = okStatus(PROD, PRODUCT_REMOVE);
         } else {
-            ViewCLI.errorStatus(PROD, PRODUCT_REMOVE);
+           // CLI.errorStatus(PROD, PRODUCT_REMOVE);
         }
+        return response;
     }
 
     public ProductController() {
