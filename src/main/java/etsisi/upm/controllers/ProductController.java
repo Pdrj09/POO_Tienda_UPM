@@ -10,8 +10,8 @@ import java.util.HashMap;
 
 public class ProductController {
 
-    private final HashMap<Integer, Product> products;
-    private Ticket ticket;
+    private static HashMap<Integer, Product> products;
+    private static Ticket ticket;
     private int totalProducts;
 
 
@@ -147,13 +147,13 @@ public class ProductController {
         } else return null;
     }
 
-    public String addProductToTicket(int ticketId , int prodId, int amount) {
+    public static String addProductToTicket(String ticketId,String cashId, int prodId, int amount) {
         if (products.containsKey(prodId)) {
             ticket.add(products.get(prodId), amount);
         }
         return ticket.toString();
     }
-    public String addPersonalicedProductToTicket(int prodId , int amount, String[] personalizations){
+    public String addProductToTicket(int prodId , String cashId, int amount, String[] personalizations){
         if (products.containsKey(prodId)) {
             ticket.addPersonalized(products.get(prodId), amount ,personalizations);
         }

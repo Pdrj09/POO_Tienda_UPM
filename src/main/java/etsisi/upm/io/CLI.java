@@ -19,10 +19,10 @@ public class CLI {
     public int newQuery(String query) {
         //Check if the query starts with PROD command keyword
         if (query.startsWith(Constants.PROD)) {
-            this.prodQuery(deleteSubstring(query, createGeneralRegex(Constants.PROD)));
+            this.prodQuery(deleteSubstring(query,  Constants.createGeneralRegex(Constants.PROD)));
             //if the query starts with TICKET, we handle using ticketQuery().
         } else if (query.startsWith(Constants.TICKET)) {
-            this.ticketQuery(deleteSubstring(query, createGeneralRegex(Constants.TICKET)));
+            this.ticketQuery(deleteSubstring(query,  Constants.createGeneralRegex(Constants.TICKET)));
             //if query starts with ECHO,it echoes back the input
         } else if (query.startsWith(Constants.ECHO)) {
             ViewCLI.echoCommand(query);
@@ -119,9 +119,9 @@ public class CLI {
 
             if (querySplit [querySplit.length-1].contains("--p") ){
                 String[] queryPersonalized = querySplit[Constants.FIVE].split(Constants.REGEX_TO_SPLIT);
-                /// newTicket = controller.addPersonalicedProductToTicket(ticketId, cashId, id, quantity, queryPersonalized);
+                //newTicket = ProductController.addProductToTicket(ticketId, cashId, id, quantity, queryPersonalized);
             }else {
-                /// newTicket =  controller.addProductToTicket(ticketId, cashId, id, quantity);
+                newTicket =  ProductController.addProductToTicket(ticketId, cashId, id, quantity);
             }
             if (newTicket != null) {
                 System.out.println(newTicket);
@@ -142,7 +142,7 @@ public class CLI {
             okStatus(Constants.TICKET, Constants.TICKET_PRINT);
 
         } else if (query.contains(Constants.TICKET_REMOVE)) {
-            int id = Integer.parseInt(deleteSubstring(query, createGeneralRegex(Constants.PRODUCT_REMOVE)));
+            int id = Integer.parseInt(deleteSubstring(query,  Constants.createGeneralRegex(Constants.PRODUCT_REMOVE)));
 
            // if (controller.removeProductFromTicket(ticketId,id)) {
            //     System.out.println(okStatus(TICKET, TICKET_REMOVE));
