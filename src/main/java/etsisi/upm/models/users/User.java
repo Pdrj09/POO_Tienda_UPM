@@ -35,7 +35,7 @@ public abstract class User {
 
     public void setName(String name) {
         if (name == null || name.isBlank())
-            throw new IllegalArgumentException("El nombre no puede estar vacío");
+            throw new IllegalArgumentException(ERR_NAME_EMPTY);
         this.name = name;
     }
 
@@ -45,7 +45,7 @@ public abstract class User {
 
     public void setEmail(String email) {
         if (email == null || email.isBlank())
-            throw new IllegalArgumentException("El email no puede estar vacío");
+            throw new IllegalArgumentException(ERR_EMAIL_EMPTY);
         this.email = email;
     }
 
