@@ -51,7 +51,7 @@ public class TicketController {
 
         // customize execution
         if (customizations != null && !customizations.isEmpty()) {
-            // calls personalizated products method
+            // calls personalized products method
             ticket.addPersonalized(product, amount, customizations.toArray(new String[0]));
         } else {
             // calls general products method

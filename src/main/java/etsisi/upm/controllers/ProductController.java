@@ -200,7 +200,7 @@ public class ProductController {
     public static String prodAddMeal(String[] querySplit, ProductController productController) {
         try {
             if (querySplit.length < Constants.FIVE + 1) {
-                throw new IllegalArgumentException("Faltan parámetros para crear la Merienda.");
+                throw new IllegalArgumentException("Some parameters are missing to create Meal.");
             }
 
             int id = Integer.parseInt(querySplit[Constants.ONE]);
@@ -212,34 +212,31 @@ public class ProductController {
 
             int maxPeople = Integer.parseInt(querySplit[Constants.FIVE]);
 
-            // Llama al método de instancia para la lógica de negocio
+            // negotiation logic response.
             String response = productController.addMeal(id, name, pricePerPerson, maxPeople, expirationDate);
 
-            // Si el método de instancia devuelve el toString() del objeto (no un error),
-            // devolvemos una cadena vacía o un mensaje de éxito.
+            // if method returns toString of the object and not an error, return an empty chain or a succesfull message.
             if (!response.startsWith(Constants.STR_ERROR)) {
-                // Asumiendo que el comando solo debe devolver el objeto si hay error,
-                // y una cadena vacía o mensaje simple si es exitoso (e.g., para que ViewCLI.print() muestre solo el OK).
-                return "Producto de servicio añadido exitosamente: " + response;
+                return "service product added successfully: " + response;
             }
             return response;
 
         } catch (java.time.format.DateTimeParseException e) {
-            return Constants.STR_ERROR + ": Formato de fecha y hora incorrecto. Use " + DATETIME_FORMAT;
+            return Constants.STR_ERROR + ": Date format incorrect. Use " + DATETIME_FORMAT;
         } catch (NumberFormatException e) {
-            return Constants.STR_ERROR + ": ID, Precio o Número de personas no válido.";
+            return Constants.STR_ERROR + ": ID, Price or Number of persons not valid.";
         } catch (IllegalArgumentException e) {
             return Constants.STR_ERROR + ": " + e.getMessage();
         } catch (Exception e) {
-            return Constants.STR_ERROR + ": Error desconocido al añadir Merienda. " + e.getMessage();
+            return Constants.STR_ERROR + ": Unknown error when adding Meal. " + e.getMessage();
         }
     }
 
     public static String prodAddMeeting(String[] querySplit, ProductController productController) {
         try {
-            // Se esperan 6 elementos en total: [0]prod, [1]addMeeting, [2]id, [3]name, [4]price, [5]date, [6]maxPeople
+            // 6 elements expected: [0]prod, [1]addMeeting, [2]id, [3]name, [4]price, [5]date, [6]maxPeople
             if (querySplit.length < Constants.FIVE + 1) {
-                throw new IllegalArgumentException("Faltan parámetros para crear la Reunión.");
+                throw new IllegalArgumentException("some parameters are missing to create the Meeting");
             }
 
             int id = Integer.parseInt(querySplit[Constants.ONE]);
@@ -247,45 +244,44 @@ public class ProductController {
             double pricePerPerson = Double.parseDouble(querySplit[Constants.THREE].replace(Constants.STR_COMMA, Constants.STR_DOT));
 
             String dateString = querySplit[Constants.FOUR];
-            // Nota: Asegúrate de que DATETIME_FORMAT esté definido
             LocalDateTime expirationDate = LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT));
 
             int maxPeople = Integer.parseInt(querySplit[Constants.FIVE]);
 
-            // Llama al método de instancia para la lógica de negocio
+            // negotiation logic response
             String response = productController.addMeeting(id, name, pricePerPerson, maxPeople, expirationDate);
 
-            // Si el método de instancia devuelve el toString() del objeto (no un error), devolvemos el resultado.
+            // is the toString is returned, then we return the message
             if (!response.startsWith(Constants.STR_ERROR)) {
-                return "Producto de servicio añadido exitosamente: " + response;
+                return "Product added successfully: " + response;
             }
             return response;
 
         } catch (java.time.format.DateTimeParseException e) {
-            return Constants.STR_ERROR + ": Formato de fecha y hora incorrecto. Use " + DATETIME_FORMAT;
+            return Constants.STR_ERROR + ": Date format incorrect. Use " + DATETIME_FORMAT;
         } catch (NumberFormatException e) {
-            return Constants.STR_ERROR + ": ID, Precio o Número de personas no válido.";
+            return Constants.STR_ERROR + ": ID, Price or Number of persons not valid.";
         } catch (IllegalArgumentException e) {
             return Constants.STR_ERROR + ": " + e.getMessage();
         } catch (Exception e) {
-            return Constants.STR_ERROR + ": Error desconocido al añadir Reunión. " + e.getMessage();
+            return Constants.STR_ERROR + ": Unknown error when adding Meeting " + e.getMessage();
         }
     }
 
     private String addMeal(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
         // ... (validación de ID y MAX_SIZE)
         if (this.products.containsKey(id)) {
-            return ERROR_CREATE_PRODUCT + ": Ya existe un producto con ID " + id;
+            return ERROR_CREATE_PRODUCT + ": the product with the ID " + id + "already exists.";
         }
         if (this.totalProducts >= MAX_SIZE) {
-            return ERROR_CREATE_PRODUCT + ": Catálogo lleno";
+            return ERROR_CREATE_PRODUCT + ": Catalog full";
         }
 
         try {
             Meal meal = new Meal(id, name, pricePerPerson, maxPeople, expirationDate);
             products.put(meal.getId(), meal);
             this.totalProducts++;
-            // Devuelve el toString() del objeto, que es capturado por prodAddMeal
+            // return of the toString of the object captured by prodAddMeal
             return meal.toString();
         } catch (IllegalArgumentException e) {
             return ERROR_CREATE_PRODUCT + ": " + e.getMessage();
@@ -293,28 +289,28 @@ public class ProductController {
     }
 
     private String addMeeting(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
-        // 1. Validar si el ID ya existe
+        // 1. ID validation
         if (this.products.containsKey(id)) {
-            return ERROR_CREATE_PRODUCT + ": Ya existe un producto con ID " + id;
+            return ERROR_CREATE_PRODUCT + ": the product with the ID " + id + "already exists.";
         }
 
-        // 2. Validar capacidad máxima del catálogo
+        // 2. validate the catalog size
         if (this.totalProducts >= MAX_SIZE) {
-            return ERROR_CREATE_PRODUCT + ": Catálogo lleno";
+            return ERROR_CREATE_PRODUCT + ": Catalog full";
         }
 
         try {
-            // 3. Crear instancia de Meeting (el constructor valida la antelación de 12 horas)
+            // 3. meeting instance and date validation
             Meeting meeting = new Meeting(id, name, pricePerPerson, maxPeople, expirationDate);
 
-            // 4. Añadir al repositorio
+            // 4. add to the repository
             products.put(meeting.getId(), meeting);
             this.totalProducts++;
 
-            // 5. Devolver la representación del objeto creado
+            // 5. return the created object
             return meeting.toString();
         } catch (IllegalArgumentException e) {
-            // Captura el error de antelación lanzado por el constructor de Meeting
+            // catch the date error by meeting construction
             return ERROR_CREATE_PRODUCT + ": " + e.getMessage();
         }
     }

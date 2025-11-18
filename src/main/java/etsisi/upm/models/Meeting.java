@@ -9,12 +9,11 @@ public class Meeting extends ServiceProduct {
     private static final String STR_MEETING = "class:Meeting";
     private static final String CLOSE_BRACE = "}";
 
-    // Constructor sin roomType ni requiredEquipment
     public Meeting(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
         super(id, name, pricePerPerson, maxPeople, expirationDate);
     }
 
-    // --- Reglas de Antelación (12 Horas) ---
+    // --- Date rules ---
     @Override
     public int getMinimumCreationTime() {
         return Constants.TIME_MEETING_PLANNING_HOURS;
@@ -25,7 +24,7 @@ public class Meeting extends ServiceProduct {
         return ChronoUnit.HOURS;
     }
 
-    // --- Costo ---
+    // cost
     @Override
     public double calculateTotalCost(int participants) {
         return getPricePerPerson() * participants;
@@ -35,7 +34,7 @@ public class Meeting extends ServiceProduct {
     @Override
     public String toString() {
         String parentToString = super.toString();
-        // Solo reemplaza el nombre de la clase
+        // replace the name of the class
         return parentToString.replace("class:ServiceProduct", STR_MEETING);
     }
 }

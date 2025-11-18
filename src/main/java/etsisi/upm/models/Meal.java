@@ -9,12 +9,11 @@ public class Meal extends ServiceProduct {
     private static final String STR_MEAL = "class:Meal";
     private static final String CLOSE_BRACE = "}";
 
-    // Constructor sin menuDescription
     public Meal(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
         super(id, name, pricePerPerson, maxPeople, expirationDate);
     }
 
-    // --- Reglas de Antelación (3 Días) ---
+    // Date rules
     @Override
     public int getMinimumCreationTime() {
         return Constants.TIME_MEAL_PLANNING_DAYS;
@@ -25,7 +24,7 @@ public class Meal extends ServiceProduct {
         return ChronoUnit.DAYS;
     }
 
-    // --- Costo ---
+    // cost
     @Override
     public double calculateTotalCost(int participants) {
         return getPricePerPerson() * participants;
@@ -35,7 +34,7 @@ public class Meal extends ServiceProduct {
     @Override
     public String toString() {
         String parentToString = super.toString();
-        // Solo reemplaza el nombre de la clase
+        // replace the name of the class
         return parentToString.replace("class:ServiceProduct", STR_MEAL);
     }
 }

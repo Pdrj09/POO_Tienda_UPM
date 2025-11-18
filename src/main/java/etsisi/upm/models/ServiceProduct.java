@@ -24,16 +24,16 @@ public abstract class ServiceProduct extends Product {
 
         if (!isFeasible(LocalDateTime.now())) {
             String timeUnit = getMinimumTimeUnit() == ChronoUnit.HOURS ? "horas" : "días";
-            throw new IllegalArgumentException("Error: La fecha de caducidad debe ser al menos " + getMinimumCreationTime() + " " + timeUnit + " en el futuro.");
+            throw new IllegalArgumentException("Error: The date must be  " + getMinimumCreationTime() + " " + timeUnit + " in the future.");
         }
     }
 
-    // --- Métodos Abstractos ---
+    // Abstract methods
     public abstract int getMinimumCreationTime();
     public abstract ChronoUnit getMinimumTimeUnit();
     public abstract double calculateTotalCost(int participants);
 
-    // --- Lógica de Antelación ---
+    // logic
     public boolean isFeasible(LocalDateTime creationTime) {
         long timeDifference = creationTime.until(expirationDate, getMinimumTimeUnit());
         return timeDifference >= getMinimumCreationTime();
@@ -51,13 +51,13 @@ public abstract class ServiceProduct extends Product {
         String currentToString = parentToString.replace("class:Product", STR_SERVICE_PRODUCT);
         StringBuilder builder = new StringBuilder(currentToString);
 
-        // USANDO CONSTANTES PROTECTED HEREDADAS DE PRODUCT:
+        // using constants inhered from Product:
         int lastBrace = builder.lastIndexOf(CLOSE_BRACE);
-        int indexPrice = builder.lastIndexOf(STR_PRICE); // <- USAR STR_PRICE (de Product)
+        int indexPrice = builder.lastIndexOf(STR_PRICE);
 
         if (lastBrace != -1) {
             if(indexPrice != -1) {
-                // El tamaño del label a reemplazar es el de la constante heredada
+                // The size of the label to be replaced is that of the inherited constant
                 builder.replace(indexPrice, indexPrice + STR_PRICE.length(), STR_PRICE_PERSON);
             }
             builder.insert(lastBrace, STR_EXPIRATION + expirationDate);
