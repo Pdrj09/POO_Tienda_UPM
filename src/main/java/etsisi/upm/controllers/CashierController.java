@@ -8,7 +8,7 @@ import java.util.Random;
 import java.util.Set;
 
 public class CashierController {
-    private static final Random ramdon = new Random();
+    private static final Random randon = new Random();
     private static final Repository<String, Cashier> repository = new Repository<>();
 
     private static final String CASHIER_PREFIX = "UW";
@@ -21,7 +21,7 @@ public class CashierController {
 
     public Cashier addCash(String emailCompany, String name) {
         String cashierId = generateCashierId();
-        Cashier cashier =  new Cashier(cashierId, emailCompany, name);
+        Cashier cashier =  Cashier.create(cashierId, emailCompany, name);
 
         repository.add(cashierId, cashier);
 
@@ -30,7 +30,7 @@ public class CashierController {
 
     public Cashier addCashier(String cahierId, String emailCompany, String name) {
         if(repository.findById(cahierId) == null) {
-            Cashier cashier =  new Cashier(cahierId, emailCompany, name);
+            Cashier cashier =  Cashier.create(cahierId, emailCompany, name);
             repository.add(cahierId, cashier);
 
             return cashier;
@@ -58,7 +58,7 @@ public class CashierController {
     private String generateCashierId(){
         String id;
         do{
-            int num = ramdon.nextInt(10_000_000); //range between 0 and 9.999.999
+            int num = randon.nextInt(10_000_000); //range between 0 and 9.999.999
             id = String.format(CASH_REGEX, CASHIER_PREFIX, num);
         }while(repository.findById(id) != null);
         return id;

@@ -21,13 +21,19 @@ public class Client extends User implements Comparable<Client> {
     private static final String STR_CASH = ", cashCreatorId:'";
     private static final String SINGLE_QUOTE = "'";
 
+    //Validation messages
+    private static final String ERR_DNI_LENGTH = "El DNI tiene que tener 9 digitos";
+    private static final String ERR_CASHIER_NULL = "El id del cajero no puede ser null";
+
 
     //CONSTRUCTOR W/ ALL PARAMETERS
     public Client(String dni, String name, String email, String idCashier) {
         super(dni, name, email);
         if(dni.length() != 9)
-            throw new IllegalArgumentException("El DNI tiene que tener 9 digitos");
+            throw new IllegalArgumentException(ERR_DNI_LENGTH);
         this.associatedTickets = new TreeSet<>();
+        if (idCashier == null)
+            throw new IllegalArgumentException(ERR_CASHIER_NULL);
         this.strIdCashier = idCashier;
     }
 
