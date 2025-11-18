@@ -153,28 +153,6 @@ public class ProductController {
         }
         return ticket.toString();
     }
-    public String addProductToTicket(int prodId , String cashId, int amount, String[] personalizations){
-        if (products.containsKey(prodId)) {
-            ticket.addPersonalized(products.get(prodId), amount ,personalizations);
-        }
-        return ticket.toString();
-    }
-
-    public boolean removeProductFromTicket(int prodId) {
-        if (products.containsKey(prodId)) {
-            ticket.remove(products.get(prodId));
-            return true;
-        } else return false;
-    }
-
-    public boolean ticketNew() {
-        return this.ticket.clear();
-    }
-
-
-    public String ticketPrint() {
-        return this.ticket.toString();
-    }
 
     public String prodList() {
         StringBuilder builder = new StringBuilder();

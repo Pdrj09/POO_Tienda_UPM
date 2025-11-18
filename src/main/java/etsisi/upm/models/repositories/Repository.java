@@ -4,29 +4,49 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Repository <K, T> {
+public class Repository <K, T> implements RepositoryInterface<K, T>{
     private final Map<K, T> repoMap;
+    private final boolean hasMaxSize;
+    private final int maxSize;
 
     public Repository() {
-        repoMap = new HashMap<>();
+        this.hasMaxSize = false;
+        this.maxSize = -1;
+        this.repoMap = new HashMap<>();
     }
 
+    public Repository(int maxSize){
+        this.hasMaxSize = true;
+        this.maxSize = maxSize;
+        this.repoMap = new HashMap<>();
+    }
+
+    @Override
     public void add(K key, T object) {
-
-        this.repoMap.put(key, object);
+        if(!this.hasMaxSize || this.repoMap.size()<this.maxSize){
+            this.repoMap.put(key, object);
+        }else{
+            throw new IllegalStateException("Repositorio con tamaño máximo de "+this.maxSize);
+        }
     }
 
+    @Override
     public T findById(K id) {
         return repoMap.get(id);
     }
 
-
+    @Override
     public T removeById(K id) {
         return repoMap.remove(id);
     }
 
-
+    @Override
     public Collection<T> findAll(){
         return this.repoMap.values();
+    }
+
+    @Override
+    public Map<K, T> getMap() {
+        return this.repoMap;
     }
 }
