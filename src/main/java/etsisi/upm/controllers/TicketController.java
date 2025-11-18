@@ -6,7 +6,7 @@ import etsisi.upm.models.repositories.*;
 import etsisi.upm.models.users.Cashier;
 import etsisi.upm.models.users.Client;
 
-import java.util.List;
+import java.util.*;
 
 public class TicketController {
     private final Repository<String,Ticket> ticketRepository;
@@ -39,10 +39,16 @@ public class TicketController {
         ticket.remove(product);
     }
 
+    /* TODO: EL ticket print debería gestionarlo el view, que el controlador le devuelva un ticket y él lo convierta*/
     public String printTicket(String ticketId, String cahsierId){
         Ticket ticket = this.ticketRepository.findById(ticketId);
         closeTicket(ticket);
         return ticket.toString();
+    }
+
+    // TODO método para usar en el view en vez de llamar a printTicket
+    public Ticket getTicket(String ticketId){
+        return this.ticketRepository.findById(ticketId);
     }
 
     private void closeTicket(Ticket ticket){
@@ -58,6 +64,18 @@ public class TicketController {
         return ticket;
     }
 
+    public List<Ticket> getTicketList(){
+        List<Ticket> ticketList = new ArrayList<Ticket>();
+        TreeMap<String, Cashier> sortedCashiers = new TreeMap<>(this.cashierRepository.getMap());
+
+        for (Map.Entry<String, Cashier> entry : sortedCashiers.entrySet()){
+            Set<String> ticketIds = entry.getValue().getTickets();
+            for (String ticketId : ticketIds){
+                ticketList.add(this.ticketRepository.findById(ticketId));
+            }
+        }
+        return ticketList;
+    }
 
 
 }

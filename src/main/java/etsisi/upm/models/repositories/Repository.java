@@ -44,4 +44,9 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
     public Collection<T> findAll(){
         return this.repoMap.values();
     }
+
+    @Override
+    public Map<K, T> getMap() {
+        return this.repoMap;
+    }
 }
