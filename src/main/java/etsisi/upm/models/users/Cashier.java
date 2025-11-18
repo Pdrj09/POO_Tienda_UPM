@@ -80,10 +80,10 @@ public class Cashier extends User implements Comparable<Cashier>{
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(OPEN_BRACE)
-                .append(STR_CASHIER).append(STR_ID).append(getId())
+                .append(STR_CASHIER).append(QUOTE).append(STR_ID).append(getId())
                 .append(STR_NAME).append(QUOTE).append(getName()).append(QUOTE)
                 .append(STR_EMAIL).append(QUOTE).append(getEmail()).append(QUOTE)
-                .append(STR_TICKETS).append(tickets)
+                .append(STR_TICKETS).append(getTickets())
                 .append(CLOSE_BRACE);
         return sb.toString();
     }

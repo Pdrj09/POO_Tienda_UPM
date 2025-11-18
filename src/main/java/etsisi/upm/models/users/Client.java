@@ -71,10 +71,10 @@ public class Client extends User implements Comparable<Client> {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(OPEN_BRACE)
-                .append(STR_CLIENT).append(STR_DNI).append(getId()).append(SINGLE_QUOTE)
-                .append(STR_NAME).append(getName()).append(SINGLE_QUOTE)
-                .append(STR_EMAIL).append(getEmail()).append(SINGLE_QUOTE)
-                .append(STR_CASH).append(getStrIdCashier()).append(SINGLE_QUOTE)
+                .append(STR_CLIENT).append(SINGLE_QUOTE).append(STR_DNI).append(getId()).append(SINGLE_QUOTE)
+                .append(STR_NAME).append(SINGLE_QUOTE).append(getName()).append(SINGLE_QUOTE)
+                .append(STR_EMAIL).append(SINGLE_QUOTE).append(getEmail()).append(SINGLE_QUOTE)
+                .append(STR_CASH).append(SINGLE_QUOTE).append(getStrIdCashier()).append(SINGLE_QUOTE)
                 .append(CLOSE_BRACE);
         return sb.toString();
     }
