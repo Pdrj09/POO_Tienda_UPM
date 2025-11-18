@@ -121,10 +121,22 @@ public class Ticket {
         return this.getId();
     }
 
+    // totalPrice updated with Meal&Meetings version
     private double totalPrice(){
         double sum=0;
         for(Map.Entry<Product,Integer> entry : list.entrySet()){
-            sum+=entry.getKey().getPrice() * entry.getValue();
+            Product product = entry.getKey();
+            int amount = entry.getValue(); // number of amount(products)/people(services)
+
+            // is a serviceProduct?
+            if (product instanceof ServiceProduct) {
+                ServiceProduct service = (ServiceProduct) product;
+                // if yes, do the maths with people*price
+                sum += service.calculateTotalCost(amount);
+            } else {
+                // normal product
+                sum += product.getPrice() * amount;
+            }
         }
         return sum;
     }
@@ -158,5 +170,10 @@ public class Ticket {
 
     public String getId() {
         return id;
+    }
+
+    //look if the product already exists
+    public boolean containsProduct(Product prod) {
+        return this.list.containsKey(prod);
     }
 }

@@ -19,9 +19,9 @@ public class Product implements Comparable<Product> {
     private static final String STR_NAME = ", name:'";
     private static final String STR_ID = ", id:";
     private static final String STR_CATEGORY = ", category:";
-    private static final String STR_PRICE = ", price:";
-    private static final String CLOSE_BRACE = "}";
     private static final String SINGLE_QUOTE = "'";
+    protected static final String STR_PRICE = ", price:";
+    protected static final String CLOSE_BRACE = "}";
 
 
 
@@ -98,6 +98,10 @@ public class Product implements Comparable<Product> {
 
     public double getPrice() {
         return price;
+    }
+
+    public int getMaxPers() {
+        return maxPers;
     }
 
     public Categories getCategory() {

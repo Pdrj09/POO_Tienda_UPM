@@ -4,25 +4,25 @@ import etsisi.upm.Constants;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
-public class Meeting extends ServiceProduct {
+public class Meal extends ServiceProduct {
 
-    private static final String STR_MEETING = "class:Meeting";
+    private static final String STR_MEAL = "class:Meal";
     private static final String CLOSE_BRACE = "}";
 
-    // Constructor sin roomType ni requiredEquipment
-    public Meeting(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
+    // Constructor sin menuDescription
+    public Meal(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
         super(id, name, pricePerPerson, maxPeople, expirationDate);
     }
 
-    // --- Reglas de Antelación (12 Horas) ---
+    // --- Reglas de Antelación (3 Días) ---
     @Override
     public int getMinimumCreationTime() {
-        return Constants.TIME_MEETING_PLANNING_HOURS;
+        return Constants.TIME_MEAL_PLANNING_DAYS;
     }
 
     @Override
     public ChronoUnit getMinimumTimeUnit() {
-        return ChronoUnit.HOURS;
+        return ChronoUnit.DAYS;
     }
 
     // --- Costo ---
@@ -36,6 +36,6 @@ public class Meeting extends ServiceProduct {
     public String toString() {
         String parentToString = super.toString();
         // Solo reemplaza el nombre de la clase
-        return parentToString.replace("class:ServiceProduct", STR_MEETING);
+        return parentToString.replace("class:ServiceProduct", STR_MEAL);
     }
 }

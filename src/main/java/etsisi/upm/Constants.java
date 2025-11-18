@@ -13,6 +13,7 @@ public class Constants {
     public static final int FOUR = 4;
     public static final int FIVE = 5;
     public static final int SIX = 6;
+    public static final int SEVEN = 7;
 
     // menu const
     public static final String EXIT = "exit";
@@ -32,7 +33,6 @@ public class Constants {
     public static final String STR_DOUBLE_DOT = ":";
 
 
-
     public static final String OK_STATUS = "ok";  //Ok
     public static final String ERROR_STATUS = "Error"; //error
 
@@ -44,12 +44,14 @@ public class Constants {
     public static final String REGEX_TO_SPLIT = " (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
     public static final String REGEX_PERSONALIZED = "(?<=--p)";
 
-
     // products const
     public static final String PRODUCT_ADD = "add";
     public static final String PRODUCT_LIST = "list";
     public static final String PRODUCT_UPDATE = "update";
     public static final String PRODUCT_REMOVE = "remove";
+    public static final String PRODUCT_ADD_MEAL = "addMeal";
+    public static final String PRODUCT_ADD_MEETING = "addMeeting";
+
 
     // ticket const
     public static final String TICKET_ADD = "add";
@@ -61,6 +63,11 @@ public class Constants {
     public static final String CLIENT_ADD = "add";
     public static final String CLIENT_REMOVE = "remove";
     public static final String CLIENT_LIST = "list";
+
+    // Time const
+    public static final int TIME_MEAL_PLANNING_DAYS = 3;
+    public static final int TIME_MEETING_PLANNING_HOURS = 12;
+    public static final int TIME_MAX_PEOPLE_SERVICE = 100;
 
 
     public static String createGeneralRegex(String query) {

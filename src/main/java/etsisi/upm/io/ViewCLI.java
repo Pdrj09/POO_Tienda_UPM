@@ -35,8 +35,8 @@ public class ViewCLI {
                     ticket list
                     prod add <id> "<name>" <category> <price>
                     prod update <id> NAME|CATEGORY|PRICE <value>
-                    prod addFood [<id>] "<name>" <price> <expiration:yyyy-MM-dd> <max_people>
-                    prod addMeeting [<id>] "<name>" <price> <expiration:yyyy-MM-dd> <max_people>
+                    prod addMeal <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
+                    prod addMeeting <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
                     prod list
                     prod remove <id>
                     help
