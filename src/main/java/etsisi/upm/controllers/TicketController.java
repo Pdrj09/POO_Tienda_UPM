@@ -3,6 +3,8 @@ package etsisi.upm.controllers;
 import etsisi.upm.models.Product;
 import etsisi.upm.models.Ticket;
 import etsisi.upm.models.repositories.*;
+import etsisi.upm.models.users.Cashier;
+import etsisi.upm.models.users.Client;
 
 import java.util.List;
 
@@ -47,5 +49,16 @@ public class TicketController {
     private void closeTicket(Ticket ticket){
         ticket.close();
     }
+
+    public Ticket removeTicket(String ticketId, String cashierId, String clientId){
+        Ticket ticket = this.ticketRepository.removeById(ticketId);
+        Cashier cashier = this.cashierRepository.findById(cashierId);
+        Client client = this.clientRepository.findById(clientId);
+        cashier.deleteTicket(ticket);
+        client.deleteTicket(ticket);
+        return ticket;
+    }
+
+
 
 }

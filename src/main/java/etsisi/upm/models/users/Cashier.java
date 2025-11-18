@@ -1,5 +1,7 @@
 package etsisi.upm.models.users;
 
+import etsisi.upm.models.Ticket;
+
 import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
@@ -40,6 +42,10 @@ public class Cashier extends User implements Comparable<Cashier>{
     }
     public Set<Client> getAssociatedClients() {
         return Set.copyOf(associatedClients);
+    }
+
+    public void deleteTicket(Ticket ticket){
+        this.tickets.remove(ticket);
     }
 
     //Double validation safety, factory method

@@ -42,6 +42,10 @@ public class Client extends User implements Comparable<Client> {
         return associatedTickets;
     }
 
+    public void deleteTicket(Ticket ticket){
+        this.associatedTickets.remove(ticket);
+    }
+
     public String getStrIdCashier() {
         return strIdCashier;
     }
