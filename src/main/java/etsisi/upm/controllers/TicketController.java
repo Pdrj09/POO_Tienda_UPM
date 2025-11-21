@@ -7,7 +7,7 @@ import etsisi.upm.models.users.Cashier;
 import etsisi.upm.models.users.Client;
 import etsisi.upm.models.ServiceProduct;
 
-import java.util.List;
+import java.util.*;
 
 public class TicketController {
     private final Repository<String,Ticket> ticketRepository;
