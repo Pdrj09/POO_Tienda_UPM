@@ -3,18 +3,19 @@ package etsisi.upm.controllers;
 import etsisi.upm.models.Product;
 import etsisi.upm.models.Ticket;
 import etsisi.upm.models.repositories.*;
+import etsisi.upm.models.users.Cashier;
+import etsisi.upm.models.users.Client;
 import etsisi.upm.models.ServiceProduct;
 
 import java.util.List;
 
 public class TicketController {
-    private final TicketRepository ticketRepository;
-    //TODO implement -- añadir los repositorios de user y product
-    private final ClientRepository clientRepository;
-    private final CashierRepository cashierRepository;
-    private final ProductRepository productRepository;
+    private final Repository<String,Ticket> ticketRepository;
+    private final Repository<String, Client> clientRepository;
+    private final Repository<String, Cashier> cashierRepository;
+    private final Repository<String, Product> productRepository;
 
-    public TicketController(TicketRepository ticketRepository, ClientRepository clientRepository, CashierRepository cashierRepository, ProductRepository productRepository) {
+    public TicketController(Repository<String,Ticket> ticketRepository, Repository<String, Client> clientRepository, Repository<String, Cashier> cashierRepository, Repository<String, Product> productRepository) {
         this.ticketRepository = ticketRepository;
         this.clientRepository = clientRepository;
         this.cashierRepository = cashierRepository;
@@ -23,7 +24,7 @@ public class TicketController {
 
     public void newTicket(String ticketId, String cashierId, String clientId){
         Ticket ticket = new Ticket(ticketId);
-        this.ticketRepository.add(ticket);
+        this.ticketRepository.add(ticketId,ticket);
     }
 
     public void addProductToTicket(String ticketId, String cahsierId, String productId, int amount, List<String> customizations){
@@ -65,14 +66,43 @@ public class TicketController {
         ticket.remove(product);
     }
 
+    /* TODO: EL ticket print debería gestionarlo el view, que el controlador le devuelva un ticket y él lo convierta*/
     public String printTicket(String ticketId, String cahsierId){
         Ticket ticket = this.ticketRepository.findById(ticketId);
         closeTicket(ticket);
         return ticket.toString();
     }
 
+    // TODO método para usar en el view en vez de llamar a printTicket
+    public Ticket getTicket(String ticketId){
+        return this.ticketRepository.findById(ticketId);
+    }
+
     private void closeTicket(Ticket ticket){
         ticket.close();
     }
+
+    public Ticket removeTicket(String ticketId, String cashierId, String clientId){
+        Ticket ticket = this.ticketRepository.removeById(ticketId);
+        Cashier cashier = this.cashierRepository.findById(cashierId);
+        Client client = this.clientRepository.findById(clientId);
+        cashier.deleteTicket(ticket);
+        client.deleteTicket(ticket);
+        return ticket;
+    }
+
+    public List<Ticket> getTicketList(){
+        List<Ticket> ticketList = new ArrayList<Ticket>();
+        TreeMap<String, Cashier> sortedCashiers = new TreeMap<>(this.cashierRepository.getMap());
+
+        for (Map.Entry<String, Cashier> entry : sortedCashiers.entrySet()){
+            Set<String> ticketIds = entry.getValue().getTickets();
+            for (String ticketId : ticketIds){
+                ticketList.add(this.ticketRepository.findById(ticketId));
+            }
+        }
+        return ticketList;
+    }
+
 
 }
