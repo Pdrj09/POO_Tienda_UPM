@@ -70,7 +70,7 @@ public class CLI {
 
 
                 ViewCLI.print( productController.prodList());
-                okStatus(Constants.PROD, Constants.PRODUCT_LIST);
+                ViewCLI.print(Constants.okStatus(Constants.PROD, Constants.PRODUCT_LIST));
 
             } else if (query.contains(Constants.PRODUCT_REMOVE)) {
 
@@ -115,7 +115,7 @@ public class CLI {
             }
             if (newTicket != null) {
                 System.out.println(newTicket);
-                okStatus(Constants.TICKET, Constants.TICKET_ADD);
+                ViewCLI.print(Constants.okStatus(Constants.TICKET, Constants.TICKET_ADD));
             } else {
                 Constants.errorStatus(Constants.TICKET,Constants. TICKET_ADD);
             }
@@ -123,13 +123,13 @@ public class CLI {
         } else if (query.contains(Constants.TICKET_NEW)) {
 
             productController.ticketNew();
-            okStatus(Constants.TICKET,Constants.TICKET_NEW);
+            ViewCLI.print(Constants.okStatus(Constants.TICKET,Constants.TICKET_NEW));
 
 
         } else if (query.contains(Constants.TICKET_PRINT)) {
 
             System.out.println(productController.ticketPrint());
-            okStatus(Constants.TICKET, Constants.TICKET_PRINT);
+            ViewCLI.print(Constants.okStatus(Constants.TICKET, Constants.TICKET_PRINT));
 
         } else if (query.contains(Constants.TICKET_REMOVE)) {
             int id = Integer.parseInt(deleteSubstring(query,  Constants.createGeneralRegex(Constants.PRODUCT_REMOVE)));
@@ -142,20 +142,6 @@ public class CLI {
         }
     }
 
-
-    protected static void okStatus(String type, String comand) {
-        StringBuilder builder;
-        builder = new StringBuilder();
-
-        builder.append(type)
-                .append(Constants.STR_BLANK_SPACE)
-                .append(comand)
-                .append(Constants.STR_DOUBLE_DOT)
-                .append(Constants.STR_BLANK_SPACE)
-                .append(Constants.OK_STATUS);
-
-        ViewCLI.print(builder.toString());
-    }
 
     protected static void  errorStatus(String type, String comand, String message) {
         StringBuilder builder;
