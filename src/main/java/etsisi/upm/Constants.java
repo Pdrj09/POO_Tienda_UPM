@@ -1,5 +1,7 @@
 package etsisi.upm;
 
+import etsisi.upm.io.ViewCLI;
+
 public class Constants {
 
 
@@ -79,6 +81,33 @@ public class Constants {
                 .append(Constants.REGEX_BLANK_SPACE);
 
         return stringBuilder.toString();
+    }
+    public static String okStatus(String type, String comand) {
+        StringBuilder builder;
+        builder = new StringBuilder();
+
+        builder.append(type)
+                .append(Constants.STR_BLANK_SPACE)
+                .append(comand)
+                .append(Constants.STR_DOUBLE_DOT)
+                .append(Constants.STR_BLANK_SPACE)
+                .append(Constants.OK_STATUS);
+
+        return builder.toString();
+    }
+
+
+    public static String errorStatus(String type, String comand) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(type)
+                .append(Constants.STR_BLANK_SPACE)
+                .append(comand)
+                .append(Constants.STR_DOUBLE_DOT)
+                .append(Constants.STR_BLANK_SPACE)
+                .append(Constants.ERROR_STATUS);
+
+        return builder.toString();
     }
 
 }

@@ -68,26 +68,16 @@ public class CLI {
 
             } else if (query.contains(Constants.PRODUCT_LIST)) {
 
-                System.out.println(productController.prodList());
+
+                ViewCLI.print( productController.prodList());
                 okStatus(Constants.PROD, Constants.PRODUCT_LIST);
 
             } else if (query.contains(Constants.PRODUCT_REMOVE)) {
+
                 productController.prodDelete(productController, query);
 
             } else if (query.contains(Constants.PRODUCT_UPDATE)) {
-
-
-                int id = Integer.parseInt(querySplit[Constants.ONE]);
-
-
-                String productEdited = productController.updateProduct(id, querySplit[Constants.TWO], querySplit[Constants.THREE]);
-
-                if (productEdited != null) {
-                    System.out.println(productEdited);
-                    okStatus(Constants.TICKET, Constants.TICKET_NEW);
-                } else {
-                    errorStatus(Constants.TICKET, Constants.TICKET_NEW);
-                }
+                ViewCLI.print(productController.editProcuct(querySplit));
 
             }
         } catch (Exception e) {
@@ -127,7 +117,7 @@ public class CLI {
                 System.out.println(newTicket);
                 okStatus(Constants.TICKET, Constants.TICKET_ADD);
             } else {
-                errorStatus(Constants.TICKET,Constants. TICKET_ADD);
+                Constants.errorStatus(Constants.TICKET,Constants. TICKET_ADD);
             }
 
         } else if (query.contains(Constants.TICKET_NEW)) {
@@ -180,19 +170,6 @@ public class CLI {
                 .append(Constants.STR_DOUBLE_DOT)
                 .append(Constants.STR_BLANK_SPACE)
                 .append(message);
-
-        ViewCLI.print(builder.toString());
-    }
-
-    protected static void errorStatus(String type, String comand) {
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(type)
-                .append(Constants.STR_BLANK_SPACE)
-                .append(comand)
-                .append(Constants.STR_DOUBLE_DOT)
-                .append(Constants.STR_BLANK_SPACE)
-                .append(Constants.ERROR_STATUS);
 
         ViewCLI.print(builder.toString());
     }

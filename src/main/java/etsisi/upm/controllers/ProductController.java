@@ -40,29 +40,15 @@ public class ProductController {
     }
 
 
-    private static String okStatus(String type, String comand) {
-        StringBuilder builder;
-        builder = new StringBuilder();
-
-        builder.append(type)
-                .append(Constants.STR_BLANK_SPACE)
-                .append(comand)
-                .append(Constants.STR_DOUBLE_DOT)
-                .append(Constants.STR_BLANK_SPACE)
-                .append(Constants.OK_STATUS);
-
-        return builder.toString();
-    }
-
 
     public static String productAdder(String[] querySplit, ProductController productController) {
-        if ((querySplit[Constants.ONE].isEmpty())||(querySplit[Constants.ONE ].equals(Constants.STR_BLANK_SPACE )) ){
+        if ((querySplit[Constants.ONE].isEmpty()) || (querySplit[Constants.ONE].equals(Constants.STR_BLANK_SPACE))) {
             throw new IllegalArgumentException("there is no id for product ");
         }
         int id = Integer.parseInt(querySplit[Constants.ONE]);
         String name = querySplit[Constants.TWO].replace(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
 
-        if ((querySplit[Constants.THREE].isEmpty())||(querySplit[Constants.THREE].equals(Constants.STR_BLANK_SPACE )) ){
+        if ((querySplit[Constants.THREE].isEmpty()) || (querySplit[Constants.THREE].equals(Constants.STR_BLANK_SPACE))) {
             throw new IllegalArgumentException("The product has to have a price");
         }
         float price = Float.parseFloat(querySplit[Constants.FOUR].replace(Constants.STR_COMMA, Constants.STR_DOT));
@@ -78,42 +64,55 @@ public class ProductController {
             System.out.println(response);
         }
         if (!response.startsWith(Constants.STR_ERROR)) {
-            response = okStatus(Constants.PROD, Constants.PRODUCT_ADD);
+            response = Constants.okStatus(Constants.PROD, Constants.PRODUCT_ADD);
         }
         return response;
     }
 
-    public static String prodDelete (ProductController productController, String query) {
+    public String editProcuct(String[] querySplit) {
+
+        String productEdited = updateProduct(Integer.parseInt(querySplit[Constants.ONE]), querySplit[Constants.TWO], querySplit[Constants.THREE]);
+        if (productEdited != null) {
+            productEdited = productEdited + "/n" + Constants.okStatus(Constants.TICKET, Constants.TICKET_NEW);
+            return productEdited;
+        } else {
+            return Constants.errorStatus(Constants.TICKET, Constants.TICKET_NEW);
+        }
+    }
+
+
+    public static String prodDelete(ProductController productController, String query) {
         int id = Integer.parseInt(deleteSubstring(query, Constants.createGeneralRegex(Constants.PRODUCT_REMOVE)));
         String deletedProd = productController.deleteProduct(id);
         String response = "";
         if (deletedProd != null) {
             System.out.println(deletedProd);
-            response = okStatus(Constants.PROD, Constants.PRODUCT_REMOVE);
+            response = Constants.okStatus(Constants.PROD, Constants.PRODUCT_REMOVE);
         } else {
-           // CLI.errorStatus(PROD, PRODUCT_REMOVE);
+            // CLI.errorStatus(PROD, PRODUCT_REMOVE);
         }
         return response;
     }
 
     public ProductController() {
         this.products = new HashMap<>();
-      //  this.ticket = new Ticket();
-        this.totalProducts=0;
+        //  this.ticket = new Ticket();
+        this.totalProducts = 0;
     }
 
     //here we add a new product to the hashmap of products
     //return true if it didn't exist, else false
     private String addProduct(String name, String category, double price, int id) {
         Product product;
-        if (Categories.existCategory(category) && this.totalProducts<MAX_SIZE) {
+        if (Categories.existCategory(category) && this.totalProducts < MAX_SIZE) {
             product = new Product(id, name, price, Categories.valueOf(category));
             products.put(product.getId(), product);
             this.totalProducts++;
             return product.toString();
         } else return ERROR_CREATE_PRODUCT;
     }
-    private String addProduct(String name, String category, double price, int id , int maxPers) {
+
+    private String addProduct(String name, String category, double price, int id, int maxPers) {
         Product product;
         if (Categories.existCategory(category)) {
             product = new Product(id, name, price, Categories.valueOf(category),maxPers);
