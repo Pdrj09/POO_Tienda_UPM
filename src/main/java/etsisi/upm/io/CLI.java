@@ -1,5 +1,6 @@
 package etsisi.upm.io;
 
+import etsisi.upm.controllers.ClientController;
 import etsisi.upm.controllers.ProductController;
 import etsisi.upm.controllers.TicketController;
 import etsisi.upm.Constants;
@@ -52,9 +53,7 @@ public class CLI {
     private void clientQuery(String query){
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         if(query.contains(Constants.CLIENT_ADD)){
-            //client add "<nombre>" <DNI> <email> <cashId>
-
-
+            ViewCLI.print(ClientController.clientAddControl(querySplit));
         }else if (query.contains(Constants.CLIENT_REMOVE)){
 
         }else if (query.contains(Constants.CLIENT_LIST)){

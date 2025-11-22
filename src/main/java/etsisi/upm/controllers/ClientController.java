@@ -15,7 +15,7 @@ public class ClientController {
     public ClientController() {
     }
 
-    public String clientAddControl (String[] querySplit){
+    public static String clientAddControl(String[] querySplit){
         //client add "<nombre>" <DNI> <email> <cashId>
         // Client{identifier='Y8682724P', name='Pepe1', email='pepe3@upm.es', cash=UW1234567}
         //client add: ok
