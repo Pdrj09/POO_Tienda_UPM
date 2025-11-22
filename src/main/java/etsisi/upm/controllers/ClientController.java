@@ -26,14 +26,14 @@ public class ClientController {
         String email = querySplit[Constants.THREE];
         String UW = querySplit[Constants.FOUR];
 
-        builder.append( this.addClient(name,dni, email,UW).toString());
+        builder.append( addClient(name,dni, email,UW).toString());
         builder.append("/n");
         builder.append(Constants.okStatus("Client","ClientAdd"));
 
         return builder.toString();
     }
 
-    private Client addClient(String name, String dni, String email, String UW) {
+    private static Client addClient(String name, String dni, String email, String UW) {
         if (repository.findById(dni) == null) {
             if (CashierController.existCashier(dni)) {
                 Client client = new Client(dni, name, email, UW);
