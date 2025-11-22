@@ -65,9 +65,7 @@ public class CLI {
             if (query.contains(Constants.PRODUCT_ADD)) {
 
                  ViewCLI.print(ProductController.productAdder(querySplit , productController));
-
             } else if (query.contains(Constants.PRODUCT_LIST)) {
-
 
                 ViewCLI.print( productController.prodList());
                 ViewCLI.print(Constants.okStatus(Constants.PROD, Constants.PRODUCT_LIST));
@@ -75,13 +73,12 @@ public class CLI {
             } else if (query.contains(Constants.PRODUCT_REMOVE)) {
 
                 productController.prodDelete(productController, query);
-
             } else if (query.contains(Constants.PRODUCT_UPDATE)) {
                 ViewCLI.print(productController.editProcuct(querySplit));
 
             }
         } catch (Exception e) {
-            errorStatus(Constants.PROD, Constants.PRODUCT_ADD, e.toString());
+            ViewCLI.print(Constants.errorStatus(Constants.PROD, Constants.PRODUCT_ADD, e.toString()));
         }
     }
     /*ticket new [<id>] <cashId> <userId>
@@ -140,24 +137,6 @@ public class CLI {
             //    errorStatus(TICKET, TICKET_REMOVE);
             //}
         }
-    }
-
-
-    protected static void  errorStatus(String type, String comand, String message) {
-        StringBuilder builder;
-        builder = new StringBuilder();
-
-        builder.append(type)
-                .append(Constants.STR_BLANK_SPACE)
-                .append(comand)
-                .append(Constants.STR_DOUBLE_DOT)
-                .append(Constants.STR_BLANK_SPACE)
-                .append(Constants.ERROR_STATUS)
-                .append(Constants.STR_DOUBLE_DOT)
-                .append(Constants.STR_BLANK_SPACE)
-                .append(message);
-
-        ViewCLI.print(builder.toString());
     }
 
 

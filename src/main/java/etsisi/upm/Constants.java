@@ -110,4 +110,22 @@ public class Constants {
         return builder.toString();
     }
 
+
+    public static String  errorStatus(String type, String comand, String message) {
+        StringBuilder builder;
+        builder = new StringBuilder();
+
+        builder.append(type)
+                .append(Constants.STR_BLANK_SPACE)
+                .append(comand)
+                .append(Constants.STR_DOUBLE_DOT)
+                .append(Constants.STR_BLANK_SPACE)
+                .append(Constants.ERROR_STATUS)
+                .append(Constants.STR_DOUBLE_DOT)
+                .append(Constants.STR_BLANK_SPACE)
+                .append(message);
+
+        return (builder.toString());
+    }
+
 }
