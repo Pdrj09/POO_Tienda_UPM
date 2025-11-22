@@ -43,6 +43,8 @@ public class CLI {
         return Constants.QUERY_SUCCESS;
         //returns 1
     }
+
+
     //client add "<nombre>" <DNI> <email> <cashId>
     //client remove <DNI>
     //client list
@@ -50,7 +52,9 @@ public class CLI {
     private void clientQuery(String query){
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         if(query.contains(Constants.CLIENT_ADD)){
-            
+            //client add "<nombre>" <DNI> <email> <cashId>
+
+
         }else if (query.contains(Constants.CLIENT_REMOVE)){
 
         }else if (query.contains(Constants.CLIENT_LIST)){
