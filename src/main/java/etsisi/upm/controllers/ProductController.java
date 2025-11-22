@@ -283,7 +283,7 @@ public class ProductController {
             return meeting.toString();
         } catch (IllegalArgumentException e) {
             // catch the date error by meeting construction
-            return ERROR_CREATE_PRODUCT + ": " + e.getMessage();
+            return ERROR_CREATE_PRODUCT + Constants.STR_DOUBLE_DOT + e.getMessage();
         }
     }
 
