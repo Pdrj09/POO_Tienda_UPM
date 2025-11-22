@@ -24,7 +24,6 @@ public class ProductController {
 
 
     private static final String CATALOG = "Catalog:\n";
-    private static final String NEXT_LINE = "\n";
     private static final String TAB_SPACE = "\t";
     private static final int MAX_SIZE = 200;
 
@@ -71,10 +70,13 @@ public class ProductController {
 
     public String editProcuct(String[] querySplit) {
 
+        StringBuilder builder = new StringBuilder();
         String productEdited = updateProduct(Integer.parseInt(querySplit[Constants.ONE]), querySplit[Constants.TWO], querySplit[Constants.THREE]);
         if (productEdited != null) {
-            productEdited = productEdited + "/n" + Constants.okStatus(Constants.TICKET, Constants.TICKET_NEW);
-            return productEdited;
+            builder.append(productEdited);
+            builder.append(Constants.ENTER_KEY );
+            builder.append( Constants.okStatus(Constants.TICKET, Constants.TICKET_NEW));
+            return builder.toString();
         } else {
             return Constants.errorStatus(Constants.TICKET, Constants.TICKET_NEW);
         }
@@ -168,7 +170,7 @@ public class ProductController {
         for (Product p : products.values()) {
             builder.append(TAB_SPACE)
                     .append(p.toString())
-                    .append(NEXT_LINE);
+                    .append(Constants.ENTER_KEY);
         }
 
         return builder.toString();

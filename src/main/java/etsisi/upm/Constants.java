@@ -33,6 +33,7 @@ public class Constants {
     public static final String STR_ERROR = "Error";
     public static final String STR_BLANK_SPACE = " ";
     public static final String STR_DOUBLE_DOT = ":";
+    public static final String ENTER_KEY = "\n";
 
 
     public static final String OK_STATUS = "ok";  //Ok
