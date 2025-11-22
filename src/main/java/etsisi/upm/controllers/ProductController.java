@@ -178,7 +178,7 @@ public class ProductController {
 
     public static String prodAddMeal(String[] querySplit, ProductController productController) {
         try {
-            if (querySplit.length < Constants.FIVE + 1) {
+            if (querySplit.length < Constants.FIVE + Constants.ONE) {
                 throw new IllegalArgumentException("Some parameters are missing to create Meal.");
             }
 
