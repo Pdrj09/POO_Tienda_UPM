@@ -19,10 +19,10 @@ public class CLI {
     public int newQuery(String query) {
         //Check if the query starts with PROD command keyword
         if (query.startsWith(Constants.PROD)) {
-            this.prodQuery(deleteSubstring(query,  Constants.createGeneralRegex(Constants.PROD)));
+            this.prodQuery(Constants.deleteSubstring(query,  Constants.createGeneralRegex(Constants.PROD)));
             //if the query starts with TICKET, we handle using ticketQuery().
         } else if (query.startsWith(Constants.TICKET)) {
-            this.ticketQuery(deleteSubstring(query,  Constants.createGeneralRegex(Constants.TICKET)));
+            this.ticketQuery(Constants.deleteSubstring(query,  Constants.createGeneralRegex(Constants.TICKET)));
             //if query starts with ECHO,it echoes back the input
         } else if (query.startsWith(Constants.ECHO)) {
             ViewCLI.echoCommand(query);
@@ -133,7 +133,7 @@ public class CLI {
             ViewCLI.print(Constants.okStatus(Constants.TICKET, Constants.TICKET_PRINT));
 
         } else if (query.contains(Constants.TICKET_REMOVE)) {
-            int id = Integer.parseInt(deleteSubstring(query,  Constants.createGeneralRegex(Constants.PRODUCT_REMOVE)));
+            int id = Integer.parseInt(Constants.deleteSubstring(query,  Constants.createGeneralRegex(Constants.PRODUCT_REMOVE)));
 
            // if (controller.removeProductFromTicket(ticketId,id)) {
            //     System.out.println(okStatus(TICKET, TICKET_REMOVE));
@@ -143,10 +143,6 @@ public class CLI {
         }
     }
 
-
-    private static String deleteSubstring(String query, String regex) {
-        return query.replaceFirst(regex, Constants.STR_EMPTY);
-    }
 
 
 }

@@ -33,13 +33,6 @@ public class ProductController {
 
     private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm";
 
-
-    private static String deleteSubstring(String query, String regex) {
-        return query.replaceFirst(regex, Constants.STR_EMPTY);
-    }
-
-
-
     public static String productAdder(String[] querySplit, ProductController productController) {
         if ((querySplit[Constants.ONE].isEmpty()) || (querySplit[Constants.ONE].equals(Constants.STR_BLANK_SPACE))) {
             throw new IllegalArgumentException("there is no id for product ");
@@ -84,7 +77,7 @@ public class ProductController {
 
 
     public static String prodDelete(ProductController productController, String query) {
-        int id = Integer.parseInt(deleteSubstring(query, Constants.createGeneralRegex(Constants.PRODUCT_REMOVE)));
+        int id = Integer.parseInt(Constants.deleteSubstring(query, Constants.createGeneralRegex(Constants.PRODUCT_REMOVE)));
         String deletedProd = productController.deleteProduct(id);
         String response = "";
         if (deletedProd != null) {

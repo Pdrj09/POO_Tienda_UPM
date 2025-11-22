@@ -128,5 +128,8 @@ public class Constants {
 
         return (builder.toString());
     }
+    public static String deleteSubstring(String query, String regex) {
+        return query.replaceFirst(regex, Constants.STR_EMPTY);
+    }
 
 }
