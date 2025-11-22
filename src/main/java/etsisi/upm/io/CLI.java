@@ -122,13 +122,13 @@ public class CLI {
 
         } else if (query.contains(Constants.TICKET_NEW)) {
 
-            productController.ticketNew();
+            //productController.ticketNew();
             ViewCLI.print(Constants.okStatus(Constants.TICKET,Constants.TICKET_NEW));
 
 
         } else if (query.contains(Constants.TICKET_PRINT)) {
 
-            System.out.println(productController.ticketPrint());
+            //System.out.println(productController.ticketPrint());
             ViewCLI.print(Constants.okStatus(Constants.TICKET, Constants.TICKET_PRINT));
 
         } else if (query.contains(Constants.TICKET_REMOVE)) {
