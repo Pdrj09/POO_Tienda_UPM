@@ -45,7 +45,7 @@ public class CLI {
         }else if (query.startsWith(Constants.CLIENT)){
             this.clientQuery(query);
         }else if (query.startsWith(Constants.CASH)){
-            //this.cashQuery(query);
+            this.cashQuery(query);
         }
         return Constants.QUERY_SUCCESS;
         //returns 1
