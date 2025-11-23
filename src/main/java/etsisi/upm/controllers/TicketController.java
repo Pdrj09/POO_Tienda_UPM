@@ -1,5 +1,6 @@
 package etsisi.upm.controllers;
 
+import etsisi.upm.Constants;
 import etsisi.upm.models.Product;
 import etsisi.upm.models.Ticket;
 import etsisi.upm.models.repositories.*;
@@ -21,6 +22,7 @@ public class TicketController {
         this.cashierRepository = cashierRepository;
         this.productRepository = productRepository;
     }
+
 
     public void newTicket(String ticketId, String cashierId, String clientId){
         Ticket ticket = new Ticket(ticketId);
@@ -66,14 +68,14 @@ public class TicketController {
         ticket.remove(product);
     }
 
-    /* TODO: EL ticket print debería gestionarlo el view, que el controlador le devuelva un ticket y él lo convierta*/
-    public String printTicket(String ticketId, String cahsierId){
+    //method were the ticked is closed and prepared for printing it (the view manage that)
+    public Ticket printTicket(String ticketId, String cahsierId){
         Ticket ticket = this.ticketRepository.findById(ticketId);
         closeTicket(ticket);
-        return ticket.toString();
+        return ticket;
     }
 
-    // TODO método para usar en el view en vez de llamar a printTicket
+
     public Ticket getTicket(String ticketId){
         return this.ticketRepository.findById(ticketId);
     }

@@ -67,6 +67,12 @@ public class Constants {
     public static final String CLIENT_REMOVE = "remove";
     public static final String CLIENT_LIST = "list";
 
+    //cash const
+    public static final String CASH_ADD = "add";
+    public static final String CASH_REMOVE = "remove";
+    public static final String CASH_LIST = "list";
+    public static final String CASH_TICKETS = "tickets";
+
     // Time const
     public static final int TIME_MEAL_PLANNING_DAYS = 3;
     public static final int TIME_MEETING_PLANNING_HOURS = 12;
