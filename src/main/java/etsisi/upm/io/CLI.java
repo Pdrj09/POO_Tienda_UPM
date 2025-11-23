@@ -1,20 +1,27 @@
 package etsisi.upm.io;
 
+import etsisi.upm.controllers.CashierController;
 import etsisi.upm.controllers.ClientController;
 import etsisi.upm.controllers.ProductController;
 import etsisi.upm.controllers.TicketController;
 import etsisi.upm.Constants;
+import etsisi.upm.models.Ticket;
 
 public class CLI {
 
     /// Global variables
     private final ProductController productController;  //gobal variable called controller
-
+    private final TicketController ticketController;
+    private final ClientController clientController;
+    private final CashierController cashierController;
     // status code
 
-    public CLI() {
+    public CLI(ProductController productController, TicketController ticketController, ClientController clientController, CashierController cashierController) {
         ViewCLI.printWellcomeMessage();
-        this.productController = new ProductController();
+        this.productController = productController;
+        this.ticketController = ticketController;
+        this.clientController = clientController;
+        this.cashierController = cashierController;
     }
 
     public int newQuery(String query) {
@@ -40,7 +47,6 @@ public class CLI {
         }else if (query.startsWith(Constants.CASH)){
             //this.cashQuery(query);
         }
-
         return Constants.QUERY_SUCCESS;
         //returns 1
     }
@@ -52,13 +58,19 @@ public class CLI {
 
     private void clientQuery(String query){
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
-        if(query.contains(Constants.CLIENT_ADD)){
-            ViewCLI.print(ClientController.clientAddControl(querySplit));
-        }else if (query.contains(Constants.CLIENT_REMOVE)){
-
-        }else if (query.contains(Constants.CLIENT_LIST)){
-
-
+        try {
+            if (query.contains(Constants.CLIENT_ADD)) {
+                ViewCLI.print(clientController.clientAddControl(querySplit));
+            } else if (query.contains(Constants.CLIENT_REMOVE)) {
+                String id = querySplit[1];
+                clientController.removeClients(id);
+                ViewCLI.print(Constants.okStatus(Constants.CLIENT, Constants.CLIENT_REMOVE));
+            } else if (query.contains(Constants.CLIENT_LIST)) {
+                ViewCLI.printClients(clientController.listClients());
+                ViewCLI.print(Constants.okStatus(Constants.CLIENT, Constants.CLIENT_LIST));
+            }
+        }catch(Exception e) {
+            ViewCLI.print(Constants.errorStatus(Constants.CLIENT, "Error", e.getMessage()));
         }
     }
 
@@ -66,19 +78,14 @@ public class CLI {
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         try {
             if (query.contains(Constants.PRODUCT_ADD)) {
-
                  ViewCLI.print(ProductController.productAdder(querySplit , productController));
             } else if (query.contains(Constants.PRODUCT_LIST)) {
-
-                ViewCLI.print( productController.prodList());
+                ViewCLI.print(productController.prodList());
                 ViewCLI.print(Constants.okStatus(Constants.PROD, Constants.PRODUCT_LIST));
-
             } else if (query.contains(Constants.PRODUCT_REMOVE)) {
-
                 productController.prodDelete(productController, query);
             } else if (query.contains(Constants.PRODUCT_UPDATE)) {
-                ViewCLI.print(productController.editProcuct(querySplit));
-
+                ViewCLI.print(productController.editProduct(querySplit));
             }
         } catch (Exception e) {
             ViewCLI.print(Constants.errorStatus(Constants.PROD, Constants.PRODUCT_ADD, e.toString()));
@@ -93,55 +100,84 @@ public class CLI {
     private void ticketQuery(String query) {
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         String ticketId = querySplit[Constants.ONE];
+        try{
+            if (query.contains(Constants.TICKET_ADD)) {
+                //ticket add <ticketId><cashId> <prodId> <amount> [--p<txt> --p<txt>]
 
-        if (query.contains(Constants.TICKET_ADD)) {
+                String cashId = querySplit[Constants.TWO];
+                int id = Integer.parseInt(querySplit[Constants.THREE]);
 
-            //ticket add <ticketId><cashId> <prodId> <amount> [--p<txt> --p<txt>]
+                int quantity = Integer.parseInt(querySplit[Constants.FOUR]);
 
+                String newTicket = "";
+                //if it is a personalized prod
 
-            String cashId = querySplit[Constants.TWO];
-            int id = Integer.parseInt(querySplit[Constants.THREE]);
+                if (querySplit [querySplit.length-1].contains("--p") ){
+                    String[] queryPersonalized = querySplit[Constants.FIVE].split(Constants.REGEX_TO_SPLIT);
+                    //newTicket = ProductController.addProductToTicket(ticketId, cashId, id, quantity, queryPersonalized);
+                }else {
+                    newTicket =  ProductController.addProductToTicket(ticketId, cashId, id, quantity);
+                }
+                if (newTicket != null) {
+                    System.out.println(newTicket);
+                    ViewCLI.print(Constants.okStatus(Constants.TICKET, Constants.TICKET_ADD));
+                } else {
+                    Constants.errorStatus(Constants.TICKET,Constants. TICKET_ADD);
+                }
 
-            int quantity = Integer.parseInt(querySplit[Constants.FOUR]);
+            } else if (query.contains(Constants.TICKET_NEW)) {
+                ViewCLI.printTickets(ticketController.getTicketList());
+                ViewCLI.print(Constants.okStatus(Constants.TICKET,Constants.TICKET_NEW));
+            } else if (query.contains(Constants.TICKET_PRINT)) {
+                ViewCLI.printTicket(ticketController.getTicket(ticketId));
+                ViewCLI.print(Constants.okStatus(Constants.TICKET, Constants.TICKET_PRINT));
 
-            String newTicket = "";
-            //if it is a personalized prod
+            } else if (query.contains(Constants.TICKET_REMOVE)) {
+                int id = Integer.parseInt(Constants.deleteSubstring(query,  Constants.createGeneralRegex(Constants.PRODUCT_REMOVE)));
 
-            if (querySplit [querySplit.length-1].contains("--p") ){
-                String[] queryPersonalized = querySplit[Constants.FIVE].split(Constants.REGEX_TO_SPLIT);
-                //newTicket = ProductController.addProductToTicket(ticketId, cashId, id, quantity, queryPersonalized);
-            }else {
-                newTicket =  ProductController.addProductToTicket(ticketId, cashId, id, quantity);
+                // if (controller.removeProductFromTicket(ticketId,id)) {
+                //     System.out.println(okStatus(TICKET, TICKET_REMOVE));
+                // } else {
+                //    errorStatus(TICKET, TICKET_REMOVE);
+                //}
             }
-            if (newTicket != null) {
-                System.out.println(newTicket);
-                ViewCLI.print(Constants.okStatus(Constants.TICKET, Constants.TICKET_ADD));
-            } else {
-                Constants.errorStatus(Constants.TICKET,Constants. TICKET_ADD);
-            }
-
-        } else if (query.contains(Constants.TICKET_NEW)) {
-
-            //productController.ticketNew();
-            ViewCLI.print(Constants.okStatus(Constants.TICKET,Constants.TICKET_NEW));
-
-
-        } else if (query.contains(Constants.TICKET_PRINT)) {
-
-            //System.out.println(productController.ticketPrint());
-            ViewCLI.print(Constants.okStatus(Constants.TICKET, Constants.TICKET_PRINT));
-
-        } else if (query.contains(Constants.TICKET_REMOVE)) {
-            int id = Integer.parseInt(Constants.deleteSubstring(query,  Constants.createGeneralRegex(Constants.PRODUCT_REMOVE)));
-
-           // if (controller.removeProductFromTicket(ticketId,id)) {
-           //     System.out.println(okStatus(TICKET, TICKET_REMOVE));
-           // } else {
-            //    errorStatus(TICKET, TICKET_REMOVE);
-            //}
+        }catch (Exception e) {
+            ViewCLI.print(Constants.errorStatus(Constants.TICKET, "Error", e.getMessage()));
         }
     }
 
 
+    private void cashQuery(String query){
+        String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
+        try {
+            if (query.contains(Constants.CASH_ADD)) {
+                //cash add [<id>] "<nombre>" <email>
+                //TODO pasarle los parámetros por cachitos hasta añadirlo
+                //String response = cashierController.addCashier(query);
+                //ViewCLI.print(response);
+                ViewCLI.print(Constants.okStatus(Constants.CASH, Constants.CASH_ADD));
+
+            } else if (query.contains(Constants.CASH_REMOVE)) {
+                if (cashierController.removeCashier(querySplit[Constants.ONE]) != null)
+                    ViewCLI.print(Constants.okStatus(Constants.CASH, Constants.CASH_REMOVE));
+                else
+                    ViewCLI.print(Constants.errorStatus(Constants.CASH, Constants.CASH_REMOVE, "Cashier not found"));
+
+            } else if (query.contains(Constants.CASH_LIST)) {
+                //cash list
+                ViewCLI.printCashiers(cashierController.listCashiers());
+                ViewCLI.print(Constants.okStatus(Constants.CASH, Constants.CASH_LIST));
+
+            } else if (query.contains(Constants.CASH_TICKETS)) {
+                //cash tickets <id>
+                //TODO hacer que printeé los tickets asociados a un cajero, hay que modificar el método listTickets
+                String cashId = querySplit[1];
+                //ViewCLI.printTickets(cashierController.listTickets(cashId));
+                ViewCLI.print(Constants.okStatus(Constants.CASH, Constants.CASH_TICKETS));
+            }
+        } catch (Exception e) {
+            ViewCLI.print(Constants.errorStatus(Constants.CASH, "Error", e.getMessage()));
+        }
+    }
 
 }

@@ -2,6 +2,7 @@ package etsisi.upm.controllers;
 
 import etsisi.upm.Constants;
 import etsisi.upm.io.CLI;
+import etsisi.upm.models.repositories.Repository;
 import etsisi.upm.util.Categories;
 import etsisi.upm.models.Product;
 import etsisi.upm.models.Ticket;
@@ -14,14 +15,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 public class ProductController {
+    private final Repository<String, Product> productRepository;
 
     private static HashMap<Integer, Product> products;
     private static Ticket ticket;
     private int totalProducts;
 
-
     private static final String ERROR_CREATE_PRODUCT = "Error al crear el producto";
-
 
     private static final String CATALOG = "Catalog:\n";
     private static final String TAB_SPACE = "\t";
@@ -32,6 +32,13 @@ public class ProductController {
     private static final String PRICE = "PRICE";
 
     private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm";
+
+    public ProductController(Repository<String, Product> productRepository) {
+        this.productRepository = productRepository;
+        this.products = new HashMap<>();
+        //  this.ticket = new Ticket();
+        this.totalProducts = 0;
+    }
 
     public static String productAdder(String[] querySplit, ProductController productController) {
         if ((querySplit[Constants.ONE].isEmpty()) || (querySplit[Constants.ONE].equals(Constants.STR_BLANK_SPACE))) {
@@ -61,7 +68,7 @@ public class ProductController {
         return response;
     }
 
-    public String editProcuct(String[] querySplit) {
+    public String editProduct(String[] querySplit) {
 
         StringBuilder builder = new StringBuilder();
         String productEdited = updateProduct(Integer.parseInt(querySplit[Constants.ONE]), querySplit[Constants.TWO], querySplit[Constants.THREE]);
@@ -89,11 +96,7 @@ public class ProductController {
         return response;
     }
 
-    public ProductController() {
-        this.products = new HashMap<>();
-        //  this.ticket = new Ticket();
-        this.totalProducts = 0;
-    }
+
 
     //here we add a new product to the hashmap of products
     //return true if it didn't exist, else false
@@ -286,5 +289,6 @@ public class ProductController {
             return ERROR_CREATE_PRODUCT + Constants.STR_DOUBLE_DOT + e.getMessage();
         }
     }
+
 
 }
