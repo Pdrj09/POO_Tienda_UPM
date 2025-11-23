@@ -30,14 +30,11 @@ public class CashierController {
     }
 
     public Cashier addCashier(String cahierId, String emailCompany, String name) {
-        if(repository.findById(cahierId) == null) {
-            Cashier cashier =  Cashier.create(cahierId, emailCompany, name);
-            repository.add(cahierId, cashier);
+        Cashier cashier =  Cashier.create(cahierId, emailCompany, name);
 
-            return cashier;
-        } else {
-            throw new IllegalArgumentException(DUPLICATED_ID_ERROR);
-        }
+        repository.add(cahierId, cashier);
+
+        return cashier;
     }
 
     public Cashier removeCashier(String id) {

@@ -177,4 +177,8 @@ public class Ticket {
     public boolean containsProduct(Product prod) {
         return this.list.containsKey(prod);
     }
+
+    public boolean isClosed(){
+        return this.state == TicketStates.CLOSED;
+    }
 }

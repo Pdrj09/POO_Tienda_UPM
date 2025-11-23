@@ -1,31 +1,31 @@
 package etsisi.upm.controllers;
 
 import etsisi.upm.Constants;
-import etsisi.upm.io.CLI;
+import etsisi.upm.models.Ticket;
 import etsisi.upm.models.repositories.Repository;
 import etsisi.upm.util.Categories;
 import etsisi.upm.models.Product;
-import etsisi.upm.models.Ticket;
 
 import etsisi.upm.models.Meal;
 import etsisi.upm.models.Meeting;
 
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
+import java.util.Collection;
 
 public class ProductController {
-    private final Repository<String, Product> productRepository;
+    private final Repository<Integer, Product> productRepository;
+    private final Repository<String, Ticket> ticketRepository;
 
-    private static HashMap<Integer, Product> products;
-    private static Ticket ticket;
-    private int totalProducts;
-
-    private static final String ERROR_CREATE_PRODUCT = "Error al crear el producto";
+    private static final String ERROR_CREATE_PRODUCT = "Error al crear el producto, categoría no existente";
+    private static final String ERROR_DELETE_PRODUCT = "Error al borrar el producto";
+    private static final String DUPLICATED_ID_ERROR  = "El id pasado como pararametro ya existe, añada otro";
+    private static final String ERROR_ID_NONEXISTENT = "El id pasado como pararametro no existe";
 
     private static final String CATALOG = "Catalog:\n";
     private static final String TAB_SPACE = "\t";
-    private static final int MAX_SIZE = 200;
+    public static final int MAX_SIZE = 200;
 
     private static final String NAME = "NAME";
     private static final String CATEGORY = "CATEGORY";
@@ -33,14 +33,12 @@ public class ProductController {
 
     private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm";
 
-    public ProductController(Repository<String, Product> productRepository) {
+    public ProductController(Repository<Integer, Product> productRepository, Repository<String, Ticket> ticketRepository) {
         this.productRepository = productRepository;
-        this.products = new HashMap<>();
-        //  this.ticket = new Ticket();
-        this.totalProducts = 0;
+        this.ticketRepository = ticketRepository;
     }
 
-    public static String productAdder(String[] querySplit, ProductController productController) {
+    public static Product productAdder(String[] querySplit, ProductController productController) {
         if ((querySplit[Constants.ONE].isEmpty()) || (querySplit[Constants.ONE].equals(Constants.STR_BLANK_SPACE))) {
             throw new IllegalArgumentException("there is no id for product ");
         }
@@ -52,118 +50,98 @@ public class ProductController {
         }
         float price = Float.parseFloat(querySplit[Constants.FOUR].replace(Constants.STR_COMMA, Constants.STR_DOT));
 
-        String response;
+        Product response;
 
         if (querySplit.length > Constants.FIVE) {
             int maxPers = Integer.parseInt(querySplit[Constants.FIVE]);
             response = productController.addProduct(name, querySplit[Constants.THREE], price, id, maxPers);
         } else {
 
-            response = productController.addProduct(name, querySplit[Constants.THREE], price, id);
+            response = productController.addProduct(name, querySplit[Constants.THREE], price, id, null);
             System.out.println(response);
         }
-        if (!response.startsWith(Constants.STR_ERROR)) {
-            response = Constants.okStatus(Constants.PROD, Constants.PRODUCT_ADD);
-        }
         return response;
     }
 
-    public String editProduct(String[] querySplit) {
+    public Product editProduct(String[] querySplit) {
 
         StringBuilder builder = new StringBuilder();
-        String productEdited = updateProduct(Integer.parseInt(querySplit[Constants.ONE]), querySplit[Constants.TWO], querySplit[Constants.THREE]);
+        Product productEdited = updateProduct(Integer.parseInt(querySplit[Constants.ONE]), querySplit[Constants.TWO], querySplit[Constants.THREE]);
         if (productEdited != null) {
-            builder.append(productEdited);
-            builder.append(Constants.ENTER_KEY );
-            builder.append( Constants.okStatus(Constants.TICKET, Constants.TICKET_NEW));
-            return builder.toString();
+            return productEdited;
         } else {
-            return Constants.errorStatus(Constants.TICKET, Constants.TICKET_NEW);
+            throw new IllegalStateException(Constants.errorStatus(Constants.TICKET, Constants.TICKET_NEW));
         }
     }
 
 
-    public static String prodDelete(ProductController productController, String query) {
+    public Product prodDelete(String query) {
         int id = Integer.parseInt(Constants.deleteSubstring(query, Constants.createGeneralRegex(Constants.PRODUCT_REMOVE)));
-        String deletedProd = productController.deleteProduct(id);
+        Product deletedProd = deleteProduct(id);
         String response = "";
         if (deletedProd != null) {
-            System.out.println(deletedProd);
-            response = Constants.okStatus(Constants.PROD, Constants.PRODUCT_REMOVE);
+            return deletedProd;
         } else {
-            // CLI.errorStatus(PROD, PRODUCT_REMOVE);
+            throw new RuntimeException();
         }
-        return response;
     }
 
 
 
     //here we add a new product to the hashmap of products
     //return true if it didn't exist, else false
-    private String addProduct(String name, String category, double price, int id) {
-        Product product;
-        if (Categories.existCategory(category) && this.totalProducts < MAX_SIZE) {
-            product = new Product(id, name, price, Categories.valueOf(category));
-            products.put(product.getId(), product);
-            this.totalProducts++;
-            return product.toString();
-        } else return ERROR_CREATE_PRODUCT;
-    }
-
-    private String addProduct(String name, String category, double price, int id, int maxPers) {
+    private Product addProduct(String name, String category, double price, int id, Integer maxPers) {
         Product product;
         if (Categories.existCategory(category)) {
-            product = new Product(id, name, price, Categories.valueOf(category),maxPers);
-            products.put(product.getId(), product);
-            return product.toString();
-        } else return ERROR_CREATE_PRODUCT;
+            if(maxPers==null) product = new Product(id, name, price, Categories.valueOf(category));
+            else product = new Product(id, name, price, Categories.valueOf(category),maxPers);
+            productRepository.add(product.getId(), product);
+            return product;
+        } else throw new IllegalArgumentException(ERROR_CREATE_PRODUCT);
     }
 
-
-    public String updateProduct(int id, String field, String newContent) {
-        if (this.products.get(id) == null) return null;
+    public Product updateProduct(int id, String field, String newContent) {
+        Product productToUpdate = this.productRepository.findById(id);
+        if (productToUpdate == null) throw new IllegalArgumentException(ERROR_ID_NONEXISTENT);
         switch (field) {
             case NAME:
-                this.products.get(id).setName(newContent);
+                productToUpdate.setName(newContent);
                 break;
             case CATEGORY:
                 if (Categories.existCategory(newContent)) {
                     Categories cat = Categories.valueOf(newContent);
-                    this.products.get(id).setCategory(cat);
+                    productToUpdate.setCategory(cat);
                 } else return null;
                 break;
             case PRICE:
-                this.products.get(id).setPrice(Double.parseDouble(newContent));
+                productToUpdate.setPrice(Double.parseDouble(newContent));
                 break;
             default:
                 return null;
         }
-        return this.products.get(id).toString();
+        return productToUpdate;
     }
 
-    //here we delete a product from the hashmap of products
-    //return true if delete succeed, else false
-    public String deleteProduct(int prodId) {
-        if (products.containsKey(prodId)) {
-            ticket.remove(products.get(prodId));
-            this.totalProducts--;
-            return products.remove(prodId).toString();
-        } else return null;
+    public Product deleteProduct(int prodId) {
+        Product productToDelete = this.productRepository.findById(prodId);
+        if (productToDelete != null){
+            Collection<Ticket> tickets = this.ticketRepository.findAll();
+            for (Ticket ticket : tickets){
+                if(!ticket.isClosed() && ticket.containsProduct(productToDelete)){
+                    ticket.remove(productToDelete);
+                }
+            }
+            return productToDelete;
+        }else throw new IllegalArgumentException(ERROR_ID_NONEXISTENT);
     }
 
-    public static String addProductToTicket(String ticketId,String cashId, int prodId, int amount) {
-        if (products.containsKey(prodId)) {
-            ticket.add(products.get(prodId), amount);
-        }
-        return ticket.toString();
-    }
 
     public String prodList() {
         StringBuilder builder = new StringBuilder();
 
         builder.append(CATALOG);
 
-        for (Product p : products.values()) {
+        for (Product p : this.productRepository.findAll()) {
             builder.append(TAB_SPACE)
                     .append(p.toString())
                     .append(Constants.ENTER_KEY);
@@ -172,7 +150,7 @@ public class ProductController {
         return builder.toString();
     }
 
-    public static String prodAddMeal(String[] querySplit, ProductController productController) {
+    public Product prodAddMeal(String[] querySplit) {
         try {
             if (querySplit.length < Constants.FIVE + Constants.ONE) {
                 throw new IllegalArgumentException("Some parameters are missing to create Meal.");
@@ -187,27 +165,20 @@ public class ProductController {
 
             int maxPeople = Integer.parseInt(querySplit[Constants.FIVE]);
 
-            // negotiation logic response.
-            String response = productController.addMeal(id, name, pricePerPerson, maxPeople, expirationDate);
+            Product response = addMeal(id, name, pricePerPerson, maxPeople, expirationDate);
 
-            // if method returns toString of the object and not an error, return an empty chain or a succesfull message.
-            if (!response.startsWith(Constants.STR_ERROR)) {
-                return "service product added successfully: " + response;
-            }
             return response;
 
         } catch (java.time.format.DateTimeParseException e) {
-            return Constants.STR_ERROR + ": Date format incorrect. Use " + DATETIME_FORMAT;
+            throw new DateTimeException(Constants.STR_ERROR + ": Date format incorrect. Use " + DATETIME_FORMAT);
         } catch (NumberFormatException e) {
-            return Constants.STR_ERROR + ": ID, Price or Number of persons not valid.";
+            throw new NumberFormatException(Constants.STR_ERROR + ": ID, Price or Number of persons not valid.");
         } catch (IllegalArgumentException e) {
-            return Constants.STR_ERROR + ": " + e.getMessage();
-        } catch (Exception e) {
-            return Constants.STR_ERROR + ": Unknown error when adding Meal. " + e.getMessage();
+            throw new IllegalArgumentException(Constants.STR_ERROR + ": " + e.getMessage());
         }
     }
 
-    public static String prodAddMeeting(String[] querySplit, ProductController productController) {
+    public Product prodAddMeeting(String[] querySplit) {
         try {
             // 6 elements expected: [0]prod, [1]addMeeting, [2]id, [3]name, [4]price, [5]date, [6]maxPeople
             if (querySplit.length < Constants.FIVE + 1) {
@@ -223,71 +194,29 @@ public class ProductController {
 
             int maxPeople = Integer.parseInt(querySplit[Constants.FIVE]);
 
-            // negotiation logic response
-            String response = productController.addMeeting(id, name, pricePerPerson, maxPeople, expirationDate);
+            Product response = addMeeting(id, name, pricePerPerson, maxPeople, expirationDate);
 
-            // is the toString is returned, then we return the message
-            if (!response.startsWith(Constants.STR_ERROR)) {
-                return "Product added successfully: " + response;
-            }
             return response;
 
         } catch (java.time.format.DateTimeParseException e) {
-            return Constants.STR_ERROR + ": Date format incorrect. Use " + DATETIME_FORMAT;
+            throw new DateTimeException(Constants.STR_ERROR + ": Date format incorrect. Use " + DATETIME_FORMAT);
         } catch (NumberFormatException e) {
-            return Constants.STR_ERROR + ": ID, Price or Number of persons not valid.";
+            throw new NumberFormatException(Constants.STR_ERROR + ": ID, Price or Number of persons not valid.");
         } catch (IllegalArgumentException e) {
-            return Constants.STR_ERROR + ": " + e.getMessage();
-        } catch (Exception e) {
-            return Constants.STR_ERROR + ": Unknown error when adding Meeting " + e.getMessage();
+            throw new IllegalArgumentException(Constants.STR_ERROR + ": " + e.getMessage());
         }
     }
 
-    private String addMeal(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
-        // ... (validación de ID y MAX_SIZE)
-        if (this.products.containsKey(id)) {
-            return ERROR_CREATE_PRODUCT + ": the product with the ID " + id + "already exists.";
-        }
-        if (this.totalProducts >= MAX_SIZE) {
-            return ERROR_CREATE_PRODUCT + ": Catalog full";
-        }
-
-        try {
-            Meal meal = new Meal(id, name, pricePerPerson, maxPeople, expirationDate);
-            products.put(meal.getId(), meal);
-            this.totalProducts++;
-            // return of the toString of the object captured by prodAddMeal
-            return meal.toString();
-        } catch (IllegalArgumentException e) {
-            return ERROR_CREATE_PRODUCT + ": " + e.getMessage();
-        }
+    private Product addMeal(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
+        Meal meal = new Meal(id, name, pricePerPerson, maxPeople, expirationDate);
+        this.productRepository.add(meal.getId(), meal);
+        return meal;
     }
 
-    private String addMeeting(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
-        // 1. ID validation
-        if (this.products.containsKey(id)) {
-            return ERROR_CREATE_PRODUCT + ": the product with the ID " + id + "already exists.";
-        }
-
-        // 2. validate the catalog size
-        if (this.totalProducts >= MAX_SIZE) {
-            return ERROR_CREATE_PRODUCT + ": Catalog full";
-        }
-
-        try {
-            // 3. meeting instance and date validation
+    private Product addMeeting(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
             Meeting meeting = new Meeting(id, name, pricePerPerson, maxPeople, expirationDate);
-
-            // 4. add to the repository
-            products.put(meeting.getId(), meeting);
-            this.totalProducts++;
-
-            // 5. return the created object
-            return meeting.toString();
-        } catch (IllegalArgumentException e) {
-            // catch the date error by meeting construction
-            return ERROR_CREATE_PRODUCT + Constants.STR_DOUBLE_DOT + e.getMessage();
-        }
+            this.productRepository.add(meeting.getId(), meeting);
+            return meeting;
     }
 
 

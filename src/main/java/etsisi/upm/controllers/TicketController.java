@@ -14,9 +14,11 @@ public class TicketController {
     private final Repository<String,Ticket> ticketRepository;
     private final Repository<String, Client> clientRepository;
     private final Repository<String, Cashier> cashierRepository;
-    private final Repository<String, Product> productRepository;
+    private final Repository<Integer, Product> productRepository;
 
-    public TicketController(Repository<String,Ticket> ticketRepository, Repository<String, Client> clientRepository, Repository<String, Cashier> cashierRepository, Repository<String, Product> productRepository) {
+    private static final String DUPLICATED_ID_ERROR  = "El id pasado como pararametro ya existe, añada otro";
+
+    public TicketController(Repository<String,Ticket> ticketRepository, Repository<String, Client> clientRepository, Repository<String, Cashier> cashierRepository, Repository<Integer, Product> productRepository) {
         this.ticketRepository = ticketRepository;
         this.clientRepository = clientRepository;
         this.cashierRepository = cashierRepository;
@@ -24,12 +26,13 @@ public class TicketController {
     }
 
 
-    public void newTicket(String ticketId, String cashierId, String clientId){
+    public Ticket newTicket(String ticketId, String cashierId, String clientId){
         Ticket ticket = new Ticket(ticketId);
         this.ticketRepository.add(ticketId,ticket);
+        return ticket;
     }
 
-    public void addProductToTicket(String ticketId, String cahsierId, String productId, int amount, List<String> customizations){
+    public void addProductToTicket(String ticketId, String cahsierId, Integer productId, int amount, List<String> customizations){
         Ticket ticket = this.ticketRepository.findById(ticketId);
         Product product = this.productRepository.findById(productId);
 
@@ -62,7 +65,7 @@ public class TicketController {
         }
     }
 
-    public void removeProductFromTicket(String ticketId, String cahsierId, String productId){
+    public void removeProductFromTicket(String ticketId, String cahsierId, Integer productId){
         Ticket ticket = this.ticketRepository.findById(cahsierId);
         Product product = this.productRepository.findById(productId);
         ticket.remove(product);

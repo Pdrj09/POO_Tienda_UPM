@@ -18,7 +18,7 @@ public class Main {
 
     public static void main(String [] args) {
         //We create the repositories and the controllers with them
-        Repository<String, Product> productRepo = new Repository<>();
+        Repository<Integer, Product> productRepo = new Repository<>(ProductController.MAX_SIZE);
         Repository<String, Ticket> ticketRepo = new Repository<>();
         Repository<String, Client> clientRepo = new Repository<>();
         Repository<String, Cashier> cashierRepo = new Repository<>();

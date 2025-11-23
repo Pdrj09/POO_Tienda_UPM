@@ -38,17 +38,13 @@ public class ClientController {
     }
 
     private Client addClient(String name, String dni, String email, String UW) {
-        if (clientRepository.findById(dni) == null) {
-            if (cashierRepository.findById(dni)!=null) {
-                Client client = new Client(dni, name, email, UW);
-                clientRepository.add(dni, client);
+        if (cashierRepository.findById(dni)!=null) {
+            Client client = new Client(dni, name, email, UW);
+            clientRepository.add(dni, client);
 
-                return client;
-            } else  {
-                throw new IllegalArgumentException(CASIER_NOT_EXIST);
-            }
-        } else {
-            throw new IllegalArgumentException(DUPLICATED_ID_ERROR);
+            return client;
+        } else  {
+            throw new IllegalArgumentException(CASIER_NOT_EXIST);
         }
     }
 
