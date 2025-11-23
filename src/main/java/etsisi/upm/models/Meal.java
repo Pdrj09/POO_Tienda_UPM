@@ -4,24 +4,24 @@ import etsisi.upm.Constants;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
-public class Meeting extends ServiceProduct {
+public class Meal extends ServiceProduct {
 
-    private static final String STR_MEETING = "class:Meeting";
+    private static final String STR_MEAL = "class:Meal";
     private static final String CLOSE_BRACE = "}";
 
-    public Meeting(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
+    public Meal(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
         super(id, name, pricePerPerson, maxPeople, expirationDate);
     }
 
-    // --- Date rules ---
+    // Date rules
     @Override
     public int getMinimumCreationTime() {
-        return Constants.TIME_MEETING_PLANNING_HOURS;
+        return Constants.TIME_MEAL_PLANNING_DAYS;
     }
 
     @Override
     public ChronoUnit getMinimumTimeUnit() {
-        return ChronoUnit.HOURS;
+        return ChronoUnit.DAYS;
     }
 
     // cost
@@ -35,6 +35,6 @@ public class Meeting extends ServiceProduct {
     public String toString() {
         String parentToString = super.toString();
         // replace the name of the class
-        return parentToString.replace("class:ServiceProduct", STR_MEETING);
+        return parentToString.replace("class:ServiceProduct", STR_MEAL);
     }
 }

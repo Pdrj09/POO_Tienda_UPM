@@ -136,7 +136,7 @@ public class CLI {
                     System.out.println(deletedProd);
                     System.out.println(okStatus(PROD, PRODUCT_REMOVE));
                 } else {
-                    ViewCLI.errorStatus(PROD, PRODUCT_REMOVE);
+                    errorStatus(PROD, PRODUCT_REMOVE);
                 }
 
 
@@ -152,12 +152,12 @@ public class CLI {
                     System.out.println(productEdited);
                     System.out.println(okStatus(TICKET, TICKET_NEW));
                 } else {
-                    ViewCLI.errorStatus(TICKET, TICKET_NEW);
+                    errorStatus(TICKET, TICKET_NEW);
                 }
 
             }
         } catch (Exception e) {
-            ViewCLI.errorStatus(PROD, PRODUCT_ADD, e.toString());
+            errorStatus(PROD, PRODUCT_ADD, e.toString());
         }
     }
     /*ticket new [<id>] <cashId> <userId>
@@ -193,18 +193,18 @@ public class CLI {
                 System.out.println(newTicket);
                 System.out.println(okStatus(TICKET, TICKET_ADD));
             } else {
-                ViewCLI.errorStatus(TICKET, TICKET_ADD);
+                errorStatus(TICKET, TICKET_ADD);
             }
 
         } else if (query.contains(TICKET_NEW)) {
 
-            productController.ticketNew();
+            //productController.ticketNew();
             System.out.println(okStatus(TICKET, TICKET_NEW));
 
 
         } else if (query.contains(TICKET_PRINT)) {
 
-            System.out.println(productController.ticketPrint());
+            //System.out.println(productController.ticketPrint());
             System.out.println(okStatus(TICKET, TICKET_PRINT));
 
         } else if (query.contains(TICKET_REMOVE)) {
@@ -249,4 +249,33 @@ public class CLI {
         return builder.toString();
     }
 
+    private void errorStatus(String type, String comand, String message) {
+        StringBuilder builder;
+        builder = new StringBuilder();
+
+        builder.append(type)
+                .append(STR_BLANK_SPACE)
+                .append(comand)
+                .append(STR_DOUBLE_DOT)
+                .append(STR_BLANK_SPACE)
+                .append(ERROR_STATUS)
+                .append(STR_DOUBLE_DOT)
+                .append(STR_BLANK_SPACE)
+                .append(message);
+
+        System.out.println(builder);
+    }
+
+    private void errorStatus(String type, String comand) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(type)
+                .append(STR_BLANK_SPACE)
+                .append(comand)
+                .append(STR_DOUBLE_DOT)
+                .append(STR_BLANK_SPACE)
+                .append(ERROR_STATUS);
+
+        System.out.println(builder);
+    }
 }

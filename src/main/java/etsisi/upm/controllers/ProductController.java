@@ -1,124 +1,113 @@
 package etsisi.upm.controllers;
 
+import etsisi.upm.Constants;
+import etsisi.upm.io.CLI;
 import etsisi.upm.util.Categories;
 import etsisi.upm.models.Product;
 import etsisi.upm.models.Ticket;
 
+import etsisi.upm.models.Meal;
+import etsisi.upm.models.Meeting;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 public class ProductController {
 
-    private final HashMap<Integer, Product> products;
-    private Ticket ticket;
+    private static HashMap<Integer, Product> products;
+    private static Ticket ticket;
     private int totalProducts;
 
 
     private static final String ERROR_CREATE_PRODUCT = "Error al crear el producto";
-    private static final String NAME = "NAME";
-    private static final String CATEGORY = "CATEGORY";
-    private static final String PRICE = "PRICE";
-    private static final String OK_STATUS = "ok";  //Ok
-    private static final String ERROR_STATUS = "Error"; //error
 
 
     private static final String CATALOG = "Catalog:\n";
-    private static final String NEXT_LINE = "\n";
     private static final String TAB_SPACE = "\t";
     private static final int MAX_SIZE = 200;
 
+    private static final String NAME = "NAME";
+    private static final String CATEGORY = "CATEGORY";
+    private static final String PRICE = "PRICE";
 
-
-    private static String okStatus(String type, String comand) {
-        StringBuilder builder;
-        builder = new StringBuilder();
-
-        builder.append(type)
-                .append(STR_BLANK_SPACE)
-                .append(comand)
-                .append(STR_DOUBLE_DOT)
-                .append(STR_BLANK_SPACE)
-                .append(OK_STATUS);
-
-        return builder.toString();
-    }
-
-
-    // numbers
-    private static final int ONE = 1;
-    private static final int TWO = 2;
-    private static final int THREE = 3;
-    private static final int FOUR = 4;
-    private static final int FIVE = 5;
-    private static final int SIX = 6;
-
-    // str const
-    private static final String STR_EMPTY = "";
-    private static final String STR_DOT = ".";
-    private static final String STR_COMMA = ",";
-    private static final String STR_ERROR = "Error";
-    private static final String STR_BLANK_SPACE = " ";
-    private static final String STR_DOUBLE_DOT = ":";
-    // products const
-    private static final String PROD = "prod";
-    private static final String PRODUCT_ADD = "add";
-    private static final String PRODUCT_LIST = "list";
-    private static final String PRODUCT_UPDATE = "update";
-    private static final String PRODUCT_REMOVE = "remove";
-
-    // regex const
-    private static final String REGEX_INIT = "^";
-    private static final String REGEX_BLANK_SPACE = "\\s*";
-    private static final String REGEX_DOUBLE_QUOTE = "\"";
-    private static final String REGEX_TO_SPLIT = " (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
-    private static final String REGEX_PERSONALIZED = "(?<=--p)";
-
+    private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm";
 
     public static String productAdder(String[] querySplit, ProductController productController) {
-        if ((querySplit[ONE].isEmpty())||(querySplit[ONE ].equals(" ")) ){
+        if ((querySplit[Constants.ONE].isEmpty()) || (querySplit[Constants.ONE].equals(Constants.STR_BLANK_SPACE))) {
             throw new IllegalArgumentException("there is no id for product ");
         }
-        int id = Integer.parseInt(querySplit[ONE]);
-        String name = querySplit[TWO].replace(REGEX_DOUBLE_QUOTE, STR_EMPTY);
+        int id = Integer.parseInt(querySplit[Constants.ONE]);
+        String name = querySplit[Constants.TWO].replace(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
 
-        if ((querySplit[THREE].isEmpty())||(querySplit[THREE].equals(" ")) ){
+        if ((querySplit[Constants.THREE].isEmpty()) || (querySplit[Constants.THREE].equals(Constants.STR_BLANK_SPACE))) {
             throw new IllegalArgumentException("The product has to have a price");
         }
-        float price = Float.parseFloat(querySplit[FOUR].replace(STR_COMMA, STR_DOT));
+        float price = Float.parseFloat(querySplit[Constants.FOUR].replace(Constants.STR_COMMA, Constants.STR_DOT));
 
         String response;
 
-        if (querySplit.length > FIVE) {
-            int maxPers = Integer.parseInt(querySplit[FIVE]);
-            response = productController.addProduct(name, querySplit[THREE], price, id, maxPers);
+        if (querySplit.length > Constants.FIVE) {
+            int maxPers = Integer.parseInt(querySplit[Constants.FIVE]);
+            response = productController.addProduct(name, querySplit[Constants.THREE], price, id, maxPers);
         } else {
 
-            response = productController.addProduct(name, querySplit[THREE], price, id);
+            response = productController.addProduct(name, querySplit[Constants.THREE], price, id);
             System.out.println(response);
         }
-        if (!response.startsWith(STR_ERROR)) {
-            response = okStatus(PROD, PRODUCT_ADD);
+        if (!response.startsWith(Constants.STR_ERROR)) {
+            response = Constants.okStatus(Constants.PROD, Constants.PRODUCT_ADD);
+        }
+        return response;
+    }
+
+    public String editProcuct(String[] querySplit) {
+
+        StringBuilder builder = new StringBuilder();
+        String productEdited = updateProduct(Integer.parseInt(querySplit[Constants.ONE]), querySplit[Constants.TWO], querySplit[Constants.THREE]);
+        if (productEdited != null) {
+            builder.append(productEdited);
+            builder.append(Constants.ENTER_KEY );
+            builder.append( Constants.okStatus(Constants.PROD, Constants.PRODUCT_UPDATE));
+            return builder.toString();
+        } else {
+            return Constants.errorStatus(Constants.PROD, Constants.PRODUCT_UPDATE);
+        }
+    }
+
+
+    public static String prodDelete(ProductController productController, String query) {
+        int id = Integer.parseInt(Constants.deleteSubstring(query, Constants.createGeneralRegex(Constants.PRODUCT_REMOVE)));
+        String deletedProd = productController.deleteProduct(id);
+        String response = "";
+        if (deletedProd != null) {
+            System.out.println(deletedProd);
+            response = Constants.okStatus(Constants.PROD, Constants.PRODUCT_REMOVE);
+        } else {
+            // CLI.errorStatus(PROD, PRODUCT_REMOVE);
         }
         return response;
     }
 
     public ProductController() {
         this.products = new HashMap<>();
-      //  this.ticket = new Ticket();
-        this.totalProducts=0;
+        //  this.ticket = new Ticket();
+        this.totalProducts = 0;
     }
 
     //here we add a new product to the hashmap of products
     //return true if it didn't exist, else false
-    public String addProduct(String name, String category, double price, int id) {
+    private String addProduct(String name, String category, double price, int id) {
         Product product;
-        if (Categories.existCategory(category) && this.totalProducts<MAX_SIZE) {
+        if (Categories.existCategory(category) && this.totalProducts < MAX_SIZE) {
             product = new Product(id, name, price, Categories.valueOf(category));
             products.put(product.getId(), product);
             this.totalProducts++;
             return product.toString();
         } else return ERROR_CREATE_PRODUCT;
     }
-    public String addProduct(String name, String category, double price, int id , int maxPers) {
+
+    private String addProduct(String name, String category, double price, int id, int maxPers) {
         Product product;
         if (Categories.existCategory(category)) {
             product = new Product(id, name, price, Categories.valueOf(category),maxPers);
@@ -159,33 +148,11 @@ public class ProductController {
         } else return null;
     }
 
-    public String addProductToTicket(int prodId, int amount) {
+    public static String addProductToTicket(String ticketId,String cashId, int prodId, int amount) {
         if (products.containsKey(prodId)) {
             ticket.add(products.get(prodId), amount);
         }
         return ticket.toString();
-    }
-    public String addPersonalicedProductToTicket(int prodId , int amount, String[] personalizations){
-        if (products.containsKey(prodId)) {
-            ticket.addPersonalized(products.get(prodId), amount ,personalizations);
-        }
-        return ticket.toString();
-    }
-
-    public boolean removeProductFromTicket(int prodId) {
-        if (products.containsKey(prodId)) {
-            ticket.remove(products.get(prodId));
-            return true;
-        } else return false;
-    }
-
-    public boolean ticketNew() {
-        return this.ticket.clear();
-    }
-
-
-    public String ticketPrint() {
-        return this.ticket.toString();
     }
 
     public String prodList() {
@@ -196,9 +163,128 @@ public class ProductController {
         for (Product p : products.values()) {
             builder.append(TAB_SPACE)
                     .append(p.toString())
-                    .append(NEXT_LINE);
+                    .append(Constants.ENTER_KEY);
         }
 
         return builder.toString();
     }
+
+    public static String prodAddMeal(String[] querySplit, ProductController productController) {
+        try {
+            if (querySplit.length < Constants.FIVE + Constants.ONE) {
+                throw new IllegalArgumentException("Some parameters are missing to create Meal.");
+            }
+
+            int id = Integer.parseInt(querySplit[Constants.ONE]);
+            String name = querySplit[Constants.TWO].replace(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
+            double pricePerPerson = Double.parseDouble(querySplit[Constants.THREE].replace(Constants.STR_COMMA, Constants.STR_DOT));
+
+            String dateString = querySplit[Constants.FOUR];
+            LocalDateTime expirationDate = LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT));
+
+            int maxPeople = Integer.parseInt(querySplit[Constants.FIVE]);
+
+            // negotiation logic response.
+            String response = productController.addMeal(id, name, pricePerPerson, maxPeople, expirationDate);
+
+            // if method returns toString of the object and not an error, return an empty chain or a succesfull message.
+            if (!response.startsWith(Constants.STR_ERROR)) {
+                return "service product added successfully: " + response;
+            }
+            return response;
+
+        } catch (java.time.format.DateTimeParseException e) {
+            return Constants.STR_ERROR + ": Date format incorrect. Use " + DATETIME_FORMAT;
+        } catch (NumberFormatException e) {
+            return Constants.STR_ERROR + ": ID, Price or Number of persons not valid.";
+        } catch (IllegalArgumentException e) {
+            return Constants.STR_ERROR + ": " + e.getMessage();
+        } catch (Exception e) {
+            return Constants.STR_ERROR + ": Unknown error when adding Meal. " + e.getMessage();
+        }
+    }
+
+    public static String prodAddMeeting(String[] querySplit, ProductController productController) {
+        try {
+            // 6 elements expected: [0]prod, [1]addMeeting, [2]id, [3]name, [4]price, [5]date, [6]maxPeople
+            if (querySplit.length < Constants.FIVE + 1) {
+                throw new IllegalArgumentException("some parameters are missing to create the Meeting");
+            }
+
+            int id = Integer.parseInt(querySplit[Constants.ONE]);
+            String name = querySplit[Constants.TWO].replace(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
+            double pricePerPerson = Double.parseDouble(querySplit[Constants.THREE].replace(Constants.STR_COMMA, Constants.STR_DOT));
+
+            String dateString = querySplit[Constants.FOUR];
+            LocalDateTime expirationDate = LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT));
+
+            int maxPeople = Integer.parseInt(querySplit[Constants.FIVE]);
+
+            // negotiation logic response
+            String response = productController.addMeeting(id, name, pricePerPerson, maxPeople, expirationDate);
+
+            // is the toString is returned, then we return the message
+            if (!response.startsWith(Constants.STR_ERROR)) {
+                return "Product added successfully: " + response;
+            }
+            return response;
+
+        } catch (java.time.format.DateTimeParseException e) {
+            return Constants.STR_ERROR + ": Date format incorrect. Use " + DATETIME_FORMAT;
+        } catch (NumberFormatException e) {
+            return Constants.STR_ERROR + ": ID, Price or Number of persons not valid.";
+        } catch (IllegalArgumentException e) {
+            return Constants.STR_ERROR + ": " + e.getMessage();
+        } catch (Exception e) {
+            return Constants.STR_ERROR + ": Unknown error when adding Meeting " + e.getMessage();
+        }
+    }
+
+    private String addMeal(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
+        // ... (validación de ID y MAX_SIZE)
+        if (this.products.containsKey(id)) {
+            return ERROR_CREATE_PRODUCT + ": the product with the ID " + id + "already exists.";
+        }
+        if (this.totalProducts >= MAX_SIZE) {
+            return ERROR_CREATE_PRODUCT + ": Catalog full";
+        }
+
+        try {
+            Meal meal = new Meal(id, name, pricePerPerson, maxPeople, expirationDate);
+            products.put(meal.getId(), meal);
+            this.totalProducts++;
+            // return of the toString of the object captured by prodAddMeal
+            return meal.toString();
+        } catch (IllegalArgumentException e) {
+            return ERROR_CREATE_PRODUCT + ": " + e.getMessage();
+        }
+    }
+
+    private String addMeeting(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
+        // 1. ID validation
+        if (this.products.containsKey(id)) {
+            return ERROR_CREATE_PRODUCT + ": the product with the ID " + id + "already exists.";
+        }
+
+        // 2. validate the catalog size
+        if (this.totalProducts >= MAX_SIZE) {
+            return ERROR_CREATE_PRODUCT + ": Catalog full";
+        }
+
+        try {
+            // 3. meeting instance and date validation
+            Meeting meeting = new Meeting(id, name, pricePerPerson, maxPeople, expirationDate);
+
+            // 4. add to the repository
+            products.put(meeting.getId(), meeting);
+            this.totalProducts++;
+
+            // 5. return the created object
+            return meeting.toString();
+        } catch (IllegalArgumentException e) {
+            // catch the date error by meeting construction
+            return ERROR_CREATE_PRODUCT + Constants.STR_DOUBLE_DOT + e.getMessage();
+        }
+    }
+
 }

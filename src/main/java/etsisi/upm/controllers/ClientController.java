@@ -1,5 +1,6 @@
 package etsisi.upm.controllers;
 
+import etsisi.upm.Constants;
 import etsisi.upm.models.repositories.Repository;
 import etsisi.upm.models.users.Client;
 
@@ -14,7 +15,25 @@ public class ClientController {
     public ClientController() {
     }
 
-    public Client addClient(String name, String dni, String email, String UW) {
+    public static String clientAddControl(String[] querySplit){
+        //client add "<nombre>" <DNI> <email> <cashId>
+        // Client{identifier='Y8682724P', name='Pepe1', email='pepe3@upm.es', cash=UW1234567}
+        //client add: ok
+        StringBuilder builder = new StringBuilder();
+
+        String name = querySplit[Constants.ONE];
+        String dni = querySplit[Constants.TWO];
+        String email = querySplit[Constants.THREE];
+        String UW = querySplit[Constants.FOUR];
+
+        builder.append( addClient(name,dni, email,UW).toString());
+        builder.append("/n");
+        builder.append(Constants.okStatus("Client","ClientAdd"));
+
+        return builder.toString();
+    }
+
+    private static Client addClient(String name, String dni, String email, String UW) {
         if (repository.findById(dni) == null) {
             if (CashierController.existCashier(dni)) {
                 Client client = new Client(dni, name, email, UW);

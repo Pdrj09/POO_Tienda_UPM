@@ -7,13 +7,19 @@ public abstract class User {
     private String name;
     private String email;
 
+    //Validation messages.
+    private static final String ERR_ID_EMPTY = "El ID no puede estar vacío";
+    private static final String ERR_NAME_EMPTY = "El nombre no puede estar vacío";
+    private static final String ERR_EMAIL_EMPTY = "El email no puede estar vacío";
+
+
     public User(String id, String name, String email) {
-        if (id == null || id.isEmpty())
-            throw new IllegalArgumentException("El ID no puede estar vacío");
+        if (id == null || id.isBlank())
+            throw new IllegalArgumentException(ERR_ID_EMPTY);
         if (name == null || name.isBlank())
-            throw new IllegalArgumentException("El nombre no puede estar vacío");
+            throw new IllegalArgumentException(ERR_NAME_EMPTY);
         if (email == null || email.isBlank())
-            throw new IllegalArgumentException("El email no puede estar vacío");
+            throw new IllegalArgumentException(ERR_EMAIL_EMPTY);
         this.id = id;
         this.name = name;
         this.email = email;
@@ -29,7 +35,7 @@ public abstract class User {
 
     public void setName(String name) {
         if (name == null || name.isBlank())
-            throw new IllegalArgumentException("El nombre no puede estar vacío");
+            throw new IllegalArgumentException(ERR_NAME_EMPTY);
         this.name = name;
     }
 
@@ -39,7 +45,7 @@ public abstract class User {
 
     public void setEmail(String email) {
         if (email == null || email.isBlank())
-            throw new IllegalArgumentException("El email no puede estar vacío");
+            throw new IllegalArgumentException(ERR_EMAIL_EMPTY);
         this.email = email;
     }
 
