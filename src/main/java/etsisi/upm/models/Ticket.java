@@ -15,6 +15,7 @@ public class Ticket {
     private TicketStates state;
 
     private Map<Product,Integer> list;
+    /// Todo multimap
     private Map<Categories,Integer> categories;
 
     private static final int ZERO = 0;
