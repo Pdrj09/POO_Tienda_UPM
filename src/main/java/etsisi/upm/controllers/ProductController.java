@@ -2,6 +2,7 @@ package etsisi.upm.controllers;
 
 import etsisi.upm.Constants;
 import etsisi.upm.io.CLI;
+import etsisi.upm.models.repositories.Repository;
 import etsisi.upm.util.Categories;
 import etsisi.upm.models.Product;
 import etsisi.upm.models.Ticket;
@@ -15,10 +16,7 @@ import java.util.HashMap;
 
 public class ProductController {
 
-    private static HashMap<Integer, Product> products;
-    private static Ticket ticket;
-    private int totalProducts;
-
+    private final Repository<Integer, Product> productRepository;
 
     private static final String ERROR_CREATE_PRODUCT = "Error al crear el producto";
 
@@ -89,20 +87,17 @@ public class ProductController {
         return response;
     }
 
-    public ProductController() {
-        this.products = new HashMap<>();
-        //  this.ticket = new Ticket();
-        this.totalProducts = 0;
+    public ProductController(Repository<Integer, Product> products) {
+        this.productRepository = products;
     }
 
     //here we add a new product to the hashmap of products
     //return true if it didn't exist, else false
     private String addProduct(String name, String category, double price, int id) {
         Product product;
-        if (Categories.existCategory(category) && this.totalProducts < MAX_SIZE) {
+        if (Categories.existCategory(category) && this.productRepository.size() < MAX_SIZE) {
             product = new Product(id, name, price, Categories.valueOf(category));
-            products.put(product.getId(), product);
-            this.totalProducts++;
+            productRepository.add(product.getId(), product);
             return product.toString();
         } else return ERROR_CREATE_PRODUCT;
     }
@@ -111,46 +106,46 @@ public class ProductController {
         Product product;
         if (Categories.existCategory(category)) {
             product = new Product(id, name, price, Categories.valueOf(category),maxPers);
-            products.put(product.getId(), product);
+            productRepository.put(product.getId(), product);
             return product.toString();
         } else return ERROR_CREATE_PRODUCT;
     }
 
 
     public String updateProduct(int id, String field, String newContent) {
-        if (this.products.get(id) == null) return null;
+        if (this.productRepository.get(id) == null) return null;
         switch (field) {
             case NAME:
-                this.products.get(id).setName(newContent);
+                this.productRepository.get(id).setName(newContent);
                 break;
             case CATEGORY:
                 if (Categories.existCategory(newContent)) {
                     Categories cat = Categories.valueOf(newContent);
-                    this.products.get(id).setCategory(cat);
+                    this.productRepository.get(id).setCategory(cat);
                 } else return null;
                 break;
             case PRICE:
-                this.products.get(id).setPrice(Double.parseDouble(newContent));
+                this.productRepository.get(id).setPrice(Double.parseDouble(newContent));
                 break;
             default:
                 return null;
         }
-        return this.products.get(id).toString();
+        return this.productRepository.get(id).toString();
     }
 
     //here we delete a product from the hashmap of products
     //return true if delete succeed, else false
     public String deleteProduct(int prodId) {
-        if (products.containsKey(prodId)) {
-            ticket.remove(products.get(prodId));
+        if (productRepository.containsKey(prodId)) {
+            ticket.remove(productRepository.get(prodId));
             this.totalProducts--;
-            return products.remove(prodId).toString();
+            return productRepository.remove(prodId).toString();
         } else return null;
     }
 
     public static String addProductToTicket(String ticketId,String cashId, int prodId, int amount) {
-        if (products.containsKey(prodId)) {
-            ticket.add(products.get(prodId), amount);
+        if (productRepository.containsKey(prodId)) {
+            ticket.add(productRepository.get(prodId), amount);
         }
         return ticket.toString();
     }
@@ -160,7 +155,7 @@ public class ProductController {
 
         builder.append(CATALOG);
 
-        for (Product p : products.values()) {
+        for (Product p : productRepository.values()) {
             builder.append(TAB_SPACE)
                     .append(p.toString())
                     .append(Constants.ENTER_KEY);
@@ -242,7 +237,7 @@ public class ProductController {
 
     private String addMeal(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
         // ... (validación de ID y MAX_SIZE)
-        if (this.products.containsKey(id)) {
+        if (this.productRepository.containsKey(id)) {
             return ERROR_CREATE_PRODUCT + ": the product with the ID " + id + "already exists.";
         }
         if (this.totalProducts >= MAX_SIZE) {
@@ -251,7 +246,7 @@ public class ProductController {
 
         try {
             Meal meal = new Meal(id, name, pricePerPerson, maxPeople, expirationDate);
-            products.put(meal.getId(), meal);
+            productRepository.put(meal.getId(), meal);
             this.totalProducts++;
             // return of the toString of the object captured by prodAddMeal
             return meal.toString();
@@ -262,7 +257,7 @@ public class ProductController {
 
     private String addMeeting(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
         // 1. ID validation
-        if (this.products.containsKey(id)) {
+        if (this.productRepository.containsKey(id)) {
             return ERROR_CREATE_PRODUCT + ": the product with the ID " + id + "already exists.";
         }
 
@@ -276,7 +271,7 @@ public class ProductController {
             Meeting meeting = new Meeting(id, name, pricePerPerson, maxPeople, expirationDate);
 
             // 4. add to the repository
-            products.put(meeting.getId(), meeting);
+            productRepository.put(meeting.getId(), meeting);
             this.totalProducts++;
 
             // 5. return the created object

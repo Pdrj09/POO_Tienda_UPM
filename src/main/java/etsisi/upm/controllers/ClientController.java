@@ -2,20 +2,24 @@ package etsisi.upm.controllers;
 
 import etsisi.upm.Constants;
 import etsisi.upm.models.repositories.Repository;
+import etsisi.upm.models.users.Cashier;
 import etsisi.upm.models.users.Client;
 
 import java.util.Collection;
 
 public class ClientController {
-    private static final Repository<String, Client> repository = new Repository<>();
+    private final Repository<String, Client> clientRepository;
+    private final Repository<String, Cashier> cashierRepository;
     private static final String DUPLICATED_ID_ERROR  = "El id pasado como pararametro ya existe, añada otro";
     private static final String CASIER_NOT_EXIST  = "El casier dado no existe";
 
 
-    public ClientController() {
+    public ClientController(Repository<String, Client> repository, Repository<String, Cashier> cashierRepository) {
+        this.clientRepository = repository;
+        this.cashierRepository = cashierRepository;
     }
 
-    public static String clientAddControl(String[] querySplit){
+    public String clientAddControl(String[] querySplit){
         //client add "<nombre>" <DNI> <email> <cashId>
         // Client{identifier='Y8682724P', name='Pepe1', email='pepe3@upm.es', cash=UW1234567}
         //client add: ok
@@ -33,11 +37,11 @@ public class ClientController {
         return builder.toString();
     }
 
-    private static Client addClient(String name, String dni, String email, String UW) {
-        if (repository.findById(dni) == null) {
-            if (CashierController.existCashier(dni)) {
+    private Client addClient(String name, String dni, String email, String UW) {
+        if (clientRepository.findById(dni) == null) {
+            if (cashierRepository.findById(dni)!=null) {
                 Client client = new Client(dni, name, email, UW);
-                repository.add(dni, client);
+                clientRepository.add(dni, client);
 
                 return client;
             } else  {
@@ -50,10 +54,10 @@ public class ClientController {
 
 
     public Client removeClients(String id) {
-        return repository.removeById(id);
+        return clientRepository.removeById(id);
     }
 
     public Collection<Client> listClients() {
-        return repository.findAll();
+        return clientRepository.findAll();
     }
 }
