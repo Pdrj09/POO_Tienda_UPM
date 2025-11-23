@@ -68,10 +68,10 @@ public class ProductController {
         if (productEdited != null) {
             builder.append(productEdited);
             builder.append(Constants.ENTER_KEY );
-            builder.append( Constants.okStatus(Constants.TICKET, Constants.TICKET_NEW));
+            builder.append( Constants.okStatus(Constants.PROD, Constants.PRODUCT_UPDATE));
             return builder.toString();
         } else {
-            return Constants.errorStatus(Constants.TICKET, Constants.TICKET_NEW);
+            return Constants.errorStatus(Constants.PROD, Constants.PRODUCT_UPDATE);
         }
     }
 
