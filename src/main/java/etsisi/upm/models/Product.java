@@ -1,5 +1,6 @@
 package etsisi.upm.models;
 
+import etsisi.upm.Constants;
 import etsisi.upm.util.Categories;
 import java.util.Objects;
 

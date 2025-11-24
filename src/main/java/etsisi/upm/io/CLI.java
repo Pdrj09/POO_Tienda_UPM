@@ -7,8 +7,6 @@ import etsisi.upm.controllers.TicketController;
 import etsisi.upm.Constants;
 import etsisi.upm.models.Ticket;
 
-import java.util.Arrays;
-
 public class CLI {
 
     /// Global variables
@@ -29,10 +27,10 @@ public class CLI {
     public int newQuery(String query) {
         //Check if the query starts with PROD command keyword
         if (query.startsWith(Constants.PROD)) {
-            this.prodQuery(Constants.deleteSubstring(query,  Constants.createGeneralRegex(Constants.PROD)));
+            this.prodQuery(Constants.deleteSubstring(query, Constants.createGeneralRegex(Constants.PROD)));
             //if the query starts with TICKET, we handle using ticketQuery().
         } else if (query.startsWith(Constants.TICKET)) {
-            this.ticketQuery(Constants.deleteSubstring(query,  Constants.createGeneralRegex(Constants.TICKET)));
+            this.ticketQuery(Constants.deleteSubstring(query, Constants.createGeneralRegex(Constants.TICKET)));
             //if query starts with ECHO,it echoes back the input
         } else if (query.startsWith(Constants.ECHO)) {
             ViewCLI.echoCommand(query);
@@ -44,9 +42,9 @@ public class CLI {
             ViewCLI.printExit();
             return Constants.QUERY_EXIT;
             //returns 0
-        }else if (query.startsWith(Constants.CLIENT)){
+        } else if (query.startsWith(Constants.CLIENT)) {
             this.clientQuery(query);
-        }else if (query.startsWith(Constants.CASH)){
+        } else if (query.startsWith(Constants.CASH)) {
             this.cashQuery(query);
         }
         return Constants.QUERY_SUCCESS;
@@ -71,27 +69,27 @@ public class CLI {
                 ViewCLI.printClients(clientController.listClients());
                 ViewCLI.print(Constants.okStatus(Constants.CLIENT, Constants.CLIENT_LIST));
             }
-        }catch(Exception e) {
+        } catch (Exception e) {
             ViewCLI.print(Constants.errorStatus(Constants.CLIENT, "Error", e.getMessage()));
         }
     }
 
-    private void prodQuery(String query) {/*
+    private void prodQuery(String query) {
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         try {
             if (query.contains(Constants.PRODUCT_ADD)) {
-                 ViewCLI.print(ProductController.productAdder(querySplit , productController));
+                ViewCLI.printProduct(ProductController.productAdder(querySplit, productController));
             } else if (query.contains(Constants.PRODUCT_LIST)) {
                 ViewCLI.print(productController.prodList());
                 ViewCLI.print(Constants.okStatus(Constants.PROD, Constants.PRODUCT_LIST));
             } else if (query.contains(Constants.PRODUCT_REMOVE)) {
                 productController.prodDelete(productController, query);
             } else if (query.contains(Constants.PRODUCT_UPDATE)) {
-                ViewCLI.print(productController.editProduct(querySplit));
+                ViewCLI.printProduct(productController.editProduct(querySplit));
             }
         } catch (Exception e) {
             ViewCLI.print(Constants.errorStatus(Constants.PROD, Constants.PRODUCT_ADD, e.toString()));
-        }*/
+        }
     }
     /*ticket new [<id>] <cashId> <userId>
     ticket add <ticketId><cashId> <prodId> <amount> [--p<txt> --p<txt>]

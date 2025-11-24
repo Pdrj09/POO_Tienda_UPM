@@ -13,14 +13,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TicketController {
-    private final Repository<String,Ticket> ticketRepository;
+    private final Repository<String, Ticket> ticketRepository;
     private final Repository<String, Client> clientRepository;
     private final Repository<String, Cashier> cashierRepository;
     private final Repository<Integer, Product> productRepository;
 
-    private static final String DUPLICATED_ID_ERROR  = "El id pasado como pararametro ya existe, añada otro";
 
-    public TicketController(Repository<String,Ticket> ticketRepository, Repository<String, Client> clientRepository, Repository<String, Cashier> cashierRepository, Repository<Integer, Product> productRepository) {
+    public TicketController(Repository<String, Ticket> ticketRepository, Repository<String, Client> clientRepository, Repository<String, Cashier> cashierRepository, Repository<Integer, Product> productRepository) {
         this.ticketRepository = ticketRepository;
         this.clientRepository = clientRepository;
         this.cashierRepository = cashierRepository;
@@ -91,7 +90,7 @@ public class TicketController {
 
     private Ticket newTicket(String ticketId, String cashierId, String clientId){
         Ticket ticket = new Ticket(ticketId);
-        this.ticketRepository.add(ticketId,ticket);
+        this.ticketRepository.add(ticketId, ticket);
         return ticket;
     }
 

@@ -92,6 +92,10 @@ public class Constants {
     public static final int TIME_MAX_PEOPLE_SERVICE = 100;
 
 
+    //Error const
+    public static final String ERROR_NO_PRODUCTS_FOUND  = "No products found";
+    public static final String DUPLICATED_ID_ERROR  = "The id given already exists please try again using a new one";
+
     public static String createGeneralRegex(String query) {
         StringBuilder stringBuilder;
         stringBuilder = new StringBuilder();

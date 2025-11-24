@@ -1,5 +1,6 @@
 package etsisi.upm.io;
 
+import etsisi.upm.Constants;
 import etsisi.upm.models.Product;
 import etsisi.upm.models.Ticket;
 import etsisi.upm.models.users.Cashier;
@@ -103,7 +104,7 @@ public class ViewCLI {
 
     public static void printProducts(Collection<Product> products){
         if (products.isEmpty())
-            System.out.println("No products found.");
+            System.out.println(Constants.ERROR_NO_PRODUCTS_FOUND);
         else products.forEach(ViewCLI::printProduct);
     }
 
