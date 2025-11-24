@@ -11,7 +11,7 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
     private final boolean hasMaxSize;
     private final int maxSize;
 
-    private static final String DUPLICATED_ID_ERROR  = "The id given already exists please try again using a new one";
+
 
 
     public Repository() {
@@ -31,9 +31,9 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
         if(!this.hasMaxSize || this.repoMap.size()<this.maxSize){
             if(this.findById(key)==null){
                 this.repoMap.put(key, object);
-            }else throw new IllegalArgumentException(DUPLICATED_ID_ERROR);
+            }else throw new IllegalArgumentException(Constants.DUPLICATED_ID_ERROR);
         }else{
-            throw new IllegalStateException("Repositorio lleno, tamaño máximo de "+this.maxSize);
+            throw new IllegalStateException("Full repository, max size of: "+this.maxSize);
         }
     }
 
