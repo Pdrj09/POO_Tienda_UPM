@@ -1,5 +1,6 @@
 package etsisi.upm.models;
 
+import etsisi.upm.Constants;
 import etsisi.upm.util.Categories;
 import java.util.Objects;
 
@@ -11,7 +12,7 @@ public class Product implements Comparable<Product> {
     private Categories category;
     private boolean personalizable;
     private int maxPers;
-    private static int maxPeople = 100;
+
 
 //Variables to avoid magic numbers
     private static final String OPEN_BRACE = "{";

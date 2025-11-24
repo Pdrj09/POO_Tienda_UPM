@@ -16,6 +16,7 @@ public class Constants {
     public static final int FIVE = 5;
     public static final int SIX = 6;
     public static final int SEVEN = 7;
+    public static final int MAX_PEOPLE = 100;
 
     // menu const
     public static final String EXIT = "exit";
