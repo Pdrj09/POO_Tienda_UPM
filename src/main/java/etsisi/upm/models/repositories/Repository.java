@@ -1,5 +1,7 @@
 package etsisi.upm.models.repositories;
 
+import etsisi.upm.Constants;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +39,10 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
 
     @Override
     public T findById(K id) {
-        return repoMap.get(id);
+        T founded = repoMap.get(id);
+        if(founded == null) throw new IllegalArgumentException(Constants.ERROR_NONEXISTEN_ID);
+
+        return founded;
     }
 
     @Override

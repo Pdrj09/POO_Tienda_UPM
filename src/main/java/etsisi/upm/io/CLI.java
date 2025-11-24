@@ -7,6 +7,8 @@ import etsisi.upm.controllers.TicketController;
 import etsisi.upm.Constants;
 import etsisi.upm.models.Ticket;
 
+import java.util.Arrays;
+
 public class CLI {
 
     /// Global variables
@@ -74,7 +76,7 @@ public class CLI {
         }
     }
 
-    private void prodQuery(String query) {
+    private void prodQuery(String query) {/*
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         try {
             if (query.contains(Constants.PRODUCT_ADD)) {
@@ -89,7 +91,7 @@ public class CLI {
             }
         } catch (Exception e) {
             ViewCLI.print(Constants.errorStatus(Constants.PROD, Constants.PRODUCT_ADD, e.toString()));
-        }
+        }*/
     }
     /*ticket new [<id>] <cashId> <userId>
     ticket add <ticketId><cashId> <prodId> <amount> [--p<txt> --p<txt>]
@@ -99,50 +101,13 @@ public class CLI {
 
     private void ticketQuery(String query) {
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
-        String ticketId = querySplit[Constants.ONE];
-        try{
-            if (query.contains(Constants.TICKET_ADD)) {
-                //ticket add <ticketId><cashId> <prodId> <amount> [--p<txt> --p<txt>]
 
-                String cashId = querySplit[Constants.TWO];
-                int id = Integer.parseInt(querySplit[Constants.THREE]);
-
-                int quantity = Integer.parseInt(querySplit[Constants.FOUR]);
-
-                String newTicket = "";
-                //if it is a personalized prod
-
-                if (querySplit [querySplit.length-1].contains("--p") ){
-                    String[] queryPersonalized = querySplit[Constants.FIVE].split(Constants.REGEX_TO_SPLIT);
-                    //newTicket = ProductController.addProductToTicket(ticketId, cashId, id, quantity, queryPersonalized);
-                }else {
-                    newTicket =  ProductController.addProductToTicket(ticketId, cashId, id, quantity);
-                }
-                if (newTicket != null) {
-                    System.out.println(newTicket);
-                    ViewCLI.print(Constants.okStatus(Constants.TICKET, Constants.TICKET_ADD));
-                } else {
-                    Constants.errorStatus(Constants.TICKET,Constants. TICKET_ADD);
-                }
-
-            } else if (query.contains(Constants.TICKET_NEW)) {
-                ViewCLI.printTickets(ticketController.getTicketList());
-                ViewCLI.print(Constants.okStatus(Constants.TICKET,Constants.TICKET_NEW));
-            } else if (query.contains(Constants.TICKET_PRINT)) {
-                ViewCLI.printTicket(ticketController.getTicket(ticketId));
-                ViewCLI.print(Constants.okStatus(Constants.TICKET, Constants.TICKET_PRINT));
-
-            } else if (query.contains(Constants.TICKET_REMOVE)) {
-                int id = Integer.parseInt(Constants.deleteSubstring(query,  Constants.createGeneralRegex(Constants.PRODUCT_REMOVE)));
-
-                // if (controller.removeProductFromTicket(ticketId,id)) {
-                //     System.out.println(okStatus(TICKET, TICKET_REMOVE));
-                // } else {
-                //    errorStatus(TICKET, TICKET_REMOVE);
-                //}
-            }
+        try {
+            this.ticketController.decodeQuery(querySplit);
+        }catch (IndexOutOfBoundsException e){
+            ViewCLI.print(Constants.errorStatus(Constants.TICKET,Constants.ERROR_STATUS,Constants.ERROR_FEW_PARAMS));
         }catch (Exception e) {
-            ViewCLI.print(Constants.errorStatus(Constants.TICKET, "Error", e.getMessage()));
+            ViewCLI.print(Constants.errorStatus(Constants.TICKET, Constants.ERROR_STATUS, e.getMessage()));
         }
     }
 

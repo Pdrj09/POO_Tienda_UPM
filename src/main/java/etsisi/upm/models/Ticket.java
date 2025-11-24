@@ -61,18 +61,10 @@ public class Ticket {
 
     // Add a product to the ticket, if the product already exists increments its amount
     //if ticket add (Product prod, int amount) -p <personalizacion>
-    public void addPersonalized(Product prod, int amount, String [] personalized){
-        if (!prod.isPersonalizable()) throw new IllegalArgumentException(ERROR_NONPERSONALIZABLE);
-        addInternal(prod,amount,personalized,true);
-    }
-
-    public void add(Product prod, int amount){
-        addInternal(prod,amount,null, false);
-    }
-
-    private void addInternal(Product prod, int amount, String [] personalized, boolean isGoingToPersonalize)
+    public Ticket addProduct(Product prod, int amount, List<String> customizations)
     {
         if (countProducts() + amount > MAX_SIZE)  throw new IllegalStateException(ERROR_MAXSIZE + Ticket.MAX_SIZE);
+        boolean isGoingToPersonalize = customizations != null;
 
         List<Object> entry = this.list.get(prod);
 
@@ -86,8 +78,8 @@ public class Ticket {
             entry = new ArrayList<>();
             entry.addFirst(amount);
 
-            if (personalized != null) {
-                entry.addAll(Arrays.asList(personalized));
+            if (customizations != null) {
+                entry.addAll(customizations);
             }
 
             this.list.put(prod,entry);
@@ -97,8 +89,8 @@ public class Ticket {
                 entry.set(0, oldAmount + amount);
             }
 
-            if (personalized != null) {
-                entry.addAll(Arrays.asList(personalized));
+            if (customizations != null) {
+                entry.addAll(customizations);
             }
         }
 
@@ -106,7 +98,7 @@ public class Ticket {
         this.categories.put(category, this.categories.getOrDefault(category, ZERO) + amount);
         this.state = TicketStates.ACTIVE;
 
-
+        return this;
     }
 
     private int countProducts(){
@@ -119,9 +111,10 @@ public class Ticket {
     }
 
     // Remove a product from the ticket
-    public void remove(Product prod){
+    public Ticket remove(Product prod){
         this.list.remove(prod);
         if(this.list.isEmpty()) this.state = TicketStates.EMPTY;
+        return this;
     }
 
     public String close(){

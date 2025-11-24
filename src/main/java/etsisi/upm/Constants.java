@@ -8,6 +8,14 @@ public class Constants {
     public static final int QUERY_SUCCESS = 1;
     public  static final int QUERY_EXIT = 0;
 
+    public static final int QUERY_TICKET_POS_INSTRUCTION = 0;
+    public static final int QUERY_TICKET_POS_TICKETID = 1;
+    public static final int QUERY_TICKET_POS_CASHID = 2;
+    public static final int QUERY_TICKET_POS_PRODID = 3;
+    public static final int QUERY_TICKET_POS_USERID = 3;
+    public static final int QUERY_TICKET_POS_AMOUNT = 4;
+    public static final int QUERY_TICKET_POS_CUSTOMIZATIONS = 5;
+
     // numbers
     public static final int ONE = 1;
     public static final int TWO = 2;
@@ -39,6 +47,10 @@ public class Constants {
     public static final String OK_STATUS = "ok";  //Ok
     public static final String ERROR_STATUS = "Error"; //error
 
+    public static final String ERROR_INVALID_OPTION = "invalid option";
+    public static final String ERROR_FEW_PARAMS = "more params required";
+    public static final String ERROR_NONEXISTEN_ID = "id nonexistent";
+
 
     // regex const
     public static final String REGEX_INIT = "^";
@@ -61,6 +73,7 @@ public class Constants {
     public static final String TICKET_PRINT = "print";
     public static final String TICKET_NEW = "new";
     public static final String TICKET_REMOVE = "remove";
+    public static final String TICKET_LIST = "list";
 
     // client const
     public static final String CLIENT_ADD = "add";

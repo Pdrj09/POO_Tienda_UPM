@@ -9,6 +9,8 @@ import etsisi.upm.models.users.Client;
 import etsisi.upm.models.ServiceProduct;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TicketController {
     private final Repository<String,Ticket> ticketRepository;
@@ -25,16 +27,78 @@ public class TicketController {
         this.productRepository = productRepository;
     }
 
-    public Ticket newTicket(String ticketId, String cashierId, String clientId){
+    public Object decodeQuery(String[] querySplit) {
+        String ticketId, cashierId, clientId;
+        int prodId, amount;
+        switch (querySplit[Constants.QUERY_TICKET_POS_INSTRUCTION]){
+            case Constants.TICKET_NEW:
+
+                ticketId = querySplit[Constants.QUERY_TICKET_POS_TICKETID];
+                cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID];
+                clientId = querySplit[Constants.QUERY_TICKET_POS_USERID];
+
+                return this.newTicket(ticketId, cashierId, clientId);
+
+            case Constants.TICKET_ADD:
+
+                ticketId = querySplit[Constants.QUERY_TICKET_POS_TICKETID];
+                cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID];
+                prodId = Integer.parseInt(querySplit[Constants.QUERY_TICKET_POS_PRODID]);
+                amount = Integer.parseInt(querySplit[Constants.QUERY_TICKET_POS_AMOUNT]);
+                List<String> customizations = null;
+
+                if (querySplit.length>Constants.QUERY_TICKET_POS_CUSTOMIZATIONS &&
+                        querySplit[Constants.QUERY_TICKET_POS_CUSTOMIZATIONS].contains("--p")){
+
+                    customizations = new ArrayList<>();
+
+                    //If it has customizations search for the customizations one by one
+                    for (int i = Constants.QUERY_TICKET_POS_CUSTOMIZATIONS; i< querySplit.length; i++){
+                        //Fin for customization
+                        Matcher matcher = Pattern.compile(Constants.REGEX_PERSONALIZED).matcher(querySplit[i]);
+
+                        //Founded customization
+                        if (matcher.find()) customizations.add(matcher.group());
+                    }
+                }
+
+                return this.addProductToTicket(ticketId, cashierId, prodId, amount, customizations);
+
+            case Constants.TICKET_REMOVE:
+
+                ticketId = querySplit[Constants.QUERY_TICKET_POS_TICKETID];
+                cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID];
+                prodId = Integer.parseInt(querySplit[Constants.QUERY_TICKET_POS_PRODID]);
+
+                return this.removeProductFromTicket(ticketId,cashierId,prodId);
+
+            case Constants.TICKET_PRINT:
+
+                ticketId = querySplit[Constants.QUERY_TICKET_POS_TICKETID];
+                cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID];
+                this.printTicket(ticketId,cashierId);
+
+                break;
+            case Constants.TICKET_LIST:
+
+                return this.getTicketList();
+
+            default:
+                throw new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
+        }
+        return null;
+    }
+
+    private Ticket newTicket(String ticketId, String cashierId, String clientId){
         Ticket ticket = new Ticket(ticketId);
         this.ticketRepository.add(ticketId,ticket);
         return ticket;
     }
 
-    public Ticket getTicket(String ticketId){
+    private Ticket getTicket(String ticketId){
         return this.ticketRepository.findById(ticketId);
     }
-    public List<Ticket> getTicketList(){
+    private List<Ticket> getTicketList(){
         List<Ticket> ticketList = new ArrayList<Ticket>();
         TreeMap<String, Cashier> sortedCashiers = new TreeMap<>(this.cashierRepository.getMap());
 
@@ -51,7 +115,7 @@ public class TicketController {
         ticket.close();
     }
 
-    public Ticket removeTicket(String ticketId, String cashierId, String clientId){
+    private Ticket removeTicket(String ticketId, String cashierId, String clientId){
         Ticket ticket = this.ticketRepository.removeById(ticketId);
         Cashier cashier = this.cashierRepository.findById(cashierId);
         Client client = this.clientRepository.findById(clientId);
@@ -61,7 +125,7 @@ public class TicketController {
     }
 
 
-    public void addProductToTicket(String ticketId, String cahsierId, Integer productId, int amount, List<String> customizations){
+    private Ticket addProductToTicket(String ticketId, String cahsierId, Integer productId, int amount, List<String> customizations){
         Ticket ticket = this.ticketRepository.findById(ticketId);
         Product product = this.productRepository.findById(productId);
 
@@ -82,26 +146,19 @@ public class TicketController {
             }
         }
 
-        // customize execution
-        if (customizations != null && !customizations.isEmpty()) {
-            // calls personalized products method
-            ticket.addPersonalized(product, amount, customizations.toArray(new String[0]));
-        } else {
-            // calls general products method
-            ticket.add(product, amount);
-        }
+        return ticket.addProduct(product,amount,customizations);
     }
 
-    public void removeProductFromTicket(String ticketId, String cahsierId, Integer productId){
+    private Ticket removeProductFromTicket(String ticketId, String cahsierId, Integer productId){
         Ticket ticket = this.ticketRepository.findById(ticketId);
         Product product = this.productRepository.findById(productId);
-        ticket.remove(product);
+        return ticket.remove(product);
     }
 
     //method were the ticked is closed and prepared for printing it (the view manage that)
-    public Ticket printTicket(String ticketId, String cahsierId){
+    private Ticket printTicket(String ticketId, String cahsierId){
         Ticket ticket = this.ticketRepository.findById(ticketId);
-        closeTicket(ticket);
+        this.closeTicket(ticket);
         return ticket;
     }
 
