@@ -27,10 +27,10 @@ public class CLI {
     public int newQuery(String query) {
         //Check if the query starts with PROD command keyword
         if (query.startsWith(Constants.PROD)) {
-            this.prodQuery(Constants.deleteSubstring(query,  Constants.createGeneralRegex(Constants.PROD)));
+            this.prodQuery(Constants.deleteSubstring(query, Constants.createGeneralRegex(Constants.PROD)));
             //if the query starts with TICKET, we handle using ticketQuery().
         } else if (query.startsWith(Constants.TICKET)) {
-            this.ticketQuery(Constants.deleteSubstring(query,  Constants.createGeneralRegex(Constants.TICKET)));
+            this.ticketQuery(Constants.deleteSubstring(query, Constants.createGeneralRegex(Constants.TICKET)));
             //if query starts with ECHO,it echoes back the input
         } else if (query.startsWith(Constants.ECHO)) {
             ViewCLI.echoCommand(query);
@@ -42,9 +42,9 @@ public class CLI {
             ViewCLI.printExit();
             return Constants.QUERY_EXIT;
             //returns 0
-        }else if (query.startsWith(Constants.CLIENT)){
+        } else if (query.startsWith(Constants.CLIENT)) {
             this.clientQuery(query);
-        }else if (query.startsWith(Constants.CASH)){
+        } else if (query.startsWith(Constants.CASH)) {
             this.cashQuery(query);
         }
         return Constants.QUERY_SUCCESS;
@@ -56,7 +56,7 @@ public class CLI {
     //client remove <DNI>
     //client list
 
-    private void clientQuery(String query){
+    private void clientQuery(String query) {
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         try {
             if (query.contains(Constants.CLIENT_ADD)) {
@@ -69,7 +69,7 @@ public class CLI {
                 ViewCLI.printClients(clientController.listClients());
                 ViewCLI.print(Constants.okStatus(Constants.CLIENT, Constants.CLIENT_LIST));
             }
-        }catch(Exception e) {
+        } catch (Exception e) {
             ViewCLI.print(Constants.errorStatus(Constants.CLIENT, "Error", e.getMessage()));
         }
     }
@@ -78,14 +78,14 @@ public class CLI {
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         try {
             if (query.contains(Constants.PRODUCT_ADD)) {
-                 ViewCLI.print(ProductController.productAdder(querySplit , productController));
+                ViewCLI.printProduct(ProductController.productAdder(querySplit, productController));
             } else if (query.contains(Constants.PRODUCT_LIST)) {
                 ViewCLI.print(productController.prodList());
                 ViewCLI.print(Constants.okStatus(Constants.PROD, Constants.PRODUCT_LIST));
             } else if (query.contains(Constants.PRODUCT_REMOVE)) {
                 productController.prodDelete(productController, query);
             } else if (query.contains(Constants.PRODUCT_UPDATE)) {
-                ViewCLI.print(productController.editProduct(querySplit));
+                ViewCLI.printProduct(productController.editProduct(querySplit));
             }
         } catch (Exception e) {
             ViewCLI.print(Constants.errorStatus(Constants.PROD, Constants.PRODUCT_ADD, e.toString()));
@@ -100,7 +100,7 @@ public class CLI {
     private void ticketQuery(String query) {
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         String ticketId = querySplit[Constants.ONE];
-        try{
+        try {
             if (query.contains(Constants.TICKET_ADD)) {
                 //ticket add <ticketId><cashId> <prodId> <amount> [--p<txt> --p<txt>]
 
@@ -109,31 +109,32 @@ public class CLI {
 
                 int quantity = Integer.parseInt(querySplit[Constants.FOUR]);
 
-                String newTicket = "";
+                Ticket newTicket = null;
+                String[] queryPersonalized = null;
                 //if it is a personalized prod
 
-                if (querySplit [querySplit.length-1].contains("--p") ){
-                    String[] queryPersonalized = querySplit[Constants.FIVE].split(Constants.REGEX_TO_SPLIT);
+                if (querySplit[querySplit.length - Constants.ONE].contains("--p")) {
+                    queryPersonalized = querySplit[Constants.FIVE].split(Constants.REGEX_TO_SPLIT);
                     //newTicket = ProductController.addProductToTicket(ticketId, cashId, id, quantity, queryPersonalized);
-                }else {
-                    newTicket =  ProductController.addProductToTicket(ticketId, cashId, id, quantity);
+                } else {
+                    newTicket = ticketController.addProductToTicket(ticketId, cashId, id, quantity, queryPersonalized);
                 }
                 if (newTicket != null) {
                     System.out.println(newTicket);
                     ViewCLI.print(Constants.okStatus(Constants.TICKET, Constants.TICKET_ADD));
                 } else {
-                    Constants.errorStatus(Constants.TICKET,Constants. TICKET_ADD);
+                    Constants.errorStatus(Constants.TICKET, Constants.TICKET_ADD);
                 }
 
             } else if (query.contains(Constants.TICKET_NEW)) {
                 ViewCLI.printTickets(ticketController.getTicketList());
-                ViewCLI.print(Constants.okStatus(Constants.TICKET,Constants.TICKET_NEW));
+                ViewCLI.print(Constants.okStatus(Constants.TICKET, Constants.TICKET_NEW));
             } else if (query.contains(Constants.TICKET_PRINT)) {
                 ViewCLI.printTicket(ticketController.getTicket(ticketId));
                 ViewCLI.print(Constants.okStatus(Constants.TICKET, Constants.TICKET_PRINT));
 
             } else if (query.contains(Constants.TICKET_REMOVE)) {
-                int id = Integer.parseInt(Constants.deleteSubstring(query,  Constants.createGeneralRegex(Constants.PRODUCT_REMOVE)));
+                int id = Integer.parseInt(Constants.deleteSubstring(query, Constants.createGeneralRegex(Constants.PRODUCT_REMOVE)));
 
                 // if (controller.removeProductFromTicket(ticketId,id)) {
                 //     System.out.println(okStatus(TICKET, TICKET_REMOVE));
@@ -141,13 +142,13 @@ public class CLI {
                 //    errorStatus(TICKET, TICKET_REMOVE);
                 //}
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             ViewCLI.print(Constants.errorStatus(Constants.TICKET, "Error", e.getMessage()));
         }
     }
 
 
-    private void cashQuery(String query){
+    private void cashQuery(String query) {
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         try {
             if (query.contains(Constants.CASH_ADD)) {

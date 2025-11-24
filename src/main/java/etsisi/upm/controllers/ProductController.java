@@ -65,7 +65,6 @@ public class ProductController {
 
     public Product editProduct(String[] querySplit) {
 
-        StringBuilder builder = new StringBuilder();
         Product productEdited = updateProduct(Integer.parseInt(querySplit[Constants.ONE]), querySplit[Constants.TWO], querySplit[Constants.THREE]);
         if (productEdited != null) {
             return productEdited;
@@ -75,7 +74,7 @@ public class ProductController {
     }
 
 
-    public Product prodDelete(String query) {
+    public Product prodDelete(ProductController productController, String query) {
         int id = Integer.parseInt(Constants.deleteSubstring(query, Constants.createGeneralRegex(Constants.PRODUCT_REMOVE)));
         Product deletedProd = deleteProduct(id);
         String response = "";
