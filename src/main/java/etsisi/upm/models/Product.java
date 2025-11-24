@@ -11,7 +11,7 @@ public class Product implements Comparable<Product> {
     private Categories category;
     private boolean personalizable;
     private int maxPers;
-    private static int maxPeople = 100;
+    public static final int maxPeople = 100;
 
 //Variables to avoid magic numbers
     private static final String OPEN_BRACE = "{";

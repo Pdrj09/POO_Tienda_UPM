@@ -10,7 +10,7 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
     private final int maxSize;
 
     private static final String DUPLICATED_ID_ERROR  = "El id pasado como pararametro ya existe, añada otro";
-
+    private static final String ERROR_MAXSIZE = "Repositorio lleno, tamaño máximo de ";
 
     public Repository() {
         this.hasMaxSize = false;
@@ -31,7 +31,7 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
                 this.repoMap.put(key, object);
             }else throw new IllegalArgumentException(DUPLICATED_ID_ERROR);
         }else{
-            throw new IllegalStateException("Repositorio lleno, tamaño máximo de "+this.maxSize);
+            throw new IllegalStateException(ERROR_MAXSIZE+this.maxSize);
         }
     }
 
