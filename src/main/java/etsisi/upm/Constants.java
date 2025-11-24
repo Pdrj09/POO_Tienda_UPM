@@ -16,7 +16,6 @@ public class Constants {
     public static final int FIVE = 5;
     public static final int SIX = 6;
     public static final int SEVEN = 7;
-    public static final int MAX_PEOPLE = 100;
 
     // menu const
     public static final String EXIT = "exit";
@@ -79,6 +78,9 @@ public class Constants {
     public static final int TIME_MEETING_PLANNING_HOURS = 12;
     public static final int TIME_MAX_PEOPLE_SERVICE = 100;
 
+
+    //Error const
+    public static final String ERROR_NO_PRODUCTS_FOUND  = "No products found.";
 
     public static String createGeneralRegex(String query) {
         StringBuilder stringBuilder;
