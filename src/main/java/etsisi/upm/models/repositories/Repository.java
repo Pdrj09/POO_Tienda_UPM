@@ -1,5 +1,7 @@
 package etsisi.upm.models.repositories;
 
+import etsisi.upm.Constants;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,12 +11,12 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
     private final boolean hasMaxSize;
     private final int maxSize;
 
-    private static final String DUPLICATED_ID_ERROR  = "El id pasado como pararametro ya existe, añada otro";
+    private static final String DUPLICATED_ID_ERROR  = "The id given already exists please try again using a new one";
 
 
     public Repository() {
         this.hasMaxSize = false;
-        this.maxSize = -1;
+        this.maxSize = - Constants.ONE;
         this.repoMap = new HashMap<>();
     }
 

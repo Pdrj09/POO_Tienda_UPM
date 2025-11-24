@@ -23,7 +23,7 @@ public class Main {
         Repository<String, Client> clientRepo = new Repository<>();
         Repository<String, Cashier> cashierRepo = new Repository<>();
 
-        ProductController productController = new ProductController(productRepo);
+        ProductController productController = new ProductController(productRepo, ticketRepo);
         TicketController ticketController = new TicketController(ticketRepo, clientRepo, cashierRepo, productRepo);
         ClientController clientController = new ClientController(clientRepo, cashierRepo);
         CashierController cashierController = new CashierController(cashierRepo);
