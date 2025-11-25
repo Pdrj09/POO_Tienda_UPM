@@ -41,6 +41,13 @@ public class CashierController {
                         .append(Constants.REGEX_BLANK_SPACE);
 
             query = query.replaceFirst(cashierRegex.toString(), Constants.STR_EMPTY);
+
+            if(query.equals(Constants.STR_EMPTY)) {
+                Collection<Cashier> cashiers = listCashiers();
+            } else {
+                // TODO dar un codigo de error personalizado
+                throw  new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
+            }
             
         } else if (query.startsWith(Constants.CASH_TICKETS)) {
             cashierRegex.append(Constants.CASH_TICKETS)
