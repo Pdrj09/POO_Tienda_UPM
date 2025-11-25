@@ -1,7 +1,5 @@
 package etsisi.upm;
 
-import etsisi.upm.io.ViewCLI;
-
 public class Constants {
 
 
