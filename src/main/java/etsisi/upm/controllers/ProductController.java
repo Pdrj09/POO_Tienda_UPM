@@ -40,7 +40,7 @@ public class ProductController {
 
     public static Product productAdder(String[] querySplit, ProductController productController) {
         if ((querySplit[Constants.ONE].isEmpty()) || (querySplit[Constants.ONE].equals(Constants.STR_BLANK_SPACE))) {
-            throw new IllegalArgumentException("there is no id for product ");
+            throw new IllegalArgumentException(" there is no id for product ");
         }
         int id = Integer.parseInt(querySplit[Constants.ONE]);
         String name = querySplit[Constants.TWO].replace(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
@@ -98,7 +98,7 @@ public class ProductController {
         } else throw new IllegalArgumentException(ERROR_CREATE_PRODUCT);
     }
 
-    public Product updateProduct(int id, String field, String newContent) {
+    private Product updateProduct(int id, String field, String newContent) {
         Product productToUpdate = this.productRepository.findById(id);
         if (productToUpdate == null) throw new IllegalArgumentException(ERROR_ID_NONEXISTENT);
         switch (field) {
