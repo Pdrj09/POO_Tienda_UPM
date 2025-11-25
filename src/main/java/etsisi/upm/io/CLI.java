@@ -125,7 +125,7 @@ public class CLI {
             } else if (query.contains(Constants.PRODUCT_REMOVE)) {
                 productController.prodDelete(productController, query);
             } else if (query.contains(Constants.PRODUCT_UPDATE)) {
-                ViewCLI.printProduct(productController.editProduct(querySplit));
+                System.out.println(productController.editProduct(querySplit));
             }else if (query.contains(Constants.PRODUCT_ADD_MEAL)) {
 
                 //System.out.println(productController.editProduct(querySplit));

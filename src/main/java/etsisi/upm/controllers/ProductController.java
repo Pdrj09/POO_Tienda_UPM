@@ -25,7 +25,6 @@ public class ProductController {
 
     private static final String CATALOG = "Catalog:\n";
     private static final String TAB_SPACE = "\t";
-    private static final int MAX_SIZE = 200;
 
     private static final String NAME = "NAME";
     private static final String CATEGORY = "CATEGORY";
@@ -62,14 +61,10 @@ public class ProductController {
         return response.toString();
     }
 
-    public Product editProduct(String[] querySplit) {
-
-        Product productEdited = updateProduct(Integer.parseInt(querySplit[Constants.ONE]), querySplit[Constants.TWO], querySplit[Constants.THREE]);
-        if (productEdited != null) {
-            return productEdited;
-        } else {
-            throw new IllegalStateException(Constants.errorStatus(Constants.TICKET, Constants.TICKET_NEW));
-        }
+    public String editProduct(String[] querySplit) {
+        StringBuilder response = new StringBuilder();
+        response.append(updateProduct(Integer.parseInt(querySplit[Constants.ONE]), querySplit[Constants.TWO], querySplit[Constants.THREE]));
+    return response.toString();
     }
 
 
@@ -140,7 +135,7 @@ public class ProductController {
     }
 
 
-    private String prodList() {
+    public String prodList() {
         StringBuilder builder = new StringBuilder();
 
         builder.append(CATALOG);
