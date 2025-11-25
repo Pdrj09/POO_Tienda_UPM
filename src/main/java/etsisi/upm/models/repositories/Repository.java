@@ -29,12 +29,15 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
 
     @Override
     public void add(K key, T object) {
-        if(!this.hasMaxSize || this.repoMap.size()<this.maxSize){
-            if(this.findById(key)==null){
-                this.repoMap.put(key, object);
-            }else throw new IllegalArgumentException(Constants.DUPLICATED_ID_ERROR);
-        }else{
-            throw new IllegalStateException(ERROR_MAXSIZE+this.maxSize);
+        if (!this.hasMaxSize || this.repoMap.size() < this.maxSize) {
+
+            if (!repoMap.containsKey(key)) {
+                repoMap.put(key, object);
+            } else {
+                throw new IllegalArgumentException(Constants.DUPLICATED_ID_ERROR);
+            }
+        } else {
+            throw new IllegalStateException(ERROR_MAXSIZE + this.maxSize);
         }
     }
 
@@ -42,7 +45,6 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
     public T findById(K id) {
         T founded = repoMap.get(id);
         if(founded == null) throw new IllegalArgumentException(Constants.ERROR_NONEXISTEN_ID);
-
         return founded;
     }
 

@@ -39,13 +39,14 @@ public class ProductController {
     }
 
     public static Product productAdder(String[] querySplit, ProductController productController) {
+
         if ((querySplit[Constants.ONE].isEmpty()) || (querySplit[Constants.ONE].equals(Constants.STR_BLANK_SPACE))) {
             throw new IllegalArgumentException(" there is no id for product ");
         }
         int id = Integer.parseInt(querySplit[Constants.ONE]);
         String name = querySplit[Constants.TWO].replace(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
 
-        if ((querySplit[Constants.THREE].isEmpty()) || (querySplit[Constants.THREE].equals(Constants.STR_BLANK_SPACE))) {
+        if ((querySplit[Constants.FOUR].isEmpty()) || (querySplit[Constants.FOUR].equals(Constants.STR_BLANK_SPACE))) {
             throw new IllegalArgumentException("The product has to have a price");
         }
         float price = Float.parseFloat(querySplit[Constants.FOUR].replace(Constants.STR_COMMA, Constants.STR_DOT));
@@ -56,8 +57,7 @@ public class ProductController {
             int maxPers = Integer.parseInt(querySplit[Constants.FIVE]);
             response = productController.addProduct(name, querySplit[Constants.THREE], price, id, maxPers);
         } else {
-
-            response = productController.addProduct(name, querySplit[Constants.THREE], price, id, null);
+            response = productController.addProduct(name, querySplit[Constants.THREE], price, id);
             System.out.println(response);
         }
         return response;
@@ -88,11 +88,18 @@ public class ProductController {
 
     //here we add a new product to the hashmap of products
     //return true if it didn't exist, else false
+    private Product addProduct(String name, String category, double price, int id) {
+        Product product;
+        if (Categories.existCategory(category)) {
+            product = new Product(id, name, price, Categories.valueOf(category));
+            productRepository.add(product.getId(), product);
+            return product;
+        } else throw new IllegalArgumentException(ERROR_CREATE_PRODUCT);
+    }
     private Product addProduct(String name, String category, double price, int id, Integer maxPers) {
         Product product;
         if (Categories.existCategory(category)) {
-            if(maxPers==null) product = new Product(id, name, price, Categories.valueOf(category));
-            else product = new Product(id, name, price, Categories.valueOf(category),maxPers);
+             product = new Product(id, name, price, Categories.valueOf(category),maxPers);
             productRepository.add(product.getId(), product);
             return product;
         } else throw new IllegalArgumentException(ERROR_CREATE_PRODUCT);
