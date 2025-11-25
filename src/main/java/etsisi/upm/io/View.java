@@ -36,8 +36,10 @@ public class View {
                 printEmptyMessage(type);
                 return;
             }
-            for (Object item : collection)
+            for (Object item : collection) {
+                printTypeHeader(element);
                 print(item, item.getClass());
+            }
             return;
         }
 
@@ -50,12 +52,14 @@ public class View {
             }
             for (int i = 0; i < length; i++) {
                 Object item = java.lang.reflect.Array.get(element, i);
+                printTypeHeader(element);
                 print(item, item.getClass());
             }
             return;
         }
 
         //normal object
+        printTypeHeader(element);
         System.out.println(MSG_INFO_PREFIX + element.toString());
     }
 
