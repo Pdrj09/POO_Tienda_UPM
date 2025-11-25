@@ -91,11 +91,6 @@ public class CLI {
         //returns 1
     }
 
-
-    //client add "<nombre>" <DNI> <email> <cashId>
-    //client remove <DNI>
-    //client list
-
     private void clientQuery(String query){
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         try {
