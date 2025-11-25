@@ -16,6 +16,7 @@ public class CLI {
     private final CashierController cashierController;
     // status code
 
+
     public CLI(ProductController productController, TicketController ticketController, ClientController clientController, CashierController cashierController) {
         ViewCLI.printWellcomeMessage();
         this.productController = productController;
