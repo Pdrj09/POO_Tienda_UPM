@@ -86,6 +86,12 @@ public class CLI {
                 productController.prodDelete(productController, query);
             } else if (query.contains(Constants.PRODUCT_UPDATE)) {
                 ViewCLI.printProduct(productController.editProduct(querySplit));
+            }else if (query.contains(Constants.PRODUCT_ADD_MEAL)) {
+
+                //ViewCLI.printProduct(productController.editProduct(querySplit));
+            }else if (query.contains(Constants.PRODUCT_ADD_MEETING)) {
+
+                //ViewCLI.printProduct(productController.editProduct(querySplit));
             }
         } catch (Exception e) {
             ViewCLI.print(Constants.errorStatus(Constants.PROD, Constants.PRODUCT_ADD, e.toString()));
