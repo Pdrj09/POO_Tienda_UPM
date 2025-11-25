@@ -128,10 +128,10 @@ public class CLI {
                 System.out.println(productController.editProduct(querySplit));
             }else if (query.contains(Constants.PRODUCT_ADD_MEAL)) {
 
-                //System.out.println(productController.editProduct(querySplit));
+                //System.out.println(productController.prodAddMeal(querySplit));
             }else if (query.contains(Constants.PRODUCT_ADD_MEETING)) {
 
-                //System.out.println(productController.editProduct(querySplit));
+                //System.out.println(productController.prodAddMeeting(querySplit));
             }
         } catch (Exception e) {
             System.out.println(Constants.errorStatus(Constants.PROD, Constants.PRODUCT_ADD, e.toString()));

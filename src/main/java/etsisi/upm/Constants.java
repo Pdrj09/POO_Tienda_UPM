@@ -25,6 +25,8 @@ public class Constants {
     public static final int SIX = 6;
     public static final int SEVEN = 7;
 
+    public static final int MAX_SIZE = 200;
+
     // menu const
     public static final String EXIT = "exit";
     public static final String PROD = "prod";
