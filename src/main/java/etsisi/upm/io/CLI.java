@@ -14,11 +14,52 @@ public class CLI {
     private final TicketController ticketController;
     private final ClientController clientController;
     private final CashierController cashierController;
-    // status code
+    // constants
+
+    private static final String WELCOME_MESSAGE = """
+            Welcome to the ticket module App.
+            Ticket module. Type 'help' to see commands.
+        """;
+
+
+    //printed when you exit the program
+    private static final String BYE = """
+            Closing application.
+            Goodbye!
+            """;
+
+
+    //this is printed when you call 'help'
+    private static final String COMMANDS_LIST = """
+            Commands:
+                    client add "<nombre>" <DNI> <email> <cashId>
+                    client remove <DNI>
+                    client list
+                    cash add [<id>] "<nombre>"<email>
+                    cash remove <id>
+                    cash list
+                    cash tickets <id>
+                    ticket new [<id>] <cashId> <userId>
+                    ticket add <ticketId><cashId> <prodId> <amount> [--p<txt> --p<txt>]\s
+                    ticket remove <ticketId><cashId> <prodId>\s
+                    ticket print <ticketId> <cashId>\s
+                    ticket list
+                    prod add <id> "<name>" <category> <price>
+                    prod update <id> NAME|CATEGORY|PRICE <value>
+                    prod addMeal <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
+                    prod addMeeting <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
+                    prod list
+                    prod remove <id>
+                    help
+                    echo “<text>”
+                    exit
+            
+            """;
+
 
 
     public CLI(ProductController productController, TicketController ticketController, ClientController clientController, CashierController cashierController) {
-        ViewCLI.printWellcomeMessage();
+        printWellcomeMessage();
         this.productController = productController;
         this.ticketController = ticketController;
         this.clientController = clientController;
@@ -34,13 +75,13 @@ public class CLI {
             this.ticketQuery(Constants.deleteSubstring(query, Constants.createGeneralRegex(Constants.TICKET)));
             //if query starts with ECHO,it echoes back the input
         } else if (query.startsWith(Constants.ECHO)) {
-            ViewCLI.echoCommand(query);
+            echoCommand(query);
             //if query starts with HELP, displays help information available
         } else if (query.startsWith(Constants.HELP)) {
-            ViewCLI.printHelp();
+            printHelp();
             //if query starts with EXIT prints goodbye message
         } else if (query.startsWith(Constants.EXIT)) {
-            ViewCLI.printExit();
+            printExit();
             return Constants.QUERY_EXIT;
             //returns 0
         } else if (query.startsWith(Constants.CLIENT)) {
@@ -148,6 +189,22 @@ public class CLI {
         } catch (Exception e) {
             System.out.println(Constants.errorStatus(Constants.CASH, "Error", e.getMessage()));
         }
+    }
+
+    private static void printWellcomeMessage(){
+        System.out.println(WELCOME_MESSAGE);
+    }
+
+    private static void printHelp(){
+        System.out.println(COMMANDS_LIST);
+    }
+
+    private static void printExit(){
+        System.out.println(BYE);
+    }
+
+    private static void echoCommand(String command) {
+        System.out.println(command);
     }
 
 }
