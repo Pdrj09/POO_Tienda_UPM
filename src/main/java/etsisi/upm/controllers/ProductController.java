@@ -25,7 +25,7 @@ public class ProductController {
 
     private static final String CATALOG = "Catalog:\n";
     private static final String TAB_SPACE = "\t";
-    public static final int MAX_SIZE = 200;
+    private static final int MAX_SIZE = 200;
 
     private static final String NAME = "NAME";
     private static final String CATEGORY = "CATEGORY";
@@ -126,7 +126,7 @@ public class ProductController {
         return productToUpdate;
     }
 
-    public Product deleteProduct(int prodId) {
+    private Product deleteProduct(int prodId) {
         Product productToDelete = this.productRepository.findById(prodId);
         if (productToDelete != null){
             Collection<Ticket> tickets = this.ticketRepository.findAll();
@@ -140,7 +140,7 @@ public class ProductController {
     }
 
 
-    public String prodList() {
+    private String prodList() {
         StringBuilder builder = new StringBuilder();
 
         builder.append(CATALOG);
