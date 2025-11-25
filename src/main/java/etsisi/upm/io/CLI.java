@@ -81,21 +81,21 @@ public class CLI {
             if (query.contains(Constants.PRODUCT_ADD)) {
                 ViewCLI.printProduct(ProductController.productAdder(querySplit, productController));
             } else if (query.contains(Constants.PRODUCT_LIST)) {
-                ViewCLI.print(productController.prodList());
-                ViewCLI.print(Constants.okStatus(Constants.PROD, Constants.PRODUCT_LIST));
+                System.out.println(productController.prodList());
+                System.out.println(Constants.okStatus(Constants.PROD, Constants.PRODUCT_LIST));
             } else if (query.contains(Constants.PRODUCT_REMOVE)) {
                 productController.prodDelete(productController, query);
             } else if (query.contains(Constants.PRODUCT_UPDATE)) {
                 ViewCLI.printProduct(productController.editProduct(querySplit));
             }else if (query.contains(Constants.PRODUCT_ADD_MEAL)) {
 
-                //ViewCLI.printProduct(productController.editProduct(querySplit));
+                //System.out.println(productController.editProduct(querySplit));
             }else if (query.contains(Constants.PRODUCT_ADD_MEETING)) {
 
-                //ViewCLI.printProduct(productController.editProduct(querySplit));
+                //System.out.println(productController.editProduct(querySplit));
             }
         } catch (Exception e) {
-            ViewCLI.print(Constants.errorStatus(Constants.PROD, Constants.PRODUCT_ADD, e.toString()));
+            System.out.println(Constants.errorStatus(Constants.PROD, Constants.PRODUCT_ADD, e.toString()));
         }
     }
     /*ticket new [<id>] <cashId> <userId>
@@ -110,9 +110,9 @@ public class CLI {
         try {
             this.ticketController.decodeQuery(querySplit);
         }catch (IndexOutOfBoundsException e){
-            ViewCLI.print(Constants.errorStatus(Constants.TICKET,Constants.ERROR_STATUS,Constants.ERROR_FEW_PARAMS));
+            System.out.println(Constants.errorStatus(Constants.TICKET,Constants.ERROR_STATUS,Constants.ERROR_FEW_PARAMS));
         }catch (Exception e) {
-            ViewCLI.print(Constants.errorStatus(Constants.TICKET, Constants.ERROR_STATUS, e.getMessage()));
+            System.out.println(Constants.errorStatus(Constants.TICKET, Constants.ERROR_STATUS, e.getMessage()));
         }
     }
 
@@ -125,28 +125,28 @@ public class CLI {
                 //TODO pasarle los parámetros por cachitos hasta añadirlo
                 //String response = cashierController.addCashier(query);
                 //ViewCLI.print(response);
-                ViewCLI.print(Constants.okStatus(Constants.CASH, Constants.CASH_ADD));
+                System.out.println(Constants.okStatus(Constants.CASH, Constants.CASH_ADD));
 
             } else if (query.contains(Constants.CASH_REMOVE)) {
                 if (cashierController.removeCashier(querySplit[Constants.ONE]) != null)
-                    ViewCLI.print(Constants.okStatus(Constants.CASH, Constants.CASH_REMOVE));
+                    System.out.println(Constants.okStatus(Constants.CASH, Constants.CASH_REMOVE));
                 else
-                    ViewCLI.print(Constants.errorStatus(Constants.CASH, Constants.CASH_REMOVE, "Cashier not found"));
+                    System.out.println(Constants.errorStatus(Constants.CASH, Constants.CASH_REMOVE, "Cashier not found"));
 
             } else if (query.contains(Constants.CASH_LIST)) {
                 //cash list
-                ViewCLI.printCashiers(cashierController.listCashiers());
-                ViewCLI.print(Constants.okStatus(Constants.CASH, Constants.CASH_LIST));
+                System.out.println(cashierController.listCashiers());
+                System.out.println(Constants.okStatus(Constants.CASH, Constants.CASH_LIST));
 
             } else if (query.contains(Constants.CASH_TICKETS)) {
                 //cash tickets <id>
                 //TODO hacer que printeé los tickets asociados a un cajero, hay que modificar el método listTickets
                 String cashId = querySplit[1];
                 //ViewCLI.printTickets(cashierController.listTickets(cashId));
-                ViewCLI.print(Constants.okStatus(Constants.CASH, Constants.CASH_TICKETS));
+                System.out.println(Constants.okStatus(Constants.CASH, Constants.CASH_TICKETS));
             }
         } catch (Exception e) {
-            ViewCLI.print(Constants.errorStatus(Constants.CASH, "Error", e.getMessage()));
+            System.out.println(Constants.errorStatus(Constants.CASH, "Error", e.getMessage()));
         }
     }
 
