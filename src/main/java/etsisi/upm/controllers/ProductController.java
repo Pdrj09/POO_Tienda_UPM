@@ -77,11 +77,10 @@ public class ProductController {
     public Product prodDelete(ProductController productController, String query) {
         int id = Integer.parseInt(Constants.deleteSubstring(query, Constants.createGeneralRegex(Constants.PRODUCT_REMOVE)));
         Product deletedProd = deleteProduct(id);
-        String response = "";
         if (deletedProd != null) {
             return deletedProd;
         } else {
-            throw new RuntimeException();
+            throw new RuntimeException("There has been an error deleting the product");
         }
     }
 
