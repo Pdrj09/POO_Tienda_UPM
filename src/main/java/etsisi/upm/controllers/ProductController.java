@@ -38,7 +38,7 @@ public class ProductController {
         this.ticketRepository = ticketRepository;
     }
 
-    public static Product productAdder(String[] querySplit, ProductController productController) {
+    public static String productAdder(String[] querySplit, ProductController productController) {
 
         if ((querySplit[Constants.ONE].isEmpty()) || (querySplit[Constants.ONE].equals(Constants.STR_BLANK_SPACE))) {
             throw new IllegalArgumentException(" there is no id for product ");
@@ -51,15 +51,15 @@ public class ProductController {
         }
         float price = Float.parseFloat(querySplit[Constants.FOUR].replace(Constants.STR_COMMA, Constants.STR_DOT));
 
-        Product response;
+        StringBuilder response = new StringBuilder();
 
         if (querySplit.length > Constants.FIVE) {
             int maxPers = Integer.parseInt(querySplit[Constants.FIVE]);
-            response = productController.addProduct(name, querySplit[Constants.THREE], price, id, maxPers);
+            response.append(productController.addProduct(name, querySplit[Constants.THREE], price, id, maxPers));
         } else {
-            response = productController.addProduct(name, querySplit[Constants.THREE], price, id);
+            response.append(productController.addProduct(name, querySplit[Constants.THREE], price, id));
         }
-        return response;
+        return response.toString();
     }
 
     public Product editProduct(String[] querySplit) {

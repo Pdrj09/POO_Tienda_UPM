@@ -5,7 +5,6 @@ import etsisi.upm.controllers.ClientController;
 import etsisi.upm.controllers.ProductController;
 import etsisi.upm.controllers.TicketController;
 import etsisi.upm.Constants;
-import etsisi.upm.models.Ticket;
 
 public class CLI {
 
@@ -27,7 +26,6 @@ public class CLI {
             Closing application.
             Goodbye!
             """;
-
 
     //this is printed when you call 'help'
     private static final String COMMANDS_LIST = """
@@ -120,7 +118,7 @@ public class CLI {
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         try {
             if (query.contains(Constants.PRODUCT_ADD)) {
-                ViewCLI.printProduct(ProductController.productAdder(querySplit, productController));
+                System.out.println(ProductController.productAdder(querySplit, productController));
             } else if (query.contains(Constants.PRODUCT_LIST)) {
                 System.out.println(productController.prodList());
                 System.out.println(Constants.okStatus(Constants.PROD, Constants.PRODUCT_LIST));
