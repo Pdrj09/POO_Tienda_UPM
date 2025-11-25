@@ -58,7 +58,6 @@ public class ProductController {
             response = productController.addProduct(name, querySplit[Constants.THREE], price, id, maxPers);
         } else {
             response = productController.addProduct(name, querySplit[Constants.THREE], price, id);
-            System.out.println(response);
         }
         return response;
     }
