@@ -20,7 +20,7 @@ public class CashierController {
         this.repository = repository;
     }
 
-    public Cashier addCash(String emailCompany, String name) {
+    private Cashier addCash(String emailCompany, String name) {
         String cashierId = generateCashierId();
         Cashier cashier =  Cashier.create(cashierId, emailCompany, name);
 
@@ -29,7 +29,7 @@ public class CashierController {
         return cashier;
     }
 
-    public Cashier addCashier(String cahierId, String emailCompany, String name) {
+    private Cashier addCashier(String cahierId, String emailCompany, String name) {
         Cashier cashier =  Cashier.create(cahierId, emailCompany, name);
 
         repository.add(cahierId, cashier);
@@ -37,19 +37,19 @@ public class CashierController {
         return cashier;
     }
 
-    public Cashier removeCashier(String id) {
+    private Cashier removeCashier(String id) {
         return repository.removeById(id);
     }
 
-    public Collection<Cashier> listCashiers() {
+    private Collection<Cashier> listCashiers() {
         return repository.findAll();
     }
 
-    public Set<String> listTickets(String cashierId) {
+    private Set<String> listTickets(String cashierId) {
         return repository.findById(cashierId).getTickets();
     }
 
-    public Boolean existCashier(String cashierId) {
+    private Boolean existCashier(String cashierId) {
         return repository.findById(cashierId) != null;
     }
 
