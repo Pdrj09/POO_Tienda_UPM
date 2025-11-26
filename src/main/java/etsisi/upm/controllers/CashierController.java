@@ -26,6 +26,7 @@ public class CashierController {
         StringBuilder cashierRegex = new StringBuilder();
         cashierRegex.append(Constants.REGEX_INIT);
 
+        // TODO no se da ID
         if (query.startsWith(Constants.CASH_ADD)) {
             try {
                 cashierRegex.append(Constants.CASH_ADD)
