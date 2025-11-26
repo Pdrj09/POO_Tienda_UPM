@@ -58,6 +58,16 @@ public class CashierController {
 
             query = query.replaceFirst(cashierRegex.toString(), Constants.STR_EMPTY);
 
+            String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
+
+            if (querySplit.length == Constants.TWO) {
+                throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
+            }
+
+            Cashier cashier = removeCashier(querySplit[Constants.ONE]);
+
+            return View.getString(cashier);
+
         } else if (query.startsWith(Constants.CASH_LIST)) {
             cashierRegex.append(Constants.CASH_LIST)
                         .append(Constants.REGEX_BLANK_SPACE);
@@ -106,8 +116,6 @@ public class CashierController {
         } else {
             throw  new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
         }
-
-        return "";
     }
 
     private Cashier addCash(String emailCompany, String name) {
