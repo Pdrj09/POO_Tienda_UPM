@@ -25,10 +25,25 @@ public class CashierController {
         cashierRegex.append(Constants.REGEX_INIT);
 
         if (query.startsWith(Constants.CASH_ADD)) {
-            cashierRegex.append(Constants.CASH_ADD)
+            try {
+                cashierRegex.append(Constants.CASH_ADD)
                         .append(Constants.REGEX_BLANK_SPACE);
 
-            query = query.replaceFirst(cashierRegex.toString(), Constants.STR_EMPTY);
+                query = query.replaceFirst(cashierRegex.toString(), Constants.STR_EMPTY);
+
+                String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
+
+                String id = querySplit[Constants.ONE];
+                String name = querySplit[Constants.TWO].replaceAll(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
+                String mail = querySplit[Constants.THREE];
+
+                 Cashier newCash = addCashier(id, name, mail);
+
+
+
+            } catch (Exception e) {
+                return e.getMessage();
+            }
             
         } else if (query.startsWith(Constants.CASH_REMOVE)) {
             cashierRegex.append(Constants.CASH_REMOVE)
