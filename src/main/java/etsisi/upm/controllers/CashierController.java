@@ -2,6 +2,7 @@ package etsisi.upm.controllers;
 
 import etsisi.upm.Constants;
 import etsisi.upm.io.View;
+import etsisi.upm.models.Ticket;
 import etsisi.upm.models.repositories.Repository;
 import etsisi.upm.models.users.Cashier;
 
@@ -86,6 +87,21 @@ public class CashierController {
                         .append(Constants.REGEX_BLANK_SPACE);
 
             query = query.replaceFirst(cashierRegex.toString(), Constants.STR_EMPTY);
+
+            String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
+            if (querySplit.length == Constants.TWO) {
+                throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
+            }
+
+            Collection<String> tickets = listTickets(querySplit[Constants.ONE]);
+
+            StringBuilder builder = new StringBuilder();
+
+            for(String ticket : tickets) {
+                builder.append(View.getString(ticket));
+            }
+
+            return builder.toString();
 
         } else {
             throw  new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
