@@ -35,7 +35,7 @@ public class CashierController {
 
                 String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
 
-                if (querySplit.length == Constants.FOUR) {
+                if (querySplit.length != Constants.FOUR) {
                     // TODO menos parametros
                     throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
                 }
@@ -60,7 +60,7 @@ public class CashierController {
 
             String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
 
-            if (querySplit.length == Constants.TWO) {
+            if (querySplit.length != Constants.TWO) {
                 throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
             }
 
@@ -99,7 +99,7 @@ public class CashierController {
             query = query.replaceFirst(cashierRegex.toString(), Constants.STR_EMPTY);
 
             String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
-            if (querySplit.length == Constants.TWO) {
+            if (querySplit.length != Constants.TWO) {
                 throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
             }
 
