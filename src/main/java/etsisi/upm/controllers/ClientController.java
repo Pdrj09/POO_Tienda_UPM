@@ -56,6 +56,14 @@ public class ClientController {
                     .append(Constants.REGEX_BLANK_SPACE);
             query = query.replaceFirst(Constants.CLIENT_REMOVE, Constants.STR_EMPTY);
 
+            String[] querySplit = query.split(Constants.REGEX_INIT);
+
+            if (querySplit.length != Constants.TWO) {
+                throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
+            }
+
+            return View.getString(removeClients(querySplit[Constants.ONE]));
+
         } else {
             throw new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
         }
