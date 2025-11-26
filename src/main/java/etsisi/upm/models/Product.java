@@ -2,6 +2,8 @@ package etsisi.upm.models;
 
 import etsisi.upm.Constants;
 import etsisi.upm.util.Categories;
+
+import java.util.ArrayList;
 import java.util.Objects;
 
 //We asign the variables

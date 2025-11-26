@@ -23,6 +23,12 @@ public class View {
     private static final String MSG_ERROR_PREFIX = RED + "[ERROR]" + RESET + " ";
     private static final String MSG_INFO_PREFIX = CYAN + "[INFO]" + RESET + " ";
 
+
+    public static String getString(Object model){
+        if (model != null) return model.toString();
+        else return MSG_NULL_ELEMENT;
+    }
+
     //Here we print an object w/ toString()
     public static <T> void print(T element, Class<?> type) {
         if (element == null) {
