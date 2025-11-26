@@ -1,6 +1,7 @@
 package etsisi.upm.controllers;
 
 import etsisi.upm.Constants;
+import etsisi.upm.io.View;
 import etsisi.upm.models.repositories.Repository;
 import etsisi.upm.models.users.Cashier;
 
@@ -33,13 +34,18 @@ public class CashierController {
 
                 String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
 
+                if (querySplit.length == Constants.FOUR) {
+                    // TODO menos parametros
+                    throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
+                }
+
                 String id = querySplit[Constants.ONE];
                 String name = querySplit[Constants.TWO].replaceAll(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
                 String mail = querySplit[Constants.THREE];
 
                  Cashier newCash = addCashier(id, name, mail);
 
-
+                return View.getString(newCash);
 
             } catch (Exception e) {
                 return e.getMessage();
@@ -63,7 +69,18 @@ public class CashierController {
                 // TODO dar un codigo de error personalizado
                 throw  new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
             }
-            
+
+            StringBuilder builder = new StringBuilder();
+
+            Collection<Cashier> cashiers = listCashiers();
+
+            for (Cashier cashier : cashiers) {
+                cashierRegex.append(View.getString(cashier));
+            }
+
+            return builder.toString();
+
+
         } else if (query.startsWith(Constants.CASH_TICKETS)) {
             cashierRegex.append(Constants.CASH_TICKETS)
                         .append(Constants.REGEX_BLANK_SPACE);
