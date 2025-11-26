@@ -35,6 +35,11 @@ public class ClientController {
                 throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
             }
 
+            Client newClient = addClient(querySplit[Constants.ONE], querySplit[Constants.TWO],
+                                            querySplit[Constants.THREE],  querySplit[Constants.FOUR]);
+
+            return View.getString(newClient);
+
 
         } else if (query.startsWith(Constants.CLIENT_LIST)) {
             regex.append(Constants.CLIENT_LIST)
@@ -67,8 +72,6 @@ public class ClientController {
         } else {
             throw new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
         }
-
-        return "";
     }
 
     public String clientAddControl(String[] querySplit){
