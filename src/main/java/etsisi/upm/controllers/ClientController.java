@@ -38,7 +38,7 @@ public class ClientController {
             Client newClient = addClient(querySplit[Constants.ONE], querySplit[Constants.TWO],
                                             querySplit[Constants.THREE],  querySplit[Constants.FOUR]);
 
-            return View.getString(newClient);
+            return View.print(newClient).toString();
 
 
         } else if (query.startsWith(Constants.CLIENT_LIST)) {
@@ -51,7 +51,7 @@ public class ClientController {
             //TODO formatear
             StringBuilder list = new StringBuilder();
             for (Client client : clients) {
-                list.append(View.getString(client));
+                list.append(View.print(client));
             }
 
             return list.toString();
@@ -67,7 +67,7 @@ public class ClientController {
                 throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
             }
 
-            return View.getString(removeClients(querySplit[Constants.ONE]));
+            return View.print(removeClients(querySplit[Constants.ONE]).toString()).toString();
 
         } else {
             throw new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
@@ -85,7 +85,7 @@ public class ClientController {
         String email = querySplit[Constants.THREE];
         String UW = querySplit[Constants.FOUR];
 
-        builder.append(View.getString(addClient(name,dni, email,UW)));
+        builder.append(View.print(addClient(name,dni, email,UW)));
         builder.append("/n");
         builder.append(Constants.okStatus("Client","ClientAdd"));
 
