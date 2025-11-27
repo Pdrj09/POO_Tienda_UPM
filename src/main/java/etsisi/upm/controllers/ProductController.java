@@ -32,7 +32,7 @@ public class ProductController {
     private static final String CATEGORY = "CATEGORY";
     private static final String PRICE = "PRICE";
 
-    private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm";
+    private static final String DATETIME_FORMAT = "yyyy-MM-dd";
 
     public ProductController(Repository<Integer, Product> productRepository, Repository<String, Ticket> ticketRepository) {
         this.productRepository = productRepository;
@@ -47,33 +47,44 @@ public class ProductController {
         switch (querySplit[Constants.QUERY_PRODUCT_POS_INSTRUCTION]){
             case Constants.PRODUCT_ADD:
 
-                //If it has not had "" is the id, else is the name
-                if (!querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID].startsWith("\"")) {
-                    prodId = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
-                    index=0;
-                }else{
-                    //Generar id
-                    index=1;
+                if ((querySplit[Constants.ONE].isEmpty()) || (querySplit[Constants.ONE].equals(Constants.STR_BLANK_SPACE))) {
+                    throw new IllegalArgumentException(Constants.ERROR_NONEXISTEN_ID);
+                }
+                int id = Integer.parseInt(querySplit[Constants.ONE]);
+                name = querySplit[Constants.TWO].replace(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
+
+                if ((querySplit[Constants.FOUR].isEmpty()) || (querySplit[Constants.FOUR].equals(Constants.STR_BLANK_SPACE))) {
+                    throw new IllegalArgumentException(Constants.ERROR_PRICE);
+                }
+                price = Float.parseFloat(querySplit[Constants.FOUR].replace(Constants.STR_COMMA, Constants.STR_DOT));
+
+                if (querySplit.length > Constants.FIVE) {
+                    maxPers = Integer.parseInt(querySplit[Constants.FIVE]);
+                    StringBuilder response = new StringBuilder();
+                        response.append(View.getString(this.addProduct(name, querySplit[Constants.THREE], price, id, maxPers)));
+                        response.append(Constants.ENTER_KEY);
+                        response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
+                    return response.toString();
+                } else {
+                    StringBuilder response = new StringBuilder();
+                        response.append(View.getString(this.addProduct(name, querySplit[Constants.THREE], price, id)));
+                        response.append(Constants.ENTER_KEY);
+                        response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
+                    return response.toString();
                 }
 
-                name = querySplit[Constants.QUERY_PRODUCT_POS_NAME-index];
-                category = querySplit[Constants.QUERY_PRODUCT_POS_CATEGORY];
-                price = Double.parseDouble(querySplit[Constants.QUERY_PRODUCT_POS_PRICE]);
-                prodId = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
 
-                if (querySplit.length > Constants.QUERY_PRODUCT_POS_MAXPERS){
-                    maxPers = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_MAXPERS]);
-                }else maxPers = null;
-
-
-                return View.getString(this.addProduct(name, category, price, prodId, maxPers));
             case Constants.PRODUCT_UPDATE:
 
                 prodId = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
                 field = querySplit[Constants.QUERY_PRODUCT_POS_FIELD];
                 newContent = querySplit[Constants.QUERY_PRODUCT_POS_NEWCONTENT];
+                StringBuilder response = new StringBuilder();
+                    response.append(View.getString(this.updateProduct(prodId,field,newContent)));
+                    response.append(Constants.ENTER_KEY);
+                    response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_UPDATE ));
+                return response.toString();
 
-                return View.getString(this.updateProduct(prodId,field,newContent));
             case Constants.PRODUCT_ADD_FOOD:
 
                 prodId = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
@@ -105,35 +116,6 @@ public class ProductController {
         }
     }
 
-    public static String productAdder(String[] querySplit, ProductController productController) {
-
-        if ((querySplit[Constants.ONE].isEmpty()) || (querySplit[Constants.ONE].equals(Constants.STR_BLANK_SPACE))) {
-            throw new IllegalArgumentException(" there is no id for product ");
-        }
-        int id = Integer.parseInt(querySplit[Constants.ONE]);
-        String name = querySplit[Constants.TWO].replace(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
-
-        if ((querySplit[Constants.FOUR].isEmpty()) || (querySplit[Constants.FOUR].equals(Constants.STR_BLANK_SPACE))) {
-            throw new IllegalArgumentException("The product has to have a price");
-        }
-        float price = Float.parseFloat(querySplit[Constants.FOUR].replace(Constants.STR_COMMA, Constants.STR_DOT));
-
-        StringBuilder response = new StringBuilder();
-
-        if (querySplit.length > Constants.FIVE) {
-            int maxPers = Integer.parseInt(querySplit[Constants.FIVE]);
-            response.append(productController.addProduct(name, querySplit[Constants.THREE], price, id, maxPers));
-        } else {
-            response.append(productController.addProduct(name, querySplit[Constants.THREE], price, id));
-        }
-        return response.toString();
-    }
-
-    public String editProduct(String[] querySplit) {
-        StringBuilder response = new StringBuilder();
-        response.append(updateProduct(Integer.parseInt(querySplit[Constants.ONE]), querySplit[Constants.TWO], querySplit[Constants.THREE]));
-    return response.toString();
-    }
 
 
     public Product prodDelete(ProductController productController, String query) {
@@ -158,7 +140,6 @@ public class ProductController {
             return product;
         } else throw new IllegalArgumentException(ERROR_CREATE_PRODUCT);
     }
-    //TODO: unificar addProduct
     private Product addProduct(String name, String category, double price, int id, Integer maxPers) {
         Product product;
         if (Categories.existCategory(category)) {

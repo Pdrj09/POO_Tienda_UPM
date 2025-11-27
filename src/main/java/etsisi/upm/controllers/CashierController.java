@@ -142,11 +142,11 @@ public class CashierController {
         return cashier;
     }
 
-    private Cashier removeCashier(String id) {
+    public Cashier removeCashier(String id) {
         return repository.removeById(id);
     }
 
-    private Collection<Cashier> listCashiers() {
+    public Collection<Cashier> listCashiers() {
         return repository.findAll();
     }
 

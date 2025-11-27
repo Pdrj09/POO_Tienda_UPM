@@ -5,120 +5,124 @@ import etsisi.upm.models.Ticket;
 import etsisi.upm.models.users.Cashier;
 import etsisi.upm.models.users.Client;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Collection;
 
 public class View {
     //colours ANSI
     private static final String RESET = "\u001B[0m";
-    private static final String GREEN = "\u001B[32m";
-    private static final String RED = "\u001B[31m";
     private static final String YELLOW = "\u001B[33m";
     private static final String CYAN = "\u001B[36m";
 
     //messages
     private static final String MSG_NOTHING_TO_SHOW = YELLOW + "[!] No items to display." + RESET;
-    private static final String MSG_NULL_ELEMENT = RED + "[X] Element not found." + RESET;
 
-    private static final String MSG_SUCCESS_PREFIX = GREEN + "[OK]" + RESET + " ";
-    private static final String MSG_ERROR_PREFIX = RED + "[ERROR]" + RESET + " ";
-    private static final String MSG_INFO_PREFIX = CYAN + "[INFO]" + RESET + " ";
-
-
-    public static String getString(Object model){
-        if (model != null) return model.toString();
-        else return MSG_NULL_ELEMENT;
-    }
 
     //Here we print an object w/ toString()
-    public static <T> void print(T element, Class<?> type) {
+    public static <T> StringBuilder print(T element) {
+        StringBuilder sb = new StringBuilder();
         if (element == null) {
-            printEmptyMessage(type);
-            return;
+            sb.append(MSG_NOTHING_TO_SHOW).append("\n");
+            return sb;
         }
-
         //for collections
         if (element instanceof Collection<?> collection) {
             if (collection.isEmpty()) {
-                printEmptyMessage(type);
-                return;
+                sb.append(emptyMessage(null)).append("\n");
+                return sb;
             }
-            for (Object item : collection) {
-                printTypeHeader(element);
-                print(item, item.getClass());
-            }
-            return;
+            //for knowing the first type of the element
+            Class<?> itemType = collection.iterator().next().getClass();
+            sb.append(buildTable(collection, itemType));
+            return sb;
         }
 
-        //for arrays
-        if (element.getClass().isArray()) {
-            int length = java.lang.reflect.Array.getLength(element);
-            if (length == 0) {
-                printEmptyMessage(type);
-                return;
+        sb.append(buildTable(java.util.List.of(element), element.getClass()));
+        return sb;
+    }
+
+    private static String buildTable(Collection<?> collection, Class<?> itemType) {
+        StringBuilder sb = new StringBuilder();
+
+        Field[] fields = itemType.getDeclaredFields();
+        for (Field f :fields) f.setAccessible(true);
+        //we calculate the widths
+        int[] colWidths = new int[fields.length];
+        for (int i = 0; i <fields.length; i++)
+            colWidths[i] = fields[i].getName().length();
+        for (Object obj :collection) {
+            for (int i = 0; i < fields.length;i++) {
+                try {
+                    Object value = fields[i].get(obj);
+                    int len = value!=null?value.toString().length(): 4; //for null
+                    if (len >colWidths[i]) colWidths[i] = len;
+                } catch (Exception ignored) {}
             }
-            for (int i = 0; i < length; i++) {
-                Object item = java.lang.reflect.Array.get(element, i);
-                printTypeHeader(element);
-                print(item, item.getClass());
-            }
-            return;
         }
 
-        //normal object
-        printTypeHeader(element);
-        System.out.println(MSG_INFO_PREFIX + element.toString());
+        String title = " " + itemType.getSimpleName().toLowerCase() + " ";
+        int totalWidth = Arrays.stream(colWidths).sum()+fields.length * 3 + 1;
+
+        //header
+        sb.append(YELLOW)
+                .append("┌")
+                .append(centerTitle(totalWidth - 2, title))
+                .append("┐")
+                .append("\n");
+
+        //columns names
+        sb.append("│ ");
+        for (int i = 0; i <fields.length; i++) {
+            sb.append(String.format("%-" + colWidths[i] + "s │ ", fields[i].getName()));
+        }
+        sb.append("\n");
+
+        //separator
+        sb.append("├");
+        for (int width :colWidths) {
+            sb.append("─".repeat(width +2)).append("┼");
+        }
+        sb.setLength(sb.length()- 1); //the last one out
+        sb.append("\n");
+
+        //rows
+        sb.append(CYAN);
+        for (Object obj : collection) {
+            sb.append("│ ");
+            for (int i = 0; i < fields.length; i++) {
+                try {
+                    Object value =fields[i].get(obj);
+                    String val = value != null ? value.toString() : "null";
+                    sb.append(String.format("%-" + colWidths[i] + "s │ ", val));
+                } catch (Exception e) {
+                    sb.append("ERROR │ ");
+                }
+            }
+            sb.append("\n");
+        }
+
+        //footer
+        sb.append(CYAN)
+                .append("└")
+                .append("─".repeat(totalWidth - 2))
+                .append("┘")
+                .append(RESET)
+                .append("\n");
+
+        return sb.toString();
+    }
+
+    private static String centerTitle(int i, String title) {
+        int padding = (i-title.length())/2;
+        return "─".repeat(padding) +title +"─".repeat(i - padding - title.length());
     }
 
 
-    //Prints custom empty message based on class type
-    private static void printEmptyMessage(Class<?> type) {
+    //Prints custom empty message based on class type, reflexive
+    private static String emptyMessage(Class<?> type) {
         if (type == null)
-            System.out.println(MSG_NOTHING_TO_SHOW);
-        else if (Cashier.class.equals(type))
-            noCashiersFound();
-        else if (Client.class.equals(type))
-            noClientsFound();
-        else if (Product.class.equals(type))
-            noProductsFound();
-        else if (Ticket.class.equals(type))
-            noTicketsFound();
-        else
-            System.out.println(MSG_NOTHING_TO_SHOW);
+            return MSG_NOTHING_TO_SHOW + "\n";
+        return YELLOW + "[!] No " + type.getSimpleName().toLowerCase() + "s found." + RESET;
     }
-
-    //Prints a header based on the object type.
-    private static void printTypeHeader(Object element) {
-        if (element instanceof Cashier)
-            System.out.println(CYAN + "--- Cashier info ---" + RESET);
-        else if (element instanceof Client)
-            System.out.println(CYAN + "--- Client info ---" + RESET);
-        else if (element instanceof Product)
-            System.out.println(CYAN + "--- Product info ---" + RESET);
-        else if (element instanceof Ticket)
-            System.out.println(CYAN + "--- Ticket info ---" + RESET);
-        else
-            System.out.println(CYAN + "--- Item ---" + RESET);
-    }
-
-    /**custom messages for specific things*/
-    /*Prints a message when no cashiers are found. */
-    public static void noCashiersFound(){
-        System.out.println(YELLOW + "[!] No cashiers registered." + RESET);
-    }
-
-    /*Prints a message when no clients are found. */
-    public static void noClientsFound(){
-        System.out.println(YELLOW + "[!] No clients registered." + RESET);
-    }
-
-    /*Prints a message when no products exist in the system. */
-    public static void noProductsFound(){
-        System.out.println(YELLOW + "[!] No products available in the inventory." + RESET);
-    }
-
-    /*Prints a message when no tickets exist in the system. */
-    public static void noTicketsFound(){
-        System.out.println(YELLOW + "[!] No tickets found." + RESET);
-    }
-
 }
