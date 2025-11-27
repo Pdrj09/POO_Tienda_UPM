@@ -20,20 +20,22 @@ public class View {
     private static final String MSG_INFO_PREFIX = CYAN + "[INFO]" + RESET + " ";
 
     //Here we print an object w/ toString()
-    public static <T> StringBuilder print(T element, Class<?> type) {
+    public static <T> StringBuilder print(T element) {
         StringBuilder sb = new StringBuilder();
         if (element == null) {
-            sb.append(emptyMessage(type));
+            sb.append(MSG_NOTHING_TO_SHOW).append("\n");
             return sb;
         }
         //for collections
         if (element instanceof Collection<?> collection) {
             if (collection.isEmpty()) {
-                sb.append(emptyMessage(type));
+                sb.append(emptyMessage(null));
                 return sb;
             }
+            //for knowing the first type of the element
+            Class<?> itemType = collection.iterator().next().getClass();
             for (Object item : collection) {
-                sb.append(typeHeader(item));
+                sb.append(typeHeader(itemType));
                 sb.append(item.toString()).append("\n");
             }
             return sb;
@@ -43,19 +45,19 @@ public class View {
         if (element.getClass().isArray()) {
             int length = java.lang.reflect.Array.getLength(element);
             if (length == 0) {
-                sb.append(emptyMessage(type));
+                sb.append(emptyMessage(null));
                 return sb;
             }
             for (int i = 0; i < length; i++) {
                 Object item = java.lang.reflect.Array.get(element, i);
-                sb.append(typeHeader(item));
+                sb.append(typeHeader(item.getClass()));
                 sb.append(item.toString()).append("\n");
             }
             return sb;
         }
 
         //normal object
-        sb.append(typeHeader(element));
+        sb.append(typeHeader(element.getClass()));
         sb.append(element.toString()).append("\n");
         return sb;
     }
