@@ -24,7 +24,6 @@ public class CashierController {
         StringBuilder cashierRegex = new StringBuilder();
         cashierRegex.append(Constants.REGEX_INIT);
 
-        // TODO no se da ID
         if (query.startsWith(Constants.CASH_ADD)) {
             try {
                 cashierRegex.append(Constants.CASH_ADD)
@@ -34,18 +33,26 @@ public class CashierController {
 
                 String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
 
-                if (querySplit.length != Constants.FOUR) {
-                    // TODO menos parametros
+                if (querySplit.length == Constants.FOUR) {
+                    String id = querySplit[Constants.ONE];
+                    String name = querySplit[Constants.TWO].replaceAll(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
+                    String mail = querySplit[Constants.THREE];
+
+                    Cashier newCash = addCashier(id, mail, name);
+
+                    return View.getString(newCash);
+                } else if (querySplit.length == Constants.THREE) {
+                    String name = querySplit[Constants.ONE];
+                    String mail = querySplit[Constants.TWO];
+
+                    Cashier newCash = addCash(mail, name);
+
+                    return View.getString(newCash);
+                } else {
                     throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
+
                 }
 
-                String id = querySplit[Constants.ONE];
-                String name = querySplit[Constants.TWO].replaceAll(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
-                String mail = querySplit[Constants.THREE];
-
-                 Cashier newCash = addCashier(id, name, mail);
-
-                return View.getString(newCash);
 
             } catch (Exception e) {
                 return e.getMessage();
