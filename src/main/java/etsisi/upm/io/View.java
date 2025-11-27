@@ -17,102 +17,78 @@ public class View {
 
     //messages
     private static final String MSG_NOTHING_TO_SHOW = YELLOW + "[!] No items to display." + RESET;
-    private static final String MSG_NULL_ELEMENT = RED + "[X] Element not found." + RESET;
-
-    private static final String MSG_SUCCESS_PREFIX = GREEN + "[OK]" + RESET + " ";
-    private static final String MSG_ERROR_PREFIX = RED + "[ERROR]" + RESET + " ";
     private static final String MSG_INFO_PREFIX = CYAN + "[INFO]" + RESET + " ";
 
     //Here we print an object w/ toString()
-    public static <T> void print(T element, Class<?> type) {
+    public static <T> StringBuilder print(T element, Class<?> type) {
+        StringBuilder sb = new StringBuilder();
         if (element == null) {
-            printEmptyMessage(type);
-            return;
+            sb.append(emptyMessage(type));
+            return sb;
         }
-
         //for collections
         if (element instanceof Collection<?> collection) {
             if (collection.isEmpty()) {
-                printEmptyMessage(type);
-                return;
+                sb.append(emptyMessage(type));
+                return sb;
             }
             for (Object item : collection) {
-                printTypeHeader(element);
-                print(item, item.getClass());
+                sb.append(typeHeader(item));
+                sb.append(item.toString()).append("\n");
             }
-            return;
+            return sb;
         }
 
         //for arrays
         if (element.getClass().isArray()) {
             int length = java.lang.reflect.Array.getLength(element);
             if (length == 0) {
-                printEmptyMessage(type);
-                return;
+                sb.append(emptyMessage(type));
+                return sb;
             }
             for (int i = 0; i < length; i++) {
                 Object item = java.lang.reflect.Array.get(element, i);
-                printTypeHeader(element);
-                print(item, item.getClass());
+                sb.append(typeHeader(item));
+                sb.append(item.toString()).append("\n");
             }
-            return;
+            return sb;
         }
 
         //normal object
-        printTypeHeader(element);
-        System.out.println(MSG_INFO_PREFIX + element.toString());
+        sb.append(typeHeader(element));
+        sb.append(element.toString()).append("\n");
+        return sb;
     }
 
 
     //Prints custom empty message based on class type
-    private static void printEmptyMessage(Class<?> type) {
+    private static String emptyMessage(Class<?> type) {
         if (type == null)
-            System.out.println(MSG_NOTHING_TO_SHOW);
+            return MSG_NOTHING_TO_SHOW + "\n";
         else if (Cashier.class.equals(type))
-            noCashiersFound();
+            return YELLOW + "[!] No cashiers registered." + RESET + "\n";
         else if (Client.class.equals(type))
-            noClientsFound();
+            return YELLOW + "[!] No clients registered." + RESET + "\n";
         else if (Product.class.equals(type))
-            noProductsFound();
+            return YELLOW + "[!] No products available in the inventory." + RESET + "\n";
         else if (Ticket.class.equals(type))
-            noTicketsFound();
+            return YELLOW + "[!] No tickets found." + RESET + "\n";
         else
-            System.out.println(MSG_NOTHING_TO_SHOW);
+            return MSG_NOTHING_TO_SHOW + "\n";
     }
 
     //Prints a header based on the object type.
-    private static void printTypeHeader(Object element) {
+    private static String typeHeader(Object element) {
         if (element instanceof Cashier)
-            System.out.println(CYAN + "--- Cashier info ---" + RESET);
+            return MSG_NOTHING_TO_SHOW + "\n";
         else if (element instanceof Client)
-            System.out.println(CYAN + "--- Client info ---" + RESET);
+            return CYAN + "--- Client info ---" + RESET + "\n";
         else if (element instanceof Product)
-            System.out.println(CYAN + "--- Product info ---" + RESET);
+            return CYAN + "--- Product info ---" + RESET + "\n";
         else if (element instanceof Ticket)
-            System.out.println(CYAN + "--- Ticket info ---" + RESET);
+            return CYAN + "--- Ticket info ---" + RESET + "\n";
         else
-            System.out.println(CYAN + "--- Item ---" + RESET);
-    }
-
-    /**custom messages for specific things*/
-    /*Prints a message when no cashiers are found. */
-    public static void noCashiersFound(){
-        System.out.println(YELLOW + "[!] No cashiers registered." + RESET);
-    }
-
-    /*Prints a message when no clients are found. */
-    public static void noClientsFound(){
-        System.out.println(YELLOW + "[!] No clients registered." + RESET);
-    }
-
-    /*Prints a message when no products exist in the system. */
-    public static void noProductsFound(){
-        System.out.println(YELLOW + "[!] No products available in the inventory." + RESET);
-    }
-
-    /*Prints a message when no tickets exist in the system. */
-    public static void noTicketsFound(){
-        System.out.println(YELLOW + "[!] No tickets found." + RESET);
+            return CYAN + "--- Ticket info ---" + RESET + "\n";
     }
 
 }
