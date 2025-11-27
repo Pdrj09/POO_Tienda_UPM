@@ -47,7 +47,7 @@ public class CLI {
                     ticket list
                     prod add <id> "<name>" <category> <price>
                     prod update <id> NAME|CATEGORY|PRICE <value>
-                    prod addFood <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
+                    prod addMeal <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
                     prod addMeeting <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
                     prod list
                     prod remove <id>
@@ -115,30 +115,10 @@ public class CLI {
     private void prodQuery(String query) {
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         try {
-<<<<<<< HEAD
-            if (query.contains(Constants.PRODUCT_ADD)) {
-                System.out.println(ProductController.productAdder(querySplit, productController));
-            } else if (query.contains(Constants.PRODUCT_LIST)) {
-                View.print(productController.prodList());
-                System.out.println(Constants.okStatus(Constants.PROD, Constants.PRODUCT_LIST));
-            } else if (query.contains(Constants.PRODUCT_REMOVE)) {
-                productController.prodDelete(productController, query);
-            } else if (query.contains(Constants.PRODUCT_UPDATE)) {
-                System.out.println(productController.editProduct(querySplit));
-            }else if (query.contains(Constants.PRODUCT_ADD_MEAL)) {
-
-                //System.out.println(productController.prodAddMeal(querySplit));
-            }else if (query.contains(Constants.PRODUCT_ADD_MEETING)) {
-
-                //System.out.println(productController.prodAddMeeting(querySplit));
-            }
-        } catch (Exception e) {
-=======
             System.out.println(this.productController.decodeQuery(querySplit));
         }catch (IndexOutOfBoundsException e){
             System.out.println(Constants.errorStatus(Constants.PROD,Constants.ERROR_STATUS,Constants.ERROR_FEW_PARAMS));
         }catch (Exception e) {
->>>>>>> bd2548eba7c957290742d309faf41206fa5ee120
             System.out.println(Constants.errorStatus(Constants.PROD, Constants.PRODUCT_ADD, e.toString()));
         }
     }
@@ -167,14 +147,14 @@ public class CLI {
                 System.out.println(Constants.okStatus(Constants.CASH, Constants.CASH_ADD));
 
             } else if (query.contains(Constants.CASH_REMOVE)) {
-                /*if (cashierController.removeCashier(querySplit[Constants.ONE]) != null)
+                if (cashierController.removeCashier(querySplit[Constants.ONE]) != null)
                     System.out.println(Constants.okStatus(Constants.CASH, Constants.CASH_REMOVE));
                 else
                     System.out.println(Constants.errorStatus(Constants.CASH, Constants.CASH_REMOVE, "Cashier not found"));
-                */
+
             } else if (query.contains(Constants.CASH_LIST)) {
                 //cash list
-                //View.print(cashierController.listCashiers());
+                View.print(cashierController.listCashiers());
                 System.out.println(Constants.okStatus(Constants.CASH, Constants.CASH_LIST));
 
             } else if (query.contains(Constants.CASH_TICKETS)) {
