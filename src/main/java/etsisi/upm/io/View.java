@@ -18,6 +18,12 @@ public class View {
     //messages
     private static final String MSG_NOTHING_TO_SHOW = YELLOW + "[!] No items to display." + RESET;
 
+
+    public static String getString(Object model){
+        if (model != null) return model.toString();
+        else return MSG_NULL_ELEMENT;
+    }
+
     //Here we print an object w/ toString()
     public static <T> StringBuilder print(T element) {
         StringBuilder sb = new StringBuilder();

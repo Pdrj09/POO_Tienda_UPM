@@ -47,7 +47,7 @@ public class CLI {
                     ticket list
                     prod add <id> "<name>" <category> <price>
                     prod update <id> NAME|CATEGORY|PRICE <value>
-                    prod addMeal <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
+                    prod addFood <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
                     prod addMeeting <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
                     prod list
                     prod remove <id>
@@ -120,31 +120,13 @@ public class CLI {
     private void prodQuery(String query) {
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         try {
-            if (query.contains(Constants.PRODUCT_ADD)) {
-                System.out.println(ProductController.productAdder(querySplit, productController));
-            } else if (query.contains(Constants.PRODUCT_LIST)) {
-                View.print(productController.prodList(), Product.class);
-                System.out.println(Constants.okStatus(Constants.PROD, Constants.PRODUCT_LIST));
-            } else if (query.contains(Constants.PRODUCT_REMOVE)) {
-                productController.prodDelete(productController, query);
-            } else if (query.contains(Constants.PRODUCT_UPDATE)) {
-                System.out.println(productController.editProduct(querySplit));
-            }else if (query.contains(Constants.PRODUCT_ADD_MEAL)) {
-
-                //System.out.println(productController.prodAddMeal(querySplit));
-            }else if (query.contains(Constants.PRODUCT_ADD_MEETING)) {
-
-                //System.out.println(productController.prodAddMeeting(querySplit));
-            }
-        } catch (Exception e) {
+            System.out.println(this.productController.decodeQuery(querySplit));
+        }catch (IndexOutOfBoundsException e){
+            System.out.println(Constants.errorStatus(Constants.PROD,Constants.ERROR_STATUS,Constants.ERROR_FEW_PARAMS));
+        }catch (Exception e) {
             System.out.println(Constants.errorStatus(Constants.PROD, Constants.PRODUCT_ADD, e.toString()));
         }
     }
-    /*ticket new [<id>] <cashId> <userId>
-    ticket add <ticketId><cashId> <prodId> <amount> [--p<txt> --p<txt>]
-    ticket remove <ticketId><cashId> <prodId>
-    ticket print <ticketId> <cashId>
-    ticket list*/
 
     private void ticketQuery(String query) {
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
