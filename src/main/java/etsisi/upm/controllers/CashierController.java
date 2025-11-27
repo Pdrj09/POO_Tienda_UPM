@@ -40,14 +40,14 @@ public class CashierController {
 
                     Cashier newCash = addCashier(id, mail, name);
 
-                    return View.getString(newCash);
+                    return View.print(newCash).toString();
                 } else if (querySplit.length == Constants.TWO) {
                     String name = querySplit[Constants.ZERO];
                     String mail = querySplit[Constants.ONE];
 
                     Cashier newCash = addCash(mail, name);
 
-                    return View.getString(newCash);
+                    return View.print(newCash).toString();
                 } else {
                     throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
 
@@ -72,7 +72,7 @@ public class CashierController {
 
             Cashier cashier = removeCashier(querySplit[Constants.ZERO]);
 
-            return View.getString(cashier);
+            return View.print(cashier).toString();
 
         } else if (query.startsWith(Constants.CASH_LIST)) {
             cashierRegex.append(Constants.CASH_LIST)
@@ -92,7 +92,7 @@ public class CashierController {
             Collection<Cashier> cashiers = listCashiers();
 
             for (Cashier cashier : cashiers) {
-                cashierRegex.append(View.getString(cashier));
+                cashierRegex.append(View.print(cashier).toString());
             }
 
             return builder.toString();
@@ -114,7 +114,7 @@ public class CashierController {
             StringBuilder builder = new StringBuilder();
 
             for(String ticket : tickets) {
-                builder.append(View.getString(ticket));
+                builder.append(View.print(ticket));
             }
 
             return builder.toString();
