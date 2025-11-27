@@ -19,7 +19,7 @@ public class View {
             return sb.toString();
         }
 
-        // Collections
+        //collections
         if (element instanceof Collection<?> collection) {
             if (collection.isEmpty()) {
                 sb.append(MSG_NOTHING_TO_SHOW).append("\n");
@@ -32,7 +32,7 @@ public class View {
             return sb.toString();
         }
 
-        // Arrays
+        //arrays
         if (element.getClass().isArray()) {
             int length = java.lang.reflect.Array.getLength(element);
             if (length == 0) {
@@ -47,17 +47,15 @@ public class View {
             return sb.toString();
         }
 
-        // Single object
+        //single object
         sb.append(typeHeader(element));
         sb.append(MSG_INFO_PREFIX).append(element.toString()).append("\n");
         return sb.toString();
     }
 
-    // Headers reflexivos
+    //reflexive headers
     private static String typeHeader(Object element) {
         if (element == null) return MSG_NOTHING_TO_SHOW + "\n";
-
-        // Obtener nombre de la clase automáticamente
         String className = element.getClass().getSimpleName();
         return CYAN + "--- " + className + " info ---" + RESET + "\n";
     }
