@@ -48,7 +48,7 @@ public class ProductController {
             case Constants.PRODUCT_ADD:
 
                 //If it has not had "" is the id, else is the name
-                if (!querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID].startsWith("\"")) {
+                if (!querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID].startsWith(Constants.REGEX_DOUBLE_QUOTE)) {
                     prodId = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
                     index=0;
                 }else{
@@ -63,10 +63,13 @@ public class ProductController {
 
                 if (querySplit.length > Constants.QUERY_PRODUCT_POS_MAXPERS){
                     maxPers = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_MAXPERS]);
-                }else maxPers = null;
+                    return View.getString(this.addProduct(name, category, price, prodId, maxPers));
+                }else {
+                    return View.getString(this.addProduct(name, category, price, prodId));
+                }
 
 
-                return View.getString(this.addProduct(name, category, price, prodId, maxPers));
+
             case Constants.PRODUCT_UPDATE:
 
                 prodId = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
@@ -158,7 +161,6 @@ public class ProductController {
             return product;
         } else throw new IllegalArgumentException(ERROR_CREATE_PRODUCT);
     }
-    //TODO: unificar addProduct
     private Product addProduct(String name, String category, double price, int id, Integer maxPers) {
         Product product;
         if (Categories.existCategory(category)) {
