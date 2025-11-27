@@ -58,7 +58,6 @@ public class View {
     //reflexive headers
     private static String typeHeader(Object element) {
         if (element == null) return MSG_NOTHING_TO_SHOW + Constants.ENTER_KEY;
-        String className = element.getClass().getSimpleName();
-        return CYAN + "--- " + className + " info ---" + RESET + Constants.ENTER_KEY;
+        return CYAN + "--- " + element.getClass().getSimpleName() + " info ---" + RESET + Constants.ENTER_KEY;
     }
 }
