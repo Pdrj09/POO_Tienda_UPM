@@ -70,6 +70,7 @@ public class Constants {
     public static final String REGEX_PERSONALIZED = "(?<=--p)";
 
     // products const
+    public static final String PRODUCT = "prod";
     public static final String PRODUCT_ADD = "add";
     public static final String PRODUCT_LIST = "list";
     public static final String PRODUCT_UPDATE = "update";

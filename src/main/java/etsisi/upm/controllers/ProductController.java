@@ -60,9 +60,17 @@ public class ProductController {
 
                 if (querySplit.length > Constants.FIVE) {
                     maxPers = Integer.parseInt(querySplit[Constants.FIVE]);
-                    return View.getString(this.addProduct(name, querySplit[Constants.THREE], price, id, maxPers));
+                    StringBuilder response = new StringBuilder();
+                        response.append(View.getString(this.addProduct(name, querySplit[Constants.THREE], price, id, maxPers)));
+                        response.append(Constants.ENTER_KEY);
+                        response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
+                    return response.toString();
                 } else {
-                    return View.getString(this.addProduct(name, querySplit[Constants.THREE], price, id));
+                    StringBuilder response = new StringBuilder();
+                        response.append(View.getString(this.addProduct(name, querySplit[Constants.THREE], price, id)));
+                        response.append(Constants.ENTER_KEY);
+                        response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
+                    return response.toString();
                 }
 
 
@@ -71,8 +79,11 @@ public class ProductController {
                 prodId = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
                 field = querySplit[Constants.QUERY_PRODUCT_POS_FIELD];
                 newContent = querySplit[Constants.QUERY_PRODUCT_POS_NEWCONTENT];
-
-                return View.getString(this.updateProduct(prodId,field,newContent));
+                StringBuilder response = new StringBuilder();
+                    response.append(View.getString(this.updateProduct(prodId,field,newContent)));
+                    response.append(Constants.ENTER_KEY);
+                    response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_UPDATE ));
+                return response.toString();
 
             case Constants.PRODUCT_ADD_FOOD:
 
@@ -105,12 +116,6 @@ public class ProductController {
         }
     }
 
-
-    public String editProduct(String[] querySplit) {
-        StringBuilder response = new StringBuilder();
-        response.append(updateProduct(Integer.parseInt(querySplit[Constants.ONE]), querySplit[Constants.TWO], querySplit[Constants.THREE]));
-    return response.toString();
-    }
 
 
     public Product prodDelete(ProductController productController, String query) {
