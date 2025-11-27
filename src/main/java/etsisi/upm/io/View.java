@@ -1,5 +1,7 @@
 package etsisi.upm.io;
 
+import etsisi.upm.Constants;
+
 import java.util.Collection;
 
 public class View {
@@ -15,19 +17,19 @@ public class View {
         StringBuilder sb = new StringBuilder();
 
         if (element == null) {
-            sb.append(MSG_NOTHING_TO_SHOW).append("\n");
+            sb.append(MSG_NOTHING_TO_SHOW).append(Constants.ENTER_KEY);
             return sb.toString();
         }
 
         //collections
         if (element instanceof Collection<?> collection) {
             if (collection.isEmpty()) {
-                sb.append(MSG_NOTHING_TO_SHOW).append("\n");
+                sb.append(MSG_NOTHING_TO_SHOW).append(Constants.ENTER_KEY);
                 return sb.toString();
             }
             for (Object item : collection) {
                 sb.append(typeHeader(item));
-                sb.append(MSG_INFO_PREFIX).append(item.toString()).append("\n");
+                sb.append(MSG_INFO_PREFIX).append(item.toString()).append(Constants.ENTER_KEY);
             }
             return sb.toString();
         }
@@ -36,27 +38,27 @@ public class View {
         if (element.getClass().isArray()) {
             int length = java.lang.reflect.Array.getLength(element);
             if (length == 0) {
-                sb.append(MSG_NOTHING_TO_SHOW).append("\n");
+                sb.append(MSG_NOTHING_TO_SHOW).append(Constants.ENTER_KEY);
                 return sb.toString();
             }
             for (int i = 0; i < length; i++) {
                 Object item = java.lang.reflect.Array.get(element, i);
                 sb.append(typeHeader(item));
-                sb.append(MSG_INFO_PREFIX).append(item.toString()).append("\n");
+                sb.append(MSG_INFO_PREFIX).append(item.toString()).append(Constants.ENTER_KEY);
             }
             return sb.toString();
         }
 
         //single object
         sb.append(typeHeader(element));
-        sb.append(MSG_INFO_PREFIX).append(element.toString()).append("\n");
+        sb.append(MSG_INFO_PREFIX).append(element).append(Constants.ENTER_KEY);
         return sb.toString();
     }
 
     //reflexive headers
     private static String typeHeader(Object element) {
-        if (element == null) return MSG_NOTHING_TO_SHOW + "\n";
+        if (element == null) return MSG_NOTHING_TO_SHOW + Constants.ENTER_KEY;
         String className = element.getClass().getSimpleName();
-        return CYAN + "--- " + className + " info ---" + RESET + "\n";
+        return CYAN + "--- " + className + " info ---" + RESET + Constants.ENTER_KEY;
     }
 }
