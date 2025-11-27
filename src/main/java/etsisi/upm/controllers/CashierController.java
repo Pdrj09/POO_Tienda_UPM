@@ -2,12 +2,10 @@ package etsisi.upm.controllers;
 
 import etsisi.upm.Constants;
 import etsisi.upm.io.View;
-import etsisi.upm.models.Ticket;
 import etsisi.upm.models.repositories.Repository;
 import etsisi.upm.models.users.Cashier;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 
