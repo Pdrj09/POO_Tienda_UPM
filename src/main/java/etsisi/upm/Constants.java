@@ -34,6 +34,7 @@ public class Constants {
     public static final int FIVE = 5;
     public static final int SIX = 6;
     public static final int SEVEN = 7;
+    public static final int NINE = 9;
 
     public static final int MAX_SIZE = 200;
 
@@ -64,12 +65,14 @@ public class Constants {
     public static final String ERROR_NONEXISTEN_ID = "id nonexistent";
     public static final String ERROR_FILE_NOTFOUND = "file not found";
     public static final String ERROR_PRICE = "No price for product";
+    public static final String ERROR_INVALID_ID = "UW format incorrect";
     // regex const
     public static final String REGEX_INIT = "^";
     public static final String REGEX_BLANK_SPACE = "\\s*";
     public static final String REGEX_DOUBLE_QUOTE = "\"";
     public static final String REGEX_TO_SPLIT = " (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
     public static final String REGEX_PERSONALIZED = "(?<=--p)";
+    public static final String REGEX_CASH_ID = "^\\{7}UW$";
 
     // products const
     public static final String PRODUCT = "prod";

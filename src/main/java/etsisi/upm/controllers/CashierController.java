@@ -5,6 +5,7 @@ import etsisi.upm.io.View;
 import etsisi.upm.models.repositories.Repository;
 import etsisi.upm.models.users.Cashier;
 
+import java.security.InvalidParameterException;
 import java.util.Collection;
 import java.util.Random;
 import java.util.Set;
@@ -136,6 +137,8 @@ public class CashierController {
 
     private Cashier addCashier(String cahierId, String emailCompany, String name) {
         Cashier cashier =  Cashier.create(cahierId, emailCompany, name);
+
+        if(!cahierId.matches(Constants.REGEX_CASH_ID)) throw new InvalidParameterException(Constants.ERROR_INVALID_ID);
 
         repository.add(cahierId, cashier);
 
