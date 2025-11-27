@@ -4,19 +4,19 @@ import etsisi.upm.Constants;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
-public class Meal extends ServiceProduct {
+public class Food extends ServiceProduct {
 
     private static final String STR_MEAL = "class:Meal";
     private static final String CLOSE_BRACE = "}";
 
-    public Meal(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
+    public Food(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
         super(id, name, pricePerPerson, maxPeople, expirationDate);
     }
 
     // Date rules
     @Override
     public int getMinimumCreationTime() {
-        return Constants.TIME_MEAL_PLANNING_DAYS;
+        return Constants.TIME_FOOD_PLANNING_DAYS;
     }
 
     @Override
