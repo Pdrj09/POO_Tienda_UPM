@@ -33,17 +33,17 @@ public class CashierController {
 
                 String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
 
-                if (querySplit.length == Constants.FOUR) {
-                    String id = querySplit[Constants.ONE];
-                    String name = querySplit[Constants.TWO].replaceAll(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
-                    String mail = querySplit[Constants.THREE];
+                if (querySplit.length == Constants.THREE) {
+                    String id = querySplit[Constants.ZERO];
+                    String name = querySplit[Constants.ONE].replaceAll(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
+                    String mail = querySplit[Constants.TWO];
 
                     Cashier newCash = addCashier(id, mail, name);
 
                     return View.getString(newCash);
-                } else if (querySplit.length == Constants.THREE) {
-                    String name = querySplit[Constants.ONE];
-                    String mail = querySplit[Constants.TWO];
+                } else if (querySplit.length == Constants.TWO) {
+                    String name = querySplit[Constants.ZERO];
+                    String mail = querySplit[Constants.ONE];
 
                     Cashier newCash = addCash(mail, name);
 
@@ -66,11 +66,11 @@ public class CashierController {
 
             String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
 
-            if (querySplit.length != Constants.TWO) {
+            if (querySplit.length != Constants.ONE) {
                 throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
             }
 
-            Cashier cashier = removeCashier(querySplit[Constants.ONE]);
+            Cashier cashier = removeCashier(querySplit[Constants.ZERO]);
 
             return View.getString(cashier);
 
@@ -105,11 +105,11 @@ public class CashierController {
             query = query.replaceFirst(cashierRegex.toString(), Constants.STR_EMPTY);
 
             String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
-            if (querySplit.length != Constants.TWO) {
+            if (querySplit.length != Constants.ONE) {
                 throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
             }
 
-            Collection<String> tickets = listTickets(querySplit[Constants.ONE]);
+            Collection<String> tickets = listTickets(querySplit[Constants.ZERO]);
 
             StringBuilder builder = new StringBuilder();
 
@@ -126,6 +126,7 @@ public class CashierController {
 
     private Cashier addCash(String emailCompany, String name) {
         String cashierId = generateCashierId();
+
         Cashier cashier =  Cashier.create(cashierId, emailCompany, name);
 
         repository.add(cashierId, cashier);

@@ -86,9 +86,16 @@ public class CLI {
             return Constants.QUERY_EXIT;
             //returns 0
         } else if (query.startsWith(Constants.CLIENT)) {
-            this.clientQuery(query);
+            String response = clientController.clientQuery(Constants.deleteSubstring(query,
+                                                                Constants.createGeneralRegex(Constants.CLIENT)));
+
+            System.out.println(response);
         } else if (query.startsWith(Constants.CASH)) {
-            this.cashQuery(query);
+            String response = cashierController.cashierQuery(Constants.deleteSubstring(query,
+                                                                    Constants.createGeneralRegex(Constants.CASH)));
+
+            System.out.println(response);
+
         }
         return Constants.QUERY_SUCCESS;
         //returns 1
@@ -133,7 +140,7 @@ public class CLI {
         }
     }
 
-
+    /*
     private void cashQuery(String query){
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         try {
@@ -165,7 +172,7 @@ public class CLI {
         } catch (Exception e) {
             System.out.println(Constants.errorStatus(Constants.CASH, "Error", e.getMessage()));
         }
-    }
+    } */
 
     private static void printWelcomeMessage(){
         System.out.println(WELCOME_MESSAGE);

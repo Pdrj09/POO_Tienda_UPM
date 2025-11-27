@@ -26,6 +26,7 @@ public class Constants {
     public static final int QUERY_PRODUCT_POS_EXPIRATION = 4;
     public static final int QUERY_PRODUCT_POS_MAXPEOPLE = 5;
     // numbers
+    public static final int ZERO = 0;
     public static final int ONE = 1;
     public static final int TWO = 2;
     public static final int THREE = 3;
