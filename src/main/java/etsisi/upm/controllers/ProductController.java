@@ -48,13 +48,13 @@ public class ProductController {
             case Constants.PRODUCT_ADD:
 
                 if ((querySplit[Constants.ONE].isEmpty()) || (querySplit[Constants.ONE].equals(Constants.STR_BLANK_SPACE))) {
-                    throw new IllegalArgumentException(" there is no id for product ");
+                    throw new IllegalArgumentException(Constants.ERROR_NONEXISTEN_ID);
                 }
                 int id = Integer.parseInt(querySplit[Constants.ONE]);
                 name = querySplit[Constants.TWO].replace(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
 
                 if ((querySplit[Constants.FOUR].isEmpty()) || (querySplit[Constants.FOUR].equals(Constants.STR_BLANK_SPACE))) {
-                    throw new IllegalArgumentException("The product has to have a price");
+                    throw new IllegalArgumentException(Constants.ERROR_PRICE);
                 }
                 price = Float.parseFloat(querySplit[Constants.FOUR].replace(Constants.STR_COMMA, Constants.STR_DOT));
 
