@@ -17,7 +17,6 @@ public class View {
 
     //messages
     private static final String MSG_NOTHING_TO_SHOW = YELLOW + "[!] No items to display." + RESET;
-    private static final String MSG_INFO_PREFIX = CYAN + "[INFO]" + RESET + " ";
 
 
     public static String getString(Object model){
@@ -42,7 +41,7 @@ public class View {
             Class<?> itemType = collection.iterator().next().getClass();
             for (Object item : collection) {
                 sb.append(typeHeader(itemType));
-                sb.append(item.toString()).append("\n");
+                sb.append(item).append("\n");
             }
             return sb;
         }
@@ -57,14 +56,14 @@ public class View {
             for (int i = 0; i < length; i++) {
                 Object item = java.lang.reflect.Array.get(element, i);
                 sb.append(typeHeader(item.getClass()));
-                sb.append(item.toString()).append("\n");
+                sb.append(item).append("\n");
             }
             return sb;
         }
 
         //normal object
         sb.append(typeHeader(element.getClass()));
-        sb.append(element.toString()).append("\n");
+        sb.append(element).append("\n");
         return sb;
     }
 
@@ -86,17 +85,17 @@ public class View {
     }
 
     //Prints a header based on the object type.
-    private static String typeHeader(Object element) {
-        if (element instanceof Cashier)
-            return MSG_NOTHING_TO_SHOW + "\n";
-        else if (element instanceof Client)
+    private static String typeHeader(Class<?> type) {
+        if (Cashier.class.equals(type))
+            return CYAN + "--- Cashier info ---" + RESET + "\n";
+        else if (Client.class.equals(type))
             return CYAN + "--- Client info ---" + RESET + "\n";
-        else if (element instanceof Product)
+        else if (Product.class.equals(type))
             return CYAN + "--- Product info ---" + RESET + "\n";
-        else if (element instanceof Ticket)
+        else if (Ticket.class.equals(type))
             return CYAN + "--- Ticket info ---" + RESET + "\n";
         else
-            return CYAN + "--- Ticket info ---" + RESET + "\n";
+            return MSG_NOTHING_TO_SHOW + "\n";
     }
 
 }
