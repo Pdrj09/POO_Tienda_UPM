@@ -10,8 +10,6 @@ import java.util.Collection;
 public class View {
     //colours ANSI
     private static final String RESET = "\u001B[0m";
-    private static final String GREEN = "\u001B[32m";
-    private static final String RED = "\u001B[31m";
     private static final String YELLOW = "\u001B[33m";
     private static final String CYAN = "\u001B[36m";
 
@@ -34,7 +32,7 @@ public class View {
         //for collections
         if (element instanceof Collection<?> collection) {
             if (collection.isEmpty()) {
-                sb.append(emptyMessage(null));
+                sb.append(emptyMessage(null)).append("\n");
                 return sb;
             }
             //for knowing the first type of the element
@@ -50,7 +48,7 @@ public class View {
         if (element.getClass().isArray()) {
             int length = java.lang.reflect.Array.getLength(element);
             if (length == 0) {
-                sb.append(emptyMessage(null));
+                sb.append(emptyMessage(null)).append("\n");
                 return sb;
             }
             for (int i = 0; i < length; i++) {
@@ -68,34 +66,17 @@ public class View {
     }
 
 
-    //Prints custom empty message based on class type
+    //Prints custom empty message based on class type, reflexive
     private static String emptyMessage(Class<?> type) {
         if (type == null)
             return MSG_NOTHING_TO_SHOW + "\n";
-        else if (Cashier.class.equals(type))
-            return YELLOW + "[!] No cashiers registered." + RESET + "\n";
-        else if (Client.class.equals(type))
-            return YELLOW + "[!] No clients registered." + RESET + "\n";
-        else if (Product.class.equals(type))
-            return YELLOW + "[!] No products available in the inventory." + RESET + "\n";
-        else if (Ticket.class.equals(type))
-            return YELLOW + "[!] No tickets found." + RESET + "\n";
-        else
-            return MSG_NOTHING_TO_SHOW + "\n";
+        return YELLOW + "[!] No " + type.getSimpleName().toLowerCase() + "s found." + RESET;
     }
 
     //Prints a header based on the object type.
     private static String typeHeader(Class<?> type) {
-        if (Cashier.class.equals(type))
-            return CYAN + "--- Cashier info ---" + RESET + "\n";
-        else if (Client.class.equals(type))
-            return CYAN + "--- Client info ---" + RESET + "\n";
-        else if (Product.class.equals(type))
-            return CYAN + "--- Product info ---" + RESET + "\n";
-        else if (Ticket.class.equals(type))
-            return CYAN + "--- Ticket info ---" + RESET + "\n";
-        else
+        if (type == null)
             return MSG_NOTHING_TO_SHOW + "\n";
+        return CYAN + type.getSimpleName().toLowerCase() + RESET + "\n";
     }
-
 }
