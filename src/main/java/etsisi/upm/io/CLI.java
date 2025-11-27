@@ -109,7 +109,7 @@ public class CLI {
                 clientController.removeClients(id);
                 System.out.println(Constants.okStatus(Constants.CLIENT, Constants.CLIENT_REMOVE));
             } else if (query.contains(Constants.CLIENT_LIST)) {
-                View.print(clientController.listClients(), Client.class);
+                View.print(clientController.listClients());
                 System.out.println(Constants.okStatus(Constants.CLIENT, Constants.CLIENT_LIST));
             }
         } catch (Exception e) {
@@ -123,7 +123,7 @@ public class CLI {
             if (query.contains(Constants.PRODUCT_ADD)) {
                 System.out.println(ProductController.productAdder(querySplit, productController));
             } else if (query.contains(Constants.PRODUCT_LIST)) {
-                View.print(productController.prodList(), Product.class);
+                View.print(productController.prodList());
                 System.out.println(Constants.okStatus(Constants.PROD, Constants.PRODUCT_LIST));
             } else if (query.contains(Constants.PRODUCT_REMOVE)) {
                 productController.prodDelete(productController, query);
@@ -170,14 +170,14 @@ public class CLI {
                 System.out.println(Constants.okStatus(Constants.CASH, Constants.CASH_ADD));
 
             } else if (query.contains(Constants.CASH_REMOVE)) {
-                if (cashierController.removeCashier(querySplit[Constants.ONE]) != null)
+                /*if (cashierController.removeCashier(querySplit[Constants.ONE]) != null)
                     System.out.println(Constants.okStatus(Constants.CASH, Constants.CASH_REMOVE));
                 else
                     System.out.println(Constants.errorStatus(Constants.CASH, Constants.CASH_REMOVE, "Cashier not found"));
-
+                */
             } else if (query.contains(Constants.CASH_LIST)) {
                 //cash list
-                View.print(cashierController.listCashiers(), Cashier.class);
+                //View.print(cashierController.listCashiers());
                 System.out.println(Constants.okStatus(Constants.CASH, Constants.CASH_LIST));
 
             } else if (query.contains(Constants.CASH_TICKETS)) {
