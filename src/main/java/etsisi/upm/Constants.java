@@ -52,8 +52,7 @@ public class Constants {
     public static final String ERROR_INVALID_OPTION = "invalid option";
     public static final String ERROR_FEW_PARAMS = "more params required";
     public static final String ERROR_NONEXISTEN_ID = "id nonexistent";
-
-
+    public static final String ERROR_FILE_NOTFOUND = "file not found";
     // regex const
     public static final String REGEX_INIT = "^";
     public static final String REGEX_BLANK_SPACE = "\\s*";
