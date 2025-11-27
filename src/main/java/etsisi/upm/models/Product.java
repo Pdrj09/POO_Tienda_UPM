@@ -4,10 +4,12 @@ import etsisi.upm.Constants;
 import etsisi.upm.util.Categories;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 //We asign the variables
-public class Product implements Comparable<Product> {
+public class Product implements Comparable<Product>, Viewable{
     private final int id; // It is a global variable as the id cant change once the object is created
     private String name;
     private double price;
@@ -123,5 +125,15 @@ public class Product implements Comparable<Product> {
     @Override
     public int compareTo(Product other) {
         return this.name.compareToIgnoreCase(other.name);
+    }
+
+    @Override
+    public Collection<?> getDataCollection() {
+        Collection<Object> data = new ArrayList<>();
+        data.add(id);
+        data.add(name);
+        data.add(category);
+        data.add(price);
+        return data;
     }
 }

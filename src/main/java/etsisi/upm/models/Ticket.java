@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class Ticket {
+public class Ticket implements Viewable{
 
     //Stores the list of products and their quantities in the current transaction
     private String id;
@@ -187,5 +187,19 @@ public class Ticket {
 
     public boolean isClosed(){
         return this.state == TicketStates.CLOSED;
+    }
+
+    @Override
+    public Collection<?> getDataCollection() {
+        Collection<Object> data = new ArrayList<>();
+        for (Map.Entry<Product, List<Object>> entry : list.entrySet()) {
+            data.add(entry.getKey());
+            if (categories.get(entry.getKey().getCategory()) > MIN_FOR_DISCOUNT)
+                data.add(entry.getKey().getPrice() * entry.getKey().getCategory().getDiscount());
+        }
+        data.add(totalPrice());
+        data.add(totalDiscount());
+        data.add(totalPrice() - totalDiscount());
+        return data;
     }
 }

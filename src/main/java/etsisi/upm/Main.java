@@ -1,6 +1,6 @@
 package etsisi.upm;
 
-import etsisi.upm.controllers.CashierController;
+//import etsisi.upm.controllers.CashierController;
 import etsisi.upm.controllers.ClientController;
 import etsisi.upm.controllers.ProductController;
 import etsisi.upm.controllers.TicketController;
@@ -26,12 +26,12 @@ public class Main {
         ProductController productController = new ProductController(productRepo,ticketRepo);
         TicketController ticketController = new TicketController(ticketRepo, clientRepo, cashierRepo, productRepo);
         ClientController clientController = new ClientController(clientRepo, cashierRepo);
-        CashierController cashierController = new CashierController(cashierRepo);
+//        CashierController cashierController = new CashierController(cashierRepo);
 
         //We call scanner
         Scanner sc = new Scanner(System.in);
         int status;
-        CLI cli = new CLI(productController, ticketController, clientController, cashierController);// we create a menu
+        CLI cli = new CLI(productController, ticketController, clientController, null);// we create a menu
 
         do {
             System.out.print(CURSOR);

@@ -2,6 +2,7 @@ package etsisi.upm.io;
 
 import etsisi.upm.models.Product;
 import etsisi.upm.models.Ticket;
+import etsisi.upm.models.Viewable;
 import etsisi.upm.models.users.Cashier;
 import etsisi.upm.models.users.Client;
 
@@ -20,8 +21,9 @@ public class View {
 
 
     public static String getString(Object model){
-        if (model != null) return model.toString();
-        else return MSG_NULL_ELEMENT;
+        if (model == null) return MSG_NOTHING_TO_SHOW;
+        if (model instanceof Viewable) return buildTable(((Viewable) model).getDataCollection(),model.getClass());
+        else return model.toString();
     }
 
     //Here we print an object w/ toString()
