@@ -34,6 +34,7 @@ public class Constants {
     public static final int SIX = 6;
     public static final int SEVEN = 7;
 
+    public static final int NON_SIZE = -1;
     public static final int MAX_SIZE = 200;
 
     // menu const
@@ -62,6 +63,7 @@ public class Constants {
     public static final String ERROR_FEW_PARAMS = "more params required";
     public static final String ERROR_NONEXISTEN_ID = "id nonexistent";
     public static final String ERROR_FILE_NOTFOUND = "file not found";
+
     // regex const
     public static final String REGEX_INIT = "^";
     public static final String REGEX_BLANK_SPACE = "\\s*";
@@ -105,6 +107,8 @@ public class Constants {
     //Error const
     public static final String ERROR_NO_PRODUCTS_FOUND  = "No products found";
     public static final String DUPLICATED_ID_ERROR  = "The id given already exists please try again using a new one";
+    public static final String ERROR_MAXSIZE = "Repository full, maximum size of ";
+    public static final String ERROR_SERVICE_DATE_FEASIBILITY = "Error: The date must be at least ";
 
     public static String createGeneralRegex(String query) {
         StringBuilder stringBuilder;
