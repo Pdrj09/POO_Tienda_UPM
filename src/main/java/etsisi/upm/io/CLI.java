@@ -47,7 +47,7 @@ public class CLI {
                     ticket list
                     prod add <id> "<name>" <category> <price>
                     prod update <id> NAME|CATEGORY|PRICE <value>
-                    prod addMeal <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
+                    prod addFood <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
                     prod addMeeting <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
                     prod list
                     prod remove <id>
@@ -94,11 +94,6 @@ public class CLI {
         //returns 1
     }
 
-
-    //client add "<nombre>" <DNI> <email> <cashId>
-    //client remove <DNI>
-    //client list
-
     private void clientQuery(String query){
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         try {
@@ -120,6 +115,7 @@ public class CLI {
     private void prodQuery(String query) {
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         try {
+<<<<<<< HEAD
             if (query.contains(Constants.PRODUCT_ADD)) {
                 System.out.println(ProductController.productAdder(querySplit, productController));
             } else if (query.contains(Constants.PRODUCT_LIST)) {
@@ -137,14 +133,15 @@ public class CLI {
                 //System.out.println(productController.prodAddMeeting(querySplit));
             }
         } catch (Exception e) {
+=======
+            System.out.println(this.productController.decodeQuery(querySplit));
+        }catch (IndexOutOfBoundsException e){
+            System.out.println(Constants.errorStatus(Constants.PROD,Constants.ERROR_STATUS,Constants.ERROR_FEW_PARAMS));
+        }catch (Exception e) {
+>>>>>>> bd2548eba7c957290742d309faf41206fa5ee120
             System.out.println(Constants.errorStatus(Constants.PROD, Constants.PRODUCT_ADD, e.toString()));
         }
     }
-    /*ticket new [<id>] <cashId> <userId>
-    ticket add <ticketId><cashId> <prodId> <amount> [--p<txt> --p<txt>]
-    ticket remove <ticketId><cashId> <prodId>
-    ticket print <ticketId> <cashId>
-    ticket list*/
 
     private void ticketQuery(String query) {
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
