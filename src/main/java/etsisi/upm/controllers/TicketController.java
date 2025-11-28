@@ -95,7 +95,7 @@ public class TicketController {
     }
 
     private Ticket getTicket(String ticketId){
-        return this.ticketRepository.findById(ticketId);
+        return this.ticketRepository.findByIdOrThrow(ticketId);
     }
     private List<Ticket> getTicketList(){
         List<Ticket> ticketList = new ArrayList<Ticket>();
@@ -104,7 +104,7 @@ public class TicketController {
         for (Map.Entry<String, Cashier> entry : sortedCashiers.entrySet()){
             Set<String> ticketIds = entry.getValue().getTickets();
             for (String ticketId : ticketIds){
-                ticketList.add(this.ticketRepository.findById(ticketId));
+                ticketList.add(this.ticketRepository.findByIdOrThrow(ticketId));
             }
         }
         return ticketList;
@@ -116,8 +116,8 @@ public class TicketController {
 
     private Ticket removeTicket(String ticketId, String cashierId, String clientId){
         Ticket ticket = this.ticketRepository.removeById(ticketId);
-        Cashier cashier = this.cashierRepository.findById(cashierId);
-        Client client = this.clientRepository.findById(clientId);
+        Cashier cashier = this.cashierRepository.findByIdOrThrow(cashierId);
+        Client client = this.clientRepository.findByIdOrThrow(clientId);
         cashier.deleteTicket(ticket);
         client.deleteTicket(ticket);
         return ticket;
@@ -125,8 +125,8 @@ public class TicketController {
 
 
     private Ticket addProductToTicket(String ticketId, String cahsierId, Integer productId, int amount, List<String> customizations){
-        Ticket ticket = this.ticketRepository.findById(ticketId);
-        Product product = this.productRepository.findById(productId);
+        Ticket ticket = this.ticketRepository.findByIdOrThrow(ticketId);
+        Product product = this.productRepository.findByIdOrThrow(productId);
 
         if (product == null) {
             throw new IllegalArgumentException("Can't find product.");
@@ -149,14 +149,14 @@ public class TicketController {
     }
 
     private Ticket removeProductFromTicket(String ticketId, String cahsierId, Integer productId){
-        Ticket ticket = this.ticketRepository.findById(ticketId);
-        Product product = this.productRepository.findById(productId);
+        Ticket ticket = this.ticketRepository.findByIdOrThrow(ticketId);
+        Product product = this.productRepository.findByIdOrThrow(productId);
         return ticket.remove(product);
     }
 
     //method were the ticked is closed and prepared for printing it (the view manage that)
     private Ticket printTicket(String ticketId, String cahsierId){
-        Ticket ticket = this.ticketRepository.findById(ticketId);
+        Ticket ticket = this.ticketRepository.findByIdOrThrow(ticketId);
         this.closeTicket(ticket);
         return ticket;
     }

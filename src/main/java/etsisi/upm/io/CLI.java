@@ -130,8 +130,11 @@ public class CLI {
 
         try {
             System.out.println(this.cashierController.cashierQuery(querySplit));
-        }catch (Exception e) {
-            System.out.println(Constants.errorStatus(Constants.PROD, e.toString()));
+        }catch (IndexOutOfBoundsException _){
+            System.out.println(Constants.errorStatus(Constants.CASH, Constants.ERROR_FEW_PARAMS));
+        }
+        catch (Exception e) {
+            System.out.println(Constants.errorStatus(Constants.CASH, e.toString()));
         }
     }
 

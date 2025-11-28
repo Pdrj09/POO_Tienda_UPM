@@ -5,6 +5,7 @@ import java.util.Map;
 
 public interface RepositoryInterface<K, T> {
     void add(K key, T object);
+    T findByIdOrThrow(K id);
     T findById(K id);
     T removeById(K id);
     Collection<T> findAll();
