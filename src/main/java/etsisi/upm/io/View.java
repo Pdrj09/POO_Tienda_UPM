@@ -99,7 +99,7 @@ public class View {
             }
         }
 
-        String title = " " + itemType.getSimpleName().toLowerCase() + " ";
+        String title = "♥ " + itemType.getSimpleName().toLowerCase() + " ♥";
         int totalWidth = Arrays.stream(colWidths).sum() + fields.size() * 3 + 1;
 
         //HEADER

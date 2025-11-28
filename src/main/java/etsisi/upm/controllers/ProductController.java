@@ -50,7 +50,7 @@ public class ProductController {
         double price;
         Integer prodId, maxPers, maxPeople;
         LocalDateTime expirationDate;
-        String command = "prod " + querySplit[Constants.QUERY_PRODUCT_POS_INSTRUCTION];
+        String command = Constants.PROD + querySplit[Constants.QUERY_PRODUCT_POS_INSTRUCTION];
         switch (querySplit[Constants.QUERY_PRODUCT_POS_INSTRUCTION]){
             case Constants.PRODUCT_ADD:
                 int id;
