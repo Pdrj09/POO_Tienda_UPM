@@ -67,13 +67,13 @@ public class ProductController {
                     if (querySplit.length > Constants.FIVE) {
                         maxPers = Integer.parseInt(querySplit[Constants.FIVE]);
                         StringBuilder response = new StringBuilder();
-                        response.append(View.print(this.addProduct(name, querySplit[Constants.THREE], price, id, maxPers)));
+                        response.append(View.getString(this.addProduct(name, querySplit[Constants.THREE], price, id, maxPers)));
                         response.append(Constants.ENTER_KEY);
                         response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
                         return response.toString();
                     } else {
                         StringBuilder response = new StringBuilder();
-                        response.append(View.print(this.addProduct(name, querySplit[Constants.THREE], price, id)));
+                        response.append(View.getString(this.addProduct(name, querySplit[Constants.THREE], price, id)));
                         response.append(Constants.ENTER_KEY);
                         response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
                         return response.toString();
@@ -90,13 +90,13 @@ public class ProductController {
                     if (querySplit.length > Constants.FOUR) {
                         maxPers = Integer.parseInt(querySplit[Constants.FOUR]);
                         StringBuilder response = new StringBuilder();
-                            response.append(View.print(this.addProduct(name, querySplit[Constants.TWO], price, id, maxPers)));
+                            response.append(View.getString(this.addProduct(name, querySplit[Constants.TWO], price, id, maxPers)));
                             response.append(Constants.ENTER_KEY);
                          response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
                         return response.toString();
                     } else {
                         StringBuilder response = new StringBuilder();
-                            response.append(View.print(this.addProduct(name, querySplit[Constants.TWO], price, id)));
+                            response.append(View.getString(this.addProduct(name, querySplit[Constants.TWO], price, id)));
                             response.append(Constants.ENTER_KEY);
                             response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
                         return response.toString();
@@ -125,7 +125,7 @@ public class ProductController {
                 maxPeople = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_MAXPEOPLE]);
                 expirationDate = LocalDateTime.parse(querySplit[Constants.QUERY_PRODUCT_POS_EXPIRATION]);
 
-                return View.print(this.addFood(prodId, name, price, maxPeople, expirationDate));
+                return View.print(this.addFood(prodId, name, price, maxPeople, expirationDate)).toString();
             case Constants.PRODUCT_ADD_MEETING:
 
                 prodId = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
@@ -134,15 +134,15 @@ public class ProductController {
                 maxPeople = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_MAXPEOPLE]);
                 expirationDate = LocalDateTime.parse(querySplit[Constants.QUERY_PRODUCT_POS_EXPIRATION]);
 
-                return View.print(this.addMeeting(prodId, name, price, maxPeople, expirationDate));
+                return View.print(this.addMeeting(prodId, name, price, maxPeople, expirationDate)).toString();
             case Constants.PRODUCT_LIST:
 
-                return View.print(this.prodList());
+                return View.print(this.prodList()).toString();
             case Constants.PRODUCT_REMOVE:
 
                 prodId = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
 
-                return View.print(this.deleteProduct(prodId));
+                return View.print(this.deleteProduct(prodId)).toString();
             default:
                 throw new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
         }

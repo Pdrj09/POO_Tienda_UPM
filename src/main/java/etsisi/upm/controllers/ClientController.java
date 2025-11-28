@@ -12,7 +12,7 @@ public class ClientController {
     private final Repository<String, Client> clientRepository;
     private final Repository<String, Cashier> cashierRepository;
     private static final String DUPLICATED_ID_ERROR  = "El id pasado como pararametro ya existe, añada otro";
-    private static final String CASIER_NOT_EXIST  = "The cashier given doesnt exists";
+    private static final String CASIER_NOT_EXIST  = "El casier dado no existe";
 
 
     public ClientController(Repository<String, Client> repository, Repository<String, Cashier> cashierRepository) {
@@ -38,7 +38,7 @@ public class ClientController {
             Client newClient = addClient(querySplit[Constants.ONE], querySplit[Constants.TWO],
                                             querySplit[Constants.THREE],  querySplit[Constants.FOUR]);
 
-            return View.print(newClient);
+            return View.print(newClient).toString();
 
 
         } else if (query.startsWith(Constants.CLIENT_LIST)) {
@@ -67,7 +67,7 @@ public class ClientController {
                 throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
             }
 
-            return View.print(removeClients(querySplit[Constants.ONE]));
+            return View.print(removeClients(querySplit[Constants.ONE]).toString()).toString();
 
         } else {
             throw new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
