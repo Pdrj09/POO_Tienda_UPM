@@ -58,6 +58,39 @@ public class CLI {
             
             """ + getCategoriesHelp();
 
+    private static final String COMMANDS_LIST_CLIENT = """
+            Commands:
+                    client add "<nombre>" <DNI> <email> <cashId>
+                    client remove <DNI>
+                    client list
+            """;
+
+    private static final String COMMANDS_LIST_CASH = """
+            Commands:
+                    cash add [<id>] "<nombre>"<email>
+                    cash remove <id>
+                    cash list
+                    cash tickets <id>
+            """;
+
+    private static final String COMMANDS_LIST_TICKET = """
+            Commands:
+                    ticket new [<id>] <cashId> <userId>
+                    ticket add <ticketId><cashId> <prodId> <amount> [--p<txt> --p<txt>]\s
+                    ticket remove <ticketId><cashId> <prodId>\s
+                    ticket print <ticketId> <cashId>\s
+                    ticket list
+            """;
+
+    private static final String COMMANDS_LIST_PROD = """
+            Commands:
+                    prod add <id> "<name>" <category> <price>
+                    prod update <id> NAME|CATEGORY|PRICE <value>
+                    prod addFood <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
+                    prod addMeeting <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
+                    prod list
+                    prod remove <id>
+            """;
 
 
     public CLI(ProductController productController, TicketController ticketController, ClientController clientController, CashierController cashierController) {
@@ -80,7 +113,7 @@ public class CLI {
             echoCommand(query);
             //if query starts with HELP, displays help information available
         } else if (query.startsWith(Constants.HELP)) {
-            printHelp();
+            printHelp(query);
             //if query starts with EXIT prints goodbye message
         } else if (query.startsWith(Constants.EXIT)) {
             printExit();
@@ -141,8 +174,27 @@ public class CLI {
         System.out.println(WELCOME_MESSAGE);
     }
 
-    private static void printHelp(){
-        System.out.println(COMMANDS_LIST);
+    private static void printHelp(String query){
+        String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
+        if (querySplit.length>Constants.QUERY_HELP_POS_INSTRUCTION){
+            switch (querySplit[Constants.QUERY_HELP_POS_INSTRUCTION]){
+                case Constants.CLIENT:
+                    System.out.println(COMMANDS_LIST_CLIENT);
+                    break;
+                case Constants.CASH:
+                    System.out.println(COMMANDS_LIST_CASH);
+                    break;
+                case Constants.TICKET:
+                    System.out.println(COMMANDS_LIST_TICKET);
+                    break;
+                case Constants.PROD:
+                    System.out.println(COMMANDS_LIST_PROD);
+                    break;
+                default:
+                    System.out.println(COMMANDS_LIST);
+            }
+
+        }else System.out.println(COMMANDS_LIST);
     }
 
     private static void printExit(){
