@@ -45,7 +45,6 @@ public class ProductController {
                 .orElse(0) + 1;
     }
 
-
     public String decodeQuery(String[] querySplit){
         String name, category, field, newContent;
         double price;
@@ -147,20 +146,6 @@ public class ProductController {
         }
     }
 
-
-
-    public Product prodDelete(ProductController productController, String query) {
-        int id = Integer.parseInt(Constants.deleteSubstring(query, Constants.createGeneralRegex(Constants.PRODUCT_REMOVE)));
-        Product deletedProd = deleteProduct(id);
-        if (deletedProd != null) {
-            return deletedProd;
-        } else {
-            throw new RuntimeException("There has been an error deleting the product");
-        }
-    }
-
-
-
     //here we add a new product to the hashmap of products
     //return true if it didn't exist, else false
     private Product addProduct(String name, String category, double price, int id) {
@@ -216,7 +201,7 @@ public class ProductController {
     }
 
 
-    public String prodList() {
+    private String prodList() {
         StringBuilder builder = new StringBuilder();
 
         builder.append(CATALOG);
@@ -228,63 +213,6 @@ public class ProductController {
         }
 
         return builder.toString();
-    }
-
-    public Product prodAddMeal(String[] querySplit) {
-        try {
-            if (querySplit.length < Constants.FIVE + Constants.ONE) {
-                throw new IllegalArgumentException("Some parameters are missing to create Meal.");
-            }
-
-            int id = Integer.parseInt(querySplit[Constants.ONE]);
-            String name = querySplit[Constants.TWO].replace(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
-            double pricePerPerson = Double.parseDouble(querySplit[Constants.THREE].replace(Constants.STR_COMMA, Constants.STR_DOT));
-
-            String dateString = querySplit[Constants.FOUR];
-            LocalDateTime expirationDate = LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT));
-
-            int maxPeople = Integer.parseInt(querySplit[Constants.FIVE]);
-
-            Product response = addFood(id, name, pricePerPerson, maxPeople, expirationDate);
-
-            return response;
-
-        } catch (java.time.format.DateTimeParseException e) {
-            throw new DateTimeException(Constants.STR_ERROR + ": Date format incorrect. Use " + DATETIME_FORMAT);
-        } catch (NumberFormatException e) {
-            throw new NumberFormatException(Constants.STR_ERROR + ": ID, Price or Number of persons not valid.");
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(Constants.STR_ERROR + ": " + e.getMessage());
-        }
-    }
-
-    public Product prodAddMeeting(String[] querySplit) {
-        try {
-            // 6 elements expected: [0]prod, [1]addMeeting, [2]id, [3]name, [4]price, [5]date, [6]maxPeople
-            if (querySplit.length < Constants.FIVE + 1) {
-                throw new IllegalArgumentException("some parameters are missing to create the Meeting");
-            }
-
-            int id = Integer.parseInt(querySplit[Constants.ONE]);
-            String name = querySplit[Constants.TWO].replace(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
-            double pricePerPerson = Double.parseDouble(querySplit[Constants.THREE].replace(Constants.STR_COMMA, Constants.STR_DOT));
-
-            String dateString = querySplit[Constants.FOUR];
-            LocalDateTime expirationDate = LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT));
-
-            int maxPeople = Integer.parseInt(querySplit[Constants.FIVE]);
-
-            Product response = addMeeting(id, name, pricePerPerson, maxPeople, expirationDate);
-
-            return response;
-
-        } catch (java.time.format.DateTimeParseException e) {
-            throw new DateTimeException(Constants.STR_ERROR + ": Date format incorrect. Use " + DATETIME_FORMAT);
-        } catch (NumberFormatException e) {
-            throw new NumberFormatException(Constants.STR_ERROR + ": ID, Price or Number of persons not valid.");
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(Constants.STR_ERROR + ": " + e.getMessage());
-        }
     }
 
     private Product addFood(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
