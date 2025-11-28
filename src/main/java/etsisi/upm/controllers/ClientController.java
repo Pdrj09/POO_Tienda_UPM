@@ -29,14 +29,18 @@ public class ClientController {
                     .append(Constants.REGEX_BLANK_SPACE);
             query = query.replaceFirst(Constants.CLIENT_ADD, Constants.STR_EMPTY);
 
-            String[] querySplit = query.split(Constants.REGEX_INIT);
+            String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
 
-            if (querySplit.length != Constants.FOUR) {
+            for( String s : querySplit) {
+                System.out.println(s);
+            }
+
+            if (querySplit.length != Constants.FIVE) {
                 throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
             }
 
-            Client newClient = addClient(querySplit[Constants.ZERO], querySplit[Constants.ONE],
-                                            querySplit[Constants.TWO],  querySplit[Constants.THREE]);
+            Client newClient = addClient(querySplit[Constants.ONE], querySplit[Constants.TWO],
+                                            querySplit[Constants.THREE],  querySplit[Constants.FOUR]);
 
             return View.print(newClient);
 
@@ -55,7 +59,7 @@ public class ClientController {
                     .append(Constants.REGEX_BLANK_SPACE);
             query = query.replaceFirst(Constants.CLIENT_REMOVE, Constants.STR_EMPTY);
 
-            String[] querySplit = query.split(Constants.REGEX_INIT);
+            String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
 
             if (querySplit.length != Constants.ONE) {
                 throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
