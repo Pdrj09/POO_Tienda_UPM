@@ -114,7 +114,6 @@ public class CLI {
 
     private void ticketQuery(String query) {
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
-
         try {
             System.out.println(this.ticketController.decodeQuery(querySplit));
         }catch (IndexOutOfBoundsException e){
@@ -127,7 +126,6 @@ public class CLI {
 
     private void cashQuery(String query){
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
-
         try {
             System.out.println(this.cashierController.cashierQuery(querySplit));
         }catch (IndexOutOfBoundsException _){

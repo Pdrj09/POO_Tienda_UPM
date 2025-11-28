@@ -22,7 +22,7 @@ public class View {
     }
 
     //principal method for printing Objects
-    public static <T> String getString(T element) {
+    public static <T> String getString(T element, String command) {
         StringBuilder sb = new StringBuilder();
         if (element == null)
             return MSG_NOTHING_TO_SHOW + "\n";
@@ -72,8 +72,7 @@ public class View {
         //individual object
         else
             sb.append(buildTable(Collections.singletonList(element), element.getClass()));
-        String typeName = element.getClass().getSimpleName();
-        sb.append(Constants.okStatus(typeName, "ViewPrint")).append("\n");
+        sb.append(Constants.okStatus(command.split(" ")[0], command.split(" ")[1])).append("\n");
         return sb.toString();
     }
 

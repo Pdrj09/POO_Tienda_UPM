@@ -25,6 +25,7 @@ public class CashierController {
         StringBuilder cashierRegex = new StringBuilder();
         cashierRegex.append(Constants.REGEX_INIT);
         String instruction = querySplit[Constants.QUERY_CASH_POS_INSTRUCTION];
+        String command = querySplit[Constants.QUERY_CASH_POS_CLASS] + " " + querySplit[Constants.QUERY_CASH_POS_INSTRUCTION];
         switch (instruction) {
             case Constants.CASH_ADD:
                 if (querySplit.length == Constants.QUERY_CASH_LENGTH_WITHID) {
@@ -34,7 +35,7 @@ public class CashierController {
 
                     Cashier newCash = addCashier(id, mail, name);
 
-                    return View.getString(newCash);
+                    return View.getString(newCash, command);
                 } else if (querySplit.length == Constants.QUERY_CASH_LENGTH_WITHOUTID) {
                     int index = 1;
                     String name = querySplit[Constants.QUERY_CASH_POS_NAME - index];
@@ -42,7 +43,7 @@ public class CashierController {
 
                     Cashier newCash = addCashier(mail, name);
 
-                    return View.getString(newCash);
+                    return View.getString(newCash, command);
                 } else {
                     throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
                 }
@@ -51,17 +52,17 @@ public class CashierController {
 
                 Cashier cashier = removeCashier(querySplit[Constants.QUERY_CASH_POS_ID]);
 
-                return View.getString(cashier);
+                return View.getString(cashier, command);
             case Constants.CASH_LIST:
 
                 if (querySplit.length == Constants.QUERY_CASH_POS_INSTRUCTION + 1) {
-                    return View.getString(listCashiers());
+                    return View.getString(listCashiers(), command);
                 } else {
                     throw new IllegalArgumentException(Constants.ERROR_TOMANY_ARGUMENTS);
                 }
             case Constants.CASH_TICKETS:
 
-                return View.getString(listTickets(querySplit[Constants.QUERY_CASH_POS_ID]));
+                return View.getString(listTickets(querySplit[Constants.QUERY_CASH_POS_ID]), command);
             default:
                 throw new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
         }
@@ -92,10 +93,6 @@ public class CashierController {
 
     private Set<String> listTickets(String cashierId) {
         return repository.findByIdOrThrow(cashierId).getTickets();
-    }
-
-    private Boolean existCashier(String cashierId) {
-        return repository.findByIdOrThrow(cashierId) != null;
     }
 
     private String generateCashierId(){
