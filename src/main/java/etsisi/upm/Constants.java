@@ -14,6 +14,17 @@ public class Constants {
     public static final int QUERY_TICKET_POS_AMOUNT = 4;
     public static final int QUERY_TICKET_POS_CUSTOMIZATIONS = 5;
 
+    public static final int QUERY_PRODUCT_POS_INSTRUCTION = 0;
+    public static final int QUERY_PRODUCT_POS_PRODUCTID = 1;
+    public static final int QUERY_PRODUCT_POS_NAME = 2;
+    public static final int QUERY_PRODUCT_POS_CATEGORY = 3;
+    public static final int QUERY_PRODUCT_POS_PRICE = 4;
+    public static final int QUERY_PRODUCT_POS_MAXPERS = 5;
+    public static final int QUERY_PRODUCT_POS_FIELD = 2;
+    public static final int QUERY_PRODUCT_POS_NEWCONTENT = 3;
+    public static final int QUERY_PRODUCT_POS_PRICE_FOODMEETING = 3;
+    public static final int QUERY_PRODUCT_POS_EXPIRATION = 4;
+    public static final int QUERY_PRODUCT_POS_MAXPEOPLE = 5;
     // numbers
     public static final int ONE = 1;
     public static final int TWO = 2;
@@ -50,8 +61,8 @@ public class Constants {
     public static final String ERROR_INVALID_OPTION = "invalid option";
     public static final String ERROR_FEW_PARAMS = "more params required";
     public static final String ERROR_NONEXISTEN_ID = "id nonexistent";
-
-
+    public static final String ERROR_FILE_NOTFOUND = "file not found";
+    public static final String ERROR_PRICE = "No price for product";
     // regex const
     public static final String REGEX_INIT = "^";
     public static final String REGEX_BLANK_SPACE = "\\s*";
@@ -60,11 +71,12 @@ public class Constants {
     public static final String REGEX_PERSONALIZED = "(?<=--p)";
 
     // products const
+    public static final String PRODUCT = "prod";
     public static final String PRODUCT_ADD = "add";
     public static final String PRODUCT_LIST = "list";
     public static final String PRODUCT_UPDATE = "update";
     public static final String PRODUCT_REMOVE = "remove";
-    public static final String PRODUCT_ADD_MEAL = "addMeal";
+    public static final String PRODUCT_ADD_FOOD = "addFood";
     public static final String PRODUCT_ADD_MEETING = "addMeeting";
 
 
@@ -87,7 +99,7 @@ public class Constants {
     public static final String CASH_TICKETS = "tickets";
 
     // Time const
-    public static final int TIME_MEAL_PLANNING_DAYS = 3;
+    public static final int TIME_FOOD_PLANNING_DAYS = 3;
     public static final int TIME_MEETING_PLANNING_HOURS = 12;
     public static final int TIME_MAX_PEOPLE_SERVICE = 100;
 

@@ -1,14 +1,16 @@
 package etsisi.upm.controllers;
 
 import etsisi.upm.Constants;
+import etsisi.upm.io.View;
 import etsisi.upm.models.Ticket;
 import etsisi.upm.models.repositories.Repository;
 import etsisi.upm.util.Categories;
 import etsisi.upm.models.Product;
 
-import etsisi.upm.models.Meal;
+import etsisi.upm.models.Food;
 import etsisi.upm.models.Meeting;
 
+import javax.management.Query;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -30,42 +32,122 @@ public class ProductController {
     private static final String CATEGORY = "CATEGORY";
     private static final String PRICE = "PRICE";
 
-    private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm";
+    private static final String DATETIME_FORMAT = "yyyy-MM-dd";
 
     public ProductController(Repository<Integer, Product> productRepository, Repository<String, Ticket> ticketRepository) {
         this.productRepository = productRepository;
         this.ticketRepository = ticketRepository;
     }
 
-    public static String productAdder(String[] querySplit, ProductController productController) {
-
-        if ((querySplit[Constants.ONE].isEmpty()) || (querySplit[Constants.ONE].equals(Constants.STR_BLANK_SPACE))) {
-            throw new IllegalArgumentException(" there is no id for product ");
-        }
-        int id = Integer.parseInt(querySplit[Constants.ONE]);
-        String name = querySplit[Constants.TWO].replace(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
-
-        if ((querySplit[Constants.FOUR].isEmpty()) || (querySplit[Constants.FOUR].equals(Constants.STR_BLANK_SPACE))) {
-            throw new IllegalArgumentException("The product has to have a price");
-        }
-        float price = Float.parseFloat(querySplit[Constants.FOUR].replace(Constants.STR_COMMA, Constants.STR_DOT));
-
-        StringBuilder response = new StringBuilder();
-
-        if (querySplit.length > Constants.FIVE) {
-            int maxPers = Integer.parseInt(querySplit[Constants.FIVE]);
-            response.append(productController.addProduct(name, querySplit[Constants.THREE], price, id, maxPers));
-        } else {
-            response.append(productController.addProduct(name, querySplit[Constants.THREE], price, id));
-        }
-        return response.toString();
+    private int generateAutomaticId() {
+        return productRepository.findAll().stream()
+                .mapToInt(Product::getId)
+                .max()
+                .orElse(0) + 1;
     }
 
-    public String editProduct(String[] querySplit) {
-        StringBuilder response = new StringBuilder();
-        response.append(updateProduct(Integer.parseInt(querySplit[Constants.ONE]), querySplit[Constants.TWO], querySplit[Constants.THREE]));
-    return response.toString();
+
+    public String decodeQuery(String[] querySplit){
+        String name, category, field, newContent;
+        double price;
+        Integer prodId, maxPers, maxPeople;
+        LocalDateTime expirationDate;
+        switch (querySplit[Constants.QUERY_PRODUCT_POS_INSTRUCTION]){
+            case Constants.PRODUCT_ADD:
+                int id;
+                try {
+                    id = Integer.parseInt(querySplit[Constants.ONE]);  // si es número, perfecto
+                    name = querySplit[Constants.TWO].replace(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
+
+                    if ((querySplit[Constants.FOUR].isEmpty()) || (querySplit[Constants.FOUR].equals(Constants.STR_BLANK_SPACE))) {
+                        throw new IllegalArgumentException(Constants.ERROR_PRICE);
+                    }
+                    price = Float.parseFloat(querySplit[Constants.FOUR].replace(Constants.STR_COMMA, Constants.STR_DOT));
+
+                    if (querySplit.length > Constants.FIVE) {
+                        maxPers = Integer.parseInt(querySplit[Constants.FIVE]);
+                        StringBuilder response = new StringBuilder();
+                        response.append(View.getString(this.addProduct(name, querySplit[Constants.THREE], price, id, maxPers)));
+                        response.append(Constants.ENTER_KEY);
+                        response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
+                        return response.toString();
+                    } else {
+                        StringBuilder response = new StringBuilder();
+                        response.append(View.getString(this.addProduct(name, querySplit[Constants.THREE], price, id)));
+                        response.append(Constants.ENTER_KEY);
+                        response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
+                        return response.toString();
+                    }
+                } catch (NumberFormatException e) {
+                    id = generateAutomaticId();
+                    name = querySplit[Constants.ONE].replace(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
+
+                    if ((querySplit[Constants.THREE].isEmpty()) || (querySplit[Constants.THREE].equals(Constants.STR_BLANK_SPACE))) {
+                        throw new IllegalArgumentException(Constants.ERROR_PRICE);
+                    }
+                    price = Float.parseFloat(querySplit[Constants.THREE].replace(Constants.STR_COMMA, Constants.STR_DOT));
+
+                    if (querySplit.length > Constants.FOUR) {
+                        maxPers = Integer.parseInt(querySplit[Constants.FOUR]);
+                        StringBuilder response = new StringBuilder();
+                            response.append(View.getString(this.addProduct(name, querySplit[Constants.TWO], price, id, maxPers)));
+                            response.append(Constants.ENTER_KEY);
+                         response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
+                        return response.toString();
+                    } else {
+                        StringBuilder response = new StringBuilder();
+                            response.append(View.getString(this.addProduct(name, querySplit[Constants.TWO], price, id)));
+                            response.append(Constants.ENTER_KEY);
+                            response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
+                        return response.toString();
+                    }
+                    // si NO es número, generas el ID
+                }
+
+
+
+            case Constants.PRODUCT_UPDATE:
+
+                prodId = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
+                field = querySplit[Constants.QUERY_PRODUCT_POS_FIELD];
+                newContent = querySplit[Constants.QUERY_PRODUCT_POS_NEWCONTENT];
+                StringBuilder response = new StringBuilder();
+                    response.append(View.getString(this.updateProduct(prodId,field,newContent)));
+                    response.append(Constants.ENTER_KEY);
+                    response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_UPDATE ));
+                return response.toString();
+
+            case Constants.PRODUCT_ADD_FOOD:
+
+                prodId = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
+                name = querySplit[Constants.QUERY_PRODUCT_POS_NAME];
+                price = Double.parseDouble(querySplit[Constants.QUERY_PRODUCT_POS_PRICE]);
+                maxPeople = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_MAXPEOPLE]);
+                expirationDate = LocalDateTime.parse(querySplit[Constants.QUERY_PRODUCT_POS_EXPIRATION]);
+
+                return View.getString(this.addFood(prodId, name, price, maxPeople, expirationDate));
+            case Constants.PRODUCT_ADD_MEETING:
+
+                prodId = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
+                name = querySplit[Constants.QUERY_PRODUCT_POS_NAME];
+                price = Double.parseDouble(querySplit[Constants.QUERY_PRODUCT_POS_PRICE]);
+                maxPeople = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_MAXPEOPLE]);
+                expirationDate = LocalDateTime.parse(querySplit[Constants.QUERY_PRODUCT_POS_EXPIRATION]);
+
+                return View.getString(this.addMeeting(prodId, name, price, maxPeople, expirationDate));
+            case Constants.PRODUCT_LIST:
+
+                return View.getString(this.prodList());
+            case Constants.PRODUCT_REMOVE:
+
+                prodId = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
+
+                return View.getString(this.deleteProduct(prodId));
+            default:
+                throw new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
+        }
     }
+
 
 
     public Product prodDelete(ProductController productController, String query) {
@@ -164,7 +246,7 @@ public class ProductController {
 
             int maxPeople = Integer.parseInt(querySplit[Constants.FIVE]);
 
-            Product response = addMeal(id, name, pricePerPerson, maxPeople, expirationDate);
+            Product response = addFood(id, name, pricePerPerson, maxPeople, expirationDate);
 
             return response;
 
@@ -206,10 +288,10 @@ public class ProductController {
         }
     }
 
-    private Product addMeal(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
-        Meal meal = new Meal(id, name, pricePerPerson, maxPeople, expirationDate);
-        this.productRepository.add(meal.getId(), meal);
-        return meal;
+    private Product addFood(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
+        Food food = new Food(id, name, pricePerPerson, maxPeople, expirationDate);
+        this.productRepository.add(food.getId(), food);
+        return food;
     }
 
     private Product addMeeting(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
