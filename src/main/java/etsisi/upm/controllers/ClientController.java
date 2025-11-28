@@ -18,12 +18,13 @@ public class ClientController {
     }
 
     public String clientQuery(String[] query) {
-        switch (query[Constants.QUERY_CASH_POS_INSTRUCTION]) {
+        String command = query[Constants.QUERY_CLIENT_POS_CLASS] + " " + query[Constants.QUERY_CLIENT_POS_INSTRUCTION];
+        switch (query[Constants.QUERY_CLIENT_POS_INSTRUCTION]) {
             case Constants.CASH_ADD -> {
                 if (query.length == Constants.QUERY_CLIENT_POS_MAXARGS) {
                     Client newClient = addClient(query[Constants.TWO], query[Constants.THREE],
                             query[Constants.FOUR], query[Constants.FIVE]);
-                    return View.getString(newClient);
+                    return View.getString(newClient, command);
                 } else
                     throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
             }
@@ -31,12 +32,12 @@ public class ClientController {
                 Collection<Client> clients = listClients();
                 if (clients.isEmpty())
                     return Constants.ERROR_NO_CLIENTS_FOUND;
-                return View.getString(clients);
+                return View.getString(clients, command);
             }
             case Constants.CLIENT_REMOVE -> {
                 if (query.length != Constants.THREE)
                     throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
-                return View.getString(removeClients(query[Constants.TWO]));
+                return View.getString(removeClients(query[Constants.TWO]), command);
             }
             default -> throw new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
         }

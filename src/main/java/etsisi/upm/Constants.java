@@ -125,6 +125,9 @@ public class Constants {
     public static final String DUPLICATED_ID_ERROR  = "The id given already exists please try again using a new one";
     public static final int QUERY_CLIENT_POS_MAXARGS = 6;
     public static final String ERROR_NO_CLIENTS_FOUND = "No clients found";
+    public static final int QUERY_CLIENT_POS_INSTRUCTION = 1;
+    public static final int QUERY_CLIENT_POS_CLASS = 0;
+    public static final int QUERY_CASH_POS_CLASS = 0;
 
     public static String createGeneralRegex(String query) {
         StringBuilder stringBuilder;

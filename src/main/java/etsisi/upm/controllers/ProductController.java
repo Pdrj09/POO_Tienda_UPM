@@ -50,6 +50,7 @@ public class ProductController {
         double price;
         Integer prodId, maxPers, maxPeople;
         LocalDateTime expirationDate;
+        String command = "prod " + querySplit[Constants.QUERY_PRODUCT_POS_INSTRUCTION];
         switch (querySplit[Constants.QUERY_PRODUCT_POS_INSTRUCTION]){
             case Constants.PRODUCT_ADD:
                 int id;
@@ -65,13 +66,13 @@ public class ProductController {
                     if (querySplit.length > Constants.FIVE) {
                         maxPers = Integer.parseInt(querySplit[Constants.FIVE]);
                         StringBuilder response = new StringBuilder();
-                        response.append(View.getString(this.addProduct(name, querySplit[Constants.THREE], price, id, maxPers)));
+                        response.append(View.getString(this.addProduct(name, querySplit[Constants.THREE], price, id, maxPers), command));
                         response.append(Constants.ENTER_KEY);
                         response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
                         return response.toString();
                     } else {
                         StringBuilder response = new StringBuilder();
-                        response.append(View.getString(this.addProduct(name, querySplit[Constants.THREE], price, id)));
+                        response.append(View.getString(this.addProduct(name, querySplit[Constants.THREE], price, id), command));
                         response.append(Constants.ENTER_KEY);
                         response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
                         return response.toString();
@@ -88,13 +89,13 @@ public class ProductController {
                     if (querySplit.length > Constants.FOUR) {
                         maxPers = Integer.parseInt(querySplit[Constants.FOUR]);
                         StringBuilder response = new StringBuilder();
-                            response.append(View.getString(this.addProduct(name, querySplit[Constants.TWO], price, id, maxPers)));
+                            response.append(View.getString(this.addProduct(name, querySplit[Constants.TWO], price, id, maxPers), command));
                             response.append(Constants.ENTER_KEY);
                          response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
                         return response.toString();
                     } else {
                         StringBuilder response = new StringBuilder();
-                            response.append(View.getString(this.addProduct(name, querySplit[Constants.TWO], price, id)));
+                            response.append(View.getString(this.addProduct(name, querySplit[Constants.TWO], price, id), command));
                             response.append(Constants.ENTER_KEY);
                             response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
                         return response.toString();
@@ -110,7 +111,7 @@ public class ProductController {
                 field = querySplit[Constants.QUERY_PRODUCT_POS_FIELD];
                 newContent = querySplit[Constants.QUERY_PRODUCT_POS_NEWCONTENT];
                 StringBuilder response = new StringBuilder();
-                    response.append(View.getString(this.updateProduct(prodId,field,newContent)));
+                    response.append(View.getString(this.updateProduct(prodId,field,newContent), command));
                     response.append(Constants.ENTER_KEY);
                     response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_UPDATE ));
                 return response.toString();
@@ -123,7 +124,7 @@ public class ProductController {
                 maxPeople = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_MAXPEOPLE]);
                 expirationDate = LocalDateTime.parse(querySplit[Constants.QUERY_PRODUCT_POS_EXPIRATION]);
 
-                return View.getString(this.addFood(prodId, name, price, maxPeople, expirationDate));
+                return View.getString(this.addFood(prodId, name, price, maxPeople, expirationDate), command);
             case Constants.PRODUCT_ADD_MEETING:
 
                 prodId = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
@@ -132,15 +133,15 @@ public class ProductController {
                 maxPeople = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_MAXPEOPLE]);
                 expirationDate = LocalDateTime.parse(querySplit[Constants.QUERY_PRODUCT_POS_EXPIRATION]);
 
-                return View.getString(this.addMeeting(prodId, name, price, maxPeople, expirationDate));
+                return View.getString(this.addMeeting(prodId, name, price, maxPeople, expirationDate), command);
             case Constants.PRODUCT_LIST:
 
-                return View.getString(this.prodList());
+                return View.getString(this.prodList(), command);
             case Constants.PRODUCT_REMOVE:
 
                 prodId = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
 
-                return View.getString(this.deleteProduct(prodId));
+                return View.getString(this.deleteProduct(prodId), command);
             default:
                 throw new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
         }
