@@ -88,16 +88,9 @@ public class CashierController {
                 throw  new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
             }
 
-            StringBuilder builder = new StringBuilder();
-
             Collection<Cashier> cashiers = listCashiers();
 
-            for (Cashier cashier : cashiers) {
-                cashierRegex.append(View.print(cashier).toString());
-            }
-
-            return builder.toString();
-
+            return View.print(cashiers);
 
         } else if (query.startsWith(Constants.CASH_TICKETS)) {
             cashierRegex.append(Constants.CASH_TICKETS)

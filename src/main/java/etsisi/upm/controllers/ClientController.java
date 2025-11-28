@@ -48,13 +48,7 @@ public class ClientController {
 
             Collection<Client> clients = listClients();
 
-            //TODO formatear
-            StringBuilder list = new StringBuilder();
-            for (Client client : clients) {
-                list.append(View.print(client));
-            }
-
-            return list.toString();
+            return View.print(clients);
 
         } else if (query.startsWith(Constants.CLIENT_REMOVE)) {
             regex.append(Constants.CLIENT_REMOVE)
