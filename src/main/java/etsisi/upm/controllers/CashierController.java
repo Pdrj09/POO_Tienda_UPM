@@ -5,6 +5,7 @@ import etsisi.upm.io.View;
 import etsisi.upm.models.repositories.Repository;
 import etsisi.upm.models.users.Cashier;
 
+import java.security.InvalidParameterException;
 import java.util.Collection;
 import java.util.Random;
 import java.util.Set;
@@ -33,21 +34,21 @@ public class CashierController {
 
                 String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
 
-                if (querySplit.length == Constants.FOUR) {
-                    String id = querySplit[Constants.ONE];
-                    String name = querySplit[Constants.TWO].replaceAll(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
-                    String mail = querySplit[Constants.THREE];
+                if (querySplit.length == Constants.THREE) {
+                    String id = querySplit[Constants.ZERO];
+                    String name = querySplit[Constants.ONE].replaceAll(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
+                    String mail = querySplit[Constants.TWO];
 
                     Cashier newCash = addCashier(id, mail, name);
 
-                    return View.getString(newCash);
-                } else if (querySplit.length == Constants.THREE) {
-                    String name = querySplit[Constants.ONE];
-                    String mail = querySplit[Constants.TWO];
+                    return View.print(newCash).toString();
+                } else if (querySplit.length == Constants.TWO) {
+                    String name = querySplit[Constants.ZERO];
+                    String mail = querySplit[Constants.ONE];
 
                     Cashier newCash = addCash(mail, name);
 
-                    return View.getString(newCash);
+                    return View.print(newCash).toString();
                 } else {
                     throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
 
@@ -66,13 +67,13 @@ public class CashierController {
 
             String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
 
-            if (querySplit.length != Constants.TWO) {
+            if (querySplit.length != Constants.ONE) {
                 throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
             }
 
-            Cashier cashier = removeCashier(querySplit[Constants.ONE]);
+            Cashier cashier = removeCashier(querySplit[Constants.ZERO]);
 
-            return View.getString(cashier);
+            return View.print(cashier).toString();
 
         } else if (query.startsWith(Constants.CASH_LIST)) {
             cashierRegex.append(Constants.CASH_LIST)
@@ -92,7 +93,7 @@ public class CashierController {
             Collection<Cashier> cashiers = listCashiers();
 
             for (Cashier cashier : cashiers) {
-                cashierRegex.append(View.getString(cashier));
+                cashierRegex.append(View.print(cashier).toString());
             }
 
             return builder.toString();
@@ -105,16 +106,16 @@ public class CashierController {
             query = query.replaceFirst(cashierRegex.toString(), Constants.STR_EMPTY);
 
             String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
-            if (querySplit.length != Constants.TWO) {
+            if (querySplit.length != Constants.ONE) {
                 throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
             }
 
-            Collection<String> tickets = listTickets(querySplit[Constants.ONE]);
+            Collection<String> tickets = listTickets(querySplit[Constants.ZERO]);
 
             StringBuilder builder = new StringBuilder();
 
             for(String ticket : tickets) {
-                builder.append(View.getString(ticket));
+                builder.append(View.print(ticket));
             }
 
             return builder.toString();
@@ -126,6 +127,7 @@ public class CashierController {
 
     private Cashier addCash(String emailCompany, String name) {
         String cashierId = generateCashierId();
+
         Cashier cashier =  Cashier.create(cashierId, emailCompany, name);
 
         repository.add(cashierId, cashier);
@@ -135,6 +137,8 @@ public class CashierController {
 
     private Cashier addCashier(String cahierId, String emailCompany, String name) {
         Cashier cashier =  Cashier.create(cahierId, emailCompany, name);
+
+        if(!cahierId.matches(Constants.REGEX_CASH_ID)) throw new InvalidParameterException(Constants.ERROR_INVALID_ID);
 
         repository.add(cahierId, cashier);
 
