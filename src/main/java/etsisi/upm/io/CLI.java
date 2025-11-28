@@ -47,7 +47,7 @@ public class CLI {
                     ticket list
                     prod add <id> "<name>" <category> <price>
                     prod update <id> NAME|CATEGORY|PRICE <value>
-                    prod addFood <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
+                    prod addMeal <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
                     prod addMeeting <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
                     prod list
                     prod remove <id>
@@ -86,18 +86,20 @@ public class CLI {
             return Constants.QUERY_EXIT;
             //returns 0
         } else if (query.startsWith(Constants.CLIENT)) {
-            this.clientQuery(query);
+            String response = clientController.clientQuery(Constants.deleteSubstring(query,
+                                                                Constants.createGeneralRegex(Constants.CLIENT)));
+
+            System.out.println(response);
         } else if (query.startsWith(Constants.CASH)) {
-            this.cashQuery(query);
+            String response = cashierController.cashierQuery(Constants.deleteSubstring(query,
+                                                                    Constants.createGeneralRegex(Constants.CASH)));
+
+            System.out.println(response);
+
         }
         return Constants.QUERY_SUCCESS;
         //returns 1
     }
-
-
-    //client add "<nombre>" <DNI> <email> <cashId>
-    //client remove <DNI>
-    //client list
 
     private void clientQuery(String query){
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
@@ -109,7 +111,7 @@ public class CLI {
                 clientController.removeClients(id);
                 System.out.println(Constants.okStatus(Constants.CLIENT, Constants.CLIENT_REMOVE));
             } else if (query.contains(Constants.CLIENT_LIST)) {
-                View.print(clientController.listClients(), Client.class);
+                View.print(clientController.listClients());
                 System.out.println(Constants.okStatus(Constants.CLIENT, Constants.CLIENT_LIST));
             }
         } catch (Exception e) {
@@ -121,10 +123,8 @@ public class CLI {
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         try {
             System.out.println(this.productController.decodeQuery(querySplit));
-        }catch (IndexOutOfBoundsException e){
-            System.out.println(Constants.errorStatus(Constants.PROD,Constants.ERROR_STATUS,Constants.ERROR_FEW_PARAMS));
         }catch (Exception e) {
-            System.out.println(Constants.errorStatus(Constants.PROD, Constants.PRODUCT_ADD, e.toString()));
+            System.out.println(Constants.errorStatus(Constants.PROD, e.toString()));
         }
     }
 
@@ -140,7 +140,7 @@ public class CLI {
         }
     }
 
-
+    /*
     private void cashQuery(String query){
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         try {
@@ -159,7 +159,7 @@ public class CLI {
 
             } else if (query.contains(Constants.CASH_LIST)) {
                 //cash list
-                View.print(cashierController.listCashiers(), Cashier.class);
+                View.print(cashierController.listCashiers());
                 System.out.println(Constants.okStatus(Constants.CASH, Constants.CASH_LIST));
 
             } else if (query.contains(Constants.CASH_TICKETS)) {
@@ -172,7 +172,7 @@ public class CLI {
         } catch (Exception e) {
             System.out.println(Constants.errorStatus(Constants.CASH, "Error", e.getMessage()));
         }
-    }
+    } */
 
     private static void printWelcomeMessage(){
         System.out.println(WELCOME_MESSAGE);

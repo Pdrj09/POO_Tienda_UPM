@@ -19,12 +19,12 @@ public class Product implements Comparable<Product>, Viewable{
     public static final int maxPeople = 100;
 
 //Variables to avoid magic numbers
-    private static final String OPEN_BRACE = "{";
+    protected static final String OPEN_BRACE = "{";
     private static final String STR_PRODUCT = "class:Product";
-    private static final String STR_NAME = ", name:'";
-    private static final String STR_ID = ", id:";
-    private static final String STR_CATEGORY = ", category:";
-    private static final String SINGLE_QUOTE = "'";
+    protected static final String STR_NAME = ", name:'";
+    protected static final String STR_ID = ", id:";
+    protected static final String STR_CATEGORY = ", category:";
+    protected static final String SINGLE_QUOTE = "'";
     protected static final String STR_PRICE = ", price:";
     protected static final String CLOSE_BRACE = "}";
 
@@ -101,12 +101,20 @@ public class Product implements Comparable<Product>, Viewable{
         this.price = price;
     }
 
+    public void setMaxPers(int maxPers) {
+        this.maxPers = maxPers;
+    }
+
     public double getPrice() {
         return price;
     }
 
     public int getMaxPers() {
         return maxPers;
+    }
+
+    public String getName(){
+        return name;
     }
 
     public Categories getCategory() {
@@ -125,15 +133,5 @@ public class Product implements Comparable<Product>, Viewable{
     @Override
     public int compareTo(Product other) {
         return this.name.compareToIgnoreCase(other.name);
-    }
-
-    @Override
-    public Collection<?> getDataCollection() {
-        Collection<Object> data = new ArrayList<>();
-        data.add(id);
-        data.add(name);
-        data.add(category);
-        data.add(price);
-        return data;
     }
 }
