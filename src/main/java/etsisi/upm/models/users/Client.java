@@ -11,6 +11,7 @@ import java.util.TreeSet;
 public class Client extends User implements Comparable<Client> {
     private final String strIdCashier;
     private final Set<Ticket> associatedTickets;
+    private static final String DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
     //CONSTANTS
     private static final String OPEN_BRACE = "{";
@@ -23,15 +24,15 @@ public class Client extends User implements Comparable<Client> {
     private static final String SINGLE_QUOTE = "'";
 
     //Validation messages
-    private static final String ERR_DNI_LENGTH = "El DNI tiene que tener 9 digitos";
+    private static final String ERR_DNI_LENGTH = "Invalid DNI: wrong length (must be 9 chars)";
     private static final String ERR_CASHIER_NULL = "El id del cajero no puede ser null";
-
+    private static final String ERR_DNI_DIGITS = "Invalid DNI: first 8 characters must be numbers";
+    private static final String DNI_REGEX = "\\d{8}";
 
     //CONSTRUCTOR W/ ALL PARAMETERS
     public Client(String dni, String name, String email, String idCashier) {
         super(dni, name, email);
-        if(dni.length() != 9)
-            throw new IllegalArgumentException(ERR_DNI_LENGTH);
+        validateDni(dni);
         this.associatedTickets = new HashSet<>();
         if (idCashier == null)
             throw new IllegalArgumentException(ERR_CASHIER_NULL);
@@ -54,6 +55,24 @@ public class Client extends User implements Comparable<Client> {
     public String getStrIdCashier() {
         return strIdCashier;
     }
+
+    public static void validateDni(String dni) {
+        if (dni == null || dni.length() != 9)
+            throw new IllegalArgumentException(ERR_DNI_LENGTH);
+        String numbers = dni.substring(0, 8);
+        char letter = Character.toUpperCase(dni.charAt(8));
+        //check numeric part
+        if (!numbers.matches(DNI_REGEX))
+            throw new IllegalArgumentException(ERR_DNI_DIGITS);
+        //expected letter
+        int num = Integer.parseInt(numbers);
+        char expected = DNI_LETTERS.charAt(num % 23);
+        if (letter != expected)
+            throw new IllegalArgumentException(
+                    "Invalid DNI: wrong letter. Expected " + expected + " for " + numbers
+            );
+    }
+
 
     //COMPARABLE BY NAME
     @Override
