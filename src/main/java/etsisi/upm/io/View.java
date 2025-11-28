@@ -1,6 +1,7 @@
 package etsisi.upm.io;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class View {
@@ -74,50 +75,57 @@ public class View {
     // Construir tabla de objetos
     private static String buildTable(Collection<?> collection, Class<?> itemType) {
         StringBuilder sb = new StringBuilder();
-        Field[] fields = Arrays.stream(itemType.getDeclaredFields())
-                .filter(f -> !java.lang.reflect.Modifier.isStatic(f.getModifiers()))
-                .toArray(Field[]::new);
-        for (Field f : fields) f.setAccessible(true);
+        List<Field> fields = getAllFields(itemType);
 
-        // Calcular ancho de columnas
-        int[] colWidths = new int[fields.length];
-        for (int i = 0; i < fields.length; i++) colWidths[i] = fields[i].getName().length();
+        for (Field f : fields)
+            f.setAccessible(true);
+
+        // Calcular anchos de columnas
+        int[] colWidths = new int[fields.size()];
+        for (int i = 0; i < fields.size(); i++)
+            colWidths[i] = fields.get(i).getName().length();
+
         for (Object obj : collection) {
-            for (int i = 0; i < fields.length; i++) {
+            for (int i = 0; i < fields.size(); i++) {
                 try {
-                    Object value = fields[i].get(obj);
-                    int len = value != null ? value.toString().length() : 4;
-                    if (len > colWidths[i]) colWidths[i] = len;
+                    Object value = fields.get(i).get(obj);
+                    int len = value != null ? value.toString().length() : 1;
+                    colWidths[i] = Math.max(colWidths[i], len);
                 } catch (Exception ignored) {}
             }
         }
 
         String title = " " + itemType.getSimpleName().toLowerCase() + " ";
-        int totalWidth = Arrays.stream(colWidths).sum() + fields.length * 3 + 1;
+        int totalWidth = Arrays.stream(colWidths).sum() + fields.size() * 3 + 1;
 
-        // Header
-        sb.append(YELLOW).append("┌").append(centerTitle(totalWidth - 2, title)).append("┐\n");
+        // HEADER
+        sb.append(YELLOW)
+                .append("┌").append(centerTitle(totalWidth - 2, title)).append("┐\n");
 
         // Column names
         sb.append("│ ");
-        for (int i = 0; i < fields.length; i++) sb.append(String.format("%-" + colWidths[i] + "s │ ", fields[i].getName()));
+        for (int i = 0; i < fields.size(); i++)
+            sb.append(String.format("%-" + colWidths[i] + "s │ ", fields.get(i).getName()));
         sb.append("\n");
 
         // Separator
         sb.append("├");
-        for (int w : colWidths) sb.append("─".repeat(w + 2)).append("┼");
+        for (int w : colWidths)
+            sb.append("─".repeat(w + 2)).append("┼");
         sb.setLength(sb.length() - 1);
         sb.append("\n");
 
-        // Rows
+        // ROWS
         sb.append(CYAN);
         for (Object obj : collection) {
             sb.append("│ ");
-            for (int i = 0; i < fields.length; i++) {
+            for (int i = 0; i < fields.size(); i++) {
                 try {
-                    Object value = fields[i].get(obj);
+                    Object value = fields.get(i).get(obj);
                     String val = value != null ? value.toString() : "-";
-                    sb.append(String.format("%-" + colWidths[i] + "s │ ", wrapString(val, 30).replace("\n", " ")));
+                    sb.append(String.format("%-" + colWidths[i] + "s │ ",
+                            wrapString(val, 30).replace("\n", " ")
+                    ));
                 } catch (Exception e) {
                     sb.append("ERROR │ ");
                 }
@@ -125,8 +133,11 @@ public class View {
             sb.append("\n");
         }
 
-        // Footer
-        sb.append(CYAN).append("└").append("─".repeat(totalWidth - 2)).append("┘").append(RESET).append("\n");
+        // FOOTER
+        sb.append(CYAN)
+                .append("└").append("─".repeat(totalWidth - 2)).append("┘")
+                .append(RESET).append("\n");
+
         return sb.toString();
     }
 
@@ -179,6 +190,27 @@ public class View {
         // Footer
         sb.append(CYAN).append("└").append("─".repeat(totalWidth - 2)).append("┘").append(RESET).append("\n");
         return sb.toString();
+    }
+
+    private static List<Field> getAllFields(Class<?> type) {
+        List<Field> fields = new ArrayList<>();
+
+        while (type != null && type != Object.class) {
+            for (Field f : type.getDeclaredFields()) {
+
+                int mods = f.getModifiers();
+
+                // IGNORAR CONSTANTES Y DEFINICIONES INTERNAS
+                if (Modifier.isStatic(mods)) continue;
+
+                // IGNORAR CONSTANTES DE CONFIGURACIÓN: nombres en mayúsculas
+                if (f.getName().equals(f.getName().toUpperCase())) continue;
+
+                fields.add(f);
+            }
+            type = type.getSuperclass();
+        }
+        return fields;
     }
 
     // Wrap strings largos
