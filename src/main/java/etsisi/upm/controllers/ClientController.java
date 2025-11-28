@@ -31,14 +31,14 @@ public class ClientController {
 
             String[] querySplit = query.split(Constants.REGEX_INIT);
 
-            if (querySplit.length != Constants.FIVE) {
+            if (querySplit.length != Constants.FOUR) {
                 throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
             }
 
-            Client newClient = addClient(querySplit[Constants.ONE], querySplit[Constants.TWO],
-                                            querySplit[Constants.THREE],  querySplit[Constants.FOUR]);
+            Client newClient = addClient(querySplit[Constants.ZERO], querySplit[Constants.ONE],
+                                            querySplit[Constants.TWO],  querySplit[Constants.THREE]);
 
-            return View.print(newClient).toString();
+            return View.print(newClient);
 
 
         } else if (query.startsWith(Constants.CLIENT_LIST)) {
@@ -57,11 +57,11 @@ public class ClientController {
 
             String[] querySplit = query.split(Constants.REGEX_INIT);
 
-            if (querySplit.length != Constants.TWO) {
+            if (querySplit.length != Constants.ONE) {
                 throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
             }
 
-            return View.print(removeClients(querySplit[Constants.ONE]).toString()).toString();
+            return View.print(removeClients(querySplit[Constants.ZERO]).toString()).toString();
 
         } else {
             throw new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
@@ -74,10 +74,10 @@ public class ClientController {
         //client add: ok
         StringBuilder builder = new StringBuilder();
 
-        String name = querySplit[Constants.ONE];
-        String dni = querySplit[Constants.TWO];
-        String email = querySplit[Constants.THREE];
-        String UW = querySplit[Constants.FOUR];
+        String name = querySplit[Constants.ZERO];
+        String dni = querySplit[Constants.ONE];
+        String email = querySplit[Constants.TWO];
+        String UW = querySplit[Constants.THREE];
 
         builder.append(View.print(addClient(name,dni, email,UW)));
         builder.append("/n");
