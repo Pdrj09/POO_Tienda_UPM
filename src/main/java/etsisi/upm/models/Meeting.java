@@ -7,7 +7,6 @@ import java.time.temporal.ChronoUnit;
 public class Meeting extends ServiceProduct {
 
     private static final String STR_MEETING = "class:Meeting";
-    private static final String CLOSE_BRACE = "}";
 
     public Meeting(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
         super(id, name, pricePerPerson, maxPeople, expirationDate);
