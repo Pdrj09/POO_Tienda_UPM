@@ -123,10 +123,8 @@ public class CLI {
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         try {
             System.out.println(this.productController.decodeQuery(querySplit));
-        }catch (IndexOutOfBoundsException e){
-            System.out.println(Constants.errorStatus(Constants.PROD,Constants.ERROR_STATUS,Constants.ERROR_FEW_PARAMS));
         }catch (Exception e) {
-            System.out.println(Constants.errorStatus(Constants.PROD, Constants.PRODUCT_ADD, e.toString()));
+            System.out.println(Constants.errorStatus(Constants.PROD, e.toString()));
         }
     }
 
