@@ -72,7 +72,7 @@ public class Constants {
     public static final String REGEX_DOUBLE_QUOTE = "\"";
     public static final String REGEX_TO_SPLIT = " (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
     public static final String REGEX_PERSONALIZED = "(?<=--p)";
-    public static final String REGEX_CASH_ID = "^\\{7}UW$";
+    public static final String REGEX_CASH_ID = "^\\UW{7}$";
 
     // products const
     public static final String PRODUCT = "prod";
