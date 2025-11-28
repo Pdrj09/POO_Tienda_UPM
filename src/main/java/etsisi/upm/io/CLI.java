@@ -8,6 +8,7 @@ import etsisi.upm.Constants;
 import etsisi.upm.models.Product;
 import etsisi.upm.models.users.Cashier;
 import etsisi.upm.models.users.Client;
+import etsisi.upm.util.Categories;
 
 public class CLI {
 
@@ -55,7 +56,7 @@ public class CLI {
                     echo “<text>”
                     exit
             
-            """;
+            """ + getCategoriesHelp();
 
 
 
@@ -151,5 +152,30 @@ public class CLI {
     private static void echoCommand(String command) {
         System.out.println(command);
     }
+
+    //for getting the different categories for prroducts
+    private static String getCategoriesHelp() {
+        StringBuilder lineCategories = new StringBuilder("Categories: ");
+        StringBuilder lineDiscounts = new StringBuilder("Discounts if there are ≥2 units in the category: ");
+        boolean first = true;
+        for (Categories c : Categories.values()) {
+            if (c == Categories.EMPTY)
+                continue;
+            if (!first) {
+                lineCategories.append(", ");
+                lineDiscounts.append(", ");
+            }
+            lineCategories.append(c.name());
+            lineDiscounts.append(c.name())
+                    .append(" ")
+                    .append((int)(c.getDiscount() * 100))
+                    .append("%");
+            first = false;
+        }
+        lineCategories.append("\n");
+        lineDiscounts.append(".");
+        return lineCategories.toString() + lineDiscounts.toString();
+    }
+
 
 }
