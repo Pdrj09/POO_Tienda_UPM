@@ -17,12 +17,12 @@ public class Product implements Comparable<Product> {
     public static final int maxPeople = 100;
 
 //Variables to avoid magic numbers
-    private static final String OPEN_BRACE = "{";
+    protected static final String OPEN_BRACE = "{";
     private static final String STR_PRODUCT = "class:Product";
-    private static final String STR_NAME = ", name:'";
-    private static final String STR_ID = ", id:";
-    private static final String STR_CATEGORY = ", category:";
-    private static final String SINGLE_QUOTE = "'";
+    protected static final String STR_NAME = ", name:'";
+    protected static final String STR_ID = ", id:";
+    protected static final String STR_CATEGORY = ", category:";
+    protected static final String SINGLE_QUOTE = "'";
     protected static final String STR_PRICE = ", price:";
     protected static final String CLOSE_BRACE = "}";
 
@@ -99,12 +99,20 @@ public class Product implements Comparable<Product> {
         this.price = price;
     }
 
+    public void setMaxPers(int maxPers) {
+        this.maxPers = maxPers;
+    }
+
     public double getPrice() {
         return price;
     }
 
     public int getMaxPers() {
         return maxPers;
+    }
+
+    public String getName(){
+        return name;
     }
 
     public Categories getCategory() {
