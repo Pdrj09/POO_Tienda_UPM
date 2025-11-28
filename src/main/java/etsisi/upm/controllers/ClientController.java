@@ -93,7 +93,7 @@ public class ClientController {
     }
 
     private Client addClient(String name, String dni, String email, String UW) {
-        if (cashierRepository.findById(dni)!=null) {
+        if (cashierRepository.findByIdOrThrow(dni)!=null) {
             Client client = new Client(dni, name, email, UW);
             clientRepository.add(dni, client);
 
