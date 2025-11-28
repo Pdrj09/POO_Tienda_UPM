@@ -6,6 +6,8 @@ public class Constants {
     public static final int QUERY_SUCCESS = 1;
     public  static final int QUERY_EXIT = 0;
 
+    public static final int QUERY_TICKET_ADD_LENGHT_WITHID = 4;
+    public static final int QUERY_TICKET_ADD_LENGHT_WITHOUTID = 3;
     public static final int QUERY_TICKET_POS_INSTRUCTION = 0;
     public static final int QUERY_TICKET_POS_TICKETID = 1;
     public static final int QUERY_TICKET_POS_CASHID = 2;

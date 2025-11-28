@@ -35,7 +35,6 @@ public class Ticket {
 
 
     public Ticket(String id){
-
         LocalDateTime now = LocalDateTime.now();
         String formatted = formatDate(now);
         this.id = formatted + "-" +id;
@@ -43,6 +42,10 @@ public class Ticket {
         this.categories = new HashMap<>();
         this.state = TicketStates.EMPTY;
 
+    }
+
+    public Ticket(){
+        this(String.format("%05d", new Random().nextInt(100_000)));
     }
 
     public static String formatDate(LocalDateTime date){
@@ -179,7 +182,10 @@ public class Ticket {
     public String getId() {
         return id;
     }
-
+    
+    public TicketStates getState() {
+        return state;
+    }
     //look if the product already exists
     public boolean containsProduct(Product prod) {
         return this.list.containsKey(prod);

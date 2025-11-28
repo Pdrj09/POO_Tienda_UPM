@@ -2,6 +2,7 @@ package etsisi.upm.models.users;
 
 import etsisi.upm.models.Ticket;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
@@ -31,7 +32,7 @@ public class Client extends User implements Comparable<Client> {
         super(dni, name, email);
         if(dni.length() != 9)
             throw new IllegalArgumentException(ERR_DNI_LENGTH);
-        this.associatedTickets = new TreeSet<>();
+        this.associatedTickets = new HashSet<>();
         if (idCashier == null)
             throw new IllegalArgumentException(ERR_CASHIER_NULL);
         this.strIdCashier = idCashier;
@@ -40,6 +41,10 @@ public class Client extends User implements Comparable<Client> {
     //GETTERS, public methods
     public Set<Ticket> getAssociatedTickets() {
         return associatedTickets;
+    }
+
+    public void addAssociatedTicket(Ticket ticket){
+        this.associatedTickets.add(ticket);
     }
 
     public void deleteTicket(Ticket ticket){

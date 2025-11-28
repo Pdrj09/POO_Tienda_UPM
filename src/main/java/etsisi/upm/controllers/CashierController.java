@@ -2,13 +2,12 @@ package etsisi.upm.controllers;
 
 import etsisi.upm.Constants;
 import etsisi.upm.io.View;
+import etsisi.upm.models.Ticket;
 import etsisi.upm.models.repositories.Repository;
 import etsisi.upm.models.users.Cashier;
 
 import java.security.InvalidParameterException;
-import java.util.Collection;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class CashierController {
     private static final Random randon = new Random();
@@ -90,8 +89,15 @@ public class CashierController {
         return repository.findAll();
     }
 
-    private Set<String> listTickets(String cashierId) {
-        return repository.findByIdOrThrow(cashierId).getTickets();
+    private Map<String,String> listTickets(String cashierId) {
+        Set<Ticket> tickets = repository.findByIdOrThrow(cashierId).getTickets();
+        Map<String, String > res = new TreeMap<>();
+
+        for (Ticket ticket : tickets){
+            res.put(ticket.getId(),ticket.getState().toString());
+        }
+
+        return res;
     }
 
     private Boolean existCashier(String cashierId) {

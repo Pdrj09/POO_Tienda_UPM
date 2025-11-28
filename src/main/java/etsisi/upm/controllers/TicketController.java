@@ -30,14 +30,22 @@ public class TicketController {
     public String decodeQuery(String[] querySplit) {
         String ticketId, cashierId, clientId;
         int prodId, amount;
+        System.out.println(Arrays.toString(querySplit));
         switch (querySplit[Constants.QUERY_TICKET_POS_INSTRUCTION]){
             case Constants.TICKET_NEW:
 
-                ticketId = querySplit[Constants.QUERY_TICKET_POS_TICKETID];
-                cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID];
-                clientId = querySplit[Constants.QUERY_TICKET_POS_USERID];
+                if(querySplit.length == Constants.QUERY_TICKET_ADD_LENGHT_WITHID){
+                    ticketId = querySplit[Constants.QUERY_TICKET_POS_TICKETID];
+                    cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID];
+                    clientId = querySplit[Constants.QUERY_TICKET_POS_USERID];
 
-                return View.getString(this.newTicket(ticketId, cashierId, clientId));
+                    return View.getString(this.newTicket(ticketId, cashierId, clientId));
+                } else if (querySplit.length == Constants.QUERY_TICKET_ADD_LENGHT_WITHOUTID) {
+                    cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID-1];
+                    clientId = querySplit[Constants.QUERY_TICKET_POS_USERID-1];
+
+                    return View.getString(this.newTicket(null,cashierId, clientId));
+                }
 
             case Constants.TICKET_ADD:
 
@@ -76,9 +84,8 @@ public class TicketController {
 
                 ticketId = querySplit[Constants.QUERY_TICKET_POS_TICKETID];
                 cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID];
-                this.printTicket(ticketId,cashierId);
+                return View.getString(this.printTicket(ticketId,cashierId));
 
-                break;
             case Constants.TICKET_LIST:
 
                 return View.getString(this.getTicketList());
@@ -86,12 +93,20 @@ public class TicketController {
             default:
                 throw new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
         }
-        return null;
     }
 
     private Ticket newTicket(String ticketId, String cashierId, String clientId){
-        Ticket ticket = new Ticket(ticketId);
+        Cashier cashier = this.cashierRepository.findByIdOrThrow(cashierId);
+        Client client = this.clientRepository.findByIdOrThrow(clientId);
+
+        Ticket ticket;
+        if(ticketId != null) ticket = new Ticket(ticketId);
+        else ticket = new Ticket();
+
         this.ticketRepository.add(ticketId, ticket);
+        cashier.addTicket(ticket);
+        client.addAssociatedTicket(ticket);
+
         return ticket;
     }
 
@@ -103,9 +118,9 @@ public class TicketController {
         TreeMap<String, Cashier> sortedCashiers = new TreeMap<>(this.cashierRepository.getMap());
 
         for (Map.Entry<String, Cashier> entry : sortedCashiers.entrySet()){
-            Set<String> ticketIds = entry.getValue().getTickets();
-            for (String ticketId : ticketIds){
-                ticketList.add(this.ticketRepository.findByIdOrThrow(ticketId));
+            Set<Ticket> tickets = entry.getValue().getTickets();
+            for (Ticket ticket : tickets){
+                ticketList.add(this.ticketRepository.findByIdOrThrow(ticket.getId()));
             }
         }
         return ticketList;
@@ -129,20 +144,22 @@ public class TicketController {
         Ticket ticket = this.ticketRepository.findByIdOrThrow(ticketId);
         Product product = this.productRepository.findByIdOrThrow(productId);
 
-        if (product == null) {
-            throw new IllegalArgumentException("Can't find product.");
-        }
+        switch (product) {
+            case null -> throw new IllegalArgumentException("Can't find product.");
 
-        //cant exist 2 same serviceProduct
-        if (product instanceof ServiceProduct && ticket.containsProduct(product)) {
-            throw new IllegalStateException("the same service can't be added twice in the same ticket.");
-        }
 
-        //limit participants validation.
-        if (product instanceof ServiceProduct) {
-            ServiceProduct service = (ServiceProduct) product;
-            if (amount <= 0 || amount > Product.maxPeople) {
-                throw new IllegalArgumentException("The number of participants (" + amount + ") isn't valid for this service.");
+            //cant exist 2 same serviceProduct
+            case ServiceProduct serviceProduct when ticket.containsProduct(product) ->
+                    throw new IllegalStateException("the same service can't be added twice in the same ticket.");
+
+
+            //limit participants validation.
+            case ServiceProduct service -> {
+                if (amount <= 0 || amount > Product.maxPeople) {
+                    throw new IllegalArgumentException("The number of participants (" + amount + ") isn't valid for this service.");
+                }
+            }
+            default -> {
             }
         }
 

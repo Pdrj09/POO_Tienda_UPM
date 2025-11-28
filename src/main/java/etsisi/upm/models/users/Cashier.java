@@ -2,14 +2,11 @@ package etsisi.upm.models.users;
 
 import etsisi.upm.models.Ticket;
 
-import java.util.Objects;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 //REPRESENTS A CASHIER IN THE SYSTEM
 public class Cashier extends User implements Comparable<Cashier>{
-    private final SortedSet<String> tickets; //tickets' IDs created by the cashier
+    private final Set<Ticket> createdTickets;
     private final Set<Client> associatedClients;
 
     //CONSTANT FOR THE toSTRING
@@ -31,21 +28,21 @@ public class Cashier extends User implements Comparable<Cashier>{
     //CONSTRUCTOR W/ AUTOMATIC ID GENERATION
     private Cashier(String id, String emailCompany, String name) {
         super(id, name, emailCompany);
-        this.tickets = new TreeSet<>(); //for sorted it
+        this.createdTickets = new HashSet<>(); //for sorted it
         this.associatedClients = new TreeSet<>();
     }
 
     //PUBLIC METHODS
     //this two methods returns an INMUTABLE copy for more protection
-    public Set<String> getTickets() {
-        return Set.copyOf(tickets);
+    public Set<Ticket> getTickets() {
+        return this.createdTickets;
     }
     public Set<Client> getAssociatedClients() {
         return Set.copyOf(associatedClients);
     }
 
     public void deleteTicket(Ticket ticket){
-        this.tickets.remove(ticket);
+        this.createdTickets.remove(ticket);
     }
 
     //Double validation safety, factory method
@@ -57,6 +54,10 @@ public class Cashier extends User implements Comparable<Cashier>{
         if (emailCompany == null || emailCompany.isBlank())
             throw new IllegalArgumentException(ERR_EMAIL_EMPTY);
         return new Cashier(id, emailCompany, name);
+    }
+
+    public void addTicket(Ticket ticket){
+        this.createdTickets.add(ticket);
     }
 
     //COMPARABLE (name)
