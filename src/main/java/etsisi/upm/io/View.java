@@ -1,47 +1,51 @@
 package etsisi.upm.io;
 
+import etsisi.upm.Constants;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class View {
-    // colores ANSI
+    //ANSI colours
     private static final String RESET = "\u001B[0m";
     private static final String YELLOW = "\u001B[33m";
     private static final String CYAN = "\u001B[36m";
-    // mensajes
+    //messages
     private static final String MSG_NOTHING_TO_SHOW = YELLOW + "[!] No items to display." + RESET;
 
-    // Clase mínima para key-value de strings
+    //a class for formating toString
     private static class KV {
         public String key;
         public String value;
         public KV(String key, String value) { this.key = key; this.value = value; }
     }
 
-    // Método principal
+    //principal method for printing Objects
     public static <T> String getString(T element) {
-        if (element == null) return MSG_NOTHING_TO_SHOW + "\n";
+        StringBuilder sb = new StringBuilder();
+        if (element == null)
+            return MSG_NOTHING_TO_SHOW + "\n";
 
-        // Colecciones
+        //collections
         if (element instanceof Collection<?> col) {
-            if (col.isEmpty()) return emptyMessage(null) + "\n";
-            return buildTable(col, col.iterator().next().getClass());
+            if (col.isEmpty())
+                return emptyMessage(null) + "\n";
+            sb.append(buildTable(col, col.iterator().next().getClass()));
         }
-
-        // Arrays
-        if (element.getClass().isArray()) {
+        //arrays
+        else if (element.getClass().isArray()) {
             int length = java.lang.reflect.Array.getLength(element);
-            if (length == 0) return emptyMessage(null) + "\n";
+            if (length == 0)
+                return emptyMessage(null) + "\n";
             List<Object> arrList = new ArrayList<>();
-            for (int i = 0; i < length; i++) arrList.add(java.lang.reflect.Array.get(element, i));
-            return buildTable(arrList, arrList.get(0).getClass());
+            for (int i = 0; i < length; i++)
+                arrList.add(java.lang.reflect.Array.get(element, i));
+            sb.append(buildTable(arrList, arrList.get(0).getClass()));
         }
-
-        // Strings
-        if (element instanceof String s) {
+        //strings
+        else if (element instanceof String s) {
             s = s.trim();
-            StringBuilder sb = new StringBuilder();
             String[] lines = s.split("\n");
             boolean anyKV = false;
             List<List<KV>> allLinesKV = new ArrayList<>();
@@ -62,17 +66,18 @@ public class View {
                     sb.append(CYAN).append("String").append(RESET).append(": ").append(wrapString(line, 50)).append("\n");
                 }
             }
-
-            // Construir tabla si hay KV
-            if (anyKV) sb.append(buildTableFromKV(allLinesKV));
-            return sb.toString();
+            if (anyKV)
+                sb.append(buildTableFromKV(allLinesKV));
         }
-
-        // Objeto individual
-        return buildTable(Collections.singletonList(element), element.getClass());
+        //individual object
+        else
+            sb.append(buildTable(Collections.singletonList(element), element.getClass()));
+        String typeName = element.getClass().getSimpleName();
+        sb.append(Constants.okStatus(typeName, "ViewPrint")).append("\n");
+        return sb.toString();
     }
 
-    // Construir tabla de objetos
+    //we build the table
     private static String buildTable(Collection<?> collection, Class<?> itemType) {
         StringBuilder sb = new StringBuilder();
         List<Field> fields = getAllFields(itemType);
@@ -80,7 +85,7 @@ public class View {
         for (Field f : fields)
             f.setAccessible(true);
 
-        // Calcular anchos de columnas
+        //width
         int[] colWidths = new int[fields.size()];
         for (int i = 0; i < fields.size(); i++)
             colWidths[i] = fields.get(i).getName().length();
@@ -98,24 +103,24 @@ public class View {
         String title = " " + itemType.getSimpleName().toLowerCase() + " ";
         int totalWidth = Arrays.stream(colWidths).sum() + fields.size() * 3 + 1;
 
-        // HEADER
+        //HEADER
         sb.append(YELLOW)
                 .append("┌").append(centerTitle(totalWidth - 2, title)).append("┐\n");
 
-        // Column names
+        //Column names
         sb.append("│ ");
         for (int i = 0; i < fields.size(); i++)
             sb.append(String.format("%-" + colWidths[i] + "s │ ", fields.get(i).getName()));
         sb.append("\n");
 
-        // Separator
+        //Separator
         sb.append("├");
         for (int w : colWidths)
             sb.append("─".repeat(w + 2)).append("┼");
         sb.setLength(sb.length() - 1);
         sb.append("\n");
 
-        // ROWS
+        //ROWS
         sb.append(CYAN);
         for (Object obj : collection) {
             sb.append("│ ");
@@ -133,7 +138,7 @@ public class View {
             sb.append("\n");
         }
 
-        // FOOTER
+        //FOOTER
         sb.append(CYAN)
                 .append("└").append("─".repeat(totalWidth - 2)).append("┘")
                 .append(RESET).append("\n");
@@ -141,11 +146,10 @@ public class View {
         return sb.toString();
     }
 
-    // Construir tabla de KV
+    //table for strings (k,v)
     private static String buildTableFromKV(List<List<KV>> allLinesKV) {
         StringBuilder sb = new StringBuilder();
 
-        // Obtener todas las claves
         Set<String> keySet = new LinkedHashSet<>();
         for (List<KV> line : allLinesKV) for (KV kv : line) keySet.add(kv.key);
 
@@ -163,19 +167,19 @@ public class View {
         String title = " KV ";
         int totalWidth = Arrays.stream(colWidths).sum() + keys.size() * 3 + 1;
 
-        // Header
+        //Header
         sb.append(YELLOW).append("┌").append(centerTitle(totalWidth - 2, title)).append("┐\n");
         sb.append("│ ");
         for (int i = 0; i < keys.size(); i++) sb.append(String.format("%-" + colWidths[i] + "s │ ", keys.get(i)));
         sb.append("\n");
 
-        // Separator
+        //Separator
         sb.append("├");
         for (int w : colWidths) sb.append("─".repeat(w + 2)).append("┼");
         sb.setLength(sb.length() - 1);
         sb.append("\n");
 
-        // Rows
+        //Rows
         sb.append(CYAN);
         for (List<KV> line : allLinesKV) {
             sb.append("│ ");
@@ -187,25 +191,20 @@ public class View {
             sb.append("\n");
         }
 
-        // Footer
+        //Footer
         sb.append(CYAN).append("└").append("─".repeat(totalWidth - 2)).append("┘").append(RESET).append("\n");
         return sb.toString();
     }
 
+    //get parent fields, ignore constants
     private static List<Field> getAllFields(Class<?> type) {
         List<Field> fields = new ArrayList<>();
 
         while (type != null && type != Object.class) {
             for (Field f : type.getDeclaredFields()) {
-
                 int mods = f.getModifiers();
-
-                // IGNORAR CONSTANTES Y DEFINICIONES INTERNAS
                 if (Modifier.isStatic(mods)) continue;
-
-                // IGNORAR CONSTANTES DE CONFIGURACIÓN: nombres en mayúsculas
                 if (f.getName().equals(f.getName().toUpperCase())) continue;
-
                 fields.add(f);
             }
             type = type.getSuperclass();
@@ -213,7 +212,7 @@ public class View {
         return fields;
     }
 
-    // Wrap strings largos
+    //Wrap long strings
     private static String wrapString(String s, int maxWidth) {
         StringBuilder sb = new StringBuilder();
         int index = 0;
