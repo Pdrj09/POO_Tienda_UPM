@@ -135,8 +135,10 @@ public class CLI {
 
 
     private void cashQuery(String query){
+        String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
+
         try {
-            System.out.println(this.cashierController.cashierQuery(query));
+            System.out.println(this.cashierController.cashierQuery(querySplit));
         }catch (Exception e) {
             System.out.println(Constants.errorStatus(Constants.PROD, e.toString()));
         }

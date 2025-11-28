@@ -6,6 +6,7 @@ import etsisi.upm.models.repositories.Repository;
 import etsisi.upm.models.users.Cashier;
 
 import java.security.InvalidParameterException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Random;
 import java.util.Set;
@@ -21,30 +22,24 @@ public class CashierController {
         this.repository = repository;
     }
 
-    public String cashierQuery(String query) {
+    public String cashierQuery(String[] querySplit) {
         StringBuilder cashierRegex = new StringBuilder();
         cashierRegex.append(Constants.REGEX_INIT);
 
-        if (query.startsWith(Constants.CASH_ADD)) {
+        if (querySplit[Constants.QUERY_CASH_POS_INSTRUCTION].equals(Constants.CASH_ADD)) {
             try {
-                cashierRegex.append(Constants.CASH_ADD)
-                        .append(Constants.REGEX_BLANK_SPACE);
 
-                query = query.replaceFirst(cashierRegex.toString(), Constants.STR_EMPTY);
-
-                String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
-
-                if (querySplit.length == Constants.THREE) {
-                    String id = querySplit[Constants.ZERO];
-                    String name = querySplit[Constants.ONE].replaceAll(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
-                    String mail = querySplit[Constants.TWO];
+                if (querySplit.length == Constants.FIVE) {
+                    String id = querySplit[Constants.TWO];
+                    String name = querySplit[Constants.THREE].replaceAll(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
+                    String mail = querySplit[Constants.FOUR];
 
                     Cashier newCash = addCashier(id, mail, name);
 
                     return View.getString(newCash);
-                } else if (querySplit.length == Constants.TWO) {
-                    String name = querySplit[Constants.ZERO];
-                    String mail = querySplit[Constants.ONE];
+                } else if (querySplit.length == Constants.FOUR) {
+                    String name = querySplit[Constants.TWO];
+                    String mail = querySplit[Constants.THREE];
 
                     Cashier newCash = addCash(mail, name);
 
@@ -59,7 +54,7 @@ public class CashierController {
                 return e.getMessage();
             }
 
-        } else if (query.startsWith(Constants.CASH_REMOVE)) {
+        } /*else if (query.startsWith(Constants.CASH_REMOVE)) {
             cashierRegex.append(Constants.CASH_REMOVE)
                     .append(Constants.REGEX_BLANK_SPACE);
 
@@ -120,7 +115,7 @@ public class CashierController {
 
             return builder.toString();
 
-        } else {
+        }*/ else {
             throw  new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
         }
     }

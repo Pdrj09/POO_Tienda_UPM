@@ -25,6 +25,8 @@ public class Constants {
     public static final int QUERY_PRODUCT_POS_PRICE_FOODMEETING = 3;
     public static final int QUERY_PRODUCT_POS_EXPIRATION = 4;
     public static final int QUERY_PRODUCT_POS_MAXPEOPLE = 5;
+
+    public static final int QUERY_CASH_POS_INSTRUCTION = 1;
     // numbers
     public static final int ZERO = 0;
     public static final int ONE = 1;
@@ -71,7 +73,7 @@ public class Constants {
     public static final String REGEX_DOUBLE_QUOTE = "\"";
     public static final String REGEX_TO_SPLIT = " (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
     public static final String REGEX_PERSONALIZED = "(?<=--p)";
-    public static final String REGEX_CASH_ID = "^\\{7}UW$";
+    public static final String REGEX_CASH_ID = "^UW\\d{7}$";
 
     // products const
     public static final String PRODUCT = "prod";
