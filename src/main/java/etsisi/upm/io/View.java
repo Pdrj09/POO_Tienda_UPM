@@ -43,6 +43,18 @@ public class View {
                 arrList.add(java.lang.reflect.Array.get(element, i));
             sb.append(buildTable(arrList, arrList.get(0).getClass()));
         }
+        //maps
+        else if (element instanceof Map<?, ?> map) {
+            if (map.isEmpty())
+                return MSG_NOTHING_TO_SHOW + "\n";
+            StringBuilder s = new StringBuilder();
+            for (Map.Entry<?, ?> e : map.entrySet()) {
+                s.append("{ ")
+                        .append(e.getKey()).append(": ").append(e.getValue())
+                        .append(" }\n");
+            }
+            return getString(s.toString(), command);
+        }
         //strings
         else if (element instanceof String s) {
             s = s.trim();
