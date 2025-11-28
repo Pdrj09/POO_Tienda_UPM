@@ -1,6 +1,7 @@
 package etsisi.upm.controllers;
 
 import etsisi.upm.Constants;
+import etsisi.upm.io.View;
 import etsisi.upm.models.Product;
 import etsisi.upm.models.Ticket;
 import etsisi.upm.models.repositories.*;
@@ -26,7 +27,7 @@ public class TicketController {
         this.productRepository = productRepository;
     }
 
-    public Object decodeQuery(String[] querySplit) {
+    public String decodeQuery(String[] querySplit) {
         String ticketId, cashierId, clientId;
         int prodId, amount;
         switch (querySplit[Constants.QUERY_TICKET_POS_INSTRUCTION]){
@@ -36,7 +37,7 @@ public class TicketController {
                 cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID];
                 clientId = querySplit[Constants.QUERY_TICKET_POS_USERID];
 
-                return this.newTicket(ticketId, cashierId, clientId);
+                return View.getString(this.newTicket(ticketId, cashierId, clientId));
 
             case Constants.TICKET_ADD:
 
@@ -61,7 +62,7 @@ public class TicketController {
                     }
                 }
 
-                return this.addProductToTicket(ticketId, cashierId, prodId, amount, customizations);
+                return View.getString(this.addProductToTicket(ticketId, cashierId, prodId, amount, customizations));
 
             case Constants.TICKET_REMOVE:
 
@@ -69,7 +70,7 @@ public class TicketController {
                 cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID];
                 prodId = Integer.parseInt(querySplit[Constants.QUERY_TICKET_POS_PRODID]);
 
-                return this.removeProductFromTicket(ticketId,cashierId,prodId);
+                return View.getString(this.removeProductFromTicket(ticketId,cashierId,prodId));
 
             case Constants.TICKET_PRINT:
 
@@ -80,7 +81,7 @@ public class TicketController {
                 break;
             case Constants.TICKET_LIST:
 
-                return this.getTicketList();
+                return View.getString(this.getTicketList());
 
             default:
                 throw new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);

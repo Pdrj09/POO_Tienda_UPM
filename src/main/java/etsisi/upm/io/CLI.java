@@ -125,7 +125,7 @@ public class CLI {
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
 
         try {
-            this.ticketController.decodeQuery(querySplit);
+            System.out.println(this.ticketController.decodeQuery(querySplit));
         }catch (IndexOutOfBoundsException e){
             System.out.println(Constants.errorStatus(Constants.TICKET,Constants.ERROR_STATUS,Constants.ERROR_FEW_PARAMS));
         }catch (Exception e) {
