@@ -29,6 +29,7 @@ public class TicketController {
 
     public String decodeQuery(String[] querySplit) {
         String ticketId, cashierId, clientId;
+        String command = Constants.TICKET + querySplit[Constants.QUERY_TICKET_POS_INSTRUCTION];
         int prodId, amount;
         System.out.println(Arrays.toString(querySplit));
         switch (querySplit[Constants.QUERY_TICKET_POS_INSTRUCTION]){
@@ -39,12 +40,12 @@ public class TicketController {
                     cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID];
                     clientId = querySplit[Constants.QUERY_TICKET_POS_USERID];
 
-                    return View.getString(this.newTicket(ticketId, cashierId, clientId));
+                    return View.getString(this.newTicket(ticketId, cashierId, clientId), command);
                 } else if (querySplit.length == Constants.QUERY_TICKET_ADD_LENGHT_WITHOUTID) {
                     cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID-1];
                     clientId = querySplit[Constants.QUERY_TICKET_POS_USERID-1];
 
-                    return View.getString(this.newTicket(null,cashierId, clientId));
+                    return View.getString(this.newTicket(null,cashierId, clientId), command);
                 }
 
             case Constants.TICKET_ADD:
@@ -70,7 +71,7 @@ public class TicketController {
                     }
                 }
 
-                return View.getString(this.addProductToTicket(ticketId, cashierId, prodId, amount, customizations));
+                return View.getString(this.addProductToTicket(ticketId, cashierId, prodId, amount, customizations), command);
 
             case Constants.TICKET_REMOVE:
 
@@ -78,17 +79,17 @@ public class TicketController {
                 cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID];
                 prodId = Integer.parseInt(querySplit[Constants.QUERY_TICKET_POS_PRODID]);
 
-                return View.getString(this.removeProductFromTicket(ticketId,cashierId,prodId));
+                return View.getString(this.removeProductFromTicket(ticketId,cashierId,prodId), command);
 
             case Constants.TICKET_PRINT:
 
                 ticketId = querySplit[Constants.QUERY_TICKET_POS_TICKETID];
                 cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID];
-                return View.getString(this.printTicket(ticketId,cashierId));
+                return View.getString(this.printTicket(ticketId,cashierId), command);
 
             case Constants.TICKET_LIST:
 
-                return View.getString(this.getTicketList());
+                return View.getString(this.getTicketList(), command);
 
             default:
                 throw new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
