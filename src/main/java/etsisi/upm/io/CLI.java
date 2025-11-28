@@ -104,7 +104,7 @@ public class CLI {
                 clientController.removeClients(id);
                 System.out.println(Constants.okStatus(Constants.CLIENT, Constants.CLIENT_REMOVE));
             } else if (query.contains(Constants.CLIENT_LIST)) {
-                View.print(clientController.listClients(), Client.class);
+                //View.toString(clientController.listClients());
                 System.out.println(Constants.okStatus(Constants.CLIENT, Constants.CLIENT_LIST));
             }
         } catch (Exception e) {
@@ -135,35 +135,10 @@ public class CLI {
 
 
     private void cashQuery(String query){
-        String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         try {
-            if (query.contains(Constants.CASH_ADD)) {
-                //cash add [<id>] "<nombre>" <email>
-                //TODO pasarle los parámetros por cachitos hasta añadirlo
-                //String response = cashierController.addCashier(query);
-                //ViewCLI.print(response);
-                System.out.println(Constants.okStatus(Constants.CASH, Constants.CASH_ADD));
-
-            } else if (query.contains(Constants.CASH_REMOVE)) {
-                if (cashierController.removeCashier(querySplit[Constants.ONE]) != null)
-                    System.out.println(Constants.okStatus(Constants.CASH, Constants.CASH_REMOVE));
-                else
-                    System.out.println(Constants.errorStatus(Constants.CASH, Constants.CASH_REMOVE, "Cashier not found"));
-
-            } else if (query.contains(Constants.CASH_LIST)) {
-                //cash list
-                View.print(cashierController.listCashiers(), Cashier.class);
-                System.out.println(Constants.okStatus(Constants.CASH, Constants.CASH_LIST));
-
-            } else if (query.contains(Constants.CASH_TICKETS)) {
-                //cash tickets <id>
-                //TODO hacer que printeé los tickets asociados a un cajero, hay que modificar el método listTickets
-                String cashId = querySplit[1];
-                //ViewCLI.printTickets(cashierController.listTickets(cashId));
-                System.out.println(Constants.okStatus(Constants.CASH, Constants.CASH_TICKETS));
-            }
-        } catch (Exception e) {
-            System.out.println(Constants.errorStatus(Constants.CASH, "Error", e.getMessage()));
+            System.out.println(this.cashierController.cashierQuery(query));
+        }catch (Exception e) {
+            System.out.println(Constants.errorStatus(Constants.PROD, e.toString()));
         }
     }
 
