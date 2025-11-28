@@ -97,18 +97,9 @@ public class CLI {
     private void clientQuery(String query){
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         try {
-            if (query.contains(Constants.CLIENT_ADD)) {
-                System.out.println(clientController.clientAddControl(querySplit));
-            } else if (query.contains(Constants.CLIENT_REMOVE)) {
-                String id = querySplit[1];
-                clientController.removeClients(id);
-                System.out.println(Constants.okStatus(Constants.CLIENT, Constants.CLIENT_REMOVE));
-            } else if (query.contains(Constants.CLIENT_LIST)) {
-                //View.toString(clientController.listClients());
-                System.out.println(Constants.okStatus(Constants.CLIENT, Constants.CLIENT_LIST));
-            }
-        } catch (Exception e) {
-            System.out.println(Constants.errorStatus(Constants.CLIENT, "Error", e.getMessage()));
+            System.out.println(this.clientController.clientQuery(querySplit));
+        }catch (Exception e) {
+            System.out.println(Constants.errorStatus(Constants.CLIENT, e.toString()));
         }
     }
 

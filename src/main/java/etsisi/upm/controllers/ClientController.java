@@ -20,28 +20,18 @@ public class ClientController {
         this.cashierRepository = cashierRepository;
     }
 
-    public String clientQuery(String query) {
+    public String clientQuery(String[] query) {
         StringBuilder regex = new StringBuilder();
         regex.append(Constants.REGEX_INIT);
 
-        if (query.startsWith(Constants.CLIENT_ADD)) {
-            regex.append(Constants.CLIENT_ADD)
-                    .append(Constants.REGEX_BLANK_SPACE);
-            query = query.replaceFirst(Constants.CLIENT_ADD, Constants.STR_EMPTY);
-
-            String[] querySplit = query.split(Constants.REGEX_INIT);
-
-            if (querySplit.length != Constants.FIVE) {
-                throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
+        if (query[Constants.QUERY_CASH_POS_INSTRUCTION].equals(Constants.CASH_ADD)) {
+            if (query.length == Constants.QUERY_CLIENT_POS_MAXARGS){
+                Client newClient = addClient(query[Constants.TWO], query[Constants.THREE],
+                        query[Constants.FOUR], query[Constants.FIVE]);
+                return View.getString(newClient);
             }
-
-            Client newClient = addClient(querySplit[Constants.ONE], querySplit[Constants.TWO],
-                                            querySplit[Constants.THREE],  querySplit[Constants.FOUR]);
-
-            return View.getString(newClient);
-
-
-        } else if (query.startsWith(Constants.CLIENT_LIST)) {
+        }/*
+        else if (query.startsWith(Constants.CLIENT_LIST)) {
             regex.append(Constants.CLIENT_LIST)
                     .append(Constants.REGEX_BLANK_SPACE);
             query = query.replaceFirst(Constants.CLIENT_LIST, Constants.STR_EMPTY);
@@ -61,29 +51,30 @@ public class ClientController {
                     .append(Constants.REGEX_BLANK_SPACE);
             query = query.replaceFirst(Constants.CLIENT_REMOVE, Constants.STR_EMPTY);
 
-            String[] querySplit = query.split(Constants.REGEX_INIT);
+            String[] query = query.split(Constants.REGEX_INIT);
 
-            if (querySplit.length != Constants.TWO) {
+            if (query.length != Constants.TWO) {
                 throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
             }
 
-            return View.getString(removeClients(querySplit[Constants.ONE]));
+            return View.getString(removeClients(query[Constants.ONE]));
 
         } else {
             throw new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
-        }
+        }*/
+        return "error";
     }
 
-    public String clientAddControl(String[] querySplit){
+    public String clientAddControl(String[] query){
         //client add "<nombre>" <DNI> <email> <cashId>
         // Client{identifier='Y8682724P', name='Pepe1', email='pepe3@upm.es', cash=UW1234567}
         //client add: ok
         StringBuilder builder = new StringBuilder();
 
-        String name = querySplit[Constants.ONE];
-        String dni = querySplit[Constants.TWO];
-        String email = querySplit[Constants.THREE];
-        String UW = querySplit[Constants.FOUR];
+        String name = query[Constants.ONE];
+        String dni = query[Constants.TWO];
+        String email = query[Constants.THREE];
+        String UW = query[Constants.FOUR];
 
         builder.append(View.getString(addClient(name,dni, email,UW)));
         builder.append("/n");
@@ -93,14 +84,11 @@ public class ClientController {
     }
 
     private Client addClient(String name, String dni, String email, String UW) {
-        if (cashierRepository.findByIdOrThrow(dni)!=null) {
-            Client client = new Client(dni, name, email, UW);
-            clientRepository.add(dni, client);
 
-            return client;
-        } else  {
-            throw new IllegalArgumentException(CASIER_NOT_EXIST);
-        }
+        Client client = new Client(dni, name, email, UW);
+        clientRepository.add(dni, client);
+
+        return client;
     }
 
 
