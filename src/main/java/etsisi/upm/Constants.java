@@ -3,6 +3,13 @@ package etsisi.upm;
 public class Constants {
 
 
+    public static final int ZERO = 0;
+    public static final int ONE = 1;
+    public static final int TWO = 2;
+    public static final int THREE = 3;
+    public static final int FOUR = 4;
+    public static final int FIVE = 5;
+
     public static final int QUERY_SUCCESS = 1;
     public  static final int QUERY_EXIT = 0;
 
@@ -25,16 +32,7 @@ public class Constants {
     public static final int QUERY_PRODUCT_POS_PRICE_FOODMEETING = 3;
     public static final int QUERY_PRODUCT_POS_EXPIRATION = 4;
     public static final int QUERY_PRODUCT_POS_MAXPEOPLE = 5;
-    // numbers
-    public static final int ZERO = 0;
-    public static final int ONE = 1;
-    public static final int TWO = 2;
-    public static final int THREE = 3;
-    public static final int FOUR = 4;
-    public static final int FIVE = 5;
-    public static final int SIX = 6;
-    public static final int SEVEN = 7;
-    public static final int NINE = 9;
+
 
     public static final int NON_SIZE = -1;
     public static final int MAX_SIZE = 200;
@@ -73,7 +71,7 @@ public class Constants {
     public static final String REGEX_DOUBLE_QUOTE = "\"";
     public static final String REGEX_TO_SPLIT = " (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
     public static final String REGEX_PERSONALIZED = "(?<=--p)";
-    public static final String REGEX_CASH_ID = "^\\{7}UW$";
+    public static final String REGEX_CASH_ID = "^UW\\d{7}$";
 
     // products const
     public static final String PRODUCT = "prod";

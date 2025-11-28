@@ -13,7 +13,7 @@ public class Product implements Comparable<Product> {
     private double price;
     private Categories category;
     private boolean personalizable;
-    private int maxPers;
+    private int maxPers = 0;
     public static final int maxPeople = 100;
 
 //Variables to avoid magic numbers
@@ -24,6 +24,7 @@ public class Product implements Comparable<Product> {
     protected static final String STR_CATEGORY = ", category:";
     protected static final String SINGLE_QUOTE = "'";
     protected static final String STR_PRICE = ", price:";
+    protected static final String STR_PERS = ", maxPersonal:";
     protected static final String CLOSE_BRACE = "}";
 
 
@@ -58,15 +59,28 @@ public class Product implements Comparable<Product> {
     //toString method
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(OPEN_BRACE);
-        builder.append(STR_PRODUCT);
-        builder.append(STR_ID).append(id);
-        builder.append(STR_NAME).append(name).append(SINGLE_QUOTE);
-        builder.append(STR_CATEGORY).append(category);
-        builder.append(STR_PRICE).append(price);
-        builder.append(CLOSE_BRACE);
-        return builder.toString();
+        if (maxPers == 0){
+            StringBuilder builder = new StringBuilder();
+            builder.append(OPEN_BRACE);
+            builder.append(STR_PRODUCT);
+            builder.append(STR_ID).append(id);
+            builder.append(STR_NAME).append(name).append(SINGLE_QUOTE);
+            builder.append(STR_CATEGORY).append(category);
+            builder.append(STR_PRICE).append(price);
+            builder.append(CLOSE_BRACE);
+            return builder.toString();
+        }else {
+            StringBuilder builder = new StringBuilder();
+            builder.append(OPEN_BRACE);
+            builder.append(STR_PRODUCT);
+            builder.append(STR_ID).append(id);
+            builder.append(STR_NAME).append(name).append(SINGLE_QUOTE);
+            builder.append(STR_CATEGORY).append(category);
+            builder.append(STR_PRICE).append(price);
+            builder.append(STR_PERS).append(maxPers);
+            builder.append(CLOSE_BRACE);
+            return builder.toString();
+        }
     }
 
     @Override
