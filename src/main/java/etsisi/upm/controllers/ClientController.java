@@ -90,9 +90,9 @@ public class ClientController {
         return builder.toString();
     }
 
-    private Client addClient(String name, String dni, String email, String UW) {
-        if (cashierRepository.findById(dni)!=null) {
-            Client client = new Client(dni, name, email, UW);
+    private Client addClient(String name, String dni, String email, String UpmWorker) {
+        if (cashierRepository.findById(UpmWorker)!=null) {
+            Client client = new Client(dni, name, email, UpmWorker);
             clientRepository.add(dni, client);
 
             return client;
