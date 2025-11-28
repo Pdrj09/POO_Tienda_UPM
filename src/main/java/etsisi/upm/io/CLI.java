@@ -47,7 +47,7 @@ public class CLI {
                     ticket list
                     prod add <id> "<name>" <category> <price>
                     prod update <id> NAME|CATEGORY|PRICE <value>
-                    prod addFood <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
+                    prod addMeal <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
                     prod addMeeting <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
                     prod list
                     prod remove <id>
@@ -111,7 +111,7 @@ public class CLI {
                 clientController.removeClients(id);
                 System.out.println(Constants.okStatus(Constants.CLIENT, Constants.CLIENT_REMOVE));
             } else if (query.contains(Constants.CLIENT_LIST)) {
-                View.print(clientController.listClients(), Client.class);
+                View.print(clientController.listClients());
                 System.out.println(Constants.okStatus(Constants.CLIENT, Constants.CLIENT_LIST));
             }
         } catch (Exception e) {
@@ -159,7 +159,7 @@ public class CLI {
 
             } else if (query.contains(Constants.CASH_LIST)) {
                 //cash list
-                View.print(cashierController.listCashiers(), Cashier.class);
+                View.print(cashierController.listCashiers());
                 System.out.println(Constants.okStatus(Constants.CASH, Constants.CASH_LIST));
 
             } else if (query.contains(Constants.CASH_TICKETS)) {
