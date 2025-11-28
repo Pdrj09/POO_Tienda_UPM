@@ -3,13 +3,6 @@ package etsisi.upm;
 public class Constants {
 
 
-    public static final int ZERO = 0;
-    public static final int ONE = 1;
-    public static final int TWO = 2;
-    public static final int THREE = 3;
-    public static final int FOUR = 4;
-    public static final int FIVE = 5;
-
     public static final int QUERY_SUCCESS = 1;
     public  static final int QUERY_EXIT = 0;
 
@@ -33,8 +26,23 @@ public class Constants {
     public static final int QUERY_PRODUCT_POS_EXPIRATION = 4;
     public static final int QUERY_PRODUCT_POS_MAXPEOPLE = 5;
 
+    public static final int QUERY_CASH_POS_INSTRUCTION = 1;
+    public static final int QUERY_CASH_POS_ID = 2;
+    public static final int QUERY_CASH_POS_NAME = 3;
+    public static final int QUERY_CASH_POS_EMAIL = 4;
+    public static final int QUERY_CASH_LENGTH_WITHID = 5;
+    public static final int QUERY_CASH_LENGTH_WITHOUTID = 4;
 
-    public static final int NON_SIZE = -1;
+    // numbers
+    public static final int ZERO = 0;
+    public static final int ONE = 1;
+    public static final int TWO = 2;
+    public static final int THREE = 3;
+    public static final int FOUR = 4;
+    public static final int FIVE = 5;
+    public static final int SIX = 6;
+    public static final int SEVEN = 7;
+
     public static final int MAX_SIZE = 200;
 
     // menu const
@@ -65,6 +73,9 @@ public class Constants {
     public static final String ERROR_FILE_NOTFOUND = "file not found";
     public static final String ERROR_PRICE = "No price for product";
     public static final String ERROR_INVALID_ID = "UW format incorrect";
+
+    public static final String ERROR_TOMANY_ARGUMENTS = "to many arguments";
+
     // regex const
     public static final String REGEX_INIT = "^";
     public static final String REGEX_BLANK_SPACE = "\\s*";
@@ -110,8 +121,8 @@ public class Constants {
     //Error const
     public static final String ERROR_NO_PRODUCTS_FOUND  = "No products found";
     public static final String DUPLICATED_ID_ERROR  = "The id given already exists please try again using a new one";
-    public static final String ERROR_MAXSIZE = "Repository full, maximum size of ";
-    public static final String ERROR_SERVICE_DATE_FEASIBILITY = "Error: The date must be at least ";
+    public static final int QUERY_CLIENT_POS_MAXARGS = 6;
+    public static final String ERROR_NO_CLIENTS_FOUND = "No clients found";
 
     public static String createGeneralRegex(String query) {
         StringBuilder stringBuilder;

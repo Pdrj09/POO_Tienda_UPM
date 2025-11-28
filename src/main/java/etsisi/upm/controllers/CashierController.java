@@ -21,119 +21,63 @@ public class CashierController {
         this.repository = repository;
     }
 
-    public String cashierQuery(String query) {
+    public String cashierQuery(String[] querySplit) {
         StringBuilder cashierRegex = new StringBuilder();
         cashierRegex.append(Constants.REGEX_INIT);
-
-        if (query.startsWith(Constants.CASH_ADD)) {
-            try {
-                cashierRegex.append(Constants.CASH_ADD)
-                        .append(Constants.REGEX_BLANK_SPACE);
-
-                query = query.replaceFirst(cashierRegex.toString(), Constants.STR_EMPTY);
-
-                String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
-
-                if (querySplit.length == Constants.THREE) {
-                    String id = querySplit[Constants.ZERO];
-                    String name = querySplit[Constants.ONE].replaceAll(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
-                    String mail = querySplit[Constants.TWO];
+        String instruction = querySplit[Constants.QUERY_CASH_POS_INSTRUCTION];
+        switch (instruction) {
+            case Constants.CASH_ADD:
+                if (querySplit.length == Constants.QUERY_CASH_LENGTH_WITHID) {
+                    String id = querySplit[Constants.QUERY_CASH_POS_ID];
+                    String name = querySplit[Constants.QUERY_CASH_POS_NAME].replaceAll(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
+                    String mail = querySplit[Constants.QUERY_CASH_POS_EMAIL];
 
                     Cashier newCash = addCashier(id, mail, name);
 
-                    return View.print(newCash).toString();
-                } else if (querySplit.length == Constants.TWO) {
-                    String name = querySplit[Constants.ZERO];
-                    String mail = querySplit[Constants.ONE];
+                    return View.getString(newCash);
+                } else if (querySplit.length == Constants.QUERY_CASH_LENGTH_WITHOUTID) {
+                    int index = 1;
+                    String name = querySplit[Constants.QUERY_CASH_POS_NAME - index];
+                    String mail = querySplit[Constants.QUERY_CASH_POS_EMAIL - index];
 
-                    Cashier newCash = addCash(mail, name);
+                    Cashier newCash = addCashier(mail, name);
 
-                    return View.print(newCash).toString();
+                    return View.getString(newCash);
                 } else {
                     throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
-
                 }
 
+            case Constants.CASH_REMOVE:
 
-            } catch (Exception e) {
-                return e.getMessage();
-            }
-            
-        } else if (query.startsWith(Constants.CASH_REMOVE)) {
-            cashierRegex.append(Constants.CASH_REMOVE)
-                        .append(Constants.REGEX_BLANK_SPACE);
+                Cashier cashier = removeCashier(querySplit[Constants.QUERY_CASH_POS_ID]);
 
-            query = query.replaceFirst(cashierRegex.toString(), Constants.STR_EMPTY);
+                return View.getString(cashier);
+            case Constants.CASH_LIST:
 
-            String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
+                if (querySplit.length == Constants.QUERY_CASH_POS_INSTRUCTION + 1) {
+                    return View.getString(listCashiers());
+                } else {
+                    throw new IllegalArgumentException(Constants.ERROR_TOMANY_ARGUMENTS);
+                }
+            case Constants.CASH_TICKETS:
 
-            if (querySplit.length != Constants.ONE) {
-                throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
-            }
-
-            Cashier cashier = removeCashier(querySplit[Constants.ZERO]);
-
-            return View.print(cashier).toString();
-
-        } else if (query.startsWith(Constants.CASH_LIST)) {
-            cashierRegex.append(Constants.CASH_LIST)
-                        .append(Constants.REGEX_BLANK_SPACE);
-
-            query = query.replaceFirst(cashierRegex.toString(), Constants.STR_EMPTY);
-
-            if(query.equals(Constants.STR_EMPTY)) {
-                Collection<Cashier> cashiers = listCashiers();
-            } else {
-                // TODO dar un codigo de error personalizado
-                throw  new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
-            }
-
-            Collection<Cashier> cashiers = listCashiers();
-
-            return View.print(cashiers);
-
-        } else if (query.startsWith(Constants.CASH_TICKETS)) {
-            cashierRegex.append(Constants.CASH_TICKETS)
-                        .append(Constants.REGEX_BLANK_SPACE);
-
-            query = query.replaceFirst(cashierRegex.toString(), Constants.STR_EMPTY);
-
-            String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
-            if (querySplit.length != Constants.ONE) {
-                throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
-            }
-
-            Collection<String> tickets = listTickets(querySplit[Constants.ZERO]);
-
-            StringBuilder builder = new StringBuilder();
-
-            for(String ticket : tickets) {
-                builder.append(View.print(ticket));
-            }
-
-            return builder.toString();
-
-        } else {
-            throw  new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
+                return View.getString(listTickets(querySplit[Constants.QUERY_CASH_POS_ID]));
+            default:
+                throw new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
         }
     }
 
-    private Cashier addCash(String emailCompany, String name) {
+    private Cashier addCashier(String emailCompany, String name) {
         String cashierId = generateCashierId();
+        return addCashier(cashierId,emailCompany,name);
+    }
+
+    private Cashier addCashier(String cashierId, String emailCompany, String name) {
+        if(!cashierId.matches(Constants.REGEX_CASH_ID)) throw new InvalidParameterException(Constants.ERROR_INVALID_ID);
 
         Cashier cashier =  Cashier.create(cashierId, emailCompany, name);
 
         repository.add(cashierId, cashier);
-
-        return cashier;
-    }
-
-    private Cashier addCashier(String cahierId, String emailCompany, String name) {
-        Cashier cashier =  Cashier.create(cahierId, emailCompany, name);
-
-        if(!cahierId.matches(Constants.REGEX_CASH_ID)) throw new InvalidParameterException(Constants.ERROR_INVALID_ID);
-
-        repository.add(cahierId, cashier);
 
         return cashier;
     }
@@ -147,11 +91,11 @@ public class CashierController {
     }
 
     private Set<String> listTickets(String cashierId) {
-        return repository.findById(cashierId).getTickets();
+        return repository.findByIdOrThrow(cashierId).getTickets();
     }
 
     private Boolean existCashier(String cashierId) {
-        return repository.findById(cashierId) != null;
+        return repository.findByIdOrThrow(cashierId) != null;
     }
 
     private String generateCashierId(){

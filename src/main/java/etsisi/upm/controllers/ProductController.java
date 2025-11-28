@@ -10,7 +10,6 @@ import etsisi.upm.models.Product;
 import etsisi.upm.models.Food;
 import etsisi.upm.models.Meeting;
 
-import javax.management.Query;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -182,7 +181,7 @@ public class ProductController {
     }
 
     private Product updateProduct(int id, String field, String newContent) {
-        Product productToUpdate = this.productRepository.findById(id);
+        Product productToUpdate = this.productRepository.findByIdOrThrow(id);
         if (productToUpdate == null) throw new IllegalArgumentException(ERROR_ID_NONEXISTENT);
         switch (field) {
             case NAME:
@@ -204,7 +203,7 @@ public class ProductController {
     }
 
     private Product deleteProduct(int prodId) {
-        Product productToDelete = this.productRepository.findById(prodId);
+        Product productToDelete = this.productRepository.findByIdOrThrow(prodId);
         if (productToDelete != null){
             Collection<Ticket> tickets = this.ticketRepository.findAll();
             for (Ticket ticket : tickets){

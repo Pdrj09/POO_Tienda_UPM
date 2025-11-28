@@ -1,6 +1,7 @@
 package etsisi.upm.controllers;
 
 import etsisi.upm.Constants;
+import etsisi.upm.io.View;
 import etsisi.upm.models.Product;
 import etsisi.upm.models.Ticket;
 import etsisi.upm.models.repositories.*;
@@ -26,7 +27,7 @@ public class TicketController {
         this.productRepository = productRepository;
     }
 
-    public Object decodeQuery(String[] querySplit) {
+    public String decodeQuery(String[] querySplit) {
         String ticketId, cashierId, clientId;
         int prodId, amount;
         switch (querySplit[Constants.QUERY_TICKET_POS_INSTRUCTION]){
@@ -36,7 +37,7 @@ public class TicketController {
                 cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID];
                 clientId = querySplit[Constants.QUERY_TICKET_POS_USERID];
 
-                return this.newTicket(ticketId, cashierId, clientId);
+                return View.getString(this.newTicket(ticketId, cashierId, clientId));
 
             case Constants.TICKET_ADD:
 
@@ -61,7 +62,7 @@ public class TicketController {
                     }
                 }
 
-                return this.addProductToTicket(ticketId, cashierId, prodId, amount, customizations);
+                return View.getString(this.addProductToTicket(ticketId, cashierId, prodId, amount, customizations));
 
             case Constants.TICKET_REMOVE:
 
@@ -69,7 +70,7 @@ public class TicketController {
                 cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID];
                 prodId = Integer.parseInt(querySplit[Constants.QUERY_TICKET_POS_PRODID]);
 
-                return this.removeProductFromTicket(ticketId,cashierId,prodId);
+                return View.getString(this.removeProductFromTicket(ticketId,cashierId,prodId));
 
             case Constants.TICKET_PRINT:
 
@@ -80,7 +81,7 @@ public class TicketController {
                 break;
             case Constants.TICKET_LIST:
 
-                return this.getTicketList();
+                return View.getString(this.getTicketList());
 
             default:
                 throw new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
@@ -95,7 +96,7 @@ public class TicketController {
     }
 
     private Ticket getTicket(String ticketId){
-        return this.ticketRepository.findById(ticketId);
+        return this.ticketRepository.findByIdOrThrow(ticketId);
     }
     private List<Ticket> getTicketList(){
         List<Ticket> ticketList = new ArrayList<Ticket>();
@@ -104,7 +105,7 @@ public class TicketController {
         for (Map.Entry<String, Cashier> entry : sortedCashiers.entrySet()){
             Set<String> ticketIds = entry.getValue().getTickets();
             for (String ticketId : ticketIds){
-                ticketList.add(this.ticketRepository.findById(ticketId));
+                ticketList.add(this.ticketRepository.findByIdOrThrow(ticketId));
             }
         }
         return ticketList;
@@ -116,8 +117,8 @@ public class TicketController {
 
     private Ticket removeTicket(String ticketId, String cashierId, String clientId){
         Ticket ticket = this.ticketRepository.removeById(ticketId);
-        Cashier cashier = this.cashierRepository.findById(cashierId);
-        Client client = this.clientRepository.findById(clientId);
+        Cashier cashier = this.cashierRepository.findByIdOrThrow(cashierId);
+        Client client = this.clientRepository.findByIdOrThrow(clientId);
         cashier.deleteTicket(ticket);
         client.deleteTicket(ticket);
         return ticket;
@@ -125,8 +126,8 @@ public class TicketController {
 
 
     private Ticket addProductToTicket(String ticketId, String cahsierId, Integer productId, int amount, List<String> customizations){
-        Ticket ticket = this.ticketRepository.findById(ticketId);
-        Product product = this.productRepository.findById(productId);
+        Ticket ticket = this.ticketRepository.findByIdOrThrow(ticketId);
+        Product product = this.productRepository.findByIdOrThrow(productId);
 
         if (product == null) {
             throw new IllegalArgumentException("Can't find product.");
@@ -149,14 +150,14 @@ public class TicketController {
     }
 
     private Ticket removeProductFromTicket(String ticketId, String cahsierId, Integer productId){
-        Ticket ticket = this.ticketRepository.findById(ticketId);
-        Product product = this.productRepository.findById(productId);
+        Ticket ticket = this.ticketRepository.findByIdOrThrow(ticketId);
+        Product product = this.productRepository.findByIdOrThrow(productId);
         return ticket.remove(product);
     }
 
     //method were the ticked is closed and prepared for printing it (the view manage that)
     private Ticket printTicket(String ticketId, String cahsierId){
-        Ticket ticket = this.ticketRepository.findById(ticketId);
+        Ticket ticket = this.ticketRepository.findByIdOrThrow(ticketId);
         this.closeTicket(ticket);
         return ticket;
     }
