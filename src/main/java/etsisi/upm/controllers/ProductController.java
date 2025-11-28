@@ -67,13 +67,13 @@ public class ProductController {
                     if (querySplit.length > Constants.FIVE) {
                         maxPers = Integer.parseInt(querySplit[Constants.FIVE]);
                         StringBuilder response = new StringBuilder();
-                        response.append(View.getString(this.addProduct(name, querySplit[Constants.THREE], price, id, maxPers)));
+                        response.append(View.print(this.addProduct(name, querySplit[Constants.THREE], price, id, maxPers)));
                         response.append(Constants.ENTER_KEY);
                         response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
                         return response.toString();
                     } else {
                         StringBuilder response = new StringBuilder();
-                        response.append(View.getString(this.addProduct(name, querySplit[Constants.THREE], price, id)));
+                        response.append(View.print(this.addProduct(name, querySplit[Constants.THREE], price, id)));
                         response.append(Constants.ENTER_KEY);
                         response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
                         return response.toString();
@@ -90,13 +90,13 @@ public class ProductController {
                     if (querySplit.length > Constants.FOUR) {
                         maxPers = Integer.parseInt(querySplit[Constants.FOUR]);
                         StringBuilder response = new StringBuilder();
-                            response.append(View.getString(this.addProduct(name, querySplit[Constants.TWO], price, id, maxPers)));
+                            response.append(View.print(this.addProduct(name, querySplit[Constants.TWO], price, id, maxPers)));
                             response.append(Constants.ENTER_KEY);
                          response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
                         return response.toString();
                     } else {
                         StringBuilder response = new StringBuilder();
-                            response.append(View.getString(this.addProduct(name, querySplit[Constants.TWO], price, id)));
+                            response.append(View.print(this.addProduct(name, querySplit[Constants.TWO], price, id)));
                             response.append(Constants.ENTER_KEY);
                             response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
                         return response.toString();
