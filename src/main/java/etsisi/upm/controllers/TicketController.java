@@ -29,7 +29,7 @@ public class TicketController {
 
     public String decodeQuery(String[] querySplit) {
         String ticketId, cashierId, clientId;
-        String command = Constants.TICKET + querySplit[Constants.QUERY_TICKET_POS_INSTRUCTION];
+        String command = Constants.TICKET + " " + querySplit[Constants.QUERY_TICKET_POS_INSTRUCTION];
         int prodId, amount;
         System.out.println(Arrays.toString(querySplit));
         switch (querySplit[Constants.QUERY_TICKET_POS_INSTRUCTION]){
