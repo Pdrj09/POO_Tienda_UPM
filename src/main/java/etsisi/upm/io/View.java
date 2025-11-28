@@ -1,12 +1,7 @@
 package etsisi.upm.io;
 
-import etsisi.upm.models.Product;
-import etsisi.upm.models.Ticket;
-import etsisi.upm.models.users.Cashier;
-import etsisi.upm.models.users.Client;
+import etsisi.upm.Constants;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.Collection;
 
 public class View {
@@ -15,113 +10,54 @@ public class View {
     private static final String YELLOW = "\u001B[33m";
     private static final String CYAN = "\u001B[36m";
 
-    //messages
     private static final String MSG_NOTHING_TO_SHOW = YELLOW + "[!] No items to display." + RESET;
+    private static final String MSG_INFO_PREFIX = CYAN + "[INFO]" + RESET + " ";
 
-    //Here we print an object w/ toString()
-    public static <T> StringBuilder print(T element) {
+    public static <T> String print(T element) {
         StringBuilder sb = new StringBuilder();
+
         if (element == null) {
-            sb.append(MSG_NOTHING_TO_SHOW).append("\n");
-            return sb;
+            sb.append(MSG_NOTHING_TO_SHOW).append(Constants.ENTER_KEY);
+            return sb.toString();
         }
-        //for collections
+
+        //collections
         if (element instanceof Collection<?> collection) {
             if (collection.isEmpty()) {
-                sb.append(emptyMessage(null)).append("\n");
-                return sb;
+                sb.append(MSG_NOTHING_TO_SHOW).append(Constants.ENTER_KEY);
+                return sb.toString();
             }
-            //for knowing the first type of the element
-            Class<?> itemType = collection.iterator().next().getClass();
-            sb.append(buildTable(collection, itemType));
-            return sb;
-        }
-
-        sb.append(buildTable(java.util.List.of(element), element.getClass()));
-        return sb;
-    }
-
-    private static String buildTable(Collection<?> collection, Class<?> itemType) {
-        StringBuilder sb = new StringBuilder();
-
-        Field[] fields = itemType.getDeclaredFields();
-        for (Field f :fields) f.setAccessible(true);
-        //we calculate the widths
-        int[] colWidths = new int[fields.length];
-        for (int i = 0; i <fields.length; i++)
-            colWidths[i] = fields[i].getName().length();
-        for (Object obj :collection) {
-            for (int i = 0; i < fields.length;i++) {
-                try {
-                    Object value = fields[i].get(obj);
-                    int len = value!=null?value.toString().length(): 4; //for null
-                    if (len >colWidths[i]) colWidths[i] = len;
-                } catch (Exception ignored) {}
+            for (Object item : collection) {
+                sb.append(typeHeader(item));
+                sb.append(MSG_INFO_PREFIX).append(item.toString()).append(Constants.ENTER_KEY);
             }
+            return sb.toString();
         }
-        
-        String title = " " + itemType.getSimpleName().toLowerCase() + " ";
-        int totalWidth = Arrays.stream(colWidths).sum()+fields.length * 3 + 1;
 
-        //header
-        sb.append(YELLOW)
-                .append("┌")
-                .append(centerTitle(totalWidth - 2, title))
-                .append("┐")
-                .append("\n");
-
-        //columns names
-        sb.append("│ ");
-        for (int i = 0; i <fields.length; i++) {
-            sb.append(String.format("%-" + colWidths[i] + "s │ ", fields[i].getName()));
-        }
-        sb.append("\n");
-
-        //separator
-        sb.append("├");
-        for (int width :colWidths) {
-            sb.append("─".repeat(width +2)).append("┼");
-        }
-        sb.setLength(sb.length()- 1); //the last one out
-        sb.append("\n");
-
-        //rows
-        sb.append(CYAN);
-        for (Object obj : collection) {
-            sb.append("│ ");
-            for (int i = 0; i < fields.length; i++) {
-                try {
-                    Object value =fields[i].get(obj);
-                    String val = value != null ? value.toString() : "null";
-                    sb.append(String.format("%-" + colWidths[i] + "s │ ", val));
-                } catch (Exception e) {
-                    sb.append("ERROR │ ");
-                }
+        //arrays
+        if (element.getClass().isArray()) {
+            int length = java.lang.reflect.Array.getLength(element);
+            if (length == 0) {
+                sb.append(MSG_NOTHING_TO_SHOW).append(Constants.ENTER_KEY);
+                return sb.toString();
             }
-            sb.append("\n");
+            for (int i = 0; i < length; i++) {
+                Object item = java.lang.reflect.Array.get(element, i);
+                sb.append(typeHeader(item));
+                sb.append(MSG_INFO_PREFIX).append(item.toString()).append(Constants.ENTER_KEY);
+            }
+            return sb.toString();
         }
 
-        //footer
-        sb.append(CYAN)
-                .append("└")
-                .append("─".repeat(totalWidth - 2))
-                .append("┘")
-                .append(RESET)
-                .append("\n");
-
+        //single object
+        sb.append(typeHeader(element));
+        sb.append(MSG_INFO_PREFIX).append(element).append(Constants.ENTER_KEY);
         return sb.toString();
     }
 
-    private static String centerTitle(int i, String title) {
-        int padding = (i-title.length())/2;
-        return "─".repeat(padding) +title +"─".repeat(i - padding - title.length());
-    }
-
-
-    //Prints custom empty message based on class type, reflexive
-    private static String emptyMessage(Class<?> type) {
-        if (type == null)
-            return MSG_NOTHING_TO_SHOW + "\n";
-        return YELLOW + "[!] No " + type.getSimpleName().toLowerCase() + "s found." + RESET;
+    //reflexive headers
+    private static String typeHeader(Object element) {
+        if (element == null) return MSG_NOTHING_TO_SHOW + Constants.ENTER_KEY;
+        return CYAN + "--- " + element.getClass().getSimpleName() + " info ---" + RESET + Constants.ENTER_KEY;
     }
 }
