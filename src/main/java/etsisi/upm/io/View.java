@@ -87,16 +87,23 @@ public class View {
                 arrList.add(java.lang.reflect.Array.get(element, i));
             sb.append(buildTable(arrList, arrList.get(0).getClass()));
         }
-        //for maps
+        //for maps (this case for printing the tickets from cashier), future improve: reflexive access to the name
         else if (element instanceof Map<?, ?> map) {
             if (map.isEmpty())
                 return MSG_NOTHING_TO_SHOW + "\n";
-            StringBuilder s = new StringBuilder();
-            //for-each for the map
+            StringBuilder sbStr = new StringBuilder();
+            //We convert the entries to a string that our KV regex knows to print the table with recursion
             for (Map.Entry<?, ?> e : map.entrySet()) {
-                s.append("{ ").append(e.getKey()).append(": ").append(e.getValue()).append(" }\n");
+                sbStr.append("{ class:")
+                        .append("Ticket")
+                        .append(", id: ")
+                        .append(String.valueOf(e.getKey()))
+                        .append(", state: ")
+                        .append(String.valueOf(e.getValue()))
+                        .append(" }\n");
             }
-            return getString(s.toString(), command);
+            //recursive call after the parse
+            return getString(sbStr.toString(), command);
         }
         //for stirngs
         else if (element instanceof String s) {
@@ -115,7 +122,8 @@ public class View {
                     int classIndex = line.indexOf("class:");
                     if (classIndex != -1) {
                         int commaIndex = line.indexOf(",", classIndex);
-                        if (commaIndex == -1) commaIndex = line.length() - 1;
+                        if (commaIndex == -1)
+                            commaIndex = line.length() - 1;
                         tableTitle = line.substring(classIndex + 6, commaIndex).trim();
                     }
 
@@ -125,7 +133,7 @@ public class View {
                     List<KV> kvs = new ArrayList<>();
                     for (String p : parts) {
                         String[] kv = p.split(":", 2);
-                        if (kv.length == 2)
+                        if (kv.length == 2 && !kv[0].trim().equals("class"))
                             kvs.add(new KV(kv[0].trim(), kv[1].trim()));
                     }
                     allLinesKV.add(kvs);
@@ -286,7 +294,9 @@ public class View {
                 "associatedClients",
                 "associatedTickets",
                 "personalizable",
-                "maxPers"
+                "maxPers",
+                "list",
+                "categories"
         );
         while (type != null && type != Object.class) {
             for (Field f : type.getDeclaredFields()) {
