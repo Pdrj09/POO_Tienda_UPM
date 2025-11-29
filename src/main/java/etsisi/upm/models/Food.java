@@ -6,10 +6,8 @@ import java.time.temporal.ChronoUnit;
 
 public class Food extends ServiceProduct {
 
-    private static final String STR_FOOD = "class:Food";
-
-    public Food(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
-        super(id, name, pricePerPerson, maxPeople, expirationDate);
+    public Food(int id, String name, double pricePerPerson, int numPeople, LocalDateTime expirationDate) {
+        super(id, name, pricePerPerson, numPeople, expirationDate);
     }
 
     // Date rules
@@ -34,6 +32,6 @@ public class Food extends ServiceProduct {
     public String toString() {
         String parentToString = super.toString();
         // replace the name of the class
-        return parentToString.replace("class:ServiceProduct", STR_FOOD);
+        return parentToString.replace("class:ServiceProduct", Constants.STR_FOOD);
     }
 }

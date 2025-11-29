@@ -83,6 +83,12 @@ public class Constants {
 
     public static final String ERROR_TOMANY_ARGUMENTS = "to many arguments";
 
+    public static final String STR_FOOD = "class:Food";
+    public static final String STR_MEETING = "class:Meeting";
+    public static final String STR_PRICE_PERSON = ", pricePerPerson:";
+    public static final String STR_EXPIRATION = ", expiration:";
+    public static final String STR_SERVICE_PRODUCT = "class:ServiceProduct";
+
     // regex const
     public static final String REGEX_INIT = "^";
     public static final String REGEX_BLANK_SPACE = "\\s*";

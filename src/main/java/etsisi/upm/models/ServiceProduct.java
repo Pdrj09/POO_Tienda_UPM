@@ -8,10 +8,7 @@ import java.lang.Math;
 
 public abstract class ServiceProduct extends Product {
     private final LocalDateTime expirationDate;
-
-    private static final String STR_PRICE_PERSON = ", pricePerPerson:";
-    private static final String STR_EXPIRATION = ", expiration:";
-    private static final String STR_SERVICE_PRODUCT = "class:ServiceProduct";
+    private int numPeople;
 
     public ServiceProduct(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
         super(id,
@@ -19,8 +16,7 @@ public abstract class ServiceProduct extends Product {
                 pricePerPerson,
                 Categories.EMPTY);
 
-        int limitedMaxPeople = Math.min(maxPeople, Constants.TIME_MAX_PEOPLE_SERVICE);
-        super.setMaxPers(limitedMaxPeople);
+        numPeople = Math.min(maxPeople, Constants.TIME_MAX_PEOPLE_SERVICE);
 
         this.expirationDate = expirationDate;
 
@@ -60,16 +56,16 @@ public abstract class ServiceProduct extends Product {
         StringBuilder builder = new StringBuilder();
 
         builder.append(OPEN_BRACE);
-        builder.append(STR_SERVICE_PRODUCT);
+        builder.append(Constants.STR_SERVICE_PRODUCT);
         builder.append(STR_ID).append(getId());
         builder.append(STR_NAME).append(getName()).append(SINGLE_QUOTE);
         builder.append(STR_CATEGORY).append(getCategory());
 
         // use of the constant price per person
-        builder.append(STR_PRICE_PERSON).append(getPrice());
+        builder.append(Constants.STR_PRICE_PERSON).append(getPrice());
 
         // add of the specific attribute for service product
-        builder.append(STR_EXPIRATION).append(expirationDate);
+        builder.append(Constants.STR_EXPIRATION).append(expirationDate);
 
         builder.append(CLOSE_BRACE);
 
