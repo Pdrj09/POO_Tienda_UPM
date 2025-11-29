@@ -145,6 +145,9 @@ public class Constants {
     public static final int QUERY_CLIENT_POS_CLASS = 0;
     public static final int QUERY_CASH_POS_CLASS = 0;
 
+    // private regex
+    private static final String MAIL_REGEX = "^[^@]+@[^@]+\\.[A-Za-z]{2,}";
+
 
     public static String createGeneralRegex(String query) {
         StringBuilder stringBuilder;
@@ -201,6 +204,11 @@ public class Constants {
 
         return (builder.toString());
     }
+
+    public static boolean checkEmail(String email) {
+        return email.matches(MAIL_REGEX);
+    }
+
     public static String deleteSubstring(String query, String regex) {
         return query.replaceFirst(regex, Constants.STR_EMPTY);
     }
