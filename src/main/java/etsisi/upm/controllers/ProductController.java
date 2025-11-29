@@ -198,6 +198,9 @@ public class ProductController {
                     ticket.remove(productToDelete);
                 }
             }
+
+            this.productRepository.removeById(prodId);
+
             return productToDelete;
         }else throw new IllegalArgumentException(ERROR_ID_NONEXISTENT);
     }
