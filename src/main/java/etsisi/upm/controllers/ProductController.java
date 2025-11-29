@@ -20,18 +20,6 @@ public class ProductController {
     private final Repository<Integer, Product> productRepository;
     private final Repository<String, Ticket> ticketRepository;
 
-    private static final String ERROR_CREATE_PRODUCT = "Error creating product, category does not exist";
-    private static final String ERROR_DELETE_PRODUCT = "Error deleting product";
-    private static final String DUPLICATED_ID_ERROR  = "The ID passed as a parameter already exists, please add another one";
-    private static final String ERROR_ID_NONEXISTENT = "The id passed as a parameter does not exist";
-
-    private static final String CATALOG = "Catalog:\n";
-    private static final String TAB_SPACE = "\t";
-
-    private static final String NAME = "NAME";
-    private static final String CATEGORY = "CATEGORY";
-    private static final String PRICE = "PRICE";
-
     public ProductController(Repository<Integer, Product> productRepository, Repository<String, Ticket> ticketRepository) {
         this.productRepository = productRepository;
         this.ticketRepository = ticketRepository;
@@ -41,7 +29,7 @@ public class ProductController {
         return productRepository.findAll().stream()
                 .mapToInt(Product::getId)
                 .max()
-                .orElse(0) + 1;
+                .orElse(Constants.ZERO) + Constants.ONE;
     }
 
     public String decodeQuery(String[] querySplit){
@@ -49,7 +37,7 @@ public class ProductController {
         double price;
         Integer prodId, maxPers, maxPeople;
         LocalDateTime expirationDate;
-        String command = Constants.PROD + " " + querySplit[Constants.QUERY_PRODUCT_POS_INSTRUCTION];
+        String command = Constants.PROD + Constants.STR_BLANK_SPACE + querySplit[Constants.QUERY_PRODUCT_POS_INSTRUCTION];
         switch (querySplit[Constants.QUERY_PRODUCT_POS_INSTRUCTION]){
             case Constants.PRODUCT_ADD:
                 int id;
@@ -99,7 +87,7 @@ public class ProductController {
                             response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
                         return response.toString();
                     }
-                    // si NO es número, generas el ID
+                    // if it's NOT a number, generate the ID
                 }
 
 
@@ -154,7 +142,7 @@ public class ProductController {
             product = new Product(id, name, price, Categories.valueOf(category));
             productRepository.add(product.getId(), product);
             return product;
-        } else throw new IllegalArgumentException(ERROR_CREATE_PRODUCT);
+        } else throw new IllegalArgumentException(Constants.ERROR_CREATE_PRODUCT);
     }
     private Product addProduct(String name, String category, double price, int id, Integer maxPers) {
         Product product;
@@ -162,23 +150,23 @@ public class ProductController {
              product = new Product(id, name, price, Categories.valueOf(category),maxPers);
             productRepository.add(product.getId(), product);
             return product;
-        } else throw new IllegalArgumentException(ERROR_CREATE_PRODUCT);
+        } else throw new IllegalArgumentException(Constants.ERROR_CREATE_PRODUCT);
     }
 
     private Product updateProduct(int id, String field, String newContent) {
         Product productToUpdate = this.productRepository.findByIdOrThrow(id);
-        if (productToUpdate == null) throw new IllegalArgumentException(ERROR_ID_NONEXISTENT);
+        if (productToUpdate == null) throw new IllegalArgumentException(Constants.ERROR_ID_NONEXISTENT);
         switch (field) {
-            case NAME:
+            case Constants.NAME:
                 productToUpdate.setName(newContent);
                 break;
-            case CATEGORY:
+            case Constants.CATEGORY:
                 if (Categories.existCategory(newContent)) {
                     Categories cat = Categories.valueOf(newContent);
                     productToUpdate.setCategory(cat);
                 } else return null;
                 break;
-            case PRICE:
+            case Constants.PRICE:
                 productToUpdate.setPrice(Double.parseDouble(newContent));
                 break;
             default:
@@ -197,17 +185,17 @@ public class ProductController {
                 }
             }
             return productToDelete;
-        }else throw new IllegalArgumentException(ERROR_ID_NONEXISTENT);
+        }else throw new IllegalArgumentException(Constants.ERROR_ID_NONEXISTENT);
     }
 
 
     private String prodList() {
         StringBuilder builder = new StringBuilder();
 
-        builder.append(CATALOG);
+        builder.append(Constants.CATALOG);
 
         for (Product p : this.productRepository.findAll()) {
-            builder.append(TAB_SPACE)
+            builder.append(Constants.TAB_SPACE)
                     .append(p.toString())
                     .append(Constants.ENTER_KEY);
         }

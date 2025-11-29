@@ -13,9 +13,6 @@ public class CashierController {
     private static final Random randon = new Random();
     private final Repository<String, Cashier> repository;
 
-    private static final String CASHIER_PREFIX = "UW";
-    private static final String CASH_REGEX = "%s%07d";
-
     public CashierController(Repository<String, Cashier> repository) {
         this.repository = repository;
     }
@@ -24,7 +21,7 @@ public class CashierController {
         StringBuilder cashierRegex = new StringBuilder();
         cashierRegex.append(Constants.REGEX_INIT);
         String instruction = querySplit[Constants.QUERY_CASH_POS_INSTRUCTION];
-        String command = querySplit[Constants.QUERY_CASH_POS_CLASS] + " " + querySplit[Constants.QUERY_CASH_POS_INSTRUCTION];
+        String command = querySplit[Constants.QUERY_CASH_POS_CLASS] + Constants.STR_BLANK_SPACE + querySplit[Constants.QUERY_CASH_POS_INSTRUCTION];
         switch (instruction) {
             case Constants.CASH_ADD:
                 if (querySplit.length == Constants.QUERY_CASH_LENGTH_WITHID) {
@@ -105,7 +102,7 @@ public class CashierController {
         String id;
         do{
             int num = randon.nextInt(10_000_000); //range between 0 and 9.999.999
-            id = String.format(CASH_REGEX, CASHIER_PREFIX, num);
+            id = String.format(Constants.CASH_REGEX, Constants.CASHIER_PREFIX, num);
         }while(repository.findById(id) != null);
         return id;
     }

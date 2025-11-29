@@ -144,7 +144,7 @@ public class CLI {
         try {
             System.out.println(this.productController.decodeQuery(querySplit));
         }catch (DateTimeParseException e){
-            System.out.println(Constants.errorStatus(Constants.PROD, Constants.ERROR_STATUS, Constants.ERROR_DATE));
+            System.out.println(Constants.errorStatus(Constants.PROD, Constants.ERROR_DATE));
         }catch (Exception e) {
             System.out.println(Constants.errorStatus(Constants.PROD, e.getMessage()));
         }
@@ -209,27 +209,27 @@ public class CLI {
         System.out.println(command);
     }
 
-    //for getting the different categories for prroducts
+    //for getting the different categories for products
     private static String getCategoriesHelp() {
-        StringBuilder lineCategories = new StringBuilder("Categories: ");
-        StringBuilder lineDiscounts = new StringBuilder("Discounts if there are ≥2 units in the category: ");
+        StringBuilder lineCategories = new StringBuilder(Constants.CLI_CATEGORIES);
+        StringBuilder lineDiscounts = new StringBuilder(Constants.CLI_DISCOUNT);
         boolean first = true;
         for (Categories c : Categories.values()) {
             if (c == Categories.EMPTY)
                 continue;
             if (!first) {
-                lineCategories.append(", ");
-                lineDiscounts.append(", ");
+                lineCategories.append(Constants.COMMA_SPACE);
+                lineDiscounts.append(Constants.COMMA_SPACE);
             }
             lineCategories.append(c.name());
             lineDiscounts.append(c.name())
-                    .append(" ")
-                    .append((int)(c.getDiscount() * 100))
-                    .append("%");
+                    .append(Constants.STR_BLANK_SPACE)
+                    .append((int)(c.getDiscount() * Constants.HUNDRED))
+                    .append(Constants.PERCENTAGE);
             first = false;
         }
-        lineCategories.append("\n");
-        lineDiscounts.append(".");
+        lineCategories.append(Constants.ENTER_KEY);
+        lineDiscounts.append(Constants.STR_DOT);
         return lineCategories.toString() + lineDiscounts.toString();
     }
 

@@ -1,5 +1,6 @@
 package etsisi.upm.models.users;
 
+import etsisi.upm.Constants;
 import etsisi.upm.models.Ticket;
 
 import java.util.HashSet;
@@ -11,23 +12,7 @@ import java.util.TreeSet;
 public class Client extends User implements Comparable<Client> {
     private final String strIdCashier;
     private final Set<Ticket> associatedTickets;
-    private static final String DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
-    //CONSTANTS
-    private static final String OPEN_BRACE = "{";
-    private static final String CLOSE_BRACE = "}";
-    private static final String STR_CLIENT = "class:Client";
-    private static final String STR_DNI = ", dni:'";
-    private static final String STR_NAME = ", name:'";
-    private static final String STR_EMAIL = ", email:'";
-    private static final String STR_CASH = ", cashCreatorId:'";
-    private static final String SINGLE_QUOTE = "'";
-
-    //Validation messages
-    private static final String ERR_DNI_LENGTH = "Invalid DNI: wrong length (must be 9 chars)";
-    private static final String ERR_CASHIER_NULL = "El id del cajero no puede ser null";
-    private static final String ERR_DNI_DIGITS = "Invalid DNI: first 8 characters must be numbers";
-    private static final String DNI_REGEX = "\\d{8}";
 
     //CONSTRUCTOR W/ ALL PARAMETERS
     public Client(String dni, String name, String email, String idCashier) {
@@ -35,7 +20,7 @@ public class Client extends User implements Comparable<Client> {
         validateDni(dni);
         this.associatedTickets = new HashSet<>();
         if (idCashier == null)
-            throw new IllegalArgumentException(ERR_CASHIER_NULL);
+            throw new IllegalArgumentException(Constants.ERROR_CASHIER_NULL);
         this.strIdCashier = idCashier;
     }
 
@@ -57,19 +42,19 @@ public class Client extends User implements Comparable<Client> {
     }
 
     public static void validateDni(String dni) {
-        if (dni == null || dni.length() != 9)
-            throw new IllegalArgumentException(ERR_DNI_LENGTH);
-        String numbers = dni.substring(0, 8);
-        char letter = Character.toUpperCase(dni.charAt(8));
+        if (dni == null || dni.length() != Constants.NINE)
+            throw new IllegalArgumentException(Constants.ERROR_DNI_LENGTH);
+        String numbers = dni.substring(Constants.ZERO, Constants.EIGHT);
+        char letter = Character.toUpperCase(dni.charAt(Constants.EIGHT));
         //check numeric part
-        if (!numbers.matches(DNI_REGEX))
-            throw new IllegalArgumentException(ERR_DNI_DIGITS);
+        if (!numbers.matches(Constants.DNI_REGEX))
+            throw new IllegalArgumentException(Constants.ERROR_DNI_DIGITS);
         //expected letter
         int num = Integer.parseInt(numbers);
-        char expected = DNI_LETTERS.charAt(num % 23);
+        char expected = Constants.DNI_LETTERS.charAt(num % Constants.ALPHABET_NUM);
         if (letter != expected)
             throw new IllegalArgumentException(
-                    "Invalid DNI: wrong letter. Expected " + expected + " for " + numbers
+                    Constants.ERROR_INVALID_DNI_1 + expected + Constants.ERROR_INVALID_DNI_2 + numbers
             );
     }
 
@@ -98,12 +83,12 @@ public class Client extends User implements Comparable<Client> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(OPEN_BRACE)
-                .append(STR_CLIENT).append(SINGLE_QUOTE).append(STR_DNI).append(getId()).append(SINGLE_QUOTE)
-                .append(STR_NAME).append(SINGLE_QUOTE).append(getName()).append(SINGLE_QUOTE)
-                .append(STR_EMAIL).append(SINGLE_QUOTE).append(getEmail()).append(SINGLE_QUOTE)
-                .append(STR_CASH).append(SINGLE_QUOTE).append(getStrIdCashier()).append(SINGLE_QUOTE)
-                .append(CLOSE_BRACE);
+        sb.append(Constants.OPEN_BRACE)
+                .append(Constants.STR_CLIENT).append(Constants.QUOTE).append(Constants.STR_DNI).append(getId()).append(Constants.QUOTE)
+                .append(Constants.STR_CLI_NAME).append(Constants.QUOTE).append(getName()).append(Constants.QUOTE)
+                .append(Constants.STR_CLIENT_EMAIL).append(Constants.QUOTE).append(getEmail()).append(Constants.QUOTE)
+                .append(Constants.STR_CASH).append(Constants.QUOTE).append(getStrIdCashier()).append(Constants.QUOTE)
+                .append(Constants.CLOSE_BRACE);
         return sb.toString();
     }
 }

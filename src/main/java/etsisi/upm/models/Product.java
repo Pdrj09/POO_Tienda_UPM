@@ -14,18 +14,7 @@ public class Product implements Comparable<Product> {
     private Categories category;
     private boolean personalizable;
     private int maxPers;
-    public static final int maxPeople = 100;
-
-//Variables to avoid magic numbers
-    protected static final String OPEN_BRACE = "{";
-    private static final String STR_PRODUCT = "class:Product";
-    protected static final String STR_NAME = ", name:'";
-    protected static final String STR_ID = ", id:";
-    protected static final String STR_CATEGORY = ", category:";
-    protected static final String SINGLE_QUOTE = "'";
-    protected static final String STR_PRICE = ", price:";
-    protected static final String CLOSE_BRACE = "}";
-
+    public static final int maxPeople = Constants.HUNDRED;
 
 
     //this is the constructor that creates a product
@@ -59,18 +48,18 @@ public class Product implements Comparable<Product> {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append(OPEN_BRACE);
-        builder.append(STR_PRODUCT);
-        builder.append(STR_ID).append(id);
-        builder.append(STR_NAME).append(name).append(SINGLE_QUOTE);
-        builder.append(STR_CATEGORY).append(category);
-        builder.append(STR_PRICE).append(price);
-        builder.append(CLOSE_BRACE);
+        builder.append(Constants.OPEN_BRACE);
+        builder.append(Constants.STR_PRODUCT);
+        builder.append(Constants.STR_PROD_ID).append(id);
+        builder.append(Constants.STR_PROD_NAME).append(name).append(Constants.QUOTE);
+        builder.append(Constants.STR_CATEGORY).append(category);
+        builder.append(Constants.STR_PRICE).append(price);
+        builder.append(Constants.CLOSE_BRACE);
         return builder.toString();
     }
 
     @Override
-    public boolean equals(Object o) { //equals function to see if we are refering to the same object
+    public boolean equals(Object o) { //equals function to see if we are referring to the same object
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
         return id == product.id;
@@ -123,10 +112,10 @@ public class Product implements Comparable<Product> {
         this.category = category;
     }
 
-    //Its used to compare alfabeticaly this name and the other products name (it is case insensitive)
-    //returns value < 0 if this name comes before other name alfabetically
+    //It's used to compare alphabetically this name and the other products name (it is case-insensitive)
+    //returns value < 0 if this name comes before other name alphabetically
     //        value = 0 if its equal this name and other name
-    //        value > 0 if this name comes after other name alfabetically
+    //        value > 0 if this name comes after other name alphabetically
 
     @Override
     public int compareTo(Product other) {

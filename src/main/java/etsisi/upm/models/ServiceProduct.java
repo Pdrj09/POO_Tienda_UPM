@@ -15,14 +15,14 @@ public abstract class ServiceProduct extends Product {
                 pricePerPerson,
                 Categories.EMPTY);
 
-        if (maxPeople>Constants.TIME_MAX_PEOPLE_SERVICE) throw new IllegalStateException(Constants.ERROR_TOOMANY_PEOPLE);
+        if (maxPeople>Constants.TIME_MAX_PEOPLE_SERVICE || maxPeople<=Constants.ZERO) throw new IllegalArgumentException(Constants.ERROR_TOOMANY_PEOPLE);
         else numPeople = maxPeople;
 
         this.expirationDate = expirationDate;
 
         // time validation
         if (!isFeasible(LocalDateTime.now())) {
-            String timeUnit = getMinimumTimeUnit() == ChronoUnit.HOURS ? "horas" : "días";
+            String timeUnit = getMinimumTimeUnit() == ChronoUnit.HOURS ? Constants.HOURS : Constants.DAYS;
             StringBuilder error = new StringBuilder();
             error.append(Constants.ERROR_SERVICE_DATE_FEASIBILITY);
             error.append(getMinimumCreationTime());
@@ -55,11 +55,11 @@ public abstract class ServiceProduct extends Product {
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
-        builder.append(OPEN_BRACE);
+        builder.append(Constants.OPEN_BRACE);
         builder.append(Constants.STR_SERVICE_PRODUCT);
-        builder.append(STR_ID).append(getId());
-        builder.append(STR_NAME).append(getName()).append(SINGLE_QUOTE);
-        builder.append(STR_CATEGORY).append(getCategory());
+        builder.append(Constants.STR_PROD_ID).append(getId());
+        builder.append(Constants.STR_PROD_NAME).append(getName()).append(Constants.QUOTE);
+        builder.append(Constants.STR_CATEGORY).append(getCategory());
 
         // use of the constant price per person
         builder.append(Constants.STR_PRICE_PERSON).append(getPrice());
@@ -67,7 +67,7 @@ public abstract class ServiceProduct extends Product {
         // add of the specific attribute for service product
         builder.append(Constants.STR_EXPIRATION).append(expirationDate);
 
-        builder.append(CLOSE_BRACE);
+        builder.append(Constants.CLOSE_BRACE);
 
         return builder.toString();
     }
