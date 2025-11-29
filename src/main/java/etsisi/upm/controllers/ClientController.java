@@ -45,6 +45,8 @@ public class ClientController {
 
     private Client addClient(String name, String dni, String email, String UW) {
 
+        if (!Constants.checkEmail(email)) throw new IllegalArgumentException(Constants.ERROR_MAIL_FORMAT);
+
         Client client = new Client(dni, name, email, UW);
         clientRepository.add(dni, client);
 
