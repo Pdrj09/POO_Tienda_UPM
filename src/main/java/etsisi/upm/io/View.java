@@ -211,10 +211,19 @@ public class View {
     private static List<Field> getAllFields(Class<?> type) {
         List<Field> fields = new ArrayList<>();
 
+        //Fields that must NEVER be shown in the tables
+        List<String> hiddenFields = List.of(
+                "createdTickets",
+                "associatedClients",
+                "associatedTickets",
+                "personalizable",
+                "maxPers"
+        );
         while (type != null && type != Object.class) {
             for (Field f : type.getDeclaredFields()) {
                 int mods = f.getModifiers();
                 if (Modifier.isStatic(mods)) continue;
+                if (hiddenFields.contains(f.getName())) continue;
                 if (f.getName().equals(f.getName().toUpperCase())) continue;
                 fields.add(f);
             }
