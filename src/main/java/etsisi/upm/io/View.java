@@ -1,6 +1,7 @@
 package etsisi.upm.io;
 
 import etsisi.upm.Constants;
+import etsisi.upm.models.Product;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -27,14 +28,57 @@ public class View {
         if (element == null)
             return MSG_NOTHING_TO_SHOW + "\n";
 
-        //collections
+        // --- Caso especial Ticket ---
+        if (element instanceof etsisi.upm.models.Ticket ticket) {
+            // TicketView plano para tabla principal
+            record TicketView(String id, String state, String closeDate,
+                              double totalPrice, double totalDiscount, double finalPrice) {}
+            TicketView tv = new TicketView(
+                    ticket.getId(),
+                    ticket.getState().name(),
+                    ticket.getCloseDateFormatted(),
+                    ticket.getTotalPriceView(),
+                    ticket.getTotalDiscountView(),
+                    ticket.getFinalPriceView()
+            );
+            sb.append(buildTable(Collections.singletonList(tv), tv.getClass()));
+
+            // Productos usando getters del ticket
+            if (!ticket.getList().isEmpty()) {
+                sb.append("\nProductos:\n");
+                record ProductView(int id, String name, Object category, double price, int quantity, double discount) {}
+                List<ProductView> productViews = new ArrayList<>();
+
+                for (Map.Entry<Product, List<Object>> entry : ticket.getList().entrySet()) {
+                    Product p = entry.getKey();
+                    int quantity = (int) entry.getValue().get(0);
+                    double discount = ticket.getCategories().getOrDefault(p.getCategory(), 0) > 1
+                            ? p.getPrice() * p.getCategory().getDiscount()
+                            : 0.0;
+
+                    productViews.add(new ProductView(
+                            p.getId(),
+                            p.getName(),
+                            p.getCategory(),
+                            p.getPrice(),
+                            quantity,
+                            discount
+                    ));
+                }
+
+                sb.append(buildTable(productViews, ProductView.class));
+            }
+
+            sb.append(Constants.okStatus(command.split(" ")[0], command.split(" ")[1])).append("\n");
+            return sb.toString();
+        }
+
+        // --- Resto del código original ---
         if (element instanceof Collection<?> col) {
             if (col.isEmpty())
                 return emptyMessage(null) + "\n";
             sb.append(buildTable(col, col.iterator().next().getClass()));
-        }
-        //arrays
-        else if (element.getClass().isArray()) {
+        } else if (element.getClass().isArray()) {
             int length = java.lang.reflect.Array.getLength(element);
             if (length == 0)
                 return emptyMessage(null) + "\n";
@@ -42,21 +86,15 @@ public class View {
             for (int i = 0; i < length; i++)
                 arrList.add(java.lang.reflect.Array.get(element, i));
             sb.append(buildTable(arrList, arrList.get(0).getClass()));
-        }
-        //maps
-        else if (element instanceof Map<?, ?> map) {
+        } else if (element instanceof Map<?, ?> map) {
             if (map.isEmpty())
                 return MSG_NOTHING_TO_SHOW + "\n";
             StringBuilder s = new StringBuilder();
             for (Map.Entry<?, ?> e : map.entrySet()) {
-                s.append("{ ")
-                        .append(e.getKey()).append(": ").append(e.getValue())
-                        .append(" }\n");
+                s.append("{ ").append(e.getKey()).append(": ").append(e.getValue()).append(" }\n");
             }
             return getString(s.toString(), command);
-        }
-        //strings
-        else if (element instanceof String s) {
+        } else if (element instanceof String s) {
             s = s.trim();
             String[] lines = s.split("\n");
             boolean anyKV = false;
@@ -80,13 +118,14 @@ public class View {
             }
             if (anyKV)
                 sb.append(buildTableFromKV(allLinesKV));
-        }
-        //individual object
-        else
+        } else {
             sb.append(buildTable(Collections.singletonList(element), element.getClass()));
+        }
+
         sb.append(Constants.okStatus(command.split(" ")[0], command.split(" ")[1])).append("\n");
         return sb.toString();
     }
+
 
     //we build the table
     private static String buildTable(Collection<?> collection, Class<?> itemType) {
