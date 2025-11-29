@@ -27,8 +27,13 @@ public abstract class ServiceProduct extends Product {
         // time validation
         if (!isFeasible(LocalDateTime.now())) {
             String timeUnit = getMinimumTimeUnit() == ChronoUnit.HOURS ? "horas" : "días";
-            String errorMessage = Constants.ERROR_SERVICE_DATE_FEASIBILITY + getMinimumCreationTime() + " " + timeUnit + " en el futuro.";
-            throw new IllegalArgumentException(errorMessage);
+            StringBuilder error = new StringBuilder();
+            error.append(Constants.ERROR_SERVICE_DATE_FEASIBILITY);
+            error.append(getMinimumCreationTime());
+            error.append(Constants.STR_BLANK_SPACE);
+            error.append(timeUnit);
+            error.append(Constants.IN_THE_FUTURE);
+            throw new IllegalArgumentException(String.valueOf(error));
         }
     }
 

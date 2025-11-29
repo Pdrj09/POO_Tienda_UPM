@@ -31,8 +31,6 @@ public class Constants {
     public static final int THREE = 3;
     public static final int FOUR = 4;
     public static final int FIVE = 5;
-    public static final int SIX = 6;
-    public static final int SEVEN = 7;
 
     public static final int NON_SIZE = -1;
     public static final int MAX_SIZE = 200;
@@ -63,6 +61,7 @@ public class Constants {
     public static final String ERROR_FEW_PARAMS = "more params required";
     public static final String ERROR_NONEXISTEN_ID = "id nonexistent";
     public static final String ERROR_FILE_NOTFOUND = "file not found";
+    public static final String IN_THE_FUTURE = " in the future";
 
     // regex const
     public static final String REGEX_INIT = "^";
