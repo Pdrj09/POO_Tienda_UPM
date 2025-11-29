@@ -20,10 +20,10 @@ public class ProductController {
     private final Repository<Integer, Product> productRepository;
     private final Repository<String, Ticket> ticketRepository;
 
-    private static final String ERROR_CREATE_PRODUCT = "Error al crear el producto, categoría no existente";
-    private static final String ERROR_DELETE_PRODUCT = "Error al borrar el producto";
-    private static final String DUPLICATED_ID_ERROR  = "El id pasado como pararametro ya existe, añada otro";
-    private static final String ERROR_ID_NONEXISTENT = "El id pasado como pararametro no existe";
+    private static final String ERROR_CREATE_PRODUCT = "Error creating product, category does not exist";
+    private static final String ERROR_DELETE_PRODUCT = "Error deleting product";
+    private static final String DUPLICATED_ID_ERROR  = "The ID passed as a parameter already exists, please add another one";
+    private static final String ERROR_ID_NONEXISTENT = "The id passed as a parameter does not exist";
 
     private static final String CATALOG = "Catalog:\n";
     private static final String TAB_SPACE = "\t";
@@ -31,8 +31,6 @@ public class ProductController {
     private static final String NAME = "NAME";
     private static final String CATEGORY = "CATEGORY";
     private static final String PRICE = "PRICE";
-
-    private static final String DATETIME_FORMAT = "yyyy-MM-dd";
 
     public ProductController(Repository<Integer, Product> productRepository, Repository<String, Ticket> ticketRepository) {
         this.productRepository = productRepository;

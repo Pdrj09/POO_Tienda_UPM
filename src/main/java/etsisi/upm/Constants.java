@@ -84,6 +84,7 @@ public class Constants {
     public static final String ERROR_TOOMANY_ARGUMENTS = "too many arguments";
     public static final String ERROR_TOOMANY_PEOPLE = "too many people";
 
+    public static final String DATETIME_FORMAT = "yyyy-MM-dd";
     public static final String ERROR_DATE = "date wrong";
 
     public static final String STR_FOOD = "class:Food";
@@ -116,6 +117,7 @@ public class Constants {
     public static final String TICKET_NEW = "new";
     public static final String TICKET_REMOVE = "remove";
     public static final String TICKET_LIST = "list";
+    public static final int MAX_SIZE_TICKET = 100;
 
     // client const
     public static final String CLIENT_ADD = "add";
@@ -144,6 +146,9 @@ public class Constants {
     public static final int QUERY_CLIENT_POS_INSTRUCTION = 1;
     public static final int QUERY_CLIENT_POS_CLASS = 0;
     public static final int QUERY_CASH_POS_CLASS = 0;
+    public static final String ERROR_MAXSIZE_TICKET = "Ticket filled, maximum size of ";
+    public static final String ERROR_NONPERSONALIZABLE = "You cant personalice a product that is not personalizable";
+    public static final String ERROR_ZERO_AMOUNT = "The min amount to add is 1";
 
 
     public static String createGeneralRegex(String query) {

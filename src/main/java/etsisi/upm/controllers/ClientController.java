@@ -18,7 +18,7 @@ public class ClientController {
     }
 
     public String clientQuery(String[] query) {
-        String command = query[Constants.QUERY_CLIENT_POS_CLASS] + " " + query[Constants.QUERY_CLIENT_POS_INSTRUCTION];
+        String command = query[Constants.QUERY_CLIENT_POS_CLASS] + Constants.STR_BLANK_SPACE + query[Constants.QUERY_CLIENT_POS_INSTRUCTION];
         switch (query[Constants.QUERY_CLIENT_POS_INSTRUCTION]) {
             case Constants.CASH_ADD -> {
                 if (query.length == Constants.QUERY_CLIENT_POS_MAXARGS) {

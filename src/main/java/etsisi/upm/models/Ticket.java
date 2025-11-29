@@ -1,5 +1,6 @@
 package etsisi.upm.models;
 
+import etsisi.upm.Constants;
 import etsisi.upm.util.Categories;
 import etsisi.upm.util.TicketStates;
 
@@ -18,20 +19,13 @@ public class Ticket {
     /// Todo multimap
     private Map<Categories,Integer> categories;
 
-    private static final int ZERO = 0;
-
     private static final String DISCOUNT = "**discount -";
     private static final String TOTAL_PRICE = "\nTotal price: ";
     private static final String TOTAL_DISCOUNT = "\nTotal discount: ";
     private static final String FINAL_PRICE = "\nFinal price: ";
     private static final String NEXT_LINE = "\n";
-    private static final int MAX_SIZE = 100;
     private static final double EXTRA_PRICE_PERSONALIZATIONS = 0.1;
     private static final int MIN_FOR_DISCOUNT = 1;
-
-    private static final String ERROR_MAXSIZE = "Ticket lleno, tamaño máximo de ";
-    private static final String ERROR_NONPERSONALIZABLE = "You cant personalice a product that is not personalizable";
-    private static final String ERROR_ZERO_AMOUNT = "The min amount to add is 1";
 
 
     public Ticket(String id){
@@ -66,15 +60,15 @@ public class Ticket {
     //if ticket add (Product prod, int amount) -p <personalizacion>
     public Ticket addProduct(Product prod, int amount, List<String> customizations)
     {
-        if (countProducts() + amount > MAX_SIZE)  throw new IllegalStateException(ERROR_MAXSIZE + Ticket.MAX_SIZE);
+        if (countProducts() + amount > Constants.MAX_SIZE_TICKET)  throw new IllegalStateException(Constants.ERROR_MAXSIZE_TICKET + Constants.MAX_SIZE_TICKET);
         boolean isGoingToPersonalize = customizations != null;
 
         List<Object> entry = this.list.get(prod);
 
         if(entry!=null){//If it doesn't exist, amount has to be > 0
-            if (amount == 0) throw new IllegalStateException(ERROR_ZERO_AMOUNT);
+            if (amount == 0) throw new IllegalStateException(Constants.ERROR_ZERO_AMOUNT);
         }else {//If it exists but is not going to be personalized amount has to be > 0
-            if (!isGoingToPersonalize && amount == 0)  throw new IllegalStateException(ERROR_ZERO_AMOUNT);
+            if (!isGoingToPersonalize && amount == 0)  throw new IllegalStateException(Constants.ERROR_ZERO_AMOUNT);
         }
 
         if(entry == null){
@@ -98,14 +92,14 @@ public class Ticket {
         }
 
         Categories category = prod.getCategory();
-        this.categories.put(category, this.categories.getOrDefault(category, ZERO) + amount);
+        this.categories.put(category, this.categories.getOrDefault(category, Constants.ZERO) + amount);
         this.state = TicketStates.ACTIVE;
 
         return this;
     }
 
     private int countProducts(){
-        int total = ZERO;
+        int total = Constants.ZERO;
         for(List<Object> list : this.list.values()){
             Integer quantity = (Integer) list.getFirst();
             total += quantity;
