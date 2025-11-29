@@ -173,6 +173,7 @@ public class Ticket {
         return res.toString();
     }
 
+    //getters for the view (there are used by a method in view, DO NOT TOUCH)
     public String getId() {
         return id;
     }
@@ -180,6 +181,32 @@ public class Ticket {
     public TicketStates getState() {
         return state;
     }
+    public String getCloseDateFormatted() {
+        if (closeDate == null)
+            return "-";
+        return closeDate.format(DateTimeFormatter.ofPattern("dd-MM-yy HH:mm"));
+    }
+
+    public double getTotalPriceView() {
+        return totalPrice();
+    }
+
+    public double getTotalDiscountView() {
+        return totalDiscount();
+    }
+
+    public double getFinalPriceView() {
+        return getTotalPriceView() - getTotalDiscountView();
+    }
+
+    public Map<Product, List<Object>> getList() {
+        // Devolver un unmodifiableMap para evitar modificaciones externas
+        return Collections.unmodifiableMap(list);
+    }
+    public Map<Categories, Integer> getCategories() {
+        return Collections.unmodifiableMap(categories);
+    }
+
     //look if the product already exists
     public boolean containsProduct(Product prod) {
         return this.list.containsKey(prod);
