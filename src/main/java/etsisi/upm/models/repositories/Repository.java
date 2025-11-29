@@ -39,10 +39,15 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
     }
 
     @Override
-    public T findById(K id) {
+    public T findByIdOrThrow(K id) {
         T founded = repoMap.get(id);
         if(founded == null) throw new IllegalArgumentException(Constants.ERROR_NONEXISTEN_ID);
         return founded;
+    }
+
+    @Override
+    public T findById(K id) {
+        return repoMap.get(id);
     }
 
     @Override

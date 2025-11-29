@@ -1,6 +1,7 @@
 package etsisi.upm.controllers;
 
 import etsisi.upm.Constants;
+import etsisi.upm.io.View;
 import etsisi.upm.models.Product;
 import etsisi.upm.models.Ticket;
 import etsisi.upm.models.repositories.*;
@@ -26,17 +27,25 @@ public class TicketController {
         this.productRepository = productRepository;
     }
 
-    public Object decodeQuery(String[] querySplit) {
+    public String decodeQuery(String[] querySplit) {
         String ticketId, cashierId, clientId;
+        String command = Constants.TICKET + " " + querySplit[Constants.QUERY_TICKET_POS_INSTRUCTION];
         int prodId, amount;
         switch (querySplit[Constants.QUERY_TICKET_POS_INSTRUCTION]){
             case Constants.TICKET_NEW:
 
-                ticketId = querySplit[Constants.QUERY_TICKET_POS_TICKETID];
-                cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID];
-                clientId = querySplit[Constants.QUERY_TICKET_POS_USERID];
+                if(querySplit.length == Constants.QUERY_TICKET_ADD_LENGHT_WITHID){
+                    ticketId = querySplit[Constants.QUERY_TICKET_POS_TICKETID];
+                    cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID];
+                    clientId = querySplit[Constants.QUERY_TICKET_POS_USERID];
 
-                return this.newTicket(ticketId, cashierId, clientId);
+                    return View.getString(this.newTicket(ticketId, cashierId, clientId), command);
+                } else if (querySplit.length == Constants.QUERY_TICKET_ADD_LENGHT_WITHOUTID) {
+                    cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID-1];
+                    clientId = querySplit[Constants.QUERY_TICKET_POS_USERID-1];
+
+                    return View.getString(this.newTicket(null,cashierId, clientId), command);
+                }
 
             case Constants.TICKET_ADD:
 
@@ -61,7 +70,7 @@ public class TicketController {
                     }
                 }
 
-                return this.addProductToTicket(ticketId, cashierId, prodId, amount, customizations);
+                return View.getString(this.addProductToTicket(ticketId, cashierId, prodId, amount, customizations), command);
 
             case Constants.TICKET_REMOVE:
 
@@ -69,43 +78,47 @@ public class TicketController {
                 cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID];
                 prodId = Integer.parseInt(querySplit[Constants.QUERY_TICKET_POS_PRODID]);
 
-                return this.removeProductFromTicket(ticketId,cashierId,prodId);
+                return View.getString(this.removeProductFromTicket(ticketId,cashierId,prodId), command);
 
             case Constants.TICKET_PRINT:
 
                 ticketId = querySplit[Constants.QUERY_TICKET_POS_TICKETID];
                 cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID];
-                this.printTicket(ticketId,cashierId);
+                return View.getString(this.printTicket(ticketId,cashierId), command);
 
-                break;
             case Constants.TICKET_LIST:
 
-                return this.getTicketList();
+                return View.getString(this.getTicketList(), command);
 
             default:
                 throw new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
         }
-        return null;
     }
 
     private Ticket newTicket(String ticketId, String cashierId, String clientId){
-        Ticket ticket = new Ticket(ticketId);
+        Cashier cashier = this.cashierRepository.findByIdOrThrow(cashierId);
+        Client client = this.clientRepository.findByIdOrThrow(clientId);
+
+        Ticket ticket;
+        if(ticketId != null) ticket = new Ticket(ticketId);
+        else ticket = new Ticket();
+
         this.ticketRepository.add(ticketId, ticket);
+        cashier.addTicket(ticket);
+        client.addAssociatedTicket(ticket);
+
         return ticket;
     }
 
     private Ticket getTicket(String ticketId){
-        return this.ticketRepository.findById(ticketId);
+        return this.ticketRepository.findByIdOrThrow(ticketId);
     }
     private List<Ticket> getTicketList(){
         List<Ticket> ticketList = new ArrayList<Ticket>();
         TreeMap<String, Cashier> sortedCashiers = new TreeMap<>(this.cashierRepository.getMap());
 
         for (Map.Entry<String, Cashier> entry : sortedCashiers.entrySet()){
-            Set<String> ticketIds = entry.getValue().getTickets();
-            for (String ticketId : ticketIds){
-                ticketList.add(this.ticketRepository.findById(ticketId));
-            }
+            ticketList.addAll(entry.getValue().getTickets());
         }
         return ticketList;
     }
@@ -116,8 +129,8 @@ public class TicketController {
 
     private Ticket removeTicket(String ticketId, String cashierId, String clientId){
         Ticket ticket = this.ticketRepository.removeById(ticketId);
-        Cashier cashier = this.cashierRepository.findById(cashierId);
-        Client client = this.clientRepository.findById(clientId);
+        Cashier cashier = this.cashierRepository.findByIdOrThrow(cashierId);
+        Client client = this.clientRepository.findByIdOrThrow(clientId);
         cashier.deleteTicket(ticket);
         client.deleteTicket(ticket);
         return ticket;
@@ -125,23 +138,28 @@ public class TicketController {
 
 
     private Ticket addProductToTicket(String ticketId, String cahsierId, Integer productId, int amount, List<String> customizations){
-        Ticket ticket = this.ticketRepository.findById(ticketId);
-        Product product = this.productRepository.findById(productId);
+        Ticket ticket = this.ticketRepository.findByIdOrThrow(ticketId);
+        Product product = this.productRepository.findByIdOrThrow(productId);
+        Cashier cashier = this.cashierRepository.findByIdOrThrow(cahsierId);
 
-        if (product == null) {
-            throw new IllegalArgumentException("Can't find product.");
-        }
+        if (!cashier.getTickets().contains(ticket)) throw new IllegalArgumentException(Constants.ERROR_INVALID_ID);
 
-        //cant exist 2 same serviceProduct
-        if (product instanceof ServiceProduct && ticket.containsProduct(product)) {
-            throw new IllegalStateException("the same service can't be added twice in the same ticket.");
-        }
+        switch (product) {
+            case null -> throw new IllegalArgumentException("Can't find product.");
 
-        //limit participants validation.
-        if (product instanceof ServiceProduct) {
-            ServiceProduct service = (ServiceProduct) product;
-            if (amount <= 0 || amount > Product.maxPeople) {
-                throw new IllegalArgumentException("The number of participants (" + amount + ") isn't valid for this service.");
+
+            //cant exist 2 same serviceProduct
+            case ServiceProduct serviceProduct when ticket.containsProduct(product) ->
+                    throw new IllegalStateException("the same service can't be added twice in the same ticket.");
+
+
+            //limit participants validation.
+            case ServiceProduct service -> {
+                if (amount <= 0 || amount > Product.maxPeople) {
+                    throw new IllegalArgumentException("The number of participants (" + amount + ") isn't valid for this service.");
+                }
+            }
+            default -> {
             }
         }
 
@@ -149,14 +167,22 @@ public class TicketController {
     }
 
     private Ticket removeProductFromTicket(String ticketId, String cahsierId, Integer productId){
-        Ticket ticket = this.ticketRepository.findById(ticketId);
-        Product product = this.productRepository.findById(productId);
+        Ticket ticket = this.ticketRepository.findByIdOrThrow(ticketId);
+        Product product = this.productRepository.findByIdOrThrow(productId);
+        Cashier cashier = this.cashierRepository.findByIdOrThrow(cahsierId);
+
+        if (!cashier.getTickets().contains(ticket)) throw new IllegalArgumentException(Constants.ERROR_INVALID_ID);
+
         return ticket.remove(product);
     }
 
     //method were the ticked is closed and prepared for printing it (the view manage that)
     private Ticket printTicket(String ticketId, String cahsierId){
-        Ticket ticket = this.ticketRepository.findById(ticketId);
+        Ticket ticket = this.ticketRepository.findByIdOrThrow(ticketId);
+        Cashier cashier = this.cashierRepository.findByIdOrThrow(cahsierId);
+
+        if (!cashier.getTickets().contains(ticket)) throw new IllegalArgumentException(Constants.ERROR_INVALID_ID);
+
         this.closeTicket(ticket);
         return ticket;
     }
