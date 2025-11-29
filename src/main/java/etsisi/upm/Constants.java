@@ -107,6 +107,7 @@ public class Constants {
     public static final String REGEX_TO_SPLIT = " (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
     public static final String REGEX_PERSONALIZED = "(?<=--p)";
     public static final String REGEX_CASH_ID = "^UW\\d{7}$";
+    public static final String NIE_REGEX = "^[XYZxyz]\\d{7}[A-Za-z]$";
 
     // products const
     public static final String PRODUCT = "prod";
@@ -207,6 +208,7 @@ public class Constants {
     public static final String ERROR_DNI_DIGITS = "Invalid DNI: first 8 characters must be numbers";
     public static final String ERROR_INVALID_DNI_1 = "Invalid DNI: wrong letter. Expected ";
     public static final String ERROR_INVALID_DNI_2= " for ";
+    public static final String ERROR_NIE_FORMAT = "please introduce a correct ID document (NIE/NIF)";
 
     public static final String ERROR_PRICE = "No price for product";
     public static final String ERROR_INVALID_ID = "UW format incorrect";

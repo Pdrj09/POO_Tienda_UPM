@@ -112,7 +112,7 @@ public class CLI {
             this.ticketQuery(Constants.deleteSubstring(query, Constants.createGeneralRegex(Constants.TICKET)));
             //if query starts with ECHO,it echoes back the input
         } else if (query.startsWith(Constants.ECHO)) {
-            echoCommand(query);
+            echoCommand(Constants.deleteSubstring(query, Constants.createGeneralRegex(Constants.ECHO)));
             //if query starts with HELP, displays help information available
         } else if (query.startsWith(Constants.HELP)) {
             printHelp(query);

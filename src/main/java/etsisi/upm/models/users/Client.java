@@ -47,6 +47,26 @@ public class Client extends User implements Comparable<Client> {
         String numbers = dni.substring(Constants.ZERO, Constants.EIGHT);
         char letter = Character.toUpperCase(dni.charAt(Constants.EIGHT));
         //check numeric part
+
+        if (dni.matches(Constants.NIE_REGEX)) {
+            char letra =  dni.charAt(0);
+            switch (letra) {
+                case 'X':
+                    dni = dni.replaceFirst(String.valueOf(letra), String.valueOf(Constants.ZERO));
+                    break;
+                case 'Y':
+                    dni = dni.replaceFirst(String.valueOf(letra), String.valueOf(Constants.ONE));
+                    break;
+                case 'Z':
+                    dni = dni.replaceFirst(String.valueOf(letra), String.valueOf(Constants.TWO));
+                    break;
+                default:
+                    throw new IllegalArgumentException(Constants.ERROR_NIE_FORMAT);
+            }
+            numbers = dni.substring(0, 8);
+        }
+
+
         if (!numbers.matches(Constants.DNI_REGEX))
             throw new IllegalArgumentException(Constants.ERROR_DNI_DIGITS);
         //expected letter
