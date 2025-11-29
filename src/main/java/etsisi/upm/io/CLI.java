@@ -233,7 +233,7 @@ public class CLI {
         }
         lineCategories.append(Constants.ENTER_KEY);
         lineDiscounts.append(Constants.STR_DOT);
-        return lineCategories.toString() + lineDiscounts.toString();
+        return lineCategories.append(lineDiscounts).toString();
     }
 
 
