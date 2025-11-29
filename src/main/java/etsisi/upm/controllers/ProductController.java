@@ -11,6 +11,7 @@ import etsisi.upm.models.Food;
 import etsisi.upm.models.Meeting;
 
 import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
@@ -122,7 +123,7 @@ public class ProductController {
                 name = querySplit[Constants.QUERY_PRODUCT_POS_NAME];
                 price = Double.parseDouble(querySplit[Constants.QUERY_PRODUCT_POS_PRICE_FOODMEETING]);
                 maxPeople = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_MAXPEOPLE]);
-                expirationDate = LocalDateTime.parse(querySplit[Constants.QUERY_PRODUCT_POS_EXPIRATION]);
+                expirationDate = LocalDate.parse(querySplit[Constants.QUERY_PRODUCT_POS_EXPIRATION]).atStartOfDay();
 
                 return View.getString(this.addFood(prodId, name, price, maxPeople, expirationDate), command);
             case Constants.PRODUCT_ADD_MEETING:
@@ -131,7 +132,7 @@ public class ProductController {
                 name = querySplit[Constants.QUERY_PRODUCT_POS_NAME];
                 price = Double.parseDouble(querySplit[Constants.QUERY_PRODUCT_POS_PRICE_FOODMEETING]);
                 maxPeople = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_MAXPEOPLE]);
-                expirationDate = LocalDateTime.parse(querySplit[Constants.QUERY_PRODUCT_POS_EXPIRATION]);
+                expirationDate = LocalDate.parse(querySplit[Constants.QUERY_PRODUCT_POS_EXPIRATION]).atStartOfDay();
 
                 return View.getString(this.addMeeting(prodId, name, price, maxPeople, expirationDate), command);
             case Constants.PRODUCT_LIST:

@@ -4,7 +4,6 @@ import etsisi.upm.Constants;
 import etsisi.upm.util.Categories;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.lang.Math;
 
 public abstract class ServiceProduct extends Product {
     private final LocalDateTime expirationDate;
@@ -16,7 +15,8 @@ public abstract class ServiceProduct extends Product {
                 pricePerPerson,
                 Categories.EMPTY);
 
-        numPeople = Math.min(maxPeople, Constants.TIME_MAX_PEOPLE_SERVICE);
+        if (maxPeople>Constants.TIME_MAX_PEOPLE_SERVICE) throw new IllegalStateException(Constants.ERROR_TOOMANY_PEOPLE);
+        else numPeople = maxPeople;
 
         this.expirationDate = expirationDate;
 

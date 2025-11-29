@@ -57,7 +57,7 @@ public class CashierController {
                 if (querySplit.length == Constants.QUERY_CASH_POS_INSTRUCTION + 1) {
                     return View.getString(listCashiers(), command);
                 } else {
-                    throw new IllegalArgumentException(Constants.ERROR_TOMANY_ARGUMENTS);
+                    throw new IllegalArgumentException(Constants.ERROR_TOOMANY_ARGUMENTS);
                 }
             case Constants.CASH_TICKETS:
 

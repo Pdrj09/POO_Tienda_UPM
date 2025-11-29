@@ -10,6 +10,8 @@ import etsisi.upm.models.users.Cashier;
 import etsisi.upm.models.users.Client;
 import etsisi.upm.util.Categories;
 
+import java.time.format.DateTimeParseException;
+
 public class CLI {
 
     /// Global variables
@@ -133,7 +135,7 @@ public class CLI {
         try {
             System.out.println(this.clientController.clientQuery(querySplit));
         }catch (Exception e) {
-            System.out.println(Constants.errorStatus(Constants.CLIENT, e.toString()));
+            System.out.println(Constants.errorStatus(Constants.CLIENT, e.getMessage()));
         }
     }
 
@@ -141,8 +143,10 @@ public class CLI {
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         try {
             System.out.println(this.productController.decodeQuery(querySplit));
+        }catch (DateTimeParseException e){
+            System.out.println(Constants.errorStatus(Constants.PROD, Constants.ERROR_STATUS, Constants.ERROR_DATE));
         }catch (Exception e) {
-            System.out.println(Constants.errorStatus(Constants.PROD, e.toString()));
+            System.out.println(Constants.errorStatus(Constants.PROD, e.getMessage()));
         }
     }
 
@@ -166,7 +170,7 @@ public class CLI {
             System.out.println(Constants.errorStatus(Constants.CASH, Constants.ERROR_FEW_PARAMS));
         }
         catch (Exception e) {
-            System.out.println(Constants.errorStatus(Constants.CASH, e.toString()));
+            System.out.println(Constants.errorStatus(Constants.CASH, e.getMessage()));
         }
     }
 

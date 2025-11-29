@@ -81,7 +81,10 @@ public class Constants {
     public static final String ERROR_PRICE = "No price for product";
     public static final String ERROR_INVALID_ID = "UW format incorrect";
 
-    public static final String ERROR_TOMANY_ARGUMENTS = "to many arguments";
+    public static final String ERROR_TOOMANY_ARGUMENTS = "too many arguments";
+    public static final String ERROR_TOOMANY_PEOPLE = "too many people";
+
+    public static final String ERROR_DATE = "date wrong";
 
     public static final String STR_FOOD = "class:Food";
     public static final String STR_MEETING = "class:Meeting";
@@ -141,6 +144,7 @@ public class Constants {
     public static final int QUERY_CLIENT_POS_INSTRUCTION = 1;
     public static final int QUERY_CLIENT_POS_CLASS = 0;
     public static final int QUERY_CASH_POS_CLASS = 0;
+
 
     public static String createGeneralRegex(String query) {
         StringBuilder stringBuilder;
