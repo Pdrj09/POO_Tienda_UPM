@@ -1,5 +1,6 @@
 package etsisi.upm.models.users;
 
+import etsisi.upm.Constants;
 import etsisi.upm.models.Ticket;
 
 import java.util.HashSet;
@@ -27,7 +28,9 @@ public class Client extends User implements Comparable<Client> {
     private static final String ERR_DNI_LENGTH = "Invalid DNI: wrong length (must be 9 chars)";
     private static final String ERR_CASHIER_NULL = "El id del cajero no puede ser null";
     private static final String ERR_DNI_DIGITS = "Invalid DNI: first 8 characters must be numbers";
+    private static final String ERR_NIE_FORMAT = "The NIE must start with X, Y or Z";
     private static final String DNI_REGEX = "\\d{8}";
+    private static final String NIE_REGEX = "^[XYZxyz]\\d{7}[A-Za-z]$";
 
     //CONSTRUCTOR W/ ALL PARAMETERS
     public Client(String dni, String name, String email, String idCashier) {
@@ -62,7 +65,26 @@ public class Client extends User implements Comparable<Client> {
         String numbers = dni.substring(0, 8);
         char letter = Character.toUpperCase(dni.charAt(8));
         //check numeric part
-        if (!numbers.matches(DNI_REGEX))
+
+        if (dni.matches(NIE_REGEX)) {
+            char letra =  dni.charAt(0);
+            switch (letra) {
+                case 'X':
+                    dni = dni.replaceFirst(String.valueOf(letra), String.valueOf(Constants.ZERO));
+                    break;
+                case 'Y':
+                    dni = dni.replaceFirst(String.valueOf(letra), String.valueOf(Constants.ONE));
+                    break;
+                case 'Z':
+                    dni = dni.replaceFirst(String.valueOf(letra), String.valueOf(Constants.TWO));
+                    break;
+                    default:
+                        throw new IllegalArgumentException(ERR_NIE_FORMAT);
+            }
+            numbers = dni.substring(0, 8);
+        }
+
+        if (!numbers.matches(DNI_REGEX) )
             throw new IllegalArgumentException(ERR_DNI_DIGITS);
         //expected letter
         int num = Integer.parseInt(numbers);
