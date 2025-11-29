@@ -64,17 +64,10 @@ public class ProductController {
 
                     if (querySplit.length > Constants.FIVE) {
                         maxPers = Integer.parseInt(querySplit[Constants.FIVE]);
-                        StringBuilder response = new StringBuilder();
-                        response.append(View.getString(this.addProduct(name, querySplit[Constants.THREE], price, id, maxPers), command));
-                        response.append(Constants.ENTER_KEY);
-                        response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
-                        return response.toString();
+                        return View.getString(this.addProduct(name, querySplit[Constants.THREE], price, id, maxPers),
+                                command);
                     } else {
-                        StringBuilder response = new StringBuilder();
-                        response.append(View.getString(this.addProduct(name, querySplit[Constants.THREE], price, id), command));
-                        response.append(Constants.ENTER_KEY);
-                        response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
-                        return response.toString();
+                        return View.getString(this.addProduct(name, querySplit[Constants.THREE], price, id), command);
                     }
                 } catch (NumberFormatException e) {
                     id = generateAutomaticId();
@@ -87,17 +80,10 @@ public class ProductController {
 
                     if (querySplit.length > Constants.FOUR) {
                         maxPers = Integer.parseInt(querySplit[Constants.FOUR]);
-                        StringBuilder response = new StringBuilder();
-                            response.append(View.getString(this.addProduct(name, querySplit[Constants.TWO], price, id, maxPers), command));
-                            response.append(Constants.ENTER_KEY);
-                         response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
-                        return response.toString();
+                        return View.getString(this.addProduct(name, querySplit[Constants.TWO], price, id, maxPers),
+                                command);
                     } else {
-                        StringBuilder response = new StringBuilder();
-                            response.append(View.getString(this.addProduct(name, querySplit[Constants.TWO], price, id), command));
-                            response.append(Constants.ENTER_KEY);
-                            response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
-                        return response.toString();
+                        return View.getString(this.addProduct(name, querySplit[Constants.TWO], price, id), command);
                     }
                     // si NO es número, generas el ID
                 }
@@ -109,11 +95,7 @@ public class ProductController {
                 prodId = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
                 field = querySplit[Constants.QUERY_PRODUCT_POS_FIELD];
                 newContent = querySplit[Constants.QUERY_PRODUCT_POS_NEWCONTENT];
-                StringBuilder response = new StringBuilder();
-                    response.append(View.getString(this.updateProduct(prodId,field,newContent), command));
-                    response.append(Constants.ENTER_KEY);
-                    response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_UPDATE ));
-                return response.toString();
+                return View.getString(this.updateProduct(prodId,field,newContent), command);
 
             case Constants.PRODUCT_ADD_FOOD:
 
