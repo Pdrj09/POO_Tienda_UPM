@@ -200,6 +200,7 @@ public class Constants {
     public static final String ERROR_ID_EMPTY = "The ID cannot be empty.";
     public static final String ERROR_NAME_EMPTY = "The name cannot be empty.";
     public static final String ERROR_EMAIL_EMPTY = "The email cannot be empty.";
+    public static final String ERROR_MAIL_FORMAT = "please enter a valid email address";
 
     public static final String ERROR_DNI_LENGTH = "Invalid DNI: wrong length (must be 9 chars)";
     public static final String ERROR_CASHIER_NULL = "The cashier ID cannot be null";
@@ -218,6 +219,8 @@ public class Constants {
     public static final String ERROR_NONEXISTEN_ID = "id nonexistent";
     public static final String ERROR_FILE_NOTFOUND = "file not found";
 
+    //private regex
+    private static final String MAIL_REGEX = "^[^@]+@[^@]+\\.[A-Za-z]{2,}$";
 
 
     public static String createGeneralRegex(String query) {
@@ -256,6 +259,10 @@ public class Constants {
                 .append(Constants.ERROR_STATUS);
 
         return builder.toString();
+    }
+
+    public static boolean checkEmail(String email) {
+        return email.matches(MAIL_REGEX);
     }
 
 
