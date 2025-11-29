@@ -29,7 +29,7 @@ public class TicketController {
 
     public String decodeQuery(String[] querySplit) {
         String ticketId, cashierId, clientId;
-        String command = Constants.TICKET + " " + querySplit[Constants.QUERY_TICKET_POS_INSTRUCTION];
+        String command = Constants.TICKET + Constants.STR_BLANK_SPACE + querySplit[Constants.QUERY_TICKET_POS_INSTRUCTION];
         int prodId, amount;
         switch (querySplit[Constants.QUERY_TICKET_POS_INSTRUCTION]){
             case Constants.TICKET_NEW:
@@ -145,18 +145,18 @@ public class TicketController {
         if (!cashier.getTickets().contains(ticket)) throw new IllegalArgumentException(Constants.ERROR_INVALID_ID);
 
         switch (product) {
-            case null -> throw new IllegalArgumentException("Can't find product.");
+            case null -> throw new IllegalArgumentException(Constants.ERROR_NO_PRODUCTS_FOUND);
 
 
             //cant exist 2 same serviceProduct
             case ServiceProduct serviceProduct when ticket.containsProduct(product) ->
-                    throw new IllegalStateException("the same service can't be added twice in the same ticket.");
+                    throw new IllegalStateException(Constants.ERROR_SERVICE_ALREADY_EXIST);
 
 
             //limit participants validation.
             case ServiceProduct service -> {
                 if (amount <= 0 || amount > Product.maxPeople) {
-                    throw new IllegalArgumentException("The number of participants (" + amount + ") isn't valid for this service.");
+                    throw new IllegalArgumentException(Constants.ERROR_INVALID_SERVICE_PEOPLE_1 + amount + Constants.ERROR_INVALID_SERVICE_PEOPLE_2);
                 }
             }
             default -> {

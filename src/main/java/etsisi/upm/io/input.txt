@@ -65,4 +65,7 @@ ticket add 212128 UW1234567 5 1
 ticket add 212128 UW1234567 5 3 --pred --pblue --pgreen
 ticket add 212128 UW1234567 6 3 --pred --pblue
 ticket print 212128 UW1234567
+ticket new 158926 UW1234567 98948334B
+prod addFood 158926 "Restaurante Asador" 50 2025-12-21 40
+ticket print 158926 UW1234567
 exit

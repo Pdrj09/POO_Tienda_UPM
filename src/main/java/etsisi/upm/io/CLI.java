@@ -94,9 +94,6 @@ public class CLI {
                     prod remove <id>
             """;
 
-    private static final String STR_CATEGORY = "Categories: ";
-    private static final String STR_DISCOUNT_INFO = "Discounts if there are ≥2 units in the category: ";
-
 
     public CLI(ProductController productController, TicketController ticketController, ClientController clientController, CashierController cashierController) {
         printWelcomeMessage();
@@ -115,7 +112,7 @@ public class CLI {
             this.ticketQuery(Constants.deleteSubstring(query, Constants.createGeneralRegex(Constants.TICKET)));
             //if query starts with ECHO,it echoes back the input
         } else if (query.startsWith(Constants.ECHO)) {
-            echoCommand(Constants.deleteSubstring(query, Constants.createGeneralRegex(Constants.ECHO)));
+            echoCommand(query);
             //if query starts with HELP, displays help information available
         } else if (query.startsWith(Constants.HELP)) {
             printHelp(query);
@@ -147,7 +144,7 @@ public class CLI {
         try {
             System.out.println(this.productController.decodeQuery(querySplit));
         }catch (DateTimeParseException e){
-            System.out.println(Constants.errorStatus(Constants.PROD, Constants.ERROR_STATUS, Constants.ERROR_DATE));
+            System.out.println(Constants.errorStatus(Constants.PROD, Constants.ERROR_DATE));
         }catch (Exception e) {
             System.out.println(Constants.errorStatus(Constants.PROD, e.getMessage()));
         }
@@ -212,28 +209,28 @@ public class CLI {
         System.out.println(command);
     }
 
-    //for getting the different categories for prroducts
+    //for getting the different categories for products
     private static String getCategoriesHelp() {
-        StringBuilder lineCategories = new StringBuilder(STR_CATEGORY);
-        StringBuilder lineDiscounts = new StringBuilder(STR_DISCOUNT_INFO);
+        StringBuilder lineCategories = new StringBuilder(Constants.CLI_CATEGORIES);
+        StringBuilder lineDiscounts = new StringBuilder(Constants.CLI_DISCOUNT);
         boolean first = true;
         for (Categories c : Categories.values()) {
             if (c == Categories.EMPTY)
                 continue;
             if (!first) {
-                lineCategories.append(Constants.STR_COMMA).append(Constants.STR_BLANK_SPACE);
-                lineCategories.append(Constants.STR_COMMA).append(Constants.STR_BLANK_SPACE);
+                lineCategories.append(Constants.COMMA_SPACE);
+                lineDiscounts.append(Constants.COMMA_SPACE);
             }
             lineCategories.append(c.name());
             lineDiscounts.append(c.name())
                     .append(Constants.STR_BLANK_SPACE)
-                    .append((int)(c.getDiscount() * Constants.PERCENT))
-                    .append(Constants.STR_PERCENT);
+                    .append((int)(c.getDiscount() * Constants.HUNDRED))
+                    .append(Constants.PERCENTAGE);
             first = false;
         }
         lineCategories.append(Constants.ENTER_KEY);
         lineDiscounts.append(Constants.STR_DOT);
-        return lineCategories.append(lineDiscounts).toString();
+        return lineCategories.toString() + lineDiscounts.toString();
     }
 
 

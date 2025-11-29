@@ -19,19 +19,11 @@ public class Ticket {
     /// Todo multimap
     private Map<Categories,Integer> categories;
 
-    private static final String DISCOUNT = "**discount -";
-    private static final String TOTAL_PRICE = "\nTotal price: ";
-    private static final String TOTAL_DISCOUNT = "\nTotal discount: ";
-    private static final String FINAL_PRICE = "\nFinal price: ";
-    private static final String NEXT_LINE = "\n";
-    private static final double EXTRA_PRICE_PERSONALIZATIONS = 0.1;
-    private static final int MIN_FOR_DISCOUNT = 1;
-
 
     public Ticket(String id){
         LocalDateTime now = LocalDateTime.now();
         String formatted = formatDate(now);
-        this.id = formatted + "-" +id;
+        this.id = formatted + Constants.HYPEN +id;
         this.list = new TreeMap<>();
         this.categories = new HashMap<>();
         this.state = TicketStates.EMPTY;
@@ -39,11 +31,11 @@ public class Ticket {
     }
 
     public Ticket(){
-        this(String.format("%05d", new Random().nextInt(100_000)));
+        this(String.format(Constants.ID_FORMAT, new Random().nextInt(Constants.MAX_RANDOM)));
     }
 
     public static String formatDate(LocalDateTime date){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd-HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT_WH);
         return date.format(formatter);
     }
 
@@ -66,9 +58,9 @@ public class Ticket {
         List<Object> entry = this.list.get(prod);
 
         if(entry!=null){//If it doesn't exist, amount has to be > 0
-            if (amount == 0) throw new IllegalStateException(Constants.ERROR_ZERO_AMOUNT);
+            if (amount == Constants.ZERO) throw new IllegalStateException(Constants.ERROR_ZERO_AMOUNT);
         }else {//If it exists but is not going to be personalized amount has to be > 0
-            if (!isGoingToPersonalize && amount == 0)  throw new IllegalStateException(Constants.ERROR_ZERO_AMOUNT);
+            if (!isGoingToPersonalize && amount == Constants.ZERO)  throw new IllegalStateException(Constants.ERROR_ZERO_AMOUNT);
         }
 
         if(entry == null){
@@ -81,9 +73,9 @@ public class Ticket {
 
             this.list.put(prod,entry);
         }else{
-            if (amount > 0) {
+            if (amount > Constants.ZERO) {
                 int oldAmount = (int) entry.getFirst();
-                entry.set(0, oldAmount + amount);
+                entry.set(Constants.ZERO, oldAmount + amount);
             }
 
             if (customizations != null) {
@@ -117,14 +109,14 @@ public class Ticket {
     public String close(){
         this.closeDate = LocalDateTime.now();
         String date = formatDate(this.closeDate);
-        this.id+="-"+date;
+        this.id+=Constants.HYPEN+date;
         this.state = TicketStates.CLOSED;
         return this.getId();
     }
 
     // totalPrice updated with Meal&Meetings version
     private double totalPrice(){
-        double sum=0;
+        double sum=Constants.ZERO;
         for(Map.Entry<Product,List<Object>> entry : list.entrySet()){
             double price = calculateProductPrice(entry);
             int amount = (int) entry.getValue().getFirst();
@@ -135,10 +127,10 @@ public class Ticket {
     }
 
     private double totalDiscount(){
-        double sum=0;
+        double sum=Constants.ZERO;
         for(Map.Entry<Product,List<Object>> entry : list.entrySet()){
             Product product = entry.getKey();
-            if (categories.get(product.getCategory()) > MIN_FOR_DISCOUNT){
+            if (categories.get(product.getCategory()) > Constants.MIN_FOR_DISCOUNT){
                 sum+=calculateProductPrice(entry) * product.getCategory().getDiscount();
             }
         }
@@ -149,9 +141,9 @@ public class Ticket {
         Product product = entry.getKey();
         int amount = (int) entry.getValue().getFirst(); // number of amount(products)/people(services)
         double price = product.getPrice();
-        int personalizations = entry.getValue().size()-1;
+        int personalizations = entry.getValue().size()-Constants.ONE;
 
-        double personalizationsExtra = price*EXTRA_PRICE_PERSONALIZATIONS*personalizations;
+        double personalizationsExtra = price*Constants.EXTRA_PRICE_PERSONALIZATIONS*personalizations;
         price += personalizationsExtra;
         return price;
     }
@@ -162,14 +154,14 @@ public class Ticket {
         StringBuilder res = new StringBuilder();
         for (Map.Entry<Product, List<Object>> entry : list.entrySet()) {
             res.append(entry.getKey().toString());
-            if (categories.get(entry.getKey().getCategory()) > MIN_FOR_DISCOUNT)
-                res.append(DISCOUNT).append(entry.getKey().getPrice() * entry.getKey().getCategory().getDiscount());
-            res.append(NEXT_LINE);
+            if (categories.get(entry.getKey().getCategory()) > Constants.MIN_FOR_DISCOUNT)
+                res.append(Constants.DISCOUNT).append(entry.getKey().getPrice() * entry.getKey().getCategory().getDiscount());
+            res.append(Constants.ENTER_KEY);
         }
-        res.append(TOTAL_PRICE).append(totalPrice());
-        res.append(TOTAL_DISCOUNT).append(totalDiscount());
-        res.append(FINAL_PRICE).append(totalPrice() - totalDiscount());
-        res.append(NEXT_LINE);
+        res.append(Constants.TOTAL_PRICE).append(totalPrice());
+        res.append(Constants.TOTAL_DISCOUNT).append(totalDiscount());
+        res.append(Constants.FINAL_PRICE).append(totalPrice() - totalDiscount());
+        res.append(Constants.ENTER_KEY);
         return res.toString();
     }
 
@@ -183,8 +175,8 @@ public class Ticket {
     }
     public String getCloseDateFormatted() {
         if (closeDate == null)
-            return "-";
-        return closeDate.format(DateTimeFormatter.ofPattern("dd-MM-yy HH:mm"));
+            return Constants.HYPEN;
+        return closeDate.format(DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT));
     }
 
     public double getTotalPriceView() {
@@ -200,7 +192,7 @@ public class Ticket {
     }
 
     public Map<Product, List<Object>> getList() {
-        // Devolver un unmodifiableMap para evitar modificaciones externas
+        //Return an unmodifiableMap to prevent external modifications
         return Collections.unmodifiableMap(list);
     }
     public Map<Categories, Integer> getCategories() {

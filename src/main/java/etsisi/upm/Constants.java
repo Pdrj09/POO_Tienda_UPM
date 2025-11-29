@@ -46,11 +46,14 @@ public class Constants {
     public static final int FIVE = 5;
     public static final int SIX = 6;
     public static final int SEVEN = 7;
+    public static final int EIGHT = 8;
+    public static final int NINE = 9;
+    public static final int HUNDRED = 100;
+
 
     public static final int NON_SIZE = -1;
     public static final int MAX_SIZE = 200;
 
-    public static final int PERCENT = 100;
     // menu const
     public static final String EXIT = "exit";
     public static final String PROD = "prod";
@@ -64,36 +67,38 @@ public class Constants {
     public static final String STR_EMPTY = "";
     public static final String STR_DOT = ".";
     public static final String STR_COMMA = ",";
-    public static final String STR_ERROR = "Error";
     public static final String STR_BLANK_SPACE = " ";
     public static final String STR_DOUBLE_DOT = ":";
     public static final String ENTER_KEY = "\n";
-    public static final String STR_PERCENT = "%";
+    public static final String TAB_SPACE = "\t";
+    public static final String COMMA_SPACE = ", ";
+    public static final String PERCENTAGE = "%";
+    public static final String OPEN_BRACE = "{";
+    public static final String CLOSE_BRACE = "}";
+    public static final String QUOTE = "'";
+    public static final String HYPEN = "-";
+    public static final String ID_FORMAT = "%05d";
+    public static final int MAX_RANDOM = 100_000;
 
 
     public static final String OK_STATUS = "ok";  //Ok
     public static final String ERROR_STATUS = "Error"; //error
 
-    public static final String ERROR_INVALID_OPTION = "invalid option";
-    public static final String ERROR_FEW_PARAMS = "more params required";
-    public static final String ERROR_NONEXISTEN_ID = "id nonexistent";
-    public static final String ERROR_FILE_NOTFOUND = "file not found";
     public static final String IN_THE_FUTURE = " in the future";
 
-    public static final String ERROR_PRICE = "No price for product";
-    public static final String ERROR_INVALID_ID = "UW format incorrect";
-
-    public static final String ERROR_TOOMANY_ARGUMENTS = "too many arguments";
-    public static final String ERROR_TOOMANY_PEOPLE = "too many people";
-
-    public static final String DATETIME_FORMAT = "yyyy-MM-dd";
-    public static final String ERROR_DATE = "date wrong";
+    public static final String DATETIME_FORMAT_WH = "yy-MM-dd-HH:mm";
+    public static final String DATETIME_FORMAT= "dd-MM-yy HH:mm";
 
     public static final String STR_FOOD = "class:Food";
     public static final String STR_MEETING = "class:Meeting";
     public static final String STR_PRICE_PERSON = ", pricePerPerson:";
     public static final String STR_EXPIRATION = ", expiration:";
     public static final String STR_SERVICE_PRODUCT = "class:ServiceProduct";
+
+    public static final String NAME = "NAME";
+    public static final String CATEGORY = "CATEGORY";
+    public static final String PRICE = "PRICE";
+    public static final String CATALOG = "Catalog:\n";
 
     // regex const
     public static final String REGEX_INIT = "^";
@@ -111,6 +116,11 @@ public class Constants {
     public static final String PRODUCT_REMOVE = "remove";
     public static final String PRODUCT_ADD_FOOD = "addFood";
     public static final String PRODUCT_ADD_MEETING = "addMeeting";
+    public static final String STR_PRODUCT = "class:Product";
+    public static final String STR_PROD_NAME = ", name:'";
+    public static final String STR_PROD_ID = ", id:";
+    public static final String STR_CATEGORY = ", category:";
+    public static final String STR_PRICE = ", price:";
 
 
     // ticket const
@@ -120,30 +130,57 @@ public class Constants {
     public static final String TICKET_REMOVE = "remove";
     public static final String TICKET_LIST = "list";
     public static final int MAX_SIZE_TICKET = 100;
+    public static final double EXTRA_PRICE_PERSONALIZATIONS = 0.1;
+    public static final int MIN_FOR_DISCOUNT = 1;
+    public static final String DISCOUNT = "**discount -";
+    public static final String TOTAL_PRICE = "\nTotal price: ";
+    public static final String TOTAL_DISCOUNT = "\nTotal discount: ";
+    public static final String FINAL_PRICE = "\nFinal price: ";
 
     // client const
     public static final String CLIENT_ADD = "add";
     public static final String CLIENT_REMOVE = "remove";
     public static final String CLIENT_LIST = "list";
+    public static final String CLI_CATEGORIES = "Categories: ";
+    public static final String CLI_DISCOUNT ="Discounts if there are ≥2 units in the category: ";
+    public static final String STR_CLIENT = "class:Client";
+    public static final String STR_DNI = ", dni:'";
+    public static final String STR_CLI_NAME = ", name:'";
+    public static final String STR_CLIENT_EMAIL = ", email:'";
+    public static final String STR_CASH = ", cashCreatorId:'";
+    public static final String DNI_REGEX = "\\d{8}";
+    public static final String DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
+    public static final int ALPHABET_NUM = 23;
+
+
 
     //cash const
     public static final String CASH_ADD = "add";
     public static final String CASH_REMOVE = "remove";
     public static final String CASH_LIST = "list";
     public static final String CASH_TICKETS = "tickets";
+    public static final String CASHIER_PREFIX = "UW";
+    public static final String CASH_REGEX = "%s%07d";
+    public static final String STR_CASHIER = "class:Cashier";
+    public static final String STR_ID = ", id:";
+    public static final String STR_NAME = ", name:";
+    public static final String STR_CASH_EMAIL = ", emailCompany:";
+    public static final String STR_TICKETS = ", tickets:";
 
     // Time const
     public static final int TIME_FOOD_PLANNING_DAYS = 3;
     public static final int TIME_MEETING_PLANNING_HOURS = 12;
     public static final int TIME_MAX_PEOPLE_SERVICE = 100;
+    public static final String HOURS = "hours";
+    public static final String DAYS = "days";
 
 
     //Error const
+    public static final String ERROR_DATE = "date wrong";
     public static final String ERROR_NO_PRODUCTS_FOUND  = "No products found";
     public static final String DUPLICATED_ID_ERROR  = "The id given already exists please try again using a new one";
     public static final String ERROR_MAXSIZE = "Repository full, maximum size of ";
     public static final String ERROR_SERVICE_DATE_FEASIBILITY = "Error: The date must be at least ";
-    public static final String ERROR_MAIL_FORMAT = "The mail format is incorrect";
     public static final int QUERY_CLIENT_POS_MAXARGS = 6;
     public static final String ERROR_NO_CLIENTS_FOUND = "No clients found";
     public static final int QUERY_CLIENT_POS_INSTRUCTION = 1;
@@ -152,9 +189,35 @@ public class Constants {
     public static final String ERROR_MAXSIZE_TICKET = "Ticket filled, maximum size of ";
     public static final String ERROR_NONPERSONALIZABLE = "You cant personalice a product that is not personalizable";
     public static final String ERROR_ZERO_AMOUNT = "The min amount to add is 1";
+    public static final String ERROR_SERVICE_ALREADY_EXIST = "the same service can't be added twice in the same ticket.";
+    public static final String ERROR_INVALID_SERVICE_PEOPLE_1 = "The number of participants (";
+    public static final String ERROR_INVALID_SERVICE_PEOPLE_2 = ") isn't valid for this service.";
 
-    // private regex
-    private static final String MAIL_REGEX = "^[^@]+@[^@]+\\.[A-Za-z]{2,}";
+    public static final String ERROR_CREATE_PRODUCT = "Error creating product, category does not exist";
+    public static final String ERROR_DELETE_PRODUCT = "Error deleting product";
+    public static final String ERROR_ID_NONEXISTENT = "The id passed as a parameter does not exist";
+
+    public static final String ERROR_ID_EMPTY = "The ID cannot be empty.";
+    public static final String ERROR_NAME_EMPTY = "The name cannot be empty.";
+    public static final String ERROR_EMAIL_EMPTY = "The email cannot be empty.";
+
+    public static final String ERROR_DNI_LENGTH = "Invalid DNI: wrong length (must be 9 chars)";
+    public static final String ERROR_CASHIER_NULL = "The cashier ID cannot be null";
+    public static final String ERROR_DNI_DIGITS = "Invalid DNI: first 8 characters must be numbers";
+    public static final String ERROR_INVALID_DNI_1 = "Invalid DNI: wrong letter. Expected ";
+    public static final String ERROR_INVALID_DNI_2= " for ";
+
+    public static final String ERROR_PRICE = "No price for product";
+    public static final String ERROR_INVALID_ID = "UW format incorrect";
+
+    public static final String ERROR_TOOMANY_ARGUMENTS = "too many arguments";
+    public static final String ERROR_TOOMANY_PEOPLE = "Invalid  max people number";
+
+    public static final String ERROR_INVALID_OPTION = "invalid option";
+    public static final String ERROR_FEW_PARAMS = "more params required";
+    public static final String ERROR_NONEXISTEN_ID = "id nonexistent";
+    public static final String ERROR_FILE_NOTFOUND = "file not found";
+
 
 
     public static String createGeneralRegex(String query) {
@@ -212,11 +275,6 @@ public class Constants {
 
         return (builder.toString());
     }
-
-    public static boolean checkEmail(String email) {
-        return email.matches(MAIL_REGEX);
-    }
-
     public static String deleteSubstring(String query, String regex) {
         return query.replaceFirst(regex, Constants.STR_EMPTY);
     }
