@@ -139,6 +139,7 @@ public class Constants {
     public static final String DUPLICATED_ID_ERROR  = "The id given already exists please try again using a new one";
     public static final String ERROR_MAXSIZE = "Repository full, maximum size of ";
     public static final String ERROR_SERVICE_DATE_FEASIBILITY = "Error: The date must be at least ";
+    public static final String ERROR_MAIL_FORMAT = "The mail format is incorrect";
     public static final int QUERY_CLIENT_POS_MAXARGS = 6;
     public static final String ERROR_NO_CLIENTS_FOUND = "No clients found";
     public static final int QUERY_CLIENT_POS_INSTRUCTION = 1;

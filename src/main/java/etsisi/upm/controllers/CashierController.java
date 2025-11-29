@@ -68,11 +68,16 @@ public class CashierController {
     }
 
     private Cashier addCashier(String emailCompany, String name) {
+
+        if (!Constants.checkEmail(emailCompany)) throw new IllegalArgumentException(Constants.ERROR_MAIL_FORMAT);
+
         String cashierId = generateCashierId();
         return addCashier(cashierId,emailCompany,name);
     }
 
     private Cashier addCashier(String cashierId, String emailCompany, String name) {
+        if (!Constants.checkEmail(emailCompany)) throw new IllegalArgumentException(Constants.ERROR_MAIL_FORMAT);
+
         if(!cashierId.matches(Constants.REGEX_CASH_ID)) throw new InvalidParameterException(Constants.ERROR_INVALID_ID);
 
         Cashier cashier =  Cashier.create(cashierId, emailCompany, name);
