@@ -120,7 +120,7 @@ public class ProductController {
 
                 prodId = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
                 name = querySplit[Constants.QUERY_PRODUCT_POS_NAME];
-                price = Double.parseDouble(querySplit[Constants.QUERY_PRODUCT_POS_PRICE]);
+                price = Double.parseDouble(querySplit[Constants.QUERY_PRODUCT_POS_PRICE_FOODMEETING]);
                 maxPeople = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_MAXPEOPLE]);
                 expirationDate = LocalDateTime.parse(querySplit[Constants.QUERY_PRODUCT_POS_EXPIRATION]);
 
@@ -129,7 +129,7 @@ public class ProductController {
 
                 prodId = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
                 name = querySplit[Constants.QUERY_PRODUCT_POS_NAME];
-                price = Double.parseDouble(querySplit[Constants.QUERY_PRODUCT_POS_PRICE]);
+                price = Double.parseDouble(querySplit[Constants.QUERY_PRODUCT_POS_PRICE_FOODMEETING]);
                 maxPeople = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_MAXPEOPLE]);
                 expirationDate = LocalDateTime.parse(querySplit[Constants.QUERY_PRODUCT_POS_EXPIRATION]);
 
