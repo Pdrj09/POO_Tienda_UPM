@@ -206,7 +206,8 @@ public class CLI {
     }
 
     private static void echoCommand(String command) {
-        System.out.println(command);
+        StringBuilder sb = new StringBuilder(command).append(Constants.ENTER_KEY);
+        System.out.println(sb.toString());
     }
 
     //for getting the different categories for products
