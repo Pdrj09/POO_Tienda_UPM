@@ -94,6 +94,9 @@ public class CLI {
                     prod remove <id>
             """;
 
+    private static final String STR_CATEGORY = "Categories: ";
+    private static final String STR_DISCOUNT_INFO = "Discounts if there are ≥2 units in the category: ";
+
 
     public CLI(ProductController productController, TicketController ticketController, ClientController clientController, CashierController cashierController) {
         printWelcomeMessage();
@@ -211,25 +214,25 @@ public class CLI {
 
     //for getting the different categories for prroducts
     private static String getCategoriesHelp() {
-        StringBuilder lineCategories = new StringBuilder("Categories: ");
-        StringBuilder lineDiscounts = new StringBuilder("Discounts if there are ≥2 units in the category: ");
+        StringBuilder lineCategories = new StringBuilder(STR_CATEGORY);
+        StringBuilder lineDiscounts = new StringBuilder(STR_DISCOUNT_INFO);
         boolean first = true;
         for (Categories c : Categories.values()) {
             if (c == Categories.EMPTY)
                 continue;
             if (!first) {
-                lineCategories.append(", ");
-                lineDiscounts.append(", ");
+                lineCategories.append(Constants.STR_COMMA).append(Constants.STR_BLANK_SPACE);
+                lineCategories.append(Constants.STR_COMMA).append(Constants.STR_BLANK_SPACE);
             }
             lineCategories.append(c.name());
             lineDiscounts.append(c.name())
-                    .append(" ")
-                    .append((int)(c.getDiscount() * 100))
-                    .append("%");
+                    .append(Constants.STR_BLANK_SPACE)
+                    .append((int)(c.getDiscount() * Constants.PERCENT))
+                    .append(Constants.STR_PERCENT);
             first = false;
         }
-        lineCategories.append("\n");
-        lineDiscounts.append(".");
+        lineCategories.append(Constants.ENTER_KEY);
+        lineDiscounts.append(Constants.STR_DOT);
         return lineCategories.toString() + lineDiscounts.toString();
     }
 

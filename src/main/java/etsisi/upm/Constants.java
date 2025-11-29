@@ -50,6 +50,7 @@ public class Constants {
     public static final int NON_SIZE = -1;
     public static final int MAX_SIZE = 200;
 
+    public static final int PERCENT = 100;
     // menu const
     public static final String EXIT = "exit";
     public static final String PROD = "prod";
@@ -67,6 +68,7 @@ public class Constants {
     public static final String STR_BLANK_SPACE = " ";
     public static final String STR_DOUBLE_DOT = ":";
     public static final String ENTER_KEY = "\n";
+    public static final String STR_PERCENT = "%";
 
 
     public static final String OK_STATUS = "ok";  //Ok
