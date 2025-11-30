@@ -15,8 +15,7 @@ public class Ticket {
     private LocalDateTime closeDate;
     private TicketStates state;
 
-    private Map<Product,List<Object>> list;//Position 0->Cuantity 1-n->Personalizations
-    /// Todo multimap
+    private Map<Product,Integer> list;
     private Map<Categories,Integer> categories;
 
 
@@ -48,40 +47,12 @@ public class Ticket {
         return false;
     }
 
-    // Add a product to the ticket, if the product already exists increments its amount
-    //if ticket add (Product prod, int amount) -p <personalizacion>
-    public Ticket addProduct(Product prod, int amount, List<String> customizations)
-    {
+    public Ticket addProduct(Product prod, int amount) {
         if (countProducts() + amount > Constants.MAX_SIZE_TICKET)  throw new IllegalStateException(Constants.ERROR_MAXSIZE_TICKET + Constants.MAX_SIZE_TICKET);
-        boolean isGoingToPersonalize = customizations != null;
 
-        List<Object> entry = this.list.get(prod);
+        if (amount < Constants.MIN_AMMOUNT) throw new IllegalStateException(Constants.ERROR_ZERO_AMOUNT);
 
-        if(entry!=null){//If it doesn't exist, amount has to be > 0
-            if (amount == Constants.ZERO) throw new IllegalStateException(Constants.ERROR_ZERO_AMOUNT);
-        }else {//If it exists but is not going to be personalized amount has to be > 0
-            if (!isGoingToPersonalize && amount == Constants.ZERO)  throw new IllegalStateException(Constants.ERROR_ZERO_AMOUNT);
-        }
-
-        if(entry == null){
-            entry = new ArrayList<>();
-            entry.addFirst(amount);
-
-            if (customizations != null) {
-                entry.addAll(customizations);
-            }
-
-            this.list.put(prod,entry);
-        }else{
-            if (amount > Constants.ZERO) {
-                int oldAmount = (int) entry.getFirst();
-                entry.set(Constants.ZERO, oldAmount + amount);
-            }
-
-            if (customizations != null) {
-                entry.addAll(customizations);
-            }
-        }
+        this.list.put(prod,amount);
 
         Categories category = prod.getCategory();
         this.categories.put(category, this.categories.getOrDefault(category, Constants.ZERO) + amount);
@@ -92,9 +63,8 @@ public class Ticket {
 
     private int countProducts(){
         int total = Constants.ZERO;
-        for(List<Object> list : this.list.values()){
-            Integer quantity = (Integer) list.getFirst();
-            total += quantity;
+        for(Integer amount : this.list.values()){
+            total += amount;
         }
         return total;
     }
@@ -114,39 +84,38 @@ public class Ticket {
         return this.getId();
     }
 
-    // totalPrice updated with Meal&Meetings version
     private double totalPrice(){
-        double sum=Constants.ZERO;
-        for(Map.Entry<Product,List<Object>> entry : list.entrySet()){
-            double price = calculateProductPrice(entry);
-            int amount = (int) entry.getValue().getFirst();
+        double sum=Constants.BASE_PRICE;
+        for(Map.Entry<Product, Integer> entry : list.entrySet()){
+            double price = calculateProductPrice(entry.getKey());
+            int amount = entry.getValue();
 
-            sum+= price * amount;
+            sum += price * amount;
         }
         return round(sum);
     }
 
     private double totalDiscount(){
-        double sum=Constants.ZERO;
-        for(Map.Entry<Product,List<Object>> entry : list.entrySet()){
+        double sum=Constants.BASE_DISCOUNT;
+        for(Map.Entry<Product, Integer> entry : list.entrySet()){
             Product product = entry.getKey();
-            int amount = (int) entry.getValue().getFirst();
+            int amount = entry.getValue();
+
             if (categories.get(product.getCategory()) > Constants.MIN_FOR_DISCOUNT){
-                double productBasePrice = product.getPrice() * amount;
-                sum+= productBasePrice * product.getCategory().getDiscount();
+                double productBasePrice = calculateProductPrice(product) * amount;
+                sum += productBasePrice * product.getCategory().getDiscount();
             }
         }
         return round(sum);
     }
 
-    private double calculateProductPrice(Map.Entry<Product,List<Object>> entry){
-        Product product = entry.getKey();
-        int amount = (int) entry.getValue().getFirst(); // number of amount(products)/people(services)
+    private double calculateProductPrice(Product product){
         double price = product.getPrice();
-        int personalizations = entry.getValue().size()-Constants.ONE;
 
-        double personalizationsExtra = price*Constants.EXTRA_PRICE_PERSONALIZATIONS*personalizations;
-        price += personalizationsExtra;
+        if (product instanceof ProductPersonalized){
+            price += price * Constants.EXTRA_PRICE_PERSONALIZATIONS * ((ProductPersonalized) product).getCustomizationsAmount();
+        }
+
         return price;
     }
 
@@ -161,7 +130,7 @@ public class Ticket {
     @Override
     public String toString() {
         StringBuilder res = new StringBuilder();
-        for (Map.Entry<Product, List<Object>> entry : list.entrySet()) {
+        for (Map.Entry<Product, Integer> entry : list.entrySet()) {
             res.append(entry.getKey().toString());
             if (categories.get(entry.getKey().getCategory()) > Constants.MIN_FOR_DISCOUNT) {
                 double individualDiscount = entry.getKey().getPrice() * entry.getKey().getCategory().getDiscount();
@@ -202,7 +171,7 @@ public class Ticket {
         return round(getTotalPriceView() - getTotalDiscountView());
     }
 
-    public Map<Product, List<Object>> getList() {
+    public Map<Product, Integer> getList() {
         //Return an unmodifiableMap to prevent external modifications
         return Collections.unmodifiableMap(list);
     }

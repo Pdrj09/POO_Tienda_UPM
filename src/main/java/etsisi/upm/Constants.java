@@ -121,7 +121,8 @@ public class Constants {
     public static final String STR_PROD_ID = ", id:";
     public static final String STR_CATEGORY = ", category:";
     public static final String STR_PRICE = ", price:";
-
+    public static final String STR_MAXPERS = ", maxPersonal:";
+    public static final String STR_PERONALIZATIONS = ", personalizationList:";
 
     // ticket const
     public static final String TICKET_ADD = "add";
@@ -136,6 +137,10 @@ public class Constants {
     public static final String TOTAL_PRICE = "\nTotal price: ";
     public static final String TOTAL_DISCOUNT = "\nTotal discount: ";
     public static final String FINAL_PRICE = "\nFinal price: ";
+    public static final int MIN_AMMOUNT = 1;
+    public static final double BASE_PRICE = 0;
+    public static final double BASE_DISCOUNT = 0;
+
 
     // client const
     public static final String CLIENT_ADD = "add";
@@ -187,7 +192,7 @@ public class Constants {
     public static final int QUERY_CLIENT_POS_CLASS = 0;
     public static final int QUERY_CASH_POS_CLASS = 0;
     public static final String ERROR_MAXSIZE_TICKET = "Ticket filled, maximum size of ";
-    public static final String ERROR_NONPERSONALIZABLE = "You cant personalice a product that is not personalizable";
+    public static final String ERROR_NONPERSONALIZABLE = "You cant personalize a product that is not personalizable";
     public static final String ERROR_ZERO_AMOUNT = "The min amount to add is 1";
     public static final String ERROR_SERVICE_ALREADY_EXIST = "the same service can't be added twice in the same ticket.";
     public static final String ERROR_INVALID_SERVICE_PEOPLE_1 = "The number of participants (";
@@ -217,7 +222,6 @@ public class Constants {
     public static final String ERROR_FEW_PARAMS = "more params required";
     public static final String ERROR_NONEXISTEN_ID = "id nonexistent";
     public static final String ERROR_FILE_NOTFOUND = "file not found";
-
 
 
     public static String createGeneralRegex(String query) {

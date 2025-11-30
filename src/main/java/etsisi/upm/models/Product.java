@@ -10,12 +10,12 @@ import java.util.Objects;
 
 //We asign the variables
 public class Product implements Comparable<Product> {
-    private final int id; // It is a global variable as the id cant change once the object is created
-    private String name;
-    private double price;
-    private Categories category;
-    private boolean personalizable;
-    private int maxPers;
+    protected final int id; // It is a global variable as the id cant change once the object is created
+    protected String name;
+    protected double price;
+    protected Categories category;
+    protected boolean personalizable;
+    protected int maxPers;
     public static final int maxPeople = Constants.HUNDRED;
 
 
@@ -53,7 +53,6 @@ public class Product implements Comparable<Product> {
         return kvs;
     }
 
-    //toString method
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -68,7 +67,7 @@ public class Product implements Comparable<Product> {
     }
 
     @Override
-    public boolean equals(Object o) { //equals function to see if we are referring to the same object
+    public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
         return id == product.id;

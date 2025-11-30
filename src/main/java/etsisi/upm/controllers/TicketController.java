@@ -3,6 +3,7 @@ package etsisi.upm.controllers;
 import etsisi.upm.Constants;
 import etsisi.upm.io.View;
 import etsisi.upm.models.Product;
+import etsisi.upm.models.ProductPersonalized;
 import etsisi.upm.models.Ticket;
 import etsisi.upm.models.repositories.*;
 import etsisi.upm.models.users.Cashier;
@@ -162,8 +163,14 @@ public class TicketController {
             default -> {
             }
         }
+        Product finalProduct;
+        if (customizations != null){
+            if (product.isPersonalizable()){
+                finalProduct = new ProductPersonalized(product,customizations);
+            }else throw new IllegalStateException(Constants.ERROR_NONPERSONALIZABLE);
+        }else finalProduct = product;
 
-        return ticket.addProduct(product,amount,customizations);
+        return ticket.addProduct(finalProduct,amount);
     }
 
     private Ticket removeProductFromTicket(String ticketId, String cahsierId, Integer productId){

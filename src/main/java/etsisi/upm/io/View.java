@@ -25,6 +25,10 @@ public class View {
         public KV(String key, String value) { this.key = key; this.value = value; }
     }
 
+//    public static String getString(Object o, String command){
+//        return o.toString();
+//    }
+
     // Main printing method
     public static <T> String getString(T element, String command) {
         if (element == null)
