@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 //We asign the variables
-public class Product implements Comparable<Product>{
+public class Product implements Comparable<Product>, Presentable {
     protected final int id; // It is a global variable as the id cant change once the object is created
     protected String name;
     protected double price;
@@ -75,7 +75,7 @@ public class Product implements Comparable<Product>{
        return  this.personalizable;
     }
 
-    private double round(double value) {
+    protected double round(double value) {
         long factor = (long) Math.pow(10, 2); // 2 decimales
         value *= factor;
         long tmp = Math.round(value);
@@ -125,8 +125,9 @@ public class Product implements Comparable<Product>{
         kvs.add(new KV("ID", String.valueOf(this.id)));
         kvs.add(new KV("Name", this.name));
         kvs.add(new KV("Category", String.valueOf(this.category)));
-        kvs.add(new KV("Price", String.valueOf(this.getPrice()))); // Usar getPrice()
-
+        kvs.add(new KV("Price", String.valueOf(this.getPrice())));
+        if (this.isPersonalizable())
+            kvs.add(new KV("Max Personalizations", String.valueOf(this.getMaxPers())));
         return kvs;
     }
     //It's used to compare alphabetically this name and the other products name (it is case-insensitive)

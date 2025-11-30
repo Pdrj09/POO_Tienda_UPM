@@ -11,6 +11,7 @@ import java.util.List;
 public abstract class ServiceProduct extends Product {
     private final LocalDateTime expirationDate;
     private int numPeople;
+    private double finalPrice;
 
     public ServiceProduct(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
         super(id,
@@ -20,7 +21,7 @@ public abstract class ServiceProduct extends Product {
 
         if (maxPeople>Constants.TIME_MAX_PEOPLE_SERVICE || maxPeople<=Constants.ZERO) throw new IllegalArgumentException(Constants.ERROR_TOOMANY_PEOPLE);
         else numPeople = maxPeople;
-
+        this.finalPrice = Constants.ZERO; //inicialization of the finalPrice
         this.expirationDate = expirationDate;
 
         // time validation
@@ -41,8 +42,6 @@ public abstract class ServiceProduct extends Product {
 
     public abstract ChronoUnit getMinimumTimeUnit();
 
-    public abstract double calculateTotalCost(int participants);
-
     // logic
     public boolean isFeasible(LocalDateTime creationTime) {
         long timeDifference = creationTime.until(expirationDate, getMinimumTimeUnit());
@@ -53,8 +52,13 @@ public abstract class ServiceProduct extends Product {
         return getPrice();
     }
 
-    public LocalDateTime getExpirationDate() {
-        return expirationDate;
+    @Override
+    public int getMaxPers() {
+        return this.numPeople;
+    }
+
+    public double getFinalPrice() {
+        return round(finalPrice);
     }
 
     @Override
@@ -65,6 +69,7 @@ public abstract class ServiceProduct extends Product {
         kvs.removeIf(kv -> kv.key.equals("Price"));
         kvs.add(new KV("Price/Person", String.valueOf(this.getPricePerPerson())));
         kvs.add(new KV("Max Pers", String.valueOf(this.getMaxPers())));
+        kvs.add(new KV("Final Price", String.valueOf(this.getFinalPrice())));
         //we parse the format of the date for the view
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedDate = expirationDate.format(formatter);
@@ -89,7 +94,7 @@ public abstract class ServiceProduct extends Product {
         // add of the specific attribute for service product
         builder.append(Constants.STR_EXPIRATION).append(expirationDate);
         builder.append(Constants.STR_MAX_PEOPLE_ALLOWED).append(getMaxPers());
-
+        builder.append(Constants.STR_FINAL_PRICE).append(getFinalPrice());
         builder.append(Constants.CLOSE_BRACE);
 
         return builder.toString();
