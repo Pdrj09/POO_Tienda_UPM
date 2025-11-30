@@ -95,6 +95,7 @@ public class Constants {
     public static final String STR_EXPIRATION = ", expiration:";
     public static final String STR_SERVICE_PRODUCT = "class:ServiceProduct";
     public static final String STR_MAX_PEOPLE_ALLOWED = ", maxPeopleAllowed:";
+    public static final String STR_FINAL_PRICE = ", finalPrice:";
 
     public static final String NAME = "NAME";
     public static final String CATEGORY = "CATEGORY";

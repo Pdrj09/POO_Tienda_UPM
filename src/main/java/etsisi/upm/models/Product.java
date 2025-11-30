@@ -75,7 +75,7 @@ public class Product implements Comparable<Product>, Presentable {
        return  this.personalizable;
     }
 
-    private double round(double value) {
+    protected double round(double value) {
         long factor = (long) Math.pow(10, 2); // 2 decimales
         value *= factor;
         long tmp = Math.round(value);
@@ -126,7 +126,8 @@ public class Product implements Comparable<Product>, Presentable {
         kvs.add(new KV("Name", this.name));
         kvs.add(new KV("Category", String.valueOf(this.category)));
         kvs.add(new KV("Price", String.valueOf(this.getPrice())));
-
+        if (this.isPersonalizable())
+            kvs.add(new KV("Max Personalizations", String.valueOf(this.getMaxPers())));
         return kvs;
     }
     //It's used to compare alphabetically this name and the other products name (it is case-insensitive)

@@ -21,13 +21,6 @@ public class Meeting extends ServiceProduct {
         return ChronoUnit.HOURS;
     }
 
-    // cost
-    @Override
-    public double calculateTotalCost(int participants) {
-        return getPricePerPerson() * participants;
-    }
-
-
 
     // --- toString() ---
     @Override
