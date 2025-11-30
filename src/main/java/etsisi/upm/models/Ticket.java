@@ -54,7 +54,11 @@ public class Ticket implements Presentable {
 
         if (amount < Constants.MIN_AMMOUNT) throw new IllegalStateException(Constants.ERROR_ZERO_AMOUNT);
 
-        this.list.put(prod,amount);
+        if (this.list.containsKey(prod)) {
+            int currentAmount = this.list.get(prod);
+            this.list.put(prod, currentAmount + amount);
+        }else
+            this.list.put(prod, amount);
 
         Categories category = prod.getCategory();
         this.categories.put(category, this.categories.getOrDefault(category, Constants.ZERO) + amount);
@@ -111,7 +115,7 @@ public class Ticket implements Presentable {
         return round(sum);
     }
 
-    private double calculateProductPrice(Product product){
+    public double calculateProductPrice(Product product){
         double price = product.getPrice();
 
         if (product instanceof ProductPersonalized){
@@ -130,7 +134,8 @@ public class Ticket implements Presentable {
 
     public double getDiscountPerUnit(Product prod) {
         if (categories.get(prod.getCategory()) > Constants.MIN_FOR_DISCOUNT){
-            double discount = prod.getPrice() * prod.getCategory().getDiscount();
+            double priceToUseForDiscount = this.calculateProductPrice(prod);
+            double discount = priceToUseForDiscount * prod.getCategory().getDiscount();
             return round(discount);
         }
         return Constants.BASE_DISCOUNT;
@@ -218,5 +223,21 @@ public class Ticket implements Presentable {
         kvs.add(new KV("ID", getId()));
         kvs.add(new KV("State", getState().name()));
         return kvs;
+    }
+
+    //for personalized products
+    public List<KV> getDetailedKVsForProductLine(Product p, int quantity) {
+        List<KV> prodKV = new ArrayList<>(p.toViewKVList());
+        if (p instanceof ProductPersonalized) {
+            double calculatedPrice = this.calculateProductPrice(p);
+            prodKV.removeIf(kv -> kv.key.equals("Price"));
+            prodKV.add(new KV("Price", String.valueOf(calculatedPrice)));
+        }
+        prodKV.addAll(p.getPresentableDetails());
+        prodKV.add(new KV("Quantity", String.valueOf(quantity)));
+        prodKV.add(new KV("Discount/Unit", "-" + String.valueOf(this.getDiscountPerUnit(p))));
+        prodKV.add(new KV("Total Prod. Discount", "-" + String.valueOf(this.getTotalDiscountForProduct(p))));
+
+        return prodKV;
     }
 }

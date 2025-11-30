@@ -59,7 +59,10 @@ public class Product implements Comparable<Product>, Presentable {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null)
+            return false;
+        if (o.getClass() != Product.class)//critic error comprobation
+            return false;
         Product product = (Product) o;
         return id == product.id;
     }
@@ -117,6 +120,10 @@ public class Product implements Comparable<Product>, Presentable {
         this.category = category;
     }
 
+    public List<KV> getPresentableDetails() {
+        return new ArrayList<>();
+    }
+
     @Override
     public List<KV> toViewKVList() {
         List<KV> kvs = new ArrayList<>();
@@ -135,6 +142,14 @@ public class Product implements Comparable<Product>, Presentable {
 
     @Override
     public int compareTo(Product other) {
-        return this.name.compareToIgnoreCase(other.name);
+        //compare name
+        int comparison = this.name.compareToIgnoreCase(other.name);
+        if (comparison != 0)
+            return comparison;
+        //if the names are the same, we compare the name of the class
+        if (!this.getClass().equals(other.getClass()))
+            return this.getClass().getName().compareTo(other.getClass().getName());
+        //if not, compare the id
+        return Integer.compare(this.id, other.id);
     }
 }

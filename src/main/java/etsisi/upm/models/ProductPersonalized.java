@@ -1,13 +1,14 @@
 package etsisi.upm.models;
 
 import etsisi.upm.Constants;
-import etsisi.upm.util.Categories;
+import etsisi.upm.io.KV;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 
-public class ProductPersonalized extends Product{
+public class ProductPersonalized extends Product {
     private List<String> customizations;
 
     public ProductPersonalized(Product prod, List<String> customizations) {
@@ -40,10 +41,20 @@ public class ProductPersonalized extends Product{
     }
 
     @Override
+    public List<KV> getPresentableDetails() {
+        List<KV> kvs = new ArrayList<>();
+        //for personalized titles
+        kvs.add(new KV("Custom. amount", String.valueOf(this.getCustomizationsAmount())));
+        String customizationsStr = String.join(", ", this.getCustomizations());
+        kvs.add(new KV("Details", customizationsStr));
+        return kvs;
+    }
+
+    @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append(Constants.OPEN_BRACE);
-        builder.append(Constants.STR_PRODUCT);
+        builder.append(Constants.STR_PRODUCT_PERSONALIZED);
         builder.append(Constants.STR_PROD_ID).append(id);
         builder.append(Constants.STR_PROD_NAME).append(name).append(Constants.QUOTE);
         builder.append(Constants.STR_CATEGORY).append(category);
@@ -52,6 +63,31 @@ public class ProductPersonalized extends Product{
         builder.append(Constants.STR_PERONALIZATIONS).append(customizations);
         builder.append(Constants.CLOSE_BRACE);
         return builder.toString();
+    }
+
+    // Archivo: etsisi.upm.models/ProductPersonalized.java
+    @Override
+    public int compareTo(Product other) {
+        //compareto of the father
+        int comparison = super.compareTo(other);
+        if (comparison != 0)
+            return comparison;
+        //we compare the personalizations
+        if (other instanceof ProductPersonalized) {
+            ProductPersonalized otherPersonalized = (ProductPersonalized) other;
+            //we sort the lists
+            List<String> thisCustoms = new ArrayList<>(this.customizations);
+            List<String> otherCustoms = new ArrayList<>(otherPersonalized.getCustomizations());
+            Collections.sort(thisCustoms);
+            Collections.sort(otherCustoms);
+
+            String thisCustomStr = String.join(",", thisCustoms);
+            String otherCustomStr = String.join(",", otherCustoms);
+
+            return thisCustomStr.compareTo(otherCustomStr);
+        }
+        //fatal case: we force not null
+        return 1;
     }
 
 }
