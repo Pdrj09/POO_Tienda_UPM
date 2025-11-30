@@ -1,6 +1,7 @@
 package etsisi.upm.controllers;
 
 import etsisi.upm.Constants;
+import etsisi.upm.io.KV;
 import etsisi.upm.io.View;
 import etsisi.upm.models.Product;
 import etsisi.upm.models.ProductPersonalized;
@@ -56,21 +57,20 @@ public class TicketController {
                 amount = Integer.parseInt(querySplit[Constants.QUERY_TICKET_POS_AMOUNT]);
                 List<String> customizations = null;
 
-                if (querySplit.length>Constants.QUERY_TICKET_POS_CUSTOMIZATIONS &&
-                        querySplit[Constants.QUERY_TICKET_POS_CUSTOMIZATIONS].contains("--p")){
-
-                    customizations = new ArrayList<>();
-
-                    //If it has customizations search for the customizations one by one
-                    for (int i = Constants.QUERY_TICKET_POS_CUSTOMIZATIONS; i< querySplit.length; i++){
-                        //Fin for customization
-                        Matcher matcher = Pattern.compile(Constants.REGEX_PERSONALIZED).matcher(querySplit[i]);
-
-                        //Founded customization
-                        if (matcher.find()) customizations.add(matcher.group());
+                if (querySplit.length > Constants.QUERY_TICKET_POS_CUSTOMIZATIONS) {
+                    if (querySplit[Constants.QUERY_TICKET_POS_CUSTOMIZATIONS].contains("--p")) {
+                        customizations = new ArrayList<>();
+                        for (int i = Constants.QUERY_TICKET_POS_CUSTOMIZATIONS; i < querySplit.length; i++) {
+                            String arg = querySplit[i];
+                            if (arg.toLowerCase().startsWith("--p")) {
+                                String customName = arg.substring(3).trim();
+                                if (!customName.isEmpty()) {
+                                    customizations.add(customName);
+                                }
+                            }
+                        }
                     }
                 }
-
                 return View.getString(this.addProductToTicket(ticketId, cashierId, prodId, amount, customizations), command);
 
             case Constants.TICKET_REMOVE:
@@ -164,12 +164,13 @@ public class TicketController {
             }
         }
         Product finalProduct;
-        if (customizations != null){
-            if (product.isPersonalizable()){
-                finalProduct = new ProductPersonalized(product,customizations);
-            }else throw new IllegalStateException(Constants.ERROR_NONPERSONALIZABLE);
-        }else finalProduct = product;
-
+        if (customizations != null && !customizations.isEmpty()){
+            if (product.isPersonalizable())
+                finalProduct = new ProductPersonalized(product, customizations);
+            else
+                throw new IllegalStateException(Constants.ERROR_NONPERSONALIZABLE);
+        } else
+            finalProduct = product;
         return ticket.addProduct(finalProduct,amount);
     }
 
@@ -193,9 +194,4 @@ public class TicketController {
         this.closeTicket(ticket);
         return ticket;
     }
-
-
-
-
-
 }

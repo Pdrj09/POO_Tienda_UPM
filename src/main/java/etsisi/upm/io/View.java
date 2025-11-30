@@ -84,16 +84,8 @@ public class View {
                 //detailed breakdown of the products
                 for (Map.Entry<Product,Integer> entry : ticket.getList().entrySet()) {
                     Product p = entry.getKey();
-                    //get base KVs from the product (Product.toViewKVList()) and then, add the specific fields
-                    List<KV> prodKV = new ArrayList<>(p.toViewKVList());
-                    if (p instanceof ProductPersonalized personalized) { //num of personalizations
-                        prodKV.add(new KV("Customizations Amt", String.valueOf(personalized.getCustomizationsAmount())));
-                        String customizationsStr = String.join(", ", personalized.getCustomizations());
-                        prodKV.add(new KV("Details", customizationsStr));
-                    }
-                    prodKV.add(new KV("Quantity", String.valueOf((int) entry.getValue())));
-                    prodKV.add(new KV("Discount/Unit", "-" +String.valueOf(ticket.getDiscountPerUnit(p))));
-                    prodKV.add(new KV("Total Prod. Discount", "-" + String.valueOf(ticket.getTotalDiscountForProduct(p))));
+                    int quantity = entry.getValue();
+                    List<KV> prodKV = ticket.getDetailedKVsForProductLine(p, quantity);
                     result.add(prodKV);
                 }
             }

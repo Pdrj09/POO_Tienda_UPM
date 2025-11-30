@@ -126,6 +126,7 @@ public class Constants {
     public static final String STR_MAXPERS = ", maxPersonal:";
     public static final String STR_PERONALIZATIONS = ", personalizationList:";
     public static final int MAX_PERSONALIZATIONS_ALLOWED = 100;
+    public static final String STR_PRODUCT_PERSONALIZED = "class:ProductPersonalized";
 
     // ticket const
     public static final String TICKET_ADD = "add";
@@ -225,7 +226,6 @@ public class Constants {
     public static final String ERROR_FEW_PARAMS = "more params required";
     public static final String ERROR_NONEXISTEN_ID = "id nonexistent";
     public static final String ERROR_FILE_NOTFOUND = "file not found";
-
 
     public static String createGeneralRegex(String query) {
         StringBuilder stringBuilder;
