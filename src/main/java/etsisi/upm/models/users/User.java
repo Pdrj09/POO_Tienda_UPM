@@ -54,9 +54,9 @@ public abstract class User implements Presentable {
     @Override
     public List<KV> toViewKVList() {
         List<KV> kvs = new ArrayList<>();
-        kvs.add(new KV("ID", this.id));
-        kvs.add(new KV("Name", this.name));
-        kvs.add(new KV("Email", this.email));
+        kvs.add(new KV(Constants.ID, this.id));
+        kvs.add(new KV(Constants.NAME_LOWERCASE, this.name));
+        kvs.add(new KV(Constants.EMAIL, this.email));
         return kvs;
     }
 

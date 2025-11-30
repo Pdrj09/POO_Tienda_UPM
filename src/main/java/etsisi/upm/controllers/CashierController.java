@@ -51,7 +51,7 @@ public class CashierController {
                 return View.getString(cashier, command);
             case Constants.CASH_LIST:
 
-                if (querySplit.length == Constants.QUERY_CASH_POS_INSTRUCTION + 1) {
+                if (querySplit.length == Constants.QUERY_CASH_POS_INSTRUCTION + Constants.ONE) {
                     return View.getString(listCashiers(), command);
                 } else {
                     throw new IllegalArgumentException(Constants.ERROR_TOOMANY_ARGUMENTS);
@@ -94,7 +94,7 @@ public class CashierController {
     private String generateCashierId(){
         String id;
         do{
-            int num = randon.nextInt(10_000_000); //range between 0 and 9.999.999
+            int num = randon.nextInt(Constants.MAX_RANDOM_CASH_ID); //range between 0 and 9.999.999
             id = String.format(Constants.CASH_REGEX, Constants.CASHIER_PREFIX, num);
         }while(repository.findById(id) != null);
         return id;

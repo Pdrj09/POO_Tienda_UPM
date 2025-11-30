@@ -50,7 +50,7 @@ public class ProductController {
                     }
                     price = Float.parseFloat(querySplit[Constants.QUERY_PRODUCT_POS_PRICE].replace(Constants.STR_COMMA, Constants.STR_DOT));
 
-                    if (querySplit.length > Constants.FIVE) {
+                    if (querySplit.length > Constants.QUERY_PRODUCT_POS_MAXPERS) {
                         maxPers = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_MAXPERS]);
                         StringBuilder response = new StringBuilder();
                         response.append(View.getString(this.addProduct(name, querySplit[Constants.QUERY_PRODUCT_POS_CATEGORY], price, id, maxPers), command));

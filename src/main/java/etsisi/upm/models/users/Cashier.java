@@ -19,7 +19,7 @@ public class Cashier extends User implements Comparable<Cashier>, Presentable {
     }
 
     //PUBLIC METHODS
-    //this two methods returns an INMUTABLE copy for more protection
+    //this two methods returns an IMMUTABLE copy for more protection
     public Set<Ticket> getTickets() {
         return this.createdTickets;
     }

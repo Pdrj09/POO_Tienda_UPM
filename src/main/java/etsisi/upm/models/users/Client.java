@@ -67,9 +67,9 @@ public class Client extends User implements Comparable<Client>, Presentable {
     @Override
     public List<KV> toViewKVList() {
         List<KV> kvs = super.toViewKVList(); //id, name, email
-        kvs.add(new KV("DNI", getId())); //Here we use de DNI as ID for the view
-        kvs.add(new KV("Cashier ID", getStrIdCashier()));
-        kvs.removeIf(kv -> kv.key.equals("ID"));
+        kvs.add(new KV(Constants.CLI_DNI, getId())); //Here we use de DNI as ID for the view
+        kvs.add(new KV(Constants.CASHIER_ID, getStrIdCashier()));
+        kvs.removeIf(kv -> kv.key.equals(Constants.ID));
         return kvs;
     }
 
