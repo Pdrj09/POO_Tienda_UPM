@@ -68,7 +68,7 @@ public abstract class ServiceProduct extends Product {
         kvs.removeIf(kv -> kv.key.equals("Category"));
         kvs.removeIf(kv -> kv.key.equals("Price"));
         kvs.add(new KV("Price/Person", String.valueOf(this.getPricePerPerson())));
-        kvs.add(new KV("Max Pers", String.valueOf(this.getMaxPers())));
+        kvs.add(new KV("Max Persons", String.valueOf(this.getMaxPers())));
         kvs.add(new KV("Final Price", String.valueOf(this.getFinalPrice())));
         //we parse the format of the date for the view
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
