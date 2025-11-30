@@ -41,8 +41,8 @@ public class TicketController {
 
                     return View.getString(this.newTicket(ticketId, cashierId, clientId), command);
                 } else if (querySplit.length == Constants.QUERY_TICKET_ADD_LENGHT_WITHOUTID) {
-                    cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID-1];
-                    clientId = querySplit[Constants.QUERY_TICKET_POS_USERID-1];
+                    cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID-Constants.ONE];
+                    clientId = querySplit[Constants.QUERY_TICKET_POS_USERID-Constants.ONE];
 
                     return View.getString(this.newTicket(null,cashierId, clientId), command);
                 }

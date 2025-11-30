@@ -16,7 +16,7 @@ public class Ticket {
     private TicketStates state;
 
     private Map<Product,List<Object>> list;//Position 0->Cuantity 1-n->Personalizations
-    /// Todo multimap
+    /// ALL multimap
     private Map<Categories,Integer> categories;
 
 
@@ -49,7 +49,7 @@ public class Ticket {
     }
 
     // Add a product to the ticket, if the product already exists increments its amount
-    //if ticket add (Product prod, int amount) -p <personalizacion>
+    //if ticket add (Product prod, int amount) -p <personalization>
     public Ticket addProduct(Product prod, int amount, List<String> customizations)
     {
         if (countProducts() + amount > Constants.MAX_SIZE_TICKET)  throw new IllegalStateException(Constants.ERROR_MAXSIZE_TICKET + Constants.MAX_SIZE_TICKET);

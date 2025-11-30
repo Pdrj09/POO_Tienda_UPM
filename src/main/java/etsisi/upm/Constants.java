@@ -211,7 +211,7 @@ public class Constants {
     public static final String ERROR_INVALID_ID = "UW format incorrect";
 
     public static final String ERROR_TOOMANY_ARGUMENTS = "too many arguments";
-    public static final String ERROR_TOOMANY_PEOPLE = "Invalid  max people number";
+    public static final String ERROR_TOOMANY_PEOPLE = "Invalid max people number";
 
     public static final String ERROR_INVALID_OPTION = "invalid option";
     public static final String ERROR_FEW_PARAMS = "more params required";
@@ -250,10 +250,10 @@ public class Constants {
 
         builder.append(type)
                 .append(Constants.STR_BLANK_SPACE)
-                .append(comand)
+                .append(Constants.ERROR_STATUS)
                 .append(Constants.STR_DOUBLE_DOT)
                 .append(Constants.STR_BLANK_SPACE)
-                .append(Constants.ERROR_STATUS);
+                .append(comand);
 
         return builder.toString();
     }
@@ -266,9 +266,6 @@ public class Constants {
         builder.append(type)
                 .append(Constants.STR_BLANK_SPACE)
                 .append(comand)
-                .append(Constants.STR_DOUBLE_DOT)
-                .append(Constants.STR_BLANK_SPACE)
-                .append(Constants.ERROR_STATUS)
                 .append(Constants.STR_DOUBLE_DOT)
                 .append(Constants.STR_BLANK_SPACE)
                 .append(message);

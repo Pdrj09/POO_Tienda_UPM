@@ -42,33 +42,33 @@ public class ProductController {
             case Constants.PRODUCT_ADD:
                 int id;
                 try {
-                    id = Integer.parseInt(querySplit[Constants.ONE]);  // si es número, perfecto
-                    name = querySplit[Constants.TWO].replace(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
+                    id = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);  // if number, perfect
+                    name = querySplit[Constants.QUERY_PRODUCT_POS_NAME].replace(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
 
-                    if ((querySplit[Constants.FOUR].isEmpty()) || (querySplit[Constants.FOUR].equals(Constants.STR_BLANK_SPACE))) {
+                    if ((querySplit[Constants.QUERY_PRODUCT_POS_PRICE].isEmpty()) || (querySplit[Constants.QUERY_PRODUCT_POS_PRICE].equals(Constants.STR_BLANK_SPACE))) {
                         throw new IllegalArgumentException(Constants.ERROR_PRICE);
                     }
-                    price = Float.parseFloat(querySplit[Constants.FOUR].replace(Constants.STR_COMMA, Constants.STR_DOT));
+                    price = Float.parseFloat(querySplit[Constants.QUERY_PRODUCT_POS_PRICE].replace(Constants.STR_COMMA, Constants.STR_DOT));
 
                     if (querySplit.length > Constants.FIVE) {
-                        maxPers = Integer.parseInt(querySplit[Constants.FIVE]);
+                        maxPers = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_MAXPERS]);
                         StringBuilder response = new StringBuilder();
-                        response.append(View.getString(this.addProduct(name, querySplit[Constants.THREE], price, id, maxPers), command));
+                        response.append(View.getString(this.addProduct(name, querySplit[Constants.QUERY_PRODUCT_POS_CATEGORY], price, id, maxPers), command));
                         response.append(Constants.ENTER_KEY);
                         response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
                         return response.toString();
                     } else {
                         StringBuilder response = new StringBuilder();
-                        response.append(View.getString(this.addProduct(name, querySplit[Constants.THREE], price, id), command));
+                        response.append(View.getString(this.addProduct(name, querySplit[Constants.QUERY_PRODUCT_POS_CATEGORY], price, id), command));
                         response.append(Constants.ENTER_KEY);
                         response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_ADD ));
                         return response.toString();
                     }
                 } catch (NumberFormatException e) {
                     id = generateAutomaticId();
-                    name = querySplit[Constants.ONE].replace(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
+                    name = querySplit[Constants.QUERY_PRODUCT_POS_NAME].replace(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
 
-                    if ((querySplit[Constants.THREE].isEmpty()) || (querySplit[Constants.THREE].equals(Constants.STR_BLANK_SPACE))) {
+                    if ((querySplit[Constants.THREE].isEmpty()) || (querySplit[Constants.THREE].equals(Constants.STR_BLANK_SPACE))) {/// WE HAVE TO REVISE THIS POSITIONS!!!!!!!!!!!!!!!!!!!
                         throw new IllegalArgumentException(Constants.ERROR_PRICE);
                     }
                     price = Float.parseFloat(querySplit[Constants.THREE].replace(Constants.STR_COMMA, Constants.STR_DOT));
