@@ -7,7 +7,7 @@ import etsisi.upm.models.Ticket;
 import java.util.*;
 
 //REPRESENTS A CASHIER IN THE SYSTEM
-public class Cashier extends User implements Comparable<Cashier>, Presentable {
+public class Cashier extends User {
     private final Set<Ticket> createdTickets;
     private final Set<Client> associatedClients;
 
@@ -49,7 +49,7 @@ public class Cashier extends User implements Comparable<Cashier>, Presentable {
 
     //COMPARABLE (name)
     @Override
-    public int compareTo(Cashier o) {
+    public int compareTo(User o) {
         return this.getName().compareToIgnoreCase(o.getName());
     }
 

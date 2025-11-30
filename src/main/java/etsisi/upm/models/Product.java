@@ -4,6 +4,7 @@ import etsisi.upm.Constants;
 import etsisi.upm.io.KV;
 import etsisi.upm.io.Presentable;
 import etsisi.upm.util.Categories;
+import etsisi.upm.util.Utilities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +18,6 @@ public class Product implements Comparable<Product>, Presentable {
     protected Categories category;
     protected boolean personalizable;
     protected int maxPers;
-    public static final int maxPeople = Constants.HUNDRED;
-
 
     //this is the constructor that creates a product
     public Product(int id, String name, double price, Categories category) {
@@ -61,7 +60,10 @@ public class Product implements Comparable<Product>, Presentable {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null)
+            return false;
+        if (o.getClass() != Product.class)//critic error comprobation
+            return false;
         Product product = (Product) o;
         return id == product.id;
     }
@@ -75,12 +77,6 @@ public class Product implements Comparable<Product>, Presentable {
        return  this.personalizable;
     }
 
-    protected double round(double value) {
-        long factor = (long) Math.pow(10, 2); // 2 decimales
-        value *= factor;
-        long tmp = Math.round(value);
-        return (double) tmp / factor;
-    }
 
     //getters and setters
     public int getId() {
@@ -100,7 +96,7 @@ public class Product implements Comparable<Product>, Presentable {
     }
 
     public double getPrice() {
-        return round(price);
+        return Utilities.round(price);
     }
 
     public int getMaxPers() {
@@ -117,6 +113,10 @@ public class Product implements Comparable<Product>, Presentable {
 
     public void setCategory(Categories category) {
         this.category = category;
+    }
+
+    public List<KV> getPresentableDetails() {
+        return new ArrayList<>();
     }
 
     @Override
@@ -137,6 +137,14 @@ public class Product implements Comparable<Product>, Presentable {
 
     @Override
     public int compareTo(Product other) {
-        return this.name.compareToIgnoreCase(other.name);
+        //compare name
+        int comparison = this.name.compareToIgnoreCase(other.name);
+        if (comparison != 0)
+            return comparison;
+        //if the names are the same, we compare the name of the class
+        if (!this.getClass().equals(other.getClass()))
+            return this.getClass().getName().compareTo(other.getClass().getName());
+        //if not, compare the id
+        return Integer.compare(this.id, other.id);
     }
 }

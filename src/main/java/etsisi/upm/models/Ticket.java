@@ -5,6 +5,7 @@ import etsisi.upm.io.KV;
 import etsisi.upm.io.Presentable;
 import etsisi.upm.util.Categories;
 import etsisi.upm.util.TicketStates;
+import etsisi.upm.util.Utilities;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,13 +18,13 @@ public class Ticket implements Presentable {
     private LocalDateTime closeDate;
     private TicketStates state;
 
-    private Map<Product,Integer> list;
-    private Map<Categories,Integer> categories;
+    private final Map<Product,Integer> list;
+    private final Map<Categories,Integer> categories;
 
 
     public Ticket(String id){
         LocalDateTime now = LocalDateTime.now();
-        String formatted = formatDate(now);
+        String formatted = Utilities.formatDate(now);
         this.id = formatted + Constants.HYPEN +id;
         this.list = new TreeMap<>();
         this.categories = new HashMap<>();
@@ -35,26 +36,16 @@ public class Ticket implements Presentable {
         this(String.format(Constants.ID_FORMAT, new Random().nextInt(Constants.MAX_RANDOM)));
     }
 
-    public static String formatDate(LocalDateTime date){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT_WH);
-        return date.format(formatter);
-    }
-
-    // The ticket goes empty despite the products it has.
-    public boolean clear (){
-        list.clear();
-        categories.clear();
-        if (list.isEmpty() && categories.isEmpty())
-            return true;
-        return false;
-    }
-
     public Ticket addProduct(Product prod, int amount) {
         if (countProducts() + amount > Constants.MAX_SIZE_TICKET)  throw new IllegalStateException(Constants.ERROR_MAXSIZE_TICKET + Constants.MAX_SIZE_TICKET);
 
         if (amount < Constants.MIN_AMMOUNT) throw new IllegalStateException(Constants.ERROR_ZERO_AMOUNT);
 
-        this.list.put(prod,amount);
+        if (this.list.containsKey(prod)) {
+            int currentAmount = this.list.get(prod);
+            this.list.put(prod, currentAmount + amount);
+        }else
+            this.list.put(prod, amount);
 
         Categories category = prod.getCategory();
         this.categories.put(category, this.categories.getOrDefault(category, Constants.ZERO) + amount);
@@ -80,7 +71,7 @@ public class Ticket implements Presentable {
 
     public String close(){
         this.closeDate = LocalDateTime.now();
-        String date = formatDate(this.closeDate);
+        String date = Utilities.formatDate(this.closeDate);
         this.id+=Constants.HYPEN+date;
         this.state = TicketStates.CLOSED;
         return this.getId();
@@ -94,7 +85,7 @@ public class Ticket implements Presentable {
 
             sum += price * amount;
         }
-        return round(sum);
+        return Utilities.round(sum);
     }
 
     private double totalDiscount(){
@@ -108,10 +99,10 @@ public class Ticket implements Presentable {
                 sum += productBasePrice * product.getCategory().getDiscount();
             }
         }
-        return round(sum);
+        return Utilities.round(sum);
     }
 
-    private double calculateProductPrice(Product product){
+    public double calculateProductPrice(Product product){
         double price = product.getPrice();
 
         if (product instanceof ProductPersonalized){
@@ -125,22 +116,16 @@ public class Ticket implements Presentable {
         Integer amount = this.list.get(prod);
         double discountPerUnit = getDiscountPerUnit(prod);
         double rawTotalDiscount = discountPerUnit * amount;
-        return round(rawTotalDiscount);
+        return Utilities.round(rawTotalDiscount);
     }
 
     public double getDiscountPerUnit(Product prod) {
         if (categories.get(prod.getCategory()) > Constants.MIN_FOR_DISCOUNT){
-            double discount = prod.getPrice() * prod.getCategory().getDiscount();
-            return round(discount);
+            double priceToUseForDiscount = this.calculateProductPrice(prod);
+            double discount = priceToUseForDiscount * prod.getCategory().getDiscount();
+            return Utilities.round(discount);
         }
         return Constants.BASE_DISCOUNT;
-    }
-
-    private double round(double value) {
-        long factor = (long) Math.pow(10, 2); //2 decimals
-        value *= factor;
-        long tmp = Math.round(value);
-        return (double) tmp/factor;
     }
 
 
@@ -151,7 +136,7 @@ public class Ticket implements Presentable {
             res.append(entry.getKey().toString());
             if (categories.get(entry.getKey().getCategory()) > Constants.MIN_FOR_DISCOUNT) {
                 double individualDiscount = entry.getKey().getPrice() * entry.getKey().getCategory().getDiscount();
-                res.append(Constants.DISCOUNT).append(round(individualDiscount));
+                res.append(Constants.DISCOUNT).append(Utilities.round(individualDiscount));
             }
             res.append(Constants.ENTER_KEY);
         }
@@ -171,22 +156,17 @@ public class Ticket implements Presentable {
         return state;
     }
 
-    public String getCloseDateFormatted() {
-        if (closeDate == null)
-            return Constants.HYPEN;
-        return closeDate.format(DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT));
-    }
 
     public double getTotalPriceView() {
-        return round(totalPrice());
+        return Utilities.round(totalPrice());
     }
 
     public double getTotalDiscountView() {
-        return round(totalDiscount());
+        return Utilities.round(totalDiscount());
     }
 
     public double getFinalPriceView() {
-        return round(getTotalPriceView() - getTotalDiscountView());
+        return Utilities.round(getTotalPriceView() - getTotalDiscountView());
     }
 
     public Map<Product, Integer> getList() {
@@ -218,5 +198,21 @@ public class Ticket implements Presentable {
         kvs.add(new KV("ID", getId()));
         kvs.add(new KV("State", getState().name()));
         return kvs;
+    }
+
+    //for personalized products
+    public List<KV> getDetailedKVsForProductLine(Product p, int quantity) {
+        List<KV> prodKV = new ArrayList<>(p.toViewKVList());
+        if (p instanceof ProductPersonalized) {
+            double calculatedPrice = this.calculateProductPrice(p);
+            prodKV.removeIf(kv -> kv.key.equals("Price"));
+            prodKV.add(new KV("Price", String.valueOf(calculatedPrice)));
+        }
+        prodKV.addAll(p.getPresentableDetails());
+        prodKV.add(new KV("Quantity", String.valueOf(quantity)));
+        prodKV.add(new KV("Discount/Unit", "-" + String.valueOf(this.getDiscountPerUnit(p))));
+        prodKV.add(new KV("Total Prod. Discount", "-" + String.valueOf(this.getTotalDiscountForProduct(p))));
+
+        return prodKV;
     }
 }

@@ -2,13 +2,12 @@ package etsisi.upm.models.users;
 
 import etsisi.upm.Constants;
 import etsisi.upm.io.KV;
-import etsisi.upm.io.Presentable;
 import etsisi.upm.models.Ticket;
 
 import java.util.*;
 
 //REPRESENTS DE CLIENT IN THE SYSTEM
-public class Client extends User implements Comparable<Client>, Presentable {
+public class Client extends User {
     private final String strIdCashier;
     private final Set<Ticket> associatedTickets;
 
@@ -60,7 +59,7 @@ public class Client extends User implements Comparable<Client>, Presentable {
 
     //COMPARABLE BY NAME
     @Override
-    public int compareTo(Client o) {
+    public int compareTo(User o) {
         return this.getName().compareToIgnoreCase(o.getName());
     }
 

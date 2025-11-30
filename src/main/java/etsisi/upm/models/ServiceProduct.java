@@ -3,6 +3,8 @@ package etsisi.upm.models;
 import etsisi.upm.Constants;
 import etsisi.upm.io.KV;
 import etsisi.upm.util.Categories;
+import etsisi.upm.util.Utilities;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -58,7 +60,7 @@ public abstract class ServiceProduct extends Product {
     }
 
     public double getFinalPrice() {
-        return round(finalPrice);
+        return Utilities.round(finalPrice);
     }
 
     @Override
@@ -68,7 +70,7 @@ public abstract class ServiceProduct extends Product {
         kvs.removeIf(kv -> kv.key.equals("Category"));
         kvs.removeIf(kv -> kv.key.equals("Price"));
         kvs.add(new KV("Price/Person", String.valueOf(this.getPricePerPerson())));
-        kvs.add(new KV("Max Pers", String.valueOf(this.getMaxPers())));
+        kvs.add(new KV("Max Persons", String.valueOf(this.getMaxPers())));
         kvs.add(new KV("Final Price", String.valueOf(this.getFinalPrice())));
         //we parse the format of the date for the view
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

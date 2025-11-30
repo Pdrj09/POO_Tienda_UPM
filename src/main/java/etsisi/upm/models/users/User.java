@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class User implements Presentable {
+public abstract class User implements Comparable<User>, Presentable {
     private final String id; //unique id
     private String name;
     private String email;
@@ -49,6 +49,10 @@ public abstract class User implements Presentable {
             throw new IllegalArgumentException(Constants.ERROR_EMAIL_EMPTY);
         this.email = email;
     }
+
+    //COMPARABLE BY NAME
+    @Override
+    public abstract int compareTo(User o);
 
     //this method is for the view
     @Override
