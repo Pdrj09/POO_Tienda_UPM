@@ -94,6 +94,7 @@ public class Constants {
     public static final String STR_PRICE_PERSON = ", pricePerPerson:";
     public static final String STR_EXPIRATION = ", expiration:";
     public static final String STR_SERVICE_PRODUCT = "class:ServiceProduct";
+    public static final String STR_MAX_PEOPLE_ALLOWED = ", maxPeopleAllowed:";
 
     public static final String NAME = "NAME";
     public static final String CATEGORY = "CATEGORY";
@@ -217,7 +218,6 @@ public class Constants {
     public static final String ERROR_FEW_PARAMS = "more params required";
     public static final String ERROR_NONEXISTEN_ID = "id nonexistent";
     public static final String ERROR_FILE_NOTFOUND = "file not found";
-
 
 
     public static String createGeneralRegex(String query) {

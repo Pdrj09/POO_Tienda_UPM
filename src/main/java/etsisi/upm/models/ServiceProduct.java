@@ -61,10 +61,14 @@ public abstract class ServiceProduct extends Product {
     public List<KV> toViewKVList() {
         List<KV> kvs = super.toViewKVList();
         //we add the price per person, date and maxpeople
+        kvs.removeIf(kv -> kv.key.equals("Category"));
         kvs.removeIf(kv -> kv.key.equals("Price"));
         kvs.add(new KV("Price/Person", String.valueOf(this.getPricePerPerson())));
         kvs.add(new KV("Max Pers", String.valueOf(this.getMaxPers())));
-        // kvs.add(new KV("Expiration", ...));
+        //we parse the format of the date for the view
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = expirationDate.format(formatter);
+        kvs.add(new KV("Date of Event", formattedDate));
         return kvs;
     }
 
@@ -84,6 +88,7 @@ public abstract class ServiceProduct extends Product {
 
         // add of the specific attribute for service product
         builder.append(Constants.STR_EXPIRATION).append(expirationDate);
+        builder.append(Constants.STR_MAX_PEOPLE_ALLOWED).append(getMaxPers());
 
         builder.append(Constants.CLOSE_BRACE);
 
