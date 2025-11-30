@@ -5,6 +5,7 @@ import etsisi.upm.io.View;
 import etsisi.upm.models.Ticket;
 import etsisi.upm.models.repositories.Repository;
 import etsisi.upm.models.users.Cashier;
+import etsisi.upm.util.Utilities;
 
 import java.security.InvalidParameterException;
 import java.util.*;
@@ -26,16 +27,16 @@ public class CashierController {
             case Constants.CASH_ADD:
                 if (querySplit.length == Constants.QUERY_CASH_LENGTH_WITHID) {
                     String id = querySplit[Constants.QUERY_CASH_POS_ID];
-                    String name = querySplit[Constants.QUERY_CASH_POS_NAME].replaceAll(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
-                    String mail = querySplit[Constants.QUERY_CASH_POS_EMAIL];
+                    String name = Utilities.cleanName(querySplit[Constants.QUERY_CASH_POS_NAME]);
+                    String mail = Utilities.cleanName(querySplit[Constants.QUERY_CASH_POS_EMAIL]);
 
                     Cashier newCash = addCashier(id, mail, name);
 
                     return View.getString(newCash, command);
                 } else if (querySplit.length == Constants.QUERY_CASH_LENGTH_WITHOUTID) {
                     int index = 1;
-                    String name = querySplit[Constants.QUERY_CASH_POS_NAME - index];
-                    String mail = querySplit[Constants.QUERY_CASH_POS_EMAIL - index];
+                    String name = Utilities.cleanName(querySplit[Constants.QUERY_CASH_POS_NAME - index]);
+                    String mail = Utilities.cleanName(querySplit[Constants.QUERY_CASH_POS_EMAIL - index]);
 
                     Cashier newCash = addCashier(mail, name);
 
@@ -72,7 +73,7 @@ public class CashierController {
     private Cashier addCashier(String cashierId, String emailCompany, String name) {
         if(!cashierId.matches(Constants.REGEX_CASH_ID)) throw new InvalidParameterException(Constants.ERROR_INVALID_ID);
 
-        Cashier cashier =  Cashier.create(cashierId, emailCompany, name);
+        Cashier cashier =  Cashier.create(cashierId, Utilities.cleanName(emailCompany), Utilities.cleanName(name));
 
         repository.add(cashierId, cashier);
 

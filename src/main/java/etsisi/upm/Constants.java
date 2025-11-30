@@ -164,6 +164,10 @@ public class Constants {
     public static final String DNI_REGEX = "\\d{8}";
     public static final String DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
     public static final int ALPHABET_NUM = 23;
+    public static final int QUERY_CLIENT_POS_NAME = 2;
+    public static final int QUERY_CLIENT_POS_EMAIL = 4;
+    public static final int QUERY_CLIENT_POS_DNI = 3;
+    public static final int QUERY_CLIENT_POS_WORKER_ID = 5;
     public static final String CLI_DNI = "DNI";
 
 
@@ -232,6 +236,7 @@ public class Constants {
     public static final String ERROR_FEW_PARAMS = "more params required";
     public static final String ERROR_NONEXISTEN_ID = "id nonexistent";
     public static final String ERROR_FILE_NOTFOUND = "file not found";
+
 
     public static String createGeneralRegex(String query) {
         StringBuilder stringBuilder;
