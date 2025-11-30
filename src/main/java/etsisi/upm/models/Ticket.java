@@ -186,7 +186,7 @@ public class Ticket implements Presentable {
     @Override
     public List<KV> toViewKVList() {
         List<KV> kvs = new ArrayList<>();
-        kvs.add(new KV("ID", getId()));
+        kvs.add(new KV("ID_Ticket", getId()));
         kvs.add(new KV("Total price", String.valueOf(getTotalPriceView())));
         kvs.add(new KV("Total discount", String.valueOf(getTotalDiscountView())));
         kvs.add(new KV("Final price", String.valueOf(getFinalPriceView())));
