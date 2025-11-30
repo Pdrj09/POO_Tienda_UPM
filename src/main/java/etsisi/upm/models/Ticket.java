@@ -122,14 +122,18 @@ public class Ticket implements Presentable {
     }
 
     public double getTotalDiscountForProduct(Product prod) {
-        List<Object> productData = this.list.get(prod);
-        if (productData == null) {
-            return Constants.ZERO;
-        }
-        int quantity = (int) productData.getFirst();
+        Integer amount = this.list.get(prod);
         double discountPerUnit = getDiscountPerUnit(prod);
-        double rawTotalDiscount = discountPerUnit * quantity;
+        double rawTotalDiscount = discountPerUnit * amount;
         return round(rawTotalDiscount);
+    }
+
+    public double getDiscountPerUnit(Product prod) {
+        if (categories.get(prod.getCategory()) > Constants.MIN_FOR_DISCOUNT){
+            double discount = prod.getPrice() * prod.getCategory().getDiscount();
+            return round(discount);
+        }
+        return Constants.BASE_DISCOUNT;
     }
 
     private double round(double value) {
@@ -197,14 +201,6 @@ public class Ticket implements Presentable {
 
     public boolean isClosed(){
         return this.state == TicketStates.CLOSED;
-    }
-
-    public double getDiscountPerUnit(Product prod) {
-        if (this.categories.getOrDefault(prod.getCategory(), 0) > Constants.MIN_FOR_DISCOUNT) {
-            double discount = prod.getPrice() * prod.getCategory().getDiscount();
-            return round(discount);
-        }
-        return Constants.ZERO;
     }
 
     @Override
