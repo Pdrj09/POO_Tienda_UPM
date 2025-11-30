@@ -64,5 +64,6 @@ ticket new 212128 UW1234567 98948334B
 ticket add 212128 UW1234567 5 1
 ticket add 212128 UW1234567 5 3 --pred --pblue --pgreen
 ticket add 212128 UW1234567 6 3 --pred --pblue
+ticket add 212128 UW1234567 23459 15
 ticket print 212128 UW1234567
 exit
