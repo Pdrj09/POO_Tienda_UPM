@@ -17,8 +17,8 @@ public class Ticket implements Presentable {
     private LocalDateTime closeDate;
     private TicketStates state;
 
-    private Map<Product,Integer> list;
-    private Map<Categories,Integer> categories;
+    private final Map<Product,Integer> list;
+    private final Map<Categories,Integer> categories;
 
 
     public Ticket(String id){
