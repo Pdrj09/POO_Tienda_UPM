@@ -1,6 +1,8 @@
 package etsisi.upm.models;
 
 import etsisi.upm.Constants;
+import etsisi.upm.io.KV;
+import etsisi.upm.io.Presentable;
 import etsisi.upm.util.Categories;
 import etsisi.upm.util.TicketStates;
 
@@ -8,7 +10,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class Ticket {
+public class Ticket implements Presentable {
 
     //Stores the list of products and their quantities in the current transaction
     private String id;
@@ -206,9 +208,6 @@ public class Ticket {
         //Return an unmodifiableMap to prevent external modifications
         return Collections.unmodifiableMap(list);
     }
-    public Map<Categories, Integer> getCategories() {
-        return Collections.unmodifiableMap(categories);
-    }
 
     //look if the product already exists
     public boolean containsProduct(Product prod) {
@@ -225,5 +224,17 @@ public class Ticket {
             return round(discount);
         }
         return Constants.ZERO;
+    }
+
+    @Override
+    public List<KV> toViewKVList() {
+        List<KV> kvs = new ArrayList<>();
+        kvs.add(new KV("ID", getId()));
+        kvs.add(new KV("State", getState().name()));
+        kvs.add(new KV("Close Date", getCloseDateFormatted()));
+        kvs.add(new KV("Total", String.valueOf(getTotalPriceView())));
+        kvs.add(new KV("Discount", String.valueOf(getTotalDiscountView())));
+        kvs.add(new KV("Final", String.valueOf(getFinalPriceView())));
+        return kvs;
     }
 }

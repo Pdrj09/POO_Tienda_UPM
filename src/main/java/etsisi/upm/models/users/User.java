@@ -1,10 +1,14 @@
 package etsisi.upm.models.users;
 
 import etsisi.upm.Constants;
+import etsisi.upm.io.KV;
+import etsisi.upm.io.Presentable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-public abstract class User {
+public abstract class User implements Presentable {
     private final String id; //unique id
     private String name;
     private String email;
@@ -44,6 +48,16 @@ public abstract class User {
         if (email == null || email.isBlank())
             throw new IllegalArgumentException(Constants.ERROR_EMAIL_EMPTY);
         this.email = email;
+    }
+
+    //this method is for the view
+    @Override
+    public List<KV> toViewKVList() {
+        List<KV> kvs = new ArrayList<>();
+        kvs.add(new KV("ID", this.id));
+        kvs.add(new KV("Name", this.name));
+        kvs.add(new KV("Email", this.email));
+        return kvs;
     }
 
     @Override

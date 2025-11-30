@@ -1,15 +1,14 @@
 package etsisi.upm.models.users;
 
 import etsisi.upm.Constants;
+import etsisi.upm.io.KV;
+import etsisi.upm.io.Presentable;
 import etsisi.upm.models.Ticket;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 //REPRESENTS DE CLIENT IN THE SYSTEM
-public class Client extends User implements Comparable<Client> {
+public class Client extends User implements Comparable<Client>, Presentable {
     private final String strIdCashier;
     private final Set<Ticket> associatedTickets;
 
@@ -65,6 +64,15 @@ public class Client extends User implements Comparable<Client> {
         return this.getName().compareToIgnoreCase(o.getName());
     }
 
+    @Override
+    public List<KV> toViewKVList() {
+        List<KV> kvs = super.toViewKVList(); //id, name, email
+        kvs.add(new KV("DNI", getId())); //Here we use de DNI as ID for the view
+        kvs.add(new KV("Cashier ID", getStrIdCashier()));
+        kvs.removeIf(kv -> kv.key.equals("ID"));
+        return kvs;
+    }
+
     //EQUALS AND HASHCODE
     @Override
     public boolean equals(Object o) {
@@ -79,7 +87,6 @@ public class Client extends User implements Comparable<Client> {
     }
 
     //TO STRING
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

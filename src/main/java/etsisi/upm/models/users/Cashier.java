@@ -1,12 +1,13 @@
 package etsisi.upm.models.users;
 
 import etsisi.upm.Constants;
+import etsisi.upm.io.Presentable;
 import etsisi.upm.models.Ticket;
 
 import java.util.*;
 
 //REPRESENTS A CASHIER IN THE SYSTEM
-public class Cashier extends User implements Comparable<Cashier>{
+public class Cashier extends User implements Comparable<Cashier>, Presentable {
     private final Set<Ticket> createdTickets;
     private final Set<Client> associatedClients;
 
@@ -22,6 +23,7 @@ public class Cashier extends User implements Comparable<Cashier>{
     public Set<Ticket> getTickets() {
         return this.createdTickets;
     }
+
     public Set<Client> getAssociatedClients() {
         return Set.copyOf(associatedClients);
     }
