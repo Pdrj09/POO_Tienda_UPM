@@ -1,7 +1,8 @@
 package etsisi.upm.models;
 
 import etsisi.upm.Constants;
-import etsisi.upm.io.View;
+import etsisi.upm.io.KV;
+import etsisi.upm.io.Presentable;
 import etsisi.upm.util.Categories;
 
 import java.util.ArrayList;
@@ -43,14 +44,6 @@ public class Product implements Comparable<Product> {
         this.category = category;
         this.price = price;
         return id;
-    }
-    public List<View.KV> toViewKVList() {
-        List<View.KV> kvs = new ArrayList<>();
-        kvs.add(new View.KV("id", String.valueOf(this.id)));
-        kvs.add(new View.KV("name", this.name));
-        kvs.add(new View.KV("category", String.valueOf(this.category)));
-        kvs.add(new View.KV("price", String.valueOf(this.price)));
-        return kvs;
     }
 
     @Override
@@ -126,6 +119,19 @@ public class Product implements Comparable<Product> {
         this.category = category;
     }
 
+    @Override
+    public List<KV> toViewKVList() {
+        List<KV> kvs = new ArrayList<>();
+        kvs.add(new KV("ID", String.valueOf(this.id)));
+        kvs.add(new KV("Name", this.name));
+        kvs.add(new KV("Category", String.valueOf(this.category)));
+        kvs.add(new KV("Price", String.valueOf(this.getPrice()))); // Usar getPrice()
+
+        if (this.isPersonalizable()) {
+            kvs.add(new KV("Max Pers", String.valueOf(this.maxPers)));
+        }
+        return kvs;
+    }
     //It's used to compare alphabetically this name and the other products name (it is case-insensitive)
     //returns value < 0 if this name comes before other name alphabetically
     //        value = 0 if its equal this name and other name

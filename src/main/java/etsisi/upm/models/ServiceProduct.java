@@ -1,9 +1,12 @@
 package etsisi.upm.models;
 
 import etsisi.upm.Constants;
+import etsisi.upm.io.KV;
 import etsisi.upm.util.Categories;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 public abstract class ServiceProduct extends Product {
     private final LocalDateTime expirationDate;
@@ -52,6 +55,19 @@ public abstract class ServiceProduct extends Product {
 
     public LocalDateTime getExpirationDate() {
         return expirationDate;
+    }
+
+    @Override
+    public List<KV> toViewKVList() {
+        List<KV> kvs = super.toViewKVList();
+        //we add the price per person, date and maxpeople
+        kvs.removeIf(kv -> kv.key.equals("Price")); //we delete price of the father
+        kvs.add(new KV("Price/Person", String.valueOf(this.getPricePerPerson())));
+        kvs.add(new KV("Max People", String.valueOf(this.numPeople)));
+        //parse de date
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT);
+        kvs.add(new KV("Expiration", this.expirationDate.format(formatter)));
+        return kvs;
     }
 
     // --- toString() ---
