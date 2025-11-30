@@ -72,20 +72,19 @@ public class View {
         if (obj instanceof Ticket ticket) {
             //Check if we are viewing a list or printing a detailed ticket.
             boolean isFilteredList = command.startsWith("cash tickets") || command.startsWith("ticket list");
-            //ticket totals Row (delegates to model: Ticket.toViewKVList())
-            result.add(ticket.toViewKVList());
+            if (isFilteredList) //we use the resume
+                result.add(ticket.toViewKVListSummary());
+            else
+                result.add(ticket.toViewKVList());
             if (!isFilteredList) {
                 //detailed breakdown of the products
                 for (Map.Entry<Product, List<Object>> entry : ticket.getList().entrySet()) {
                     Product p = entry.getKey();
-                    int quantity = (int) entry.getValue().get(0);
-                    //we get the calculated discount
-                    double discount = ticket.getDiscountPerUnit(p);
-                    //get base KVs from the product (Product.toViewKVList()) and assumes implements Presentable returning List<KV>
+                    //get base KVs from the product (Product.toViewKVList()) and then, add the specific fields
                     List<KV> prodKV = new ArrayList<>(p.toViewKVList());
-                    //add or overwrite ticket-specific fields
-                    prodKV.add(new KV("Quantity", String.valueOf(quantity)));
-                    prodKV.add(new KV("Discount", String.valueOf(discount)));
+                    prodKV.add(new KV("Quantity", String.valueOf((int) entry.getValue().get(0))));
+                    prodKV.add(new KV("Discount/Unit", "-" +String.valueOf(ticket.getDiscountPerUnit(p))));
+                    prodKV.add(new KV("Total Prod. Discount", "-" + String.valueOf(ticket.getTotalDiscountForProduct(p))));
                     result.add(prodKV);
                 }
             }

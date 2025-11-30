@@ -128,9 +128,6 @@ public class Product implements Comparable<Product>, Presentable {
         kvs.add(new KV("Category", String.valueOf(this.category)));
         kvs.add(new KV("Price", String.valueOf(this.getPrice()))); // Usar getPrice()
 
-        if (this.isPersonalizable()) {
-            kvs.add(new KV("Max Pers", String.valueOf(this.maxPers)));
-        }
         return kvs;
     }
     //It's used to compare alphabetically this name and the other products name (it is case-insensitive)

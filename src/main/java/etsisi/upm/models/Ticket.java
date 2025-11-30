@@ -141,6 +141,17 @@ public class Ticket implements Presentable {
         return round(sum);
     }
 
+    public double getTotalDiscountForProduct(Product prod) {
+        List<Object> productData = this.list.get(prod);
+        if (productData == null) {
+            return Constants.ZERO;
+        }
+        int quantity = (int) productData.getFirst();
+        double discountPerUnit = getDiscountPerUnit(prod);
+        double rawTotalDiscount = discountPerUnit * quantity;
+        return round(rawTotalDiscount);
+    }
+
     private double calculateProductPrice(Map.Entry<Product,List<Object>> entry){
         Product product = entry.getKey();
         int amount = (int) entry.getValue().getFirst(); // number of amount(products)/people(services)
@@ -186,6 +197,7 @@ public class Ticket implements Presentable {
     public TicketStates getState() {
         return state;
     }
+
     public String getCloseDateFormatted() {
         if (closeDate == null)
             return Constants.HYPEN;
@@ -230,11 +242,16 @@ public class Ticket implements Presentable {
     public List<KV> toViewKVList() {
         List<KV> kvs = new ArrayList<>();
         kvs.add(new KV("ID", getId()));
+        kvs.add(new KV("Total price", String.valueOf(getTotalPriceView())));
+        kvs.add(new KV("Total discount", String.valueOf(getTotalDiscountView())));
+        kvs.add(new KV("Final price", String.valueOf(getFinalPriceView())));
+        return kvs;
+    }
+    //Returns only id and state, it is used for cash tickets and ticket list commands
+    public List<KV> toViewKVListSummary() {
+        List<KV> kvs = new ArrayList<>();
+        kvs.add(new KV("ID", getId()));
         kvs.add(new KV("State", getState().name()));
-        kvs.add(new KV("Close Date", getCloseDateFormatted()));
-        kvs.add(new KV("Total", String.valueOf(getTotalPriceView())));
-        kvs.add(new KV("Discount", String.valueOf(getTotalDiscountView())));
-        kvs.add(new KV("Final", String.valueOf(getFinalPriceView())));
         return kvs;
     }
 }

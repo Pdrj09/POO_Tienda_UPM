@@ -61,12 +61,10 @@ public abstract class ServiceProduct extends Product {
     public List<KV> toViewKVList() {
         List<KV> kvs = super.toViewKVList();
         //we add the price per person, date and maxpeople
-        kvs.removeIf(kv -> kv.key.equals("Price")); //we delete price of the father
+        kvs.removeIf(kv -> kv.key.equals("Price"));
         kvs.add(new KV("Price/Person", String.valueOf(this.getPricePerPerson())));
-        kvs.add(new KV("Max People", String.valueOf(this.numPeople)));
-        //parse de date
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT);
-        kvs.add(new KV("Expiration", this.expirationDate.format(formatter)));
+        kvs.add(new KV("Max Pers", String.valueOf(this.getMaxPers())));
+        // kvs.add(new KV("Expiration", ...));
         return kvs;
     }
 
