@@ -4,6 +4,7 @@ import etsisi.upm.Constants;
 import etsisi.upm.io.KV;
 import etsisi.upm.io.Presentable;
 import etsisi.upm.util.Categories;
+import etsisi.upm.util.Utilities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,12 +77,6 @@ public class Product implements Comparable<Product>, Presentable {
        return  this.personalizable;
     }
 
-    protected double round(double value) {
-        long factor = (long) Math.pow(10, 2); // 2 decimales
-        value *= factor;
-        long tmp = Math.round(value);
-        return (double) tmp / factor;
-    }
 
     //getters and setters
     public int getId() {
@@ -101,7 +96,7 @@ public class Product implements Comparable<Product>, Presentable {
     }
 
     public double getPrice() {
-        return round(price);
+        return Utilities.round(price);
     }
 
     public int getMaxPers() {

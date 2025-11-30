@@ -3,6 +3,8 @@ package etsisi.upm.models;
 import etsisi.upm.Constants;
 import etsisi.upm.io.KV;
 import etsisi.upm.util.Categories;
+import etsisi.upm.util.Utilities;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -58,7 +60,7 @@ public abstract class ServiceProduct extends Product {
     }
 
     public double getFinalPrice() {
-        return round(finalPrice);
+        return Utilities.round(finalPrice);
     }
 
     @Override
