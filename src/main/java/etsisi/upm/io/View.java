@@ -2,12 +2,15 @@ package etsisi.upm.io;
 
 import etsisi.upm.Constants;
 import etsisi.upm.models.Product;
+import etsisi.upm.models.ProductPersonalized;
 import etsisi.upm.models.Ticket;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.*;
-
+/*The View class is responsible for presenting data to the user via CLI.
+ * it receives Model objects and formats them into a readable table structure.
+ * this class STRICTLY adheres to MVC principles by relying on Presentable (INTERFACE)
+ * and avoiding reflection, ensuring no coupling with the model's internal structure.
+ * Assumes: KV class (Key-Value) is defined externally and a Presentable interface*/
 public class View {
     //ANSI colours
     private static final String RESET = "\u001B[0m";
@@ -16,224 +19,122 @@ public class View {
     //messages
     private static final String MSG_NOTHING_TO_SHOW = YELLOW + "[!] No items to display." + RESET;
 
-    //a class for formating toString
-    private static class KV {
-        public String key;
-        public String value;
-        public KV(String key, String value) { this.key = key; this.value = value; }
-    }
-
-    //principal method for printing Objects
+    /*Entry point for printing any element, it handles collections/arrays and singular objects.
+     *it delegates the conversion to KV pairs before building the final table*/
     public static <T> String getString(T element, String command) {
-        StringBuilder sb = new StringBuilder();
         if (element == null)
             return MSG_NOTHING_TO_SHOW + "\n";
 
-        //for ticket (it is a special case)
-        if (element instanceof Ticket ticket) {
-            //we create a list KW for this special case so we can print the table
-            List<KV> ticketKV = new ArrayList<>();
-            ticketKV.add(new KV("id", ticket.getId()));
-            ticketKV.add(new KV("state", ticket.getState().name()));
-            ticketKV.add(new KV("closeDate", ticket.getCloseDateFormatted()));
-            ticketKV.add(new KV("totalPrice", String.valueOf(ticket.getTotalPriceView())));
-            ticketKV.add(new KV("totalDiscount", String.valueOf(ticket.getTotalDiscountView())));
-            ticketKV.add(new KV("finalPrice", String.valueOf(ticket.getFinalPriceView())));
-
-            //list of lists
-            sb.append(buildTableFromKV(Collections.singletonList(ticketKV), Constants.TICKET));
-
-            //now we print the products inside the ticket
-            if (!ticket.getList().isEmpty()) {
-                sb.append(CYAN + "\nProducts inside the ticket:\n" + RESET);
-
-                List<List<KV>> allProductsKV = new ArrayList<>();
-                for (Map.Entry<Product, List<Object>> entry : ticket.getList().entrySet()) {
-                    Product p = entry.getKey();
-                    int quantity = (int) entry.getValue().get(0);
-                    double discount = 0.0;
-                    if (ticket.getCategories().getOrDefault(p.getCategory(), 0) > 1)
-                        discount = p.getPrice() * p.getCategory().getDiscount();
-
-                    List<KV> productKV = new ArrayList<>();
-                    productKV.add(new KV("id", String.valueOf(p.getId())));
-                    productKV.add(new KV("name", p.getName()));
-                    productKV.add(new KV("category", String.valueOf(p.getCategory())));
-                    productKV.add(new KV("price", String.valueOf(p.getPrice())));
-                    productKV.add(new KV("quantity", String.valueOf(quantity)));
-                    productKV.add(new KV("discount", String.valueOf(discount)));
-
-                    allProductsKV.add(productKV);
-                }
-                sb.append(buildTableFromKV(allProductsKV, Constants.PRODUCT));
-            }
-            sb.append(Constants.okStatus(command.split(" ")[0], command.split(" ")[1])).append("\n");
-            return sb.toString();
-        }
-
-        //for collections
+        List<List<KV>> allKV = new ArrayList<>();
+        String tableTitle = "Items";
+        //handle Collections
         if (element instanceof Collection<?> col) {
             if (col.isEmpty())
                 return emptyMessage(null) + "\n";
-            sb.append(buildTable(col, col.iterator().next().getClass()));
-        }
-        //arrays case
+            for (Object o : col)//use objectToKV to process each element in the collection
+                allKV.addAll(objectToKV(o, command));
+            if (col.iterator().hasNext()) //get the simple class name of the first element for the table title
+                tableTitle = col.iterator().next().getClass().getSimpleName();
+
+        }//handle Arrays
         else if (element.getClass().isArray()) {
             int length = java.lang.reflect.Array.getLength(element);
             if (length == 0)
                 return emptyMessage(null) + "\n";
-            List<Object> arrList = new ArrayList<>();
             for (int i = 0; i < length; i++)
-                arrList.add(java.lang.reflect.Array.get(element, i));
-            sb.append(buildTable(arrList, arrList.get(0).getClass()));
+                allKV.addAll(objectToKV(java.lang.reflect.Array.get(element, i), command));
+            tableTitle = element.getClass().getComponentType().getSimpleName();
+        }//handle single objts.
+        else {
+            allKV.addAll(objectToKV(element, command));
+            tableTitle = element.getClass().getSimpleName();
         }
-        //for maps (this case for printing the tickets from cashier), future improve: reflexive access to the name
-        else if (element instanceof Map<?, ?> map) {
-            if (map.isEmpty())
-                return MSG_NOTHING_TO_SHOW + "\n";
-            StringBuilder sbStr = new StringBuilder();
-            //We convert the entries to a string that our KV regex knows to print the table with recursion
-            for (Map.Entry<?, ?> e : map.entrySet()) {
-                sbStr.append("{ class:")
-                        .append("Ticket")
-                        .append(", id: ")
-                        .append(String.valueOf(e.getKey()))
-                        .append(", state: ")
-                        .append(String.valueOf(e.getValue()))
-                        .append(" }\n");
-            }
-            //recursive call after the parse
-            return getString(sbStr.toString(), command);
-        }
-        //for stirngs
-        else if (element instanceof String s) {
-            s = s.trim();
-            String[] lines = s.split("\n");
-            boolean anyKV = false;
-            List<List<KV>> allLinesKV = new ArrayList<>();
-            String tableTitle = "Items"; //default name
-            for (String line : lines) {
-                line = line.trim();
-                if (line.startsWith("{") && line.endsWith("}")) {
-                    anyKV = true;
-
-                    //here we try to extract the name of the class
-                    //it search for "class:NAME" (toString sintsxis)
-                    int classIndex = line.indexOf("class:");
-                    if (classIndex != -1) {
-                        int commaIndex = line.indexOf(",", classIndex);
-                        if (commaIndex == -1)
-                            commaIndex = line.length() - 1;
-                        tableTitle = line.substring(classIndex + 6, commaIndex).trim();
-                    }
-
-
-                    String content = line.substring(1, line.length() - 1);
-                    String[] parts = content.split(",(?=(?:[^']*'[^']*')*[^']*$)");
-                    List<KV> kvs = new ArrayList<>();
-                    for (String p : parts) {
-                        String[] kv = p.split(":", 2);
-                        if (kv.length == 2 && !kv[0].trim().equals("class"))
-                            kvs.add(new KV(kv[0].trim(), kv[1].trim()));
-                    }
-                    allLinesKV.add(kvs);
-                } else
-                    sb.append(CYAN).append(tableTitle).append(RESET).append(": ").append(wrapString(line, 50)).append("\n");
-            }
-            if (anyKV)
-                sb.append(buildTableFromKV(allLinesKV, tableTitle));
-        } else
-            sb.append(buildTable(Collections.singletonList(element), element.getClass()));
+        StringBuilder sb = new StringBuilder();
+        sb.append(buildTableFromKV(allKV, tableTitle));
+        //we append the OK status message
         sb.append(Constants.okStatus(command.split(" ")[0], command.split(" ")[1])).append("\n");
         return sb.toString();
     }
 
+    /*public static String getString(Object o, String command){
+          return o.toString();
+    }*/
 
-    //we build the table
-    private static String buildTable(Collection<?> collection, Class<?> itemType) {
-        StringBuilder sb = new StringBuilder();
-        List<Field> fields = getAllFields(itemType);
-
-        for (Field f : fields)
-            f.setAccessible(true);
-
-        //width
-        int[] colWidths = new int[fields.size()];
-        for (int i = 0; i < fields.size(); i++)
-            colWidths[i] = fields.get(i).getName().length();
-
-        for (Object obj : collection) {
-            for (int i = 0; i < fields.size(); i++) {
-                try {
-                    Object value = fields.get(i).get(obj);
-                    int len;
-                    if (value != null)
-                        len = value.toString().length();
-                    else
-                        len = 1;
-                    if (len > colWidths[i])
-                        colWidths[i] = len;
-                } catch (Exception ignored) {}
-            }
+    /*Converts a Model object into a list of Key-Value pairs, ready for table drawing.
+     *This method is the core of the delegation process WITH PRESENTABLE.*/
+    private static List<List<KV>> objectToKV(Object obj, String command) {
+        List<List<KV>> result = new ArrayList<>();
+        if (obj == null) return result;
+        //SIMPLE TYPES (not Presentable)
+        if (obj instanceof String || obj instanceof Number || obj instanceof Boolean || obj.getClass().isEnum()) {
+            List<KV> kvs = new ArrayList<>();
+            kvs.add(new KV("value", obj.toString()));
+            result.add(kvs);
+            return result;
         }
-
-        String title = "♥ " + itemType.getSimpleName().toLowerCase() + " ♥";
-        int totalWidth = Arrays.stream(colWidths).sum() + fields.size() * 3 + 1;
-
-        //HEADER
-        sb.append(YELLOW)
-                .append("┌").append(centerTitle(totalWidth - 2, title)).append("┐\n");
-
-        //Column names
-        sb.append("│ ");
-        for (int i = 0; i < fields.size(); i++)
-            sb.append(String.format("%-" + colWidths[i] + "s │ ", fields.get(i).getName()));
-        sb.append("\n");
-
-        //Separator
-        sb.append("├");
-        for (int w : colWidths)
-            sb.append("─".repeat(w + 2)).append("┼");
-        sb.setLength(sb.length() - 1);
-        sb.append("\n");
-
-        //ROWS
-        sb.append(CYAN);
-        for (Object obj : collection) {
-            sb.append("│ ");
-            for (int i = 0; i < fields.size(); i++) {
-                try {
-                    Object value = fields.get(i).get(obj);
-                    String val = value != null ? value.toString() : "-";
-                    sb.append(String.format("%-" + colWidths[i] + "s │ ",
-                            wrapString(val, 30).replace("\n", " ")
-                    ));
-                } catch (Exception e) {
-                    sb.append("ERROR │ ");
+        //TICKETS (IS A SPECIAL CASE BECAUSE REQUIRES DETAILED SHOWN OF PRODUCTS)
+        if (obj instanceof Ticket ticket) {
+            //Check if we are viewing a list or printing a detailed ticket.
+            boolean isFilteredList = command.startsWith("cash tickets") || command.startsWith("ticket list");
+            if (isFilteredList) //we use the resume
+                result.add(ticket.toViewKVListSummary());
+            else
+                result.add(ticket.toViewKVList());
+            if (!isFilteredList) {
+                //detailed breakdown of the products
+                for (Map.Entry<Product,Integer> entry : ticket.getList().entrySet()) {
+                    Product p = entry.getKey();
+                    //get base KVs from the product (Product.toViewKVList()) and then, add the specific fields
+                    List<KV> prodKV = new ArrayList<>(p.toViewKVList());
+                    if (p instanceof ProductPersonalized personalized) { //num of personalizations
+                        prodKV.add(new KV("Customizations Amt", String.valueOf(personalized.getCustomizationsAmount())));
+                        String customizationsStr = String.join(", ", personalized.getCustomizations());
+                        prodKV.add(new KV("Details", customizationsStr));
+                    }
+                    prodKV.add(new KV("Quantity", String.valueOf((int) entry.getValue())));
+                    prodKV.add(new KV("Discount/Unit", "-" +String.valueOf(ticket.getDiscountPerUnit(p))));
+                    prodKV.add(new KV("Total Prod. Discount", "-" + String.valueOf(ticket.getTotalDiscountForProduct(p))));
+                    result.add(prodKV);
                 }
             }
-            sb.append("\n");
+            return result;
         }
-
-        //FOOTER
-        sb.append(CYAN)
-                .append("└").append("─".repeat(totalWidth - 2)).append("┘")
-                .append(RESET).append("\n");
-
-        return sb.toString();
+        //general case: POJOSSSS
+        //if the object isnt a Ticket BUTTT implements Presentable, we delegate.
+        if (obj instanceof Presentable p) {
+            result.add(p.toViewKVList());
+            return result;
+        }
+        //CASE OF MAPS AND COLLECTIONS ->>>> (Recursive iteration 4 structure)
+        if (obj instanceof Map<?, ?> map) {
+            for (Map.Entry<?, ?> e : map.entrySet()) {
+                List<KV> kvs = new ArrayList<>();
+                kvs.add(new KV("Key", e.getKey().toString()));
+                kvs.add(new KV("Value", e.getValue().toString()));
+                result.add(kvs);
+            }
+            return result;
+        }
+        if (obj instanceof Collection<?> col) {
+            for (Object o : col) //it use objectToKV recursively to handle Presentable elements within the collection
+                result.addAll(objectToKV(o, command));
+            return result;
+        }
+        //if it comes here, object is unpresentable
+        return result;
     }
 
-    //table for strings (k,v)
+    /*Builds the final formatted table string, graphical representation logic of the View.*/
     private static String buildTableFromKV(List<List<KV>> allLinesKV, String title) {
         StringBuilder sb = new StringBuilder();
-
+        //we collect all unique keys to form column headers in order
         Set<String> keySet = new LinkedHashSet<>();
-        for (List<KV> line : allLinesKV) {
+        for (List<KV> line : allLinesKV)
             for (KV kv : line)
                 keySet.add(kv.key);
-        }
 
         List<String> keys = new ArrayList<>(keySet);
+        //we determine column widths based on the header and content length, DYNAMIC TABLE
         int[] colWidths = new int[keys.size()];
         for (int i = 0; i < keys.size(); i++)
             colWidths[i] = keys.get(i).length();
@@ -248,73 +149,41 @@ public class View {
                     colWidths[i] = val.length();
             }
         }
-
+        //we calculate total width and then, draw the title
         int totalWidth = Arrays.stream(colWidths).sum() + keys.size() * 3 + 1;
-        //Header
         sb.append(YELLOW).append("┌").append(centerTitle(totalWidth - 2, title)).append("┐\n");
+        //headers
         sb.append("│ ");
-        for (int i = 0; i < keys.size(); i++)
-            sb.append(String.format("%-" + colWidths[i] + "s │ ", keys.get(i)));
+        for (String key : keys)
+            sb.append(String.format("%-" + colWidths[keys.indexOf(key)] + "s │ ", key));
         sb.append("\n");
-
-        //Separator
+        //separator
         sb.append("├");
         for (int w : colWidths)
             sb.append("─".repeat(w + 2)).append("┼");
         sb.setLength(sb.length() - 1);
         sb.append("\n");
-
-        //Rows
+        //rows
         sb.append(CYAN);
         for (List<KV> line : allLinesKV) {
             sb.append("│ ");
-            for (int i = 0; i < keys.size(); i++) {
+            for (String key : keys) {
                 String val = "-";
                 for (KV kv : line) {
-                    if (kv.key.equals(keys.get(i)))
+                    if (kv.key.equals(key))
                         val = kv.value;
                 }
-                sb.append(String.format("%-" + colWidths[i] + "s │ ", wrapString(val, 30).replace("\n", " ")));
+                //WE USE WRAPSTRING() TO ENSURE THAT LONG VALUES DON'T BREAK THE STRUCTURE OF THE TABLE
+                sb.append(String.format("%-" + colWidths[keys.indexOf(key)] + "s │ ", wrapString(val, 30).replace("\n", " ")));
             }
             sb.append("\n");
         }
-
-        //Footer
+        //bottom border of the table
         sb.append(CYAN).append("└").append("─".repeat(totalWidth - 2)).append("┘").append(RESET).append("\n");
         return sb.toString();
     }
 
-    //get parent fields, ignore constants
-    private static List<Field> getAllFields(Class<?> type) {
-        List<Field> fields = new ArrayList<>();
-
-        //Fields that must NEVER be shown in the tables
-        List<String> hiddenFields = List.of(
-                "createdTickets",
-                "associatedClients",
-                "associatedTickets",
-                "personalizable",
-                "maxPers",
-                "list",
-                "categories"
-        );
-        while (type != null && type != Object.class) {
-            for (Field f : type.getDeclaredFields()) {
-                int mods = f.getModifiers();
-                if (Modifier.isStatic(mods))
-                    continue;
-                if (hiddenFields.contains(f.getName()))
-                    continue;
-                if (f.getName().equals(f.getName().toUpperCase()))
-                    continue;
-                fields.add(f);
-            }
-            type = type.getSuperclass();
-        }
-        return fields;
-    }
-
-    //Wrap long strings
+    /*Helper method to wrap long strings to prevent structure breakage*/
     private static String wrapString(String s, int maxWidth) {
         StringBuilder sb = new StringBuilder();
         int index = 0;
@@ -325,11 +194,13 @@ public class View {
         return sb.toString().trim();
     }
 
+    /*Helper method to center the title string for the table header.*/
     private static String centerTitle(int width, String title) {
         int padding = (width - title.length()) / 2;
         return "─".repeat(padding) + title + "─".repeat(width - padding - title.length());
     }
 
+    /*Helper method to generate an empty message.*/
     private static String emptyMessage(Class<?> type) {
         if (type == null) return MSG_NOTHING_TO_SHOW + "\n";
         return YELLOW + "[!] No " + type.getSimpleName().toLowerCase() + "s found." + RESET;

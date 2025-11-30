@@ -87,15 +87,8 @@ public class CashierController {
         return repository.findAll();
     }
 
-    private Map<String,String> listTickets(String cashierId) {
-        Set<Ticket> tickets = repository.findByIdOrThrow(cashierId).getTickets();
-        Map<String, String > res = new TreeMap<>();
-
-        for (Ticket ticket : tickets){
-            res.put(ticket.getId(),ticket.getState().toString());
-        }
-
-        return res;
+    private Collection<Ticket> listTickets(String cashierId) {
+        return repository.findByIdOrThrow(cashierId).getTickets();
     }
 
     private String generateCashierId(){

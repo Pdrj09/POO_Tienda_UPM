@@ -188,19 +188,8 @@ public class ProductController {
         }else throw new IllegalArgumentException(Constants.ERROR_ID_NONEXISTENT);
     }
 
-
-    private String prodList() {
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(Constants.CATALOG);
-
-        for (Product p : this.productRepository.findAll()) {
-            builder.append(Constants.TAB_SPACE)
-                    .append(p.toString())
-                    .append(Constants.ENTER_KEY);
-        }
-
-        return builder.toString();
+    private Collection<Product> prodList() {
+        return this.productRepository.findAll();
     }
 
     private Product addFood(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {

@@ -1,19 +1,22 @@
 package etsisi.upm.models;
 
 import etsisi.upm.Constants;
+import etsisi.upm.io.KV;
+import etsisi.upm.io.Presentable;
 import etsisi.upm.util.Categories;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 //We asign the variables
-public class Product implements Comparable<Product> {
-    private final int id; // It is a global variable as the id cant change once the object is created
-    private String name;
-    private double price;
-    private Categories category;
-    private boolean personalizable;
-    private int maxPers;
+public class Product implements Comparable<Product>, Presentable {
+    protected final int id; // It is a global variable as the id cant change once the object is created
+    protected String name;
+    protected double price;
+    protected Categories category;
+    protected boolean personalizable;
+    protected int maxPers;
     public static final int maxPeople = Constants.HUNDRED;
 
 
@@ -43,8 +46,6 @@ public class Product implements Comparable<Product> {
         return id;
     }
 
-
-    //toString method
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -59,7 +60,7 @@ public class Product implements Comparable<Product> {
     }
 
     @Override
-    public boolean equals(Object o) { //equals function to see if we are referring to the same object
+    public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
         return id == product.id;
@@ -70,11 +71,17 @@ public class Product implements Comparable<Product> {
         return Objects.hashCode(id);
     }
     //It returns the value of id characters
-
-
     public boolean isPersonalizable(){
        return  this.personalizable;
     }
+
+    protected double round(double value) {
+        long factor = (long) Math.pow(10, 2); // 2 decimales
+        value *= factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
+    }
+
     //getters and setters
     public int getId() {
         return id;
@@ -93,7 +100,7 @@ public class Product implements Comparable<Product> {
     }
 
     public double getPrice() {
-        return price;
+        return round(price);
     }
 
     public int getMaxPers() {
@@ -112,6 +119,17 @@ public class Product implements Comparable<Product> {
         this.category = category;
     }
 
+    @Override
+    public List<KV> toViewKVList() {
+        List<KV> kvs = new ArrayList<>();
+        kvs.add(new KV("ID", String.valueOf(this.id)));
+        kvs.add(new KV("Name", this.name));
+        kvs.add(new KV("Category", String.valueOf(this.category)));
+        kvs.add(new KV("Price", String.valueOf(this.getPrice())));
+        if (this.isPersonalizable())
+            kvs.add(new KV("Max Personalizations", String.valueOf(this.getMaxPers())));
+        return kvs;
+    }
     //It's used to compare alphabetically this name and the other products name (it is case-insensitive)
     //returns value < 0 if this name comes before other name alphabetically
     //        value = 0 if its equal this name and other name
