@@ -122,7 +122,7 @@ public class Product implements Comparable<Product>, Presentable {
     @Override
     public List<KV> toViewKVList() {
         List<KV> kvs = new ArrayList<>();
-        kvs.add(new KV("ID", String.valueOf(this.id)));
+        kvs.add(new KV("ID_Product", String.valueOf(this.id)));
         kvs.add(new KV("Name", this.name));
         kvs.add(new KV("Category", String.valueOf(this.category)));
         kvs.add(new KV("Price", String.valueOf(this.getPrice())));
