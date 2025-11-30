@@ -17,9 +17,9 @@ cash add "pepecurro2" pepe0@upm.es
 echo "Creo tres cliente listo borro uno y listo"
 client add "Pepe3" 55630667S pepe1@upm.es UW1234567
 client add "Pepe2" 98948334B pepe2@upm.es UW1234567
-client add "Pepe1" Y8682724P pepe3@upm.es UW1234567
+client add "Pepe1" 49229618G pepe3@upm.es UW1234567
 client list
-client remove Y8682724P
+client remove 49229618G
 client list
 echo "creo un cajero nuevo listo, lo booro y listo de nuevo"
 cash add UW1234569 "pepecurro1" pepe0@upm.es
@@ -47,10 +47,10 @@ ticket list
 ticket print 212123 UW1234567
 ticket list
 echo "Trabajamos con productos de personas"
-prod addMeeting 23456 "Reunion Rotonda" 12 2025-12-01 120
-prod addMeeting 23457 "Graduacion ETSISI" 40 2025-12-1 30
-prod addFood 23458 "Cafeteria ETSISI" 5 2025-12-21 300
-prod addFood 23459 "Restaurante Asador" 50 2025-12-21 40
+prod addMeeting 23456 "Reunion Rotonda" 12 2025-11-21 100
+prod addMeeting 23457 "Graduacion ETSISI" 40 2025-11-21 30
+prod addFood 23458 "Cafeteria ETSISI" 5 2025-11-21 300
+prod addFood 23459 "Restaurante Asador" 50 2025-11-21 40
 prod list
 ticket new 212127 UW1234567 98948334B
 ticket add 212127 UW1234567 23456 20
@@ -65,7 +65,4 @@ ticket add 212128 UW1234567 5 1
 ticket add 212128 UW1234567 5 3 --pred --pblue --pgreen
 ticket add 212128 UW1234567 6 3 --pred --pblue
 ticket print 212128 UW1234567
-ticket new 158926 UW1234567 98948334B
-prod addFood 158926 "Restaurante Asador" 50 2025-12-21 40
-ticket print 158926 UW1234567
 exit

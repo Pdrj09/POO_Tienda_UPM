@@ -27,6 +27,8 @@ public class Meeting extends ServiceProduct {
         return getPricePerPerson() * participants;
     }
 
+
+
     // --- toString() ---
     @Override
     public String toString() {

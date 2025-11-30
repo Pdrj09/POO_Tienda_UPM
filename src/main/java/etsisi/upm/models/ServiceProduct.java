@@ -50,6 +50,10 @@ public abstract class ServiceProduct extends Product {
         return getPrice();
     }
 
+    public LocalDateTime getExpirationDate() {
+        return expirationDate;
+    }
+
     // --- toString() ---
     @Override
     public String toString() {

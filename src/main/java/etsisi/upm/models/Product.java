@@ -1,9 +1,11 @@
 package etsisi.upm.models;
 
 import etsisi.upm.Constants;
+import etsisi.upm.io.View;
 import etsisi.upm.util.Categories;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 //We asign the variables
@@ -42,7 +44,14 @@ public class Product implements Comparable<Product> {
         this.price = price;
         return id;
     }
-
+    public List<View.KV> toViewKVList() {
+        List<View.KV> kvs = new ArrayList<>();
+        kvs.add(new View.KV("id", String.valueOf(this.id)));
+        kvs.add(new View.KV("name", this.name));
+        kvs.add(new View.KV("category", String.valueOf(this.category)));
+        kvs.add(new View.KV("price", String.valueOf(this.price)));
+        return kvs;
+    }
 
     //toString method
     @Override
@@ -70,11 +79,17 @@ public class Product implements Comparable<Product> {
         return Objects.hashCode(id);
     }
     //It returns the value of id characters
-
-
     public boolean isPersonalizable(){
        return  this.personalizable;
     }
+
+    private double round(double value) {
+        long factor = (long) Math.pow(10, 2); // 2 decimales
+        value *= factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
+    }
+
     //getters and setters
     public int getId() {
         return id;
@@ -93,7 +108,7 @@ public class Product implements Comparable<Product> {
     }
 
     public double getPrice() {
-        return price;
+        return round(price);
     }
 
     public int getMaxPers() {

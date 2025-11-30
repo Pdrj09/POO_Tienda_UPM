@@ -123,18 +123,20 @@ public class Ticket {
 
             sum+= price * amount;
         }
-        return sum;
+        return round(sum);
     }
 
     private double totalDiscount(){
         double sum=Constants.ZERO;
         for(Map.Entry<Product,List<Object>> entry : list.entrySet()){
             Product product = entry.getKey();
+            int amount = (int) entry.getValue().getFirst();
             if (categories.get(product.getCategory()) > Constants.MIN_FOR_DISCOUNT){
-                sum+=calculateProductPrice(entry) * product.getCategory().getDiscount();
+                double productBasePrice = product.getPrice() * amount;
+                sum+= productBasePrice * product.getCategory().getDiscount();
             }
         }
-        return sum;
+        return round(sum);
     }
 
     private double calculateProductPrice(Map.Entry<Product,List<Object>> entry){
@@ -148,19 +150,28 @@ public class Ticket {
         return price;
     }
 
+    private double round(double value) {
+        long factor = (long) Math.pow(10, 2); //2 decimals
+        value *= factor;
+        long tmp = Math.round(value);
+        return (double) tmp/factor;
+    }
+
 
     @Override
     public String toString() {
         StringBuilder res = new StringBuilder();
         for (Map.Entry<Product, List<Object>> entry : list.entrySet()) {
             res.append(entry.getKey().toString());
-            if (categories.get(entry.getKey().getCategory()) > Constants.MIN_FOR_DISCOUNT)
-                res.append(Constants.DISCOUNT).append(entry.getKey().getPrice() * entry.getKey().getCategory().getDiscount());
+            if (categories.get(entry.getKey().getCategory()) > Constants.MIN_FOR_DISCOUNT) {
+                double individualDiscount = entry.getKey().getPrice() * entry.getKey().getCategory().getDiscount();
+                res.append(Constants.DISCOUNT).append(round(individualDiscount));
+            }
             res.append(Constants.ENTER_KEY);
         }
-        res.append(Constants.TOTAL_PRICE).append(totalPrice());
-        res.append(Constants.TOTAL_DISCOUNT).append(totalDiscount());
-        res.append(Constants.FINAL_PRICE).append(totalPrice() - totalDiscount());
+        res.append(Constants.TOTAL_PRICE).append(getTotalPriceView());
+        res.append(Constants.TOTAL_DISCOUNT).append(getTotalDiscountView());
+        res.append(Constants.FINAL_PRICE).append(getFinalPriceView());
         res.append(Constants.ENTER_KEY);
         return res.toString();
     }
@@ -180,15 +191,15 @@ public class Ticket {
     }
 
     public double getTotalPriceView() {
-        return totalPrice();
+        return round(totalPrice());
     }
 
     public double getTotalDiscountView() {
-        return totalDiscount();
+        return round(totalDiscount());
     }
 
     public double getFinalPriceView() {
-        return getTotalPriceView() - getTotalDiscountView();
+        return round(getTotalPriceView() - getTotalDiscountView());
     }
 
     public Map<Product, List<Object>> getList() {
@@ -206,5 +217,13 @@ public class Ticket {
 
     public boolean isClosed(){
         return this.state == TicketStates.CLOSED;
+    }
+
+    public double getDiscountPerUnit(Product prod) {
+        if (this.categories.getOrDefault(prod.getCategory(), 0) > Constants.MIN_FOR_DISCOUNT) {
+            double discount = prod.getPrice() * prod.getCategory().getDiscount();
+            return round(discount);
+        }
+        return Constants.ZERO;
     }
 }
