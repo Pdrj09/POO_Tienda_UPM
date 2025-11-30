@@ -2,6 +2,7 @@ package etsisi.upm.io;
 
 import etsisi.upm.Constants;
 import etsisi.upm.models.Product;
+import etsisi.upm.models.ProductPersonalized;
 import etsisi.upm.models.Ticket;
 
 import java.util.*;
@@ -19,20 +20,7 @@ public class View {
     private static final String MSG_NOTHING_TO_SHOW = YELLOW + "[!] No items to display." + RESET;
 
     /*Entry point for printing any element, it handles collections/arrays and singular objects.
-     *it delegates the conversion to KV pairs before building the final table
-     */
-    // Clase para el formato (la mantenemos aquí, es parte de la presentación)
-    public static class KV {
-        public String key;
-        public String value;
-        public KV(String key, String value) { this.key = key; this.value = value; }
-    }
-
-//    public static String getString(Object o, String command){
-//        return o.toString();
-//    }
-
-    // Main printing method
+     *it delegates the conversion to KV pairs before building the final table*/
     public static <T> String getString(T element, String command) {
         if (element == null)
             return MSG_NOTHING_TO_SHOW + "\n";
@@ -68,6 +56,10 @@ public class View {
         return sb.toString();
     }
 
+    /*public static String getString(Object o, String command){
+          return o.toString();
+    }*/
+
     /*Converts a Model object into a list of Key-Value pairs, ready for table drawing.
      *This method is the core of the delegation process WITH PRESENTABLE.*/
     private static List<List<KV>> objectToKV(Object obj, String command) {
@@ -90,11 +82,16 @@ public class View {
                 result.add(ticket.toViewKVList());
             if (!isFilteredList) {
                 //detailed breakdown of the products
-                for (Map.Entry<Product, List<Object>> entry : ticket.getList().entrySet()) {
+                for (Map.Entry<Product,Integer> entry : ticket.getList().entrySet()) {
                     Product p = entry.getKey();
                     //get base KVs from the product (Product.toViewKVList()) and then, add the specific fields
                     List<KV> prodKV = new ArrayList<>(p.toViewKVList());
-                    prodKV.add(new KV("Quantity", String.valueOf((int) entry.getValue().get(0))));
+                    if (p instanceof ProductPersonalized personalized) { //num of personalizations
+                        prodKV.add(new KV("Customizations Amt", String.valueOf(personalized.getCustomizationsAmount())));
+                        String customizationsStr = String.join(", ", personalized.getCustomizations());
+                        prodKV.add(new KV("Details", customizationsStr));
+                    }
+                    prodKV.add(new KV("Quantity", String.valueOf((int) entry.getValue())));
                     prodKV.add(new KV("Discount/Unit", "-" +String.valueOf(ticket.getDiscountPerUnit(p))));
                     prodKV.add(new KV("Total Prod. Discount", "-" + String.valueOf(ticket.getTotalDiscountForProduct(p))));
                     result.add(prodKV);

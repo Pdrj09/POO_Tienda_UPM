@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 //We asign the variables
-public class Product implements Comparable<Product> {
+public class Product implements Comparable<Product>, Presentable {
     protected final int id; // It is a global variable as the id cant change once the object is created
     protected String name;
     protected double price;
@@ -125,7 +125,7 @@ public class Product implements Comparable<Product> {
         kvs.add(new KV("ID", String.valueOf(this.id)));
         kvs.add(new KV("Name", this.name));
         kvs.add(new KV("Category", String.valueOf(this.category)));
-        kvs.add(new KV("Price", String.valueOf(this.getPrice()))); // Usar getPrice()
+        kvs.add(new KV("Price", String.valueOf(this.getPrice())));
 
         return kvs;
     }
