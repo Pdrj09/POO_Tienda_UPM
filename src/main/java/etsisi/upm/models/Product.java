@@ -17,8 +17,6 @@ public class Product implements Comparable<Product>, Presentable {
     protected Categories category;
     protected boolean personalizable;
     protected int maxPers;
-    public static final int maxPeople = Constants.HUNDRED;
-
 
     //this is the constructor that creates a product
     public Product(int id, String name, double price, Categories category) {
