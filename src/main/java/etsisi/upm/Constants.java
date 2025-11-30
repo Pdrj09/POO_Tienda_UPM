@@ -125,6 +125,7 @@ public class Constants {
     public static final String STR_PRICE = ", price:";
     public static final String STR_MAXPERS = ", maxPersonal:";
     public static final String STR_PERONALIZATIONS = ", personalizationList:";
+    public static final int MAX_PERSONALIZATIONS_ALLOWED = 100;
 
     // ticket const
     public static final String TICKET_ADD = "add";

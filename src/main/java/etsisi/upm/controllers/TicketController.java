@@ -156,7 +156,7 @@ public class TicketController {
 
             //limit participants validation.
             case ServiceProduct service -> {
-                if (amount <= 0 || amount > Product.maxPeople) {
+                if (amount <= 0 || amount > Constants.MAX_PERSONALIZATIONS_ALLOWED) {
                     throw new IllegalArgumentException(Constants.ERROR_INVALID_SERVICE_PEOPLE_1 + amount + Constants.ERROR_INVALID_SERVICE_PEOPLE_2);
                 }
             }
