@@ -1,0 +1,228 @@
+@startuml
+class View {
+    + showHelp(commands: List<String>)
+    + showProducts(products: List<Product>)
+    + showTicket(ticket: Ticket)
+    + showProvisionalTotal(price: double)
+    + showError(message: String)
+    + showMessage(message: String)
+  }
+class ComandLineInterpreter{
+  + readLine()
+}
+
+class ProductController {
+   + addProduct(id: String, name: String, category: String, price: double, maxCustomTexts: int)
+   + addFoodProduct(id: String, name: String, price: double, expiration: LocalDate, maxPeople: int)
+   + addMeetingProduct(id: String, name: String, price: double, expiration: LocalDate, maxPeople: int)
+   + listProducts()
+   + updateProduct(id: String, field: String, value: String)
+   + removeProduct(id: String)
+}
+class TicketController {
+   + newTicket(ticketId: String, cashierId: String, clientId: String)
+   + addProductToTicket(ticketId: String, cashierId: String, productId: String, amount: int, customizations: List<String>)
+   + removeProductFromTicket(ticketId: String, cashierId: String, productId: String)
+   + printTicket(ticketId: String, cashierId: String)
+   + listTickets()
+}
+class ClientController {
+   + addClient(name: String, dni: String, email: String, cashierId: String)
+   + removeClient(dni: String)
+   + listClients()
+}
+class CashierController {
+   + addCashier(id: String, name: String, email: String)
+   + removeCashier(id: String)
+   + listCashiers()
+   + listCashierTickets(cashierId: String)
+}
+
+
+
+enum Categories {
+   MERCH(0.0)
+   STATIONERY(0.05)
+   CLOTHES(0.07)
+   BOOK(0.1)
+   ELECTRONICS(0.03)
+   EMPTY(0.0) 
+   {final} discount: double
+   + getDiscount(): double
+   + existCategory(category: String): boolean
+}
+enum TicketStates {
+   EMPTY
+   ACTIVE
+   CLOSED
+}
+
+
+
+interface Presentable {
+   toViewKVList(): List<KV>
+}
+interface RepositoryInterface<K, T> {
+   add(key: K, object: T)
+   findByIdOrThrow(id: K): T
+   findById(id: K): T
+   removeById(id: K): T
+   findAll() Collection<T>
+   getMap(): Map<k, T>
+}
+
+
+
+class Product implements Presentable {
+   # {final} id: int
+   # name: String
+   # price: double
+   # category: Caregories
+   # personalizable: boolean
+   # maxPers: int
+   + update(name: String, category: Category, price: double): int
+   + {abstract} calculatePrice(amount: int): double
+   + equals(o: Object): boolean
+   + hasCode(): int
+   + toString(): String
+   + toViewKVList(): List<KV>
+   + compareTo(other: Product): int
+}
+
+class ProductPersolaized extends Product {
+   - customizations List<String>
+   + getCustomizations(): List<String>
+   + getCustomizationsAmount(): Integer
+   + equals(o: Object): boolean
+   + hasCode(): int
+   + toViewKVList(): List<KV>
+   + toString(): String
+}
+
+class ServiceProduct extends Product {
+   - expirationDate: LocalDateTime
+   - numPeople: int
+   - finalPrice: double
+   + {abstract} getMinimumCreationTime(): int
+   + {abstract} getMinimumTimeUnit(): ChronoUnit
+   + isFeasible(creationTime: LocalDateTime): boolean
+   + getPricePerPerson(): double
+   + toViewKVList(): List<KV>
+   + toString(): String
+}
+
+class Meeting extends ServiceProduct {
+   + getMinimumCreationTime(): int
+   + getMinimumTimeUnit(): ChronoUnit
+   + toString(): String
+}
+
+class Food extends ServiceProduct {
+   + getMinimumCreationTime(): int
+   + getMinimumTimeUnit(): ChronoUnit
+   + toString(): String
+}1
+
+class Ticket implements Presentable {
+   - id: String
+   - creationDate: LocalDateTime
+   - state: TicketState
+   - {final} list: Map<Product, Integer>
+   - {final} categories: Map<Categories, Integer>
+   + clear(): boolean
+   + addProduct(prod: Product, amount: int): Ticket
+   - countProducts(): int
+   + remove(prod: Product): Ticket
+   + close(): String
+   + totalPrice(): double
+   + totalDiscount(): double
+   + calculateProductPrice(prod: Product): double
+   + getTotalDiscountForProduct(prod: Product): double
+   + getDiscountPerUnit(prod: Product): double
+   + toString(): String
+   + getTotalPriceView(): double
+   + getTotalDiscountView(): double
+   + getFinalPriceView(): double
+   + getList(): Map<Product, Integer>
+   + containsProduct(prod: Product): boolean
+   + isClosed(): boolean
+   + toViewKVList(): List<KV>
+   + toViewKVListSummary(): List<KV>
+}
+
+class Repository<K,T> implements RepositoryInterface{
+   - {final} repoMap: Map<K, T>
+   - {final} hasMaxSize: boolean
+   - {final} maxSize: int
+   + add(key: K, object: T)
+   + findByIdOrThrow(id: K): T
+   + findById(id: K): T
+   + removeById(id: K): T
+   + findAll() Collection<T>
+   + getMap(): Map<k, T>
+}
+
+abstract class User implements Presentable{
+   - {final} id: String
+   - nombre: String
+   - email: String
+   + equals(o: Object): boolean
+   + hasCode(): int
+   + toViewKVList(): List<KV>
+}
+
+class Client extends User {
+   - {final} strIdCashier: String
+   - {final} associatedTickets: Set<Ticket>
+   + addAssociatedTicket(ticket: Ticket)
+   + deleteTicket(ticket: Ticket)
+   + validateDni(dni: String)
+   + equals(o: Object): boolean
+   + hasCode(): int
+   + toViewKVList(): List<KV>
+   + compareTo(o: User): int
+   + toString(): String
+}
+
+class Cashier extends User {
+   - {final} createdTickets: Set<Ticket>
+   - {final} associatedClients: Set<Client>
+   + deleteTicket(ticket Ticket)
+   + {static} create(id: String, emailCompany: String, name: String): Cashier
+   + addTicket(ticket Ticket)
+   + equals(o: Object): boolean
+   + hasCode(): int
+   + compareTo(o: User): int
+   + toString(): String
+}
+
+
+ComandLineInterpreter --> ProductController
+ProductController ..> Product
+ProductController --> Repository
+ProductController --> View
+View ..> Product 
+Repository o-- Product
+
+ComandLineInterpreter --> TicketController
+TicketController ..> Ticket
+TicketController --> Repository
+TicketController --> View
+View ..> Ticket 
+Repository o-- Ticket
+
+ComandLineInterpreter --> ClientController
+ClientController ..> Client
+ClientController --> Repository
+ClientController --> View
+View ..> Client 
+Repository o-- Client
+
+ComandLineInterpreter --> CashierController
+CashierController ..> Cashier
+CashierController --> Repository
+CashierController --> View
+View ..> Cashier 
+Repository o-- Cashier
+
+@enduml
