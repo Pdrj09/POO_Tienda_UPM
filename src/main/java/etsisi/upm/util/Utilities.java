@@ -17,4 +17,14 @@ public class Utilities {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT_WH);
         return date.format(formatter);
     }
+
+    //for cleaning "name" and 'name'
+    public static String cleanName(String rawName) {
+        if (rawName == null) return null;
+        if (rawName.startsWith("\"") && rawName.endsWith("\"") && rawName.length() >= 2)
+            return rawName.substring(1, rawName.length() - 1);
+        if (rawName.startsWith("'") && rawName.endsWith("'") && rawName.length() >= 2)
+            return rawName.substring(1, rawName.length() - 1);
+        return rawName;
+    }
 }

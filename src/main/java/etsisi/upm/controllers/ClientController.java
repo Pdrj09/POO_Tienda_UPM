@@ -5,6 +5,7 @@ import etsisi.upm.io.View;
 import etsisi.upm.models.repositories.Repository;
 import etsisi.upm.models.users.Cashier;
 import etsisi.upm.models.users.Client;
+import etsisi.upm.util.Utilities;
 
 import java.util.Collection;
 
@@ -22,8 +23,8 @@ public class ClientController {
         switch (query[Constants.QUERY_CLIENT_POS_INSTRUCTION]) {
             case Constants.CASH_ADD -> {
                 if (query.length == Constants.QUERY_CLIENT_POS_MAXARGS) {
-                    Client newClient = addClient(query[Constants.TWO], query[Constants.THREE],
-                            query[Constants.FOUR], query[Constants.FIVE]);
+                    Client newClient = addClient(Utilities.cleanName(query[Constants.QUERY_CLIENT_POS_NAME]), query[Constants.QUERY_CLIENT_POS_DNI],
+                            Utilities.cleanName(query[Constants.QUERY_CLIENT_POS_EMAIL]), query[Constants.QUERY_CLIENT_POS_WORKER_ID]);
                     return View.getString(newClient, command);
                 } else
                     throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
@@ -45,7 +46,7 @@ public class ClientController {
 
     private Client addClient(String name, String dni, String email, String UW) {
 
-        Client client = new Client(dni, name, email, UW);
+        Client client = new Client(dni, Utilities.cleanName(name), Utilities.cleanName(email), UW);
         clientRepository.add(dni, client);
 
         return client;

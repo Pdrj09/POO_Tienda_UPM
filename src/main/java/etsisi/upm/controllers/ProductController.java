@@ -9,6 +9,7 @@ import etsisi.upm.models.Product;
 
 import etsisi.upm.models.Food;
 import etsisi.upm.models.Meeting;
+import etsisi.upm.util.Utilities;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -43,7 +44,7 @@ public class ProductController {
                 int id;
                 try {
                     id = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);  // if number, perfect
-                    name = querySplit[Constants.QUERY_PRODUCT_POS_NAME].replace(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
+                    name = Utilities.cleanName(querySplit[Constants.QUERY_PRODUCT_POS_NAME]);
 
                     if ((querySplit[Constants.QUERY_PRODUCT_POS_PRICE].isEmpty()) || (querySplit[Constants.QUERY_PRODUCT_POS_PRICE].equals(Constants.STR_BLANK_SPACE))) {
                         throw new IllegalArgumentException(Constants.ERROR_PRICE);
@@ -66,8 +67,7 @@ public class ProductController {
                     }
                 } catch (NumberFormatException e) {
                     id = generateAutomaticId();
-                    name = querySplit[Constants.QUERY_PRODUCT_POS_NAME].replace(Constants.REGEX_DOUBLE_QUOTE, Constants.STR_EMPTY);
-
+                    name = Utilities.cleanName(querySplit[Constants.QUERY_PRODUCT_POS_NAME]);
                     if ((querySplit[Constants.THREE].isEmpty()) || (querySplit[Constants.THREE].equals(Constants.STR_BLANK_SPACE))) {/// WE HAVE TO REVISE THIS POSITIONS!!!!!!!!!!!!!!!!!!!
                         throw new IllegalArgumentException(Constants.ERROR_PRICE);
                     }
@@ -106,7 +106,7 @@ public class ProductController {
             case Constants.PRODUCT_ADD_FOOD:
 
                 prodId = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
-                name = querySplit[Constants.QUERY_PRODUCT_POS_NAME];
+                name = Utilities.cleanName(querySplit[Constants.QUERY_PRODUCT_POS_NAME]);
                 price = Double.parseDouble(querySplit[Constants.QUERY_PRODUCT_POS_PRICE_FOODMEETING]);
                 maxPeople = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_MAXPEOPLE]);
                 expirationDate = LocalDate.parse(querySplit[Constants.QUERY_PRODUCT_POS_EXPIRATION]).atStartOfDay();
@@ -115,7 +115,7 @@ public class ProductController {
             case Constants.PRODUCT_ADD_MEETING:
 
                 prodId = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
-                name = querySplit[Constants.QUERY_PRODUCT_POS_NAME];
+                name = Utilities.cleanName(querySplit[Constants.QUERY_PRODUCT_POS_NAME]);
                 price = Double.parseDouble(querySplit[Constants.QUERY_PRODUCT_POS_PRICE_FOODMEETING]);
                 maxPeople = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_MAXPEOPLE]);
                 expirationDate = LocalDate.parse(querySplit[Constants.QUERY_PRODUCT_POS_EXPIRATION]).atStartOfDay();
@@ -158,7 +158,7 @@ public class ProductController {
         if (productToUpdate == null) throw new IllegalArgumentException(Constants.ERROR_ID_NONEXISTENT);
         switch (field) {
             case Constants.NAME:
-                productToUpdate.setName(newContent);
+                productToUpdate.setName(Utilities.cleanName(newContent));
                 break;
             case Constants.CATEGORY:
                 if (Categories.existCategory(newContent)) {
