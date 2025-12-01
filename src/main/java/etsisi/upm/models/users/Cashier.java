@@ -1,7 +1,6 @@
 package etsisi.upm.models.users;
 
 import etsisi.upm.Constants;
-import etsisi.upm.io.Presentable;
 import etsisi.upm.models.Ticket;
 
 import java.util.*;
@@ -19,7 +18,7 @@ public class Cashier extends User {
     }
 
     //PUBLIC METHODS
-    //this two methods returns an INMUTABLE copy for more protection
+    //this two methods returns an IMMUTABLE copy for more protection
     public Set<Ticket> getTickets() {
         return this.createdTickets;
     }

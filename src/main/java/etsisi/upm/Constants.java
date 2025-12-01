@@ -52,6 +52,7 @@ public class Constants {
     public static final int EIGHT = 8;
     public static final int NINE = 9;
     public static final int HUNDRED = 100;
+    public static final int MAX_RANDOM_CASH_ID = 10_000_000;
 
 
     public static final int NON_SIZE = -1;
@@ -81,6 +82,9 @@ public class Constants {
     public static final String QUOTE = "'";
     public static final String HYPEN = "-";
     public static final String ID_FORMAT = "%05d";
+    public static final String ID = "ID";
+    public static final String NAME_LOWERCASE = "Name";
+    public static final String EMAIL = "Email";
     public static final int MAX_RANDOM = 100_000;
 
 
@@ -171,6 +175,7 @@ public class Constants {
     public static final int QUERY_CLIENT_POS_EMAIL = 4;
     public static final int QUERY_CLIENT_POS_DNI = 3;
     public static final int QUERY_CLIENT_POS_WORKER_ID = 5;
+    public static final String CLI_DNI = "DNI";
 
 
 
@@ -186,6 +191,7 @@ public class Constants {
     public static final String STR_NAME = ", name:";
     public static final String STR_CASH_EMAIL = ", emailCompany:";
     public static final String STR_TICKETS = ", tickets:";
+    public static final String CASHIER_ID = "Cashier ID";
     public static final Random RANDOM = new Random();
 
 
