@@ -1,15 +1,60 @@
 @startuml
-class View {
-    + showHelp(commands: List<String>)
-    + showProducts(products: List<Product>)
-    + showTicket(ticket: Ticket)
-    + showProvisionalTotal(price: double)
-    + showError(message: String)
-    + showMessage(message: String)
-  }
-class ComandLineInterpreter{
-  + readLine()
+
+class Main {
+   - {static} {final} CURSOR: String
+   + {static} main(args: String[])
 }
+
+class View {
+   - View()
+   - {static} {final} RESET: String
+   - {static} {final} YELLOW: String
+   - {static} {final} CYAN: String
+   - {static} {final} MSG_NOTHING_TO_SHOW: String
+   + {static} getString(element: T, command: String): String
+   - {static} objectToKV(obj: Object, command: String): List<List<KV>>
+   - {static} buildTableFromKV(allLinesKV: List<List<KV>>, title: String)
+   - {static} wrapString(s: String, maxWidth): String
+   - {static} centerTitle(width: int, title: String): String
+   - {static} emptyMessage(type: Class<?>): String
+}
+
+class KV {
+   + key: String
+   + value: String
+}
+
+class CLI {
+    - {final} productController : ProductController
+    - {final} ticketController : TicketController
+    - {final} clientController : ClientController
+    - {final} cashierController : CashierController
+
+    - {static} {final} WELCOME_MESSAGE : String
+    - {static} {final} BYE : String
+    - {static} {final} COMMANDS_LIST : String
+    - {static} {final} COMMANDS_LIST_CLIENT : String
+    - {static} {final} COMMANDS_LIST_CASH : String
+    - {static} {final} COMMANDS_LIST_TICKET : String
+    - {static} {final} COMMANDS_LIST_PROD : String
+
+    + CLI(productController : ProductController, ticketController : TicketController, clientController : ClientController, cashierController : CashierController)
+
+    + newQuery(query : String) : int
+
+    - clientQuery(query : String)
+    - prodQuery(query : String)
+    - ticketQuery(query : String)
+    - cashQuery(query : String)
+
+    - {static} printWelcomeMessage()
+    - {static} printHelp(query : String)
+    - {static} printExit()
+    - {static} echoCommand(command : String)
+    - {static} getCategoriesHelp() : String
+}
+
+
 
 class ProductController {
    + decodeQuery(querySplit: String[]): String
@@ -47,8 +92,9 @@ class CashierController {
    - addCashier(id: String, emailCompany: String, name: String): Cashier
    - removeCashier(id: String): Cashier
    - listCashiers(): Collection<Cashier>
-   - listTickets(cashierId: String): Collection<Ticket>
+   - listTickets(cashierId: String): Collection<String>
    - generateCashierId(): String
+   + getTicketsSummaryList(): List<String>
 }
 
 
@@ -122,6 +168,7 @@ class ServiceProduct extends Product {
    + getPricePerPerson(): double
    + toViewKVList(): List<KV>
    + toString(): String
+   + serFinalPrice(finalPrice: double)
 }
 
 class Meeting extends ServiceProduct {
@@ -210,32 +257,64 @@ class Cashier extends User {
 }
 
 
-ComandLineInterpreter --> ProductController
+class Utilities {
+   - Utilities()
+   + {static} round(value : double) : double
+   + {static} formatDate(date : LocalDateTime) : String
+   + {static} cleanName(rawName : String) : String
+   + {static} isInteger(s : String) : boolean
+}
+
+class Constants {
+    - Constants()
+    + {static} createGeneralRegex(query : String) : String
+    + {static} okStatus(type : String, comand : String) : String
+    + {static} errorStatus(type : String, comand : String) : String
+    + {static} errorStatus(type : String, comand : String, message : String) : String
+    + {static} deleteSubstring(query : String, regex : String) : String
+}
+
+
+
+CLI --> ProductController
 ProductController ..> Product
 ProductController --> Repository
 ProductController --> View
 View ..> Product 
 Repository o-- Product
+Product -> KV
+ServiceProduct --> KV
 
-ComandLineInterpreter --> TicketController
+CLI --> TicketController
 TicketController ..> Ticket
 TicketController --> Repository
 TicketController --> View
 View ..> Ticket 
 Repository o-- Ticket
+Ticket --> KV
 
-ComandLineInterpreter --> ClientController
+User --> KV
+
+CLI --> ClientController
 ClientController ..> Client
 ClientController --> Repository
 ClientController --> View
 View ..> Client 
 Repository o-- Client
 
-ComandLineInterpreter --> CashierController
+CLI --> CashierController
 CashierController ..> Cashier
 CashierController --> Repository
 CashierController --> View
 View ..> Cashier 
 Repository o-- Cashier
+
+Main ..> Repository
+Main ..> ProductController
+Main ..> TicketController
+Main ..> ClientController
+Main ..> CashierController
+Main *-- CLI
+
 
 @enduml

@@ -19,6 +19,8 @@ public class View {
     //messages
     private static final String MSG_NOTHING_TO_SHOW = YELLOW + "[!] No items to display." + RESET;
 
+    private View(){}
+
     /*Entry point for printing any element, it handles collections/arrays and singular objects.
      *it delegates the conversion to KV pairs before building the final table*/
     public static <T> String getString(T element, String command) {

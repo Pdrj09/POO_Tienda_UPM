@@ -6,6 +6,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Utilities {
+
+    private Utilities(){};
+
     public static double round(double value) {
         long factor = (long) Math.pow(10, 2); //2 decimals
         value *= factor;

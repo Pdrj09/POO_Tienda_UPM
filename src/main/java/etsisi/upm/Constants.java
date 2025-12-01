@@ -250,6 +250,7 @@ public class Constants {
 
     public static final int TO_PORCENTAGE = 100;
 
+    private Constants(){}
 
     public static String createGeneralRegex(String query) {
         StringBuilder stringBuilder;
