@@ -1,7 +1,6 @@
 package etsisi.upm.models.users;
 
 import etsisi.upm.Constants;
-import etsisi.upm.io.Presentable;
 import etsisi.upm.models.Ticket;
 
 import java.util.*;
