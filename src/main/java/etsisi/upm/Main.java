@@ -12,6 +12,8 @@ import etsisi.upm.models.users.Cashier;
 import etsisi.upm.models.users.Client;
 import etsisi.upm.util.Constants;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Main {
@@ -29,14 +31,43 @@ public class Main {
         ClientController clientController = new ClientController(clientRepo, cashierRepo);
         CashierController cashierController = new CashierController(cashierRepo);
 
-        //We call scanner
-        Scanner sc = new Scanner(System.in);
-        int status;
-        CLI cli = new CLI(productController, ticketController, clientController, cashierController);// we create a menu
+        CLI cli = new CLI(productController, ticketController, clientController, cashierController);
 
-        do {
-            System.out.print(CURSOR);
-            status = cli.newQuery(sc.nextLine());
-         } while (status == Constants.QUERY_SUCCESS);
+        int status = Constants.QUERY_SUCCESS;
+
+        Scanner sc = null;
+        boolean fromFile = false;
+
+        // Check args for a file
+        if (args.length > 0) {
+            File file = new File(args[0]);
+            try {
+                sc = new Scanner(file);
+                fromFile = true;
+            } catch (FileNotFoundException e) {
+                System.out.println(Constants.ERROR_FILE_NOTFOUND);
+                return; // salir si el archivo no existe
+            }
+        } else {
+            sc = new Scanner(System.in);
+        }
+
+        while (status == Constants.QUERY_SUCCESS) {
+            if (!fromFile) {
+                System.out.print(CURSOR);
+            }
+
+            if (sc.hasNextLine()) {
+                String line = sc.nextLine();
+                if (fromFile) {
+                    System.out.println(CURSOR + line);
+                }
+                status = cli.newQuery(line);
+            } else {
+                break; // si no hay más líneas en el archivo, salir
+            }
+        }
+
+        sc.close();
     }
 }
