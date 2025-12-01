@@ -249,6 +249,16 @@ public class Constants {
     public static final String ERROR_FILE_NOTFOUND = "file not found";
 
     public static final int TO_PORCENTAGE = 100;
+    public static final String ARROW = "->";
+
+
+    //view commands
+    public static final String TICKET_LIST_KEY = TICKET + STR_BLANK_SPACE + TICKET_LIST;
+    public static final String PROD_LIST_KEY = PROD + STR_BLANK_SPACE + PRODUCT_LIST;
+    public static final String CASH_LIST_KEY = CASH + STR_BLANK_SPACE + CASH_LIST;
+    public static final String CLIENT_LIST_KEY = CLIENT + STR_BLANK_SPACE + CLIENT_LIST;
+    public static final String CASH_TICKETS_KEY = CASH + STR_BLANK_SPACE + CASH_TICKETS;
+    public static final String STR_INVALID_COMMAND = ": invalid command format";
 
 
     public static String createGeneralRegex(String query) {

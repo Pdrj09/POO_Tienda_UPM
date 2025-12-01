@@ -80,8 +80,8 @@ public class CashierController {
         return repository.findAll();
     }
 
-    private Collection<Ticket> listTickets(String cashierId) {
-        return repository.findByIdOrThrow(cashierId).getTickets();
+    private Collection<String> listTickets(String cashierId) {
+        return repository.findByIdOrThrow(cashierId).getTicketsSummaryList();
     }
 
     private String generateCashierId(){

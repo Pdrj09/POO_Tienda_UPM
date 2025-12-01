@@ -65,7 +65,6 @@ public class ProductController {
                 StringBuilder response = new StringBuilder();
                     response.append(View.getString(this.updateProduct(prodId,field,newContent), command));
                     response.append(Constants.ENTER_KEY);
-                    response.append(Constants.okStatus(Constants.PRODUCT, Constants.PRODUCT_UPDATE ));
                 return response.toString();
 
             case Constants.PRODUCT_ADD_FOOD:

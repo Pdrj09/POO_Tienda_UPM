@@ -47,6 +47,11 @@ public class Ticket implements Presentable {
         }else
             this.list.put(prod, amount);
 
+        if (prod instanceof ServiceProduct service) {
+            double calculatedTotal = service.getPricePerPerson() * amount;
+            service.setFinalPrice(calculatedTotal);
+        }
+
         Categories category = prod.getCategory();
         this.categories.put(category, this.categories.getOrDefault(category, Constants.BASE_AMOUNT_OF_CATEGORY) + amount);
         this.state = TicketStates.ACTIVE;
@@ -129,16 +134,30 @@ public class Ticket implements Presentable {
     }
 
 
+    // ARCHIVO: etsisi.upm.models.Ticket.java
+
     @Override
     public String toString() {
         StringBuilder res = new StringBuilder();
         for (Map.Entry<Product, Integer> entry : list.entrySet()) {
-            res.append(entry.getKey().toString());
-            if (categories.get(entry.getKey().getCategory()) > Constants.MIN_FOR_DISCOUNT) {
-                double individualDiscount = entry.getKey().getPrice() * entry.getKey().getCategory().getDiscount();
-                res.append(Constants.DISCOUNT).append(Utilities.round(individualDiscount));
+            Product product = entry.getKey();
+            int amount = entry.getValue();
+            boolean hasDiscount = categories.getOrDefault(product.getCategory(), 0) > Constants.MIN_FOR_DISCOUNT;
+            double discountPerUnit = 0;
+            if (hasDiscount)
+                discountPerUnit = getDiscountPerUnit(product);
+
+            int effectiveAmount = amount;
+            if (product instanceof ServiceProduct)
+                effectiveAmount = 1;
+            for (int i = 0; i < effectiveAmount; i++) {
+                if (!(product instanceof ServiceProduct) || i == 0) {
+                    res.append(product.toString());
+                    if (hasDiscount)
+                        res.append(Constants.DISCOUNT).append(String.format("%.2f", -discountPerUnit));
+                    res.append(Constants.ENTER_KEY);
+                }
             }
-            res.append(Constants.ENTER_KEY);
         }
         res.append(Constants.TOTAL_PRICE).append(getTotalPriceView());
         res.append(Constants.TOTAL_DISCOUNT).append(getTotalDiscountView());

@@ -36,7 +36,6 @@ public class TicketController {
         switch (querySplit[Constants.QUERY_TICKET_POS_INSTRUCTION]){
             case Constants.TICKET_NEW:
                 int index;
-                System.out.println(Arrays.toString(querySplit));
                 if(querySplit.length == Constants.QUERY_TICKET_ADD_LENGHT_WITHID){
                     ticketId = querySplit[Constants.QUERY_TICKET_POS_TICKETID];
                     index = Constants.TICKET_WITH_ID_INDEX;
