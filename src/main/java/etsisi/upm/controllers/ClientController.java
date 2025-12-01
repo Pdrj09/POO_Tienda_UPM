@@ -36,9 +36,9 @@ public class ClientController {
                 return View.getString(clients, command);
             }
             case Constants.CLIENT_REMOVE -> {
-                if (query.length != Constants.THREE)
+                if (query.length != Constants.QUERY_CLIENT_LENGTH_REMOVE)
                     throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
-                return View.getString(removeClient(query[Constants.TWO]), command);
+                return View.getString(removeClient(query[Constants.QUERY_CLIENT_REMOVE_POS_DNI]), command);
             }
             default -> throw new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
         }

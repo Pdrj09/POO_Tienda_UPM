@@ -40,11 +40,11 @@ public class Client extends User {
     }
 
     public static void validateDniNif(String dniNif) {
-        if (dniNif == null || dniNif.length() != Constants.NINE)
+        if (dniNif == null || dniNif.length() != Constants.DNI_LENGTH)
             throw new IllegalArgumentException(Constants.ERROR_DNI_LENGTH);
         String normalizedNif = dniNif.toUpperCase();
-        String core = normalizedNif.substring(Constants.ZERO, Constants.EIGHT);
-        char finalLetter = normalizedNif.charAt(Constants.EIGHT);
+        String core = normalizedNif.substring(Constants.DNINIF_POS_START, Constants.DNINIF_POS_END);
+        char finalLetter = normalizedNif.charAt(Constants.DNINIF_POS_END);
 
         String calculationPart = core;
         if (core.startsWith("X")) {
@@ -55,7 +55,7 @@ public class Client extends User {
             calculationPart = core.replaceFirst("Z", "2");
         }
 
-        String numbers = calculationPart.substring(Constants.ZERO, Constants.EIGHT);
+        String numbers = calculationPart.substring(Constants.DNINIF_POS_START, Constants.DNINIF_POS_END);
         if (!numbers.matches(Constants.DNI_REGEX))
             throw new IllegalArgumentException(Constants.ERROR_DNI_DIGITS);
         int num = Integer.parseInt(numbers);

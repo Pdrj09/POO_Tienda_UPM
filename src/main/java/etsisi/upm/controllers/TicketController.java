@@ -35,19 +35,20 @@ public class TicketController {
         int prodId, amount;
         switch (querySplit[Constants.QUERY_TICKET_POS_INSTRUCTION]){
             case Constants.TICKET_NEW:
-
+                int index;
+                System.out.println(Arrays.toString(querySplit));
                 if(querySplit.length == Constants.QUERY_TICKET_ADD_LENGHT_WITHID){
                     ticketId = querySplit[Constants.QUERY_TICKET_POS_TICKETID];
-                    cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID];
-                    clientId = querySplit[Constants.QUERY_TICKET_POS_USERID];
-
-                    return View.getString(this.newTicket(ticketId, cashierId, clientId), command);
+                    index = Constants.TICKET_WITH_ID_INDEX;
                 } else if (querySplit.length == Constants.QUERY_TICKET_ADD_LENGHT_WITHOUTID) {
-                    cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID-Constants.ONE];
-                    clientId = querySplit[Constants.QUERY_TICKET_POS_USERID-Constants.ONE];
+                    ticketId = null;
+                    index = Constants.TICKET_WITHOUT_ID_INDEX;
+                }else throw new IllegalArgumentException(Constants.ERROR_TOOMANY_ARGUMENTS);
 
-                    return View.getString(this.newTicket(null,cashierId, clientId), command);
-                }
+                cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID-index];
+                clientId = querySplit[Constants.QUERY_TICKET_POS_USERID-index];
+
+                return View.getString(this.newTicket(ticketId, cashierId, clientId), command);
 
             case Constants.TICKET_ADD:
 

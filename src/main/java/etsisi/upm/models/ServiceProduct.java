@@ -21,14 +21,14 @@ public abstract class ServiceProduct extends Product {
                 pricePerPerson,
                 Categories.EMPTY);
 
-        if (maxPeople <= Constants.ZERO)
+        if (maxPeople <= Constants.SERVICE_PROD_MINPEOPLE)
             throw new IllegalArgumentException(Constants.ERROR_TOOMANY_PEOPLE);
         else if (maxPeople > Constants.TIME_MAX_PEOPLE_SERVICE)
             this.numPeople = Constants.TIME_MAX_PEOPLE_SERVICE;
         else
             this.numPeople = maxPeople;
 
-        this.finalPrice = Constants.ZERO; //inicialization of the finalPrice
+        this.finalPrice = Constants.SERVICE_PROD_BASEPRICE; //inicialization of the finalPrice
         this.expirationDate = expirationDate;
 
         // time validation

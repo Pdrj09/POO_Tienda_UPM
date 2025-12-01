@@ -234,7 +234,7 @@ public class CLI {
             lineCategories.append(c.name());
             lineDiscounts.append(c.name())
                     .append(Constants.STR_BLANK_SPACE)
-                    .append((int)(c.getDiscount() * Constants.HUNDRED))
+                    .append((int)(c.getDiscount() * Constants.TO_PORCENTAGE))
                     .append(Constants.PERCENTAGE);
             first = false;
         }

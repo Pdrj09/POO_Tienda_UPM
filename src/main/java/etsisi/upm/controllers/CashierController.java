@@ -24,25 +24,23 @@ public class CashierController {
         String command = querySplit[Constants.QUERY_CASH_POS_CLASS] + Constants.STR_BLANK_SPACE + querySplit[Constants.QUERY_CASH_POS_INSTRUCTION];
         switch (instruction) {
             case Constants.CASH_ADD:
+                int index;
+                String cashierId;
                 if (querySplit.length == Constants.QUERY_CASH_LENGTH_WITHID) {
-                    String id = querySplit[Constants.QUERY_CASH_POS_ID];
-                    String name = Utilities.cleanName(querySplit[Constants.QUERY_CASH_POS_NAME]);
-                    String mail = Utilities.cleanName(querySplit[Constants.QUERY_CASH_POS_EMAIL]);
-
-                    Cashier newCash = addCashier(id, mail, name);
-
-                    return View.getString(newCash, command);
+                    index = Constants.CASH_WITH_ID_INDEX;
+                    cashierId = querySplit[Constants.QUERY_CASH_POS_ID];
                 } else if (querySplit.length == Constants.QUERY_CASH_LENGTH_WITHOUTID) {
-                    int index = Constants.ONE;
-                    String name = Utilities.cleanName(querySplit[Constants.QUERY_CASH_POS_NAME - index]);
-                    String mail = Utilities.cleanName(querySplit[Constants.QUERY_CASH_POS_EMAIL - index]);
-
-                    Cashier newCash = addCashier(mail, name);
-
-                    return View.getString(newCash, command);
+                    index = Constants.CASH_WITHOUT_ID_INDEX;
+                    cashierId = generateCashierId();
                 } else {
                     throw new IllegalArgumentException(Constants.ERROR_FEW_PARAMS);
                 }
+                String name = Utilities.cleanName(querySplit[Constants.QUERY_CASH_POS_NAME - index]);
+                String mail = Utilities.cleanName(querySplit[Constants.QUERY_CASH_POS_EMAIL - index]);
+
+                Cashier newCash = addCashier(cashierId,mail, name);
+
+                return View.getString(newCash, command);
 
             case Constants.CASH_REMOVE:
 
@@ -51,7 +49,7 @@ public class CashierController {
                 return View.getString(cashier, command);
             case Constants.CASH_LIST:
 
-                if (querySplit.length == Constants.QUERY_CASH_POS_INSTRUCTION + Constants.ONE) {
+                if (querySplit.length == Constants.QUERY_CASH_LIST_LENGTH) {
                     return View.getString(listCashiers(), command);
                 } else {
                     throw new IllegalArgumentException(Constants.ERROR_TOOMANY_ARGUMENTS);
@@ -62,11 +60,6 @@ public class CashierController {
             default:
                 throw new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
         }
-    }
-
-    private Cashier addCashier(String emailCompany, String name) {
-        String cashierId = generateCashierId();
-        return addCashier(cashierId,emailCompany,name);
     }
 
     private Cashier addCashier(String cashierId, String emailCompany, String name) {

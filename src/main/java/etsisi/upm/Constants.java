@@ -19,6 +19,8 @@ public class Constants {
     public static final int QUERY_TICKET_POS_USERID = 3;
     public static final int QUERY_TICKET_POS_AMOUNT = 4;
     public static final int QUERY_TICKET_POS_CUSTOMIZATIONS = 5;
+    public static final int TICKET_WITH_ID_INDEX = 0;
+    public static final int TICKET_WITHOUT_ID_INDEX = 1;
 
     public static final int QUERY_PRODUCT_POS_INSTRUCTION = 0;
     public static final int QUERY_PRODUCT_POS_PRODUCTID = 1;
@@ -33,6 +35,7 @@ public class Constants {
     public static final int QUERY_PRODUCT_POS_MAXPEOPLE = 5;
     public static final int QUERY_PRODUCT_LENGTH_WITHCUTOMIZATIONS = 6;
 
+    public static final int QUERY_CASH_LIST_LENGTH = 2;
     public static final int QUERY_CASH_POS_INSTRUCTION = 1;
     public static final int QUERY_CASH_POS_ID = 2;
     public static final int QUERY_CASH_POS_NAME = 3;
@@ -41,17 +44,6 @@ public class Constants {
     public static final int QUERY_CASH_LENGTH_WITHOUTID = 4;
 
     // numbers
-    public static final int ZERO = 0;
-    public static final int ONE = 1;
-    public static final int TWO = 2;
-    public static final int THREE = 3;
-    public static final int FOUR = 4;
-    public static final int FIVE = 5;
-    public static final int SIX = 6;
-    public static final int SEVEN = 7;
-    public static final int EIGHT = 8;
-    public static final int NINE = 9;
-    public static final int HUNDRED = 100;
     public static final int MAX_RANDOM_CASH_ID = 10_000_000;
 
 
@@ -138,6 +130,8 @@ public class Constants {
     public static final int PROD_ID_INCREMENT = 1;
     public static final int PROD_WITHOUT_ID_INDEX = 1;
     public static final int PROD_WITH_ID_INDEX = 0;
+    public static final int SERVICE_PROD_MINPEOPLE = 0;
+    public static final int SERVICE_PROD_BASEPRICE = 0;
 
     // ticket const
     public static final String TICKET_ADD = "add";
@@ -155,6 +149,8 @@ public class Constants {
     public static final int MIN_AMMOUNT = 1;
     public static final double BASE_PRICE = 0;
     public static final double BASE_DISCOUNT = 0;
+    public static final int BASE_AMOUNT_OF_CATEGORY = 0;
+    public static final int BASE_AMOUNT_OF_PRODUCT = 0;
 
 
     // client const
@@ -175,11 +171,17 @@ public class Constants {
     public static final int QUERY_CLIENT_POS_EMAIL = 4;
     public static final int QUERY_CLIENT_POS_DNI = 3;
     public static final int QUERY_CLIENT_POS_WORKER_ID = 5;
+    public static final int QUERY_CLIENT_LENGTH_REMOVE = 3;
+    public static final int QUERY_CLIENT_REMOVE_POS_DNI = 2;
     public static final String CLI_DNI = "DNI";
-
+    public static final int DNI_LENGTH = 9;
+    public static final int DNINIF_POS_START = 0;
+    public static final int DNINIF_POS_END = 8;
 
 
     //cash const
+    public static final int CASH_WITH_ID_INDEX = 0;
+    public static final int CASH_WITHOUT_ID_INDEX = 1;
     public static final String CASH_ADD = "add";
     public static final String CASH_REMOVE = "remove";
     public static final String CASH_LIST = "list";
@@ -245,6 +247,8 @@ public class Constants {
     public static final String ERROR_FEW_PARAMS = "more params required";
     public static final String ERROR_NONEXISTEN_ID = "id nonexistent";
     public static final String ERROR_FILE_NOTFOUND = "file not found";
+
+    public static final int TO_PORCENTAGE = 100;
 
 
     public static String createGeneralRegex(String query) {

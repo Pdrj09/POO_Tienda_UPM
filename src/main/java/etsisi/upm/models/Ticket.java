@@ -48,14 +48,14 @@ public class Ticket implements Presentable {
             this.list.put(prod, amount);
 
         Categories category = prod.getCategory();
-        this.categories.put(category, this.categories.getOrDefault(category, Constants.ZERO) + amount);
+        this.categories.put(category, this.categories.getOrDefault(category, Constants.BASE_AMOUNT_OF_CATEGORY) + amount);
         this.state = TicketStates.ACTIVE;
 
         return this;
     }
 
     private int countProducts(){
-        int total = Constants.ZERO;
+        int total = Constants.BASE_AMOUNT_OF_PRODUCT;
         for(Integer amount : this.list.values()){
             total += amount;
         }
