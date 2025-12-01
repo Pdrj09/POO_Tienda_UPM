@@ -11,7 +11,7 @@ import java.security.InvalidParameterException;
 import java.util.*;
 
 public class CashierController {
-    private static final Random randon = new Random();
+    private static final Random random = new Random();
     private final Repository<String, Cashier> repository;
 
     public CashierController(Repository<String, Cashier> repository) {
@@ -34,7 +34,7 @@ public class CashierController {
 
                     return View.getString(newCash, command);
                 } else if (querySplit.length == Constants.QUERY_CASH_LENGTH_WITHOUTID) {
-                    int index = 1;
+                    int index = Constants.ONE;
                     String name = Utilities.cleanName(querySplit[Constants.QUERY_CASH_POS_NAME - index]);
                     String mail = Utilities.cleanName(querySplit[Constants.QUERY_CASH_POS_EMAIL - index]);
 
@@ -95,7 +95,7 @@ public class CashierController {
     private String generateCashierId(){
         String id;
         do{
-            int num = randon.nextInt(Constants.MAX_RANDOM_CASH_ID); //range between 0 and 9.999.999
+            int num = random.nextInt(Constants.MAX_RANDOM_CASH_ID); //range between 0 and 9.999.999
             id = String.format(Constants.CASH_REGEX, Constants.CASHIER_PREFIX, num);
         }while(repository.findById(id) != null);
         return id;

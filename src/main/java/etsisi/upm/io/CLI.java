@@ -206,7 +206,12 @@ public class CLI {
     }
 
     private static void echoCommand(String command) {
-        System.out.println(command);
+        String cleanedCommand = command;
+        if (command != null && command.startsWith("echo ")) {
+            cleanedCommand = command.substring(Constants.FIVE);
+        }
+        StringBuilder sb = new StringBuilder(cleanedCommand).append(Constants.ENTER_KEY);
+        System.out.println(sb);
     }
 
     //for getting the different categories for products

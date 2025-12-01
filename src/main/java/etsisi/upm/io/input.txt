@@ -50,7 +50,7 @@ echo "Trabajamos con productos de personas"
 prod addMeeting 23456 "Reunion Rotonda" 12 2025-12-02 120
 prod addMeeting 23457 "Graduacion ETSISI" 40 2025-12-02 30
 prod addFood 23458 "Cafeteria ETSISI" 5 2025-12-03 100
-prod addFood 23459 "Restaurante Asador" 50 2025-12-04 40
+prod addFood 23459 "Restaurante Asador" 50 2025-12-09 40
 prod list
 ticket new 212127 UW1234567 98948334B
 ticket add 212127 UW1234567 23456 20
