@@ -125,7 +125,7 @@ public class Product implements Comparable<Product>, Presentable {
         kvs.add(new KV("ID_Product", String.valueOf(this.id)));
         kvs.add(new KV("Name", this.name));
         kvs.add(new KV("Category", String.valueOf(this.category)));
-        kvs.add(new KV("Price", String.valueOf(this.getPrice())));
+        kvs.add(new KV("Price ud.", String.valueOf(this.getPrice())));
         if (this.isPersonalizable())
             kvs.add(new KV("Max Personalizations", String.valueOf(this.getMaxPers())));
         return kvs;

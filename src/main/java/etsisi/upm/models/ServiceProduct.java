@@ -71,15 +71,16 @@ public abstract class ServiceProduct extends Product {
     @Override
     public List<KV> toViewKVList() {
         List<KV> kvs = super.toViewKVList();
-        //we add the price per person, date and maxpeople
         kvs.removeIf(kv -> kv.key.equals("Category"));
         kvs.removeIf(kv -> kv.key.equals("Price"));
+        kvs.removeIf(kv -> kv.key.equals("Max Personalizations"));
+
         kvs.add(new KV("Max Persons", String.valueOf(this.getMaxPers())));
-        kvs.add(new KV("Price", String.valueOf(getPricePerPerson())));
-        //we parse the format of the date for the view
+        kvs.add(new KV("Price ud.", String.valueOf(getPricePerPerson())));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedDate = expirationDate.format(formatter);
         kvs.add(new KV("Date of Event", formattedDate));
+
         return kvs;
     }
 
