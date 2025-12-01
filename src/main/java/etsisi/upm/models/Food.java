@@ -1,6 +1,6 @@
 package etsisi.upm.models;
 
-import etsisi.upm.Constants;
+import etsisi.upm.util.Constants;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 

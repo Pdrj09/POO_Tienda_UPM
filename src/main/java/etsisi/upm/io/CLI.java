@@ -4,10 +4,7 @@ import etsisi.upm.controllers.CashierController;
 import etsisi.upm.controllers.ClientController;
 import etsisi.upm.controllers.ProductController;
 import etsisi.upm.controllers.TicketController;
-import etsisi.upm.Constants;
-import etsisi.upm.models.Product;
-import etsisi.upm.models.users.Cashier;
-import etsisi.upm.models.users.Client;
+import etsisi.upm.util.Constants;
 import etsisi.upm.util.Categories;
 
 import java.time.format.DateTimeParseException;

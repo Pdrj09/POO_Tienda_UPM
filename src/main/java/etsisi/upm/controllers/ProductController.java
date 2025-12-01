@@ -1,6 +1,6 @@
 package etsisi.upm.controllers;
 
-import etsisi.upm.Constants;
+import etsisi.upm.util.Constants;
 import etsisi.upm.io.View;
 import etsisi.upm.models.Ticket;
 import etsisi.upm.models.repositories.Repository;
@@ -11,11 +11,8 @@ import etsisi.upm.models.Food;
 import etsisi.upm.models.Meeting;
 import etsisi.upm.util.Utilities;
 
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Collection;
 
 public class ProductController {

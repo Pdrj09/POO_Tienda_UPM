@@ -1,6 +1,6 @@
 package etsisi.upm.controllers;
 
-import etsisi.upm.Constants;
+import etsisi.upm.util.Constants;
 import etsisi.upm.io.View;
 import etsisi.upm.models.repositories.Repository;
 import etsisi.upm.models.users.Cashier;

@@ -1,13 +1,10 @@
 package etsisi.upm.io;
 
-import etsisi.upm.Constants;
+import etsisi.upm.util.Constants;
 import etsisi.upm.models.Product;
-import etsisi.upm.models.ProductPersonalized;
 import etsisi.upm.models.Ticket;
 
 import java.util.*;
-
-import static etsisi.upm.Constants.*;
 
 /*The View class is responsible for presenting data to the user via CLI.
  * it receives Model objects and formats them into a readable table structure.

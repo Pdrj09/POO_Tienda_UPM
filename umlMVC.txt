@@ -316,5 +316,6 @@ Main ..> ClientController
 Main ..> CashierController
 Main *-- CLI
 
+View --> KV
 
 @enduml

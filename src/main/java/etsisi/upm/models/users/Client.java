@@ -1,6 +1,6 @@
 package etsisi.upm.models.users;
 
-import etsisi.upm.Constants;
+import etsisi.upm.util.Constants;
 import etsisi.upm.io.KV;
 import etsisi.upm.models.Ticket;
 

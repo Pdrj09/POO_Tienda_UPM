@@ -1,7 +1,6 @@
 package etsisi.upm.controllers;
 
-import etsisi.upm.Constants;
-import etsisi.upm.io.KV;
+import etsisi.upm.util.Constants;
 import etsisi.upm.io.View;
 import etsisi.upm.models.Product;
 import etsisi.upm.models.ProductPersonalized;
@@ -12,8 +11,6 @@ import etsisi.upm.models.users.Client;
 import etsisi.upm.models.ServiceProduct;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class TicketController {
     private final Repository<String, Ticket> ticketRepository;

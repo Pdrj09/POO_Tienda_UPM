@@ -10,6 +10,7 @@ import etsisi.upm.models.Ticket;
 import etsisi.upm.models.repositories.Repository;
 import etsisi.upm.models.users.Cashier;
 import etsisi.upm.models.users.Client;
+import etsisi.upm.util.Constants;
 
 import java.io.File;
 import java.io.FileNotFoundException;

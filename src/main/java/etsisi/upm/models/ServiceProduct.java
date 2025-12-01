@@ -1,6 +1,6 @@
 package etsisi.upm.models;
 
-import etsisi.upm.Constants;
+import etsisi.upm.util.Constants;
 import etsisi.upm.io.KV;
 import etsisi.upm.util.Categories;
 import etsisi.upm.util.Utilities;

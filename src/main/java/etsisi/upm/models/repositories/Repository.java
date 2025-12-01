@@ -1,6 +1,6 @@
 package etsisi.upm.models.repositories;
 
-import etsisi.upm.Constants;
+import etsisi.upm.util.Constants;
 
 import java.util.Collection;
 import java.util.HashMap;
