@@ -3,6 +3,7 @@ package etsisi.upm.models.users;
 import etsisi.upm.util.Constants;
 import etsisi.upm.io.KV;
 import etsisi.upm.io.Presentable;
+import etsisi.upm.util.Utilities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,8 @@ public abstract class User implements Comparable<User>, Presentable {
             throw new IllegalArgumentException(Constants.ERROR_NAME_EMPTY);
         if (email == null || email.isBlank())
             throw new IllegalArgumentException(Constants.ERROR_EMAIL_EMPTY);
+        if (!Utilities.isValidEmail(email))
+            throw new IllegalArgumentException(Constants.ERROR_EMAIL_FORMAT);
         this.id = id;
         this.name = name;
         this.email = email;

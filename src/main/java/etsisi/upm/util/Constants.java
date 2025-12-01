@@ -230,6 +230,7 @@ public class Constants {
     public static final String ERROR_ID_EMPTY = "The ID cannot be empty.";
     public static final String ERROR_NAME_EMPTY = "The name cannot be empty.";
     public static final String ERROR_EMAIL_EMPTY = "The email cannot be empty.";
+    public static final String ERROR_EMAIL_FORMAT = "The email format is wrong.";
 
     public static final String ERROR_DNI_LENGTH = "Invalid DNI: wrong length (must be 9 chars)";
     public static final String ERROR_CASHIER_NULL = "The cashier ID cannot be null";
