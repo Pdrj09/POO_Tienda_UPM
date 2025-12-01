@@ -68,6 +68,10 @@ public abstract class ServiceProduct extends Product {
         return Utilities.round(finalPrice);
     }
 
+    public void setFinalPrice(double finalPrice) {
+        this.finalPrice = finalPrice;
+    }
+
     @Override
     public List<KV> toViewKVList() {
         List<KV> kvs = super.toViewKVList();

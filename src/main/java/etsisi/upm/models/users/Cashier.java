@@ -27,6 +27,14 @@ public class Cashier extends User {
         return Set.copyOf(associatedClients);
     }
 
+    public List<String> getTicketsSummaryList() {
+        List<String> summary = new ArrayList<>();
+        for (Ticket ticket : this.createdTickets) {
+            summary.add(ticket.getId() + Constants.ARROW + ticket.getState().name());
+        }
+        return summary;
+    }
+
     public void deleteTicket(Ticket ticket){
         this.createdTickets.remove(ticket);
     }
@@ -73,11 +81,13 @@ public class Cashier extends User {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(Constants.OPEN_BRACE)
-                .append(Constants.STR_CASHIER).append(Constants.QUOTE).append(Constants.STR_ID).append(getId())
-                .append(Constants.STR_NAME).append(Constants.QUOTE).append(getName()).append(Constants.QUOTE)
+                .append(Constants.STR_CASHIER).append(Constants.QUOTE)
+                .append(Constants.STR_ID).append(getId())
+                .append(Constants.STR_NAME).append(Constants.QUOTE)
+                .append(getName()).append(Constants.QUOTE)
                 .append(Constants.STR_CASH_EMAIL).append(Constants.QUOTE).append(getEmail()).append(Constants.QUOTE)
-                .append(Constants.STR_TICKETS).append(getTickets())
                 .append(Constants.CLOSE_BRACE);
         return sb.toString();
     }
 }
+
