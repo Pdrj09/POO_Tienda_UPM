@@ -134,6 +134,8 @@ public class CLI {
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         try {
             System.out.println(this.clientController.clientQuery(querySplit));
+        }catch (IndexOutOfBoundsException e){
+            System.out.println(Constants.errorStatus(Constants.CLIENT,Constants.ERROR_STATUS,Constants.ERROR_FEW_PARAMS));
         }catch (Exception e) {
             System.out.println(Constants.errorStatus(Constants.CLIENT, e.getMessage()));
         }
@@ -145,6 +147,9 @@ public class CLI {
             System.out.println(this.productController.decodeQuery(querySplit));
         }catch (DateTimeParseException e){
             System.out.println(Constants.errorStatus(Constants.PROD, Constants.ERROR_DATE));
+        }
+        catch (IndexOutOfBoundsException e){
+            System.out.println(Constants.errorStatus(Constants.PROD,Constants.ERROR_STATUS,Constants.ERROR_FEW_PARAMS));
         }catch (Exception e) {
             System.out.println(Constants.errorStatus(Constants.PROD, e.getMessage()));
         }

@@ -1,5 +1,7 @@
 package etsisi.upm;
 
+import java.util.Random;
+
 public class Constants {
 
 
@@ -29,6 +31,7 @@ public class Constants {
     public static final int QUERY_PRODUCT_POS_PRICE_FOODMEETING = 3;
     public static final int QUERY_PRODUCT_POS_EXPIRATION = 4;
     public static final int QUERY_PRODUCT_POS_MAXPEOPLE = 5;
+    public static final int QUERY_PRODUCT_LENGTH_WITHCUTOMIZATIONS = 6;
 
     public static final int QUERY_CASH_POS_INSTRUCTION = 1;
     public static final int QUERY_CASH_POS_ID = 2;
@@ -127,6 +130,10 @@ public class Constants {
     public static final String STR_PERONALIZATIONS = ", personalizationList:";
     public static final int MAX_PERSONALIZATIONS_ALLOWED = 100;
     public static final String STR_PRODUCT_PERSONALIZED = "class:ProductPersonalized";
+    public static final int BASE_PROD_ID = 0;
+    public static final int PROD_ID_INCREMENT = 1;
+    public static final int PROD_WITHOUT_ID_INDEX = 1;
+    public static final int PROD_WITH_ID_INDEX = 0;
 
     // ticket const
     public static final String TICKET_ADD = "add";
@@ -179,6 +186,8 @@ public class Constants {
     public static final String STR_NAME = ", name:";
     public static final String STR_CASH_EMAIL = ", emailCompany:";
     public static final String STR_TICKETS = ", tickets:";
+    public static final Random RANDOM = new Random();
+
 
     // Time const
     public static final int TIME_FOOD_PLANNING_DAYS = 3;

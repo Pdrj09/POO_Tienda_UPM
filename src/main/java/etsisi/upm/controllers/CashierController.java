@@ -11,7 +11,6 @@ import java.security.InvalidParameterException;
 import java.util.*;
 
 public class CashierController {
-    private static final Random randon = new Random();
     private final Repository<String, Cashier> repository;
 
     public CashierController(Repository<String, Cashier> repository) {
@@ -95,7 +94,7 @@ public class CashierController {
     private String generateCashierId(){
         String id;
         do{
-            int num = randon.nextInt(10_000_000); //range between 0 and 9.999.999
+            int num = Constants.RANDOM.nextInt(10_000_000); //range between 0 and 9.999.999
             id = String.format(Constants.CASH_REGEX, Constants.CASHIER_PREFIX, num);
         }while(repository.findById(id) != null);
         return id;

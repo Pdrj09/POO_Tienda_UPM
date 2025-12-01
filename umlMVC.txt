@@ -12,30 +12,43 @@ class ComandLineInterpreter{
 }
 
 class ProductController {
-   + addProduct(id: String, name: String, category: String, price: double, maxCustomTexts: int)
-   + addFoodProduct(id: String, name: String, price: double, expiration: LocalDate, maxPeople: int)
-   + addMeetingProduct(id: String, name: String, price: double, expiration: LocalDate, maxPeople: int)
-   + listProducts()
-   + updateProduct(id: String, field: String, value: String)
-   + removeProduct(id: String)
+   + decodeQuery(querySplit: String[]): String
+   - addProduct(id: int, name: String, category: String, price: double, maxCustomTexts: int): Product
+   - addProduct(id: int, name: String, category: String, price: double): Product
+   - updateProduct(id: int, field: String, newContent: String): Product
+   - deleteProduct(prodId: int):Product
+   - prodList(): Collection<Product>
+   - addFood(id: String, name: String, pricePerPerson: double, maxPeople: int, expirationDate: LocalDate): Product
+   - addMeeting(id: String, name: String, pricePerPerson: double, maxPeople: int, expirationDate: LocalDate): Product
+   - generateAutomaticId(): int
 }
+
 class TicketController {
-   + newTicket(ticketId: String, cashierId: String, clientId: String)
-   + addProductToTicket(ticketId: String, cashierId: String, productId: String, amount: int, customizations: List<String>)
-   + removeProductFromTicket(ticketId: String, cashierId: String, productId: String)
-   + printTicket(ticketId: String, cashierId: String)
-   + listTickets()
+   + decodeQuery(querySplit: String[]): String
+   - newTicket(ticketId: String, cashierId: String, clientId: String): Ticket
+   - getTicket(ticketId: String): Ticket
+   - getTicketList(): List<Ticket>
+   - closeTicket(ticket: Ticket)
+   - addProductToTicket(ticketId: String, cashierId: String, productId: String, amount: int, customizations: List<String>): Ticket
+   - removeProductFromTicket(ticketId: String, cashierId: String, productId: String): Ticket
+   - printTicket(ticketId: String, cashierId: String): Ticket
 }
+
 class ClientController {
-   + addClient(name: String, dni: String, email: String, cashierId: String)
-   + removeClient(dni: String)
-   + listClients()
+   + clientQuery(querySplit: String[]): String
+   - addClient(name: String, dni: String, email: String, UW: String): Client
+   - removeClient(id: String): Client
+   - listClients(): Collection<Clinet>
 }
+
 class CashierController {
-   + addCashier(id: String, name: String, email: String)
-   + removeCashier(id: String)
-   + listCashiers()
-   + listCashierTickets(cashierId: String)
+   + cashierQuery(querySplit: String[]): String
+   - addCashier(emailCompany: String, name: String): Cashier
+   - addCashier(id: String, emailCompany: String, name: String): Cashier
+   - removeCashier(id: String): Cashier
+   - listCashiers(): Collection<Cashier>
+   - listTickets(cashierId: String): Collection<Ticket>
+   - generateCashierId(): String
 }
 
 
@@ -121,7 +134,7 @@ class Food extends ServiceProduct {
    + getMinimumCreationTime(): int
    + getMinimumTimeUnit(): ChronoUnit
    + toString(): String
-}1
+}
 
 class Ticket implements Presentable {
    - id: String
