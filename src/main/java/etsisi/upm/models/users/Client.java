@@ -15,7 +15,7 @@ public class Client extends User {
     //CONSTRUCTOR W/ ALL PARAMETERS
     public Client(String dni, String name, String email, String idCashier) {
         super(dni, name, email);
-        validateDni(dni);
+        validateDniNif(dni);
         this.associatedTickets = new HashSet<>();
         if (idCashier == null)
             throw new IllegalArgumentException(Constants.ERROR_CASHIER_NULL);
@@ -39,18 +39,29 @@ public class Client extends User {
         return strIdCashier;
     }
 
-    public static void validateDni(String dni) {
-        if (dni == null || dni.length() != Constants.NINE)
+    public static void validateDniNif(String dniNif) {
+        if (dniNif == null || dniNif.length() != Constants.NINE)
             throw new IllegalArgumentException(Constants.ERROR_DNI_LENGTH);
-        String numbers = dni.substring(Constants.ZERO, Constants.EIGHT);
-        char letter = Character.toUpperCase(dni.charAt(Constants.EIGHT));
-        //check numeric part
+        String normalizedNif = dniNif.toUpperCase();
+        String core = normalizedNif.substring(Constants.ZERO, Constants.EIGHT);
+        char finalLetter = normalizedNif.charAt(Constants.EIGHT);
+
+        String calculationPart = core;
+        if (core.startsWith("X")) {
+            calculationPart = core.replaceFirst("X", "0");
+        } else if (core.startsWith("Y")) {
+            calculationPart = core.replaceFirst("Y", "1");
+        } else if (core.startsWith("Z")) {
+            calculationPart = core.replaceFirst("Z", "2");
+        }
+
+        String numbers = calculationPart.substring(Constants.ZERO, Constants.EIGHT);
         if (!numbers.matches(Constants.DNI_REGEX))
             throw new IllegalArgumentException(Constants.ERROR_DNI_DIGITS);
-        //expected letter
         int num = Integer.parseInt(numbers);
         char expected = Constants.DNI_LETTERS.charAt(num % Constants.ALPHABET_NUM);
-        if (letter != expected)
+
+        if (finalLetter != expected)
             throw new IllegalArgumentException(
                     Constants.ERROR_INVALID_DNI_1 + expected + Constants.ERROR_INVALID_DNI_2 + numbers
             );
