@@ -27,6 +27,6 @@ public class Food extends ServiceProduct {
     public String toString() {
         String parentToString = super.toString();
         // replace the name of the class
-        return parentToString.replace(Constants.STR_SERVICE_PRODUCT, Constants.STR_FOOD);
+        return parentToString.replace("class:ServiceProduct", Constants.STR_FOOD);
     }
 }
