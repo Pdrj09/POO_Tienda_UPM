@@ -205,10 +205,11 @@ public class Ticket implements Presentable {
         List<KV> prodKV = new ArrayList<>(p.toViewKVList());
         if (p instanceof ProductPersonalized) {
             double calculatedPrice = this.calculateProductPrice(p);
-            prodKV.removeIf(kv -> kv.key.equals("Price"));
-            prodKV.add(new KV("Price", String.valueOf(calculatedPrice)));
+            prodKV.removeIf(kv -> kv.key.equals("Price W/Pers"));
+            prodKV.add(new KV("Price W/Pers", String.valueOf(calculatedPrice)));
         }
         prodKV.addAll(p.getPresentableDetails());
+        prodKV.add(new KV("Sum Price", String.valueOf(calculateProductPrice(p)*quantity)));
         prodKV.add(new KV("Quantity", String.valueOf(quantity)));
         prodKV.add(new KV("Discount/Unit", "-" + String.valueOf(this.getDiscountPerUnit(p))));
         prodKV.add(new KV("Total Prod. Discount", "-" + String.valueOf(this.getTotalDiscountForProduct(p))));
