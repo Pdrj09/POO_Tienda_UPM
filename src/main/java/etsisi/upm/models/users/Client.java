@@ -42,9 +42,25 @@ public class Client extends User {
     public static void validateDniNif(String dniNif) {
         if (dniNif == null || dniNif.length() != Constants.DNI_LENGTH)
             throw new IllegalArgumentException(Constants.ERROR_DNI_LENGTH);
-        String normalizedNif = dniNif.toUpperCase();
-        String core = normalizedNif.substring(Constants.DNINIF_POS_START, Constants.DNINIF_POS_END);
-        char finalLetter = normalizedNif.charAt(Constants.DNINIF_POS_END);
+
+        String normalizedId = dniNif.toUpperCase();
+        //PERSON: the last character is a letter (DNI/NIF)
+        //COMPANY: the first and last character is a number
+        boolean endsWithLetter= Character.isLetter(normalizedId.charAt(Constants.DNINIF_POS_END));
+        boolean startsWithLetter= Character.isLetter(normalizedId.charAt(Constants.DNINIF_POS_START));
+
+        //COMPANY CASE
+        if (startsWithLetter && !endsWithLetter) {
+            String nifNumbers = normalizedId.substring(1);
+            if (!nifNumbers.matches(Constants.DNI_REGEX)) {
+                throw new IllegalArgumentException(Constants.ERROR_COMPANY_ID);
+            }
+            return;
+        }
+
+        //PERSON CASE
+        String core = normalizedId.substring(Constants.DNINIF_POS_START, Constants.DNINIF_POS_END);
+        char finalLetter = normalizedId.charAt(Constants.DNINIF_POS_END);
 
         String calculationPart = core;
         if (core.startsWith("X")) {

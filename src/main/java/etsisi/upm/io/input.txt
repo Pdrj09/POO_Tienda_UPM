@@ -15,6 +15,8 @@ echo "Creo un Trabajador"
 cash add UW1234567 "pepecurro3" pepe0@upm.es
 cash add "pepecurro2" pepe0@upm.es
 echo "Creo tres cliente listo borro uno y listo"
+client add "Juan Perez" 12345678Z juan@email.com C1
+client add "Tech S.A." A08123456 tech@email.com C1
 client add "Pepe3" 55630667S pepe1@upm.es UW1234567
 client add "Pepe2" 98948334B pepe2@upm.es UW1234567
 client add "Pepe1" Y8682724P pepe3@upm.es UW1234567

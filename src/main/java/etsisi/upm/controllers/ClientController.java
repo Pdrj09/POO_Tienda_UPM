@@ -1,5 +1,6 @@
 package etsisi.upm.controllers;
 
+import etsisi.upm.models.users.CompanyClient;
 import etsisi.upm.util.Constants;
 import etsisi.upm.io.View;
 import etsisi.upm.models.repositories.Repository;
@@ -44,11 +45,15 @@ public class ClientController {
         }
     }
 
-    private Client addClient(String name, String dni, String email, String UW) {
-
-        Client client = new Client(dni, Utilities.cleanName(name), Utilities.cleanName(email), UW);
-        clientRepository.add(dni, client);
-
+    private Client addClient(String name, String id, String email, String UW) {
+        Client.validateDniNif(id);
+        Client client;
+        //we have to decide if the last character is a digit (to decide if it is a company client or not)
+        if (Character.isDigit(id.charAt(id.length()-1)))
+            client = new CompanyClient(id, Utilities.cleanName(name), Utilities.cleanName(email), UW);
+        else
+            client = new Client(id, Utilities.cleanName(name), Utilities.cleanName(email), UW);
+        clientRepository.add(id, client);
         return client;
     }
 

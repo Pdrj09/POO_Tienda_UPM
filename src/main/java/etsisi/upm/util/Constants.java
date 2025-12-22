@@ -245,6 +245,7 @@ public class Constants {
     public static final String ERROR_DNI_DIGITS = "Invalid DNI: first 8 characters must be numbers";
     public static final String ERROR_INVALID_DNI_1 = "Invalid DNI: wrong letter. Expected ";
     public static final String ERROR_INVALID_DNI_2= " for ";
+    public static final String ERROR_COMPANY_ID = "Invalid NIF: Must be a letter followed by 8 digits";
 
     public static final String ERROR_PRICE = "No price for product";
     public static final String ERROR_INVALID_ID = "UW format incorrect";
