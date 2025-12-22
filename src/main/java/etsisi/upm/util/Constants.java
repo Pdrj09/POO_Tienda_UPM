@@ -3,10 +3,18 @@ package etsisi.upm.util;
 import java.util.Random;
 
 public class Constants {
+    /*VIEW CONSTANTS*/
+    //ANSI colours
+    public static final String RESET = "\u001B[0m";
+    public static final String YELLOW = "\u001B[33m";
+    public static final String CYAN = "\u001B[36m";
+    //messages
+    public static final String MSG_NOTHING_TO_SHOW = YELLOW + "[!] No items to display." + RESET;
+
 
 
     public static final int QUERY_SUCCESS = 1;
-    public  static final int QUERY_EXIT = 0;
+    public static final int QUERY_EXIT = 0;
 
     public static final int QUERY_HELP_POS_INSTRUCTION = 1;
 
@@ -252,14 +260,6 @@ public class Constants {
     public static final int TO_PORCENTAGE = 100;
     public static final String ARROW = "->";
 
-
-    //view commands
-    public static final String TICKET_LIST_KEY = TICKET + STR_BLANK_SPACE + TICKET_LIST;
-    public static final String PROD_LIST_KEY = PROD + STR_BLANK_SPACE + PRODUCT_LIST;
-    public static final String CASH_LIST_KEY = CASH + STR_BLANK_SPACE + CASH_LIST;
-    public static final String CLIENT_LIST_KEY = CLIENT + STR_BLANK_SPACE + CLIENT_LIST;
-    public static final String CASH_TICKETS_KEY = CASH + STR_BLANK_SPACE + CASH_TICKETS;
-    public static final String STR_INVALID_COMMAND = ": invalid command format";
 
     private Constants(){}
 

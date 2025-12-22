@@ -3,8 +3,8 @@ package etsisi.upm.io;
 import etsisi.upm.util.Constants;
 import etsisi.upm.models.Product;
 import etsisi.upm.models.Ticket;
-
 import java.util.*;
+import static etsisi.upm.util.Constants.*;
 
 /*The View class is responsible for presenting data to the user via CLI.
  * it receives Model objects and formats them into a readable table structure.
@@ -12,15 +12,7 @@ import java.util.*;
  * and avoiding reflection, ensuring no coupling with the model's internal structure.
  * Assumes: KV class (Key-Value) is defined externally and a Presentable interface*/
 public class View {
-    //ANSI colours
-    private static final String RESET = "\u001B[0m";
-    private static final String YELLOW = "\u001B[33m";
-    private static final String CYAN = "\u001B[36m";
-    //messages
-    private static final String MSG_NOTHING_TO_SHOW = YELLOW + "[!] No items to display." + RESET;
-
     private View(){}
-
     /*Entry point for printing any element, it handles collections/arrays and singular objects.
      *it delegates the conversion to KV pairs before building the final table*/
     public static <T> String getString(T element, String command) {
@@ -57,96 +49,6 @@ public class View {
         sb.append(Constants.okStatus(command.split(" ")[0], command.split(" ")[1])).append("\n");
         return sb.toString();
     }
-
-    /*public static String getString(Object object, String command) {
-        if (object == null) {
-            String[] parts = command.split(STR_BLANK_SPACE);
-            if (parts.length >= 2)
-                return parts[0] + STR_BLANK_SPACE + parts[1] + STR_DOUBLE_DOT + STR_BLANK_SPACE + ERROR_STATUS;
-            return command + STR_DOUBLE_DOT + STR_BLANK_SPACE + ERROR_STATUS;
-        }
-        String[] parts = command.split(STR_BLANK_SPACE);
-        if (parts.length < 2)
-            return command + STR_INVALID_COMMAND;
-        String command_class = parts[0];
-        String instruction = parts[1];
-        String command_key = command_class + STR_BLANK_SPACE + instruction;
-        if (object instanceof Presentable) {
-            Presentable presentable = (Presentable) object;
-            StringBuilder sb = new StringBuilder();
-            switch (command_key) {
-                case Constants.TICKET + STR_BLANK_SPACE + Constants.TICKET_NEW:
-                case Constants.TICKET + STR_BLANK_SPACE + Constants.TICKET_ADD:
-                case Constants.TICKET + STR_BLANK_SPACE + Constants.TICKET_REMOVE:
-                case Constants.TICKET + STR_BLANK_SPACE + Constants.TICKET_PRINT:
-                    Ticket ticket = (Ticket) presentable;
-                    sb.append("Ticket ").append(STR_DOUBLE_DOT).append(STR_BLANK_SPACE).append(ticket.getId()).append(ENTER_KEY);
-                    sb.append(ticket.toString());
-                    break;
-                default:
-                    sb.append(presentable.toString()).append(ENTER_KEY);
-                    break;
-            }
-            sb.append(command_class).append(STR_BLANK_SPACE).append(instruction)
-                    .append(STR_DOUBLE_DOT).append(STR_BLANK_SPACE).append(OK_STATUS);
-            return sb.toString();
-        }
-        else if (object instanceof Collection) {
-            Collection<?> collection = (Collection<?>) object;
-            StringBuilder sb = new StringBuilder();
-            switch (command_key) {
-                case TICKET_LIST_KEY:
-                    sb.append("Ticket List: ").append(ENTER_KEY);
-                    if (!collection.isEmpty()) {
-                        for (Object item : collection) {
-                            Ticket ticket = (Ticket) item;
-                            sb.append(TAB_SPACE)
-                                    .append(ticket.getId()).append(" - ").append(ticket.getState().name())
-                                    .append(ENTER_KEY);
-                        }
-                    }
-                    break;
-                case PROD_LIST_KEY:
-                    sb.append("Catalog:").append(ENTER_KEY);
-                    if (!collection.isEmpty()) {
-                        for (Object item : collection)
-                            sb.append(TAB_SPACE).append(item.toString()).append(ENTER_KEY);
-                    }
-                    break;
-                case CASH_LIST_KEY:
-                    sb.append("Cash:").append(ENTER_KEY);
-                    if (!collection.isEmpty()) {
-                        for (Object item : collection) {
-                            sb.append(TAB_SPACE).append(item.toString()).append(ENTER_KEY);
-                        }
-                    }
-                    break;
-                case CLIENT_LIST_KEY:
-                    sb.append("Client:").append(ENTER_KEY);
-                    if (!collection.isEmpty()) {
-                        for (Object item : collection)
-                            sb.append(TAB_SPACE).append(item.toString()).append(ENTER_KEY);
-                    }
-                    break;
-                case CASH_TICKETS_KEY:
-                    sb.append("Tickets: ").append(ENTER_KEY);
-                    if (!collection.isEmpty()) {
-                        for (Object item : collection)
-                            sb.append(TAB_SPACE).append(item.toString()).append(ENTER_KEY);
-                    }
-                    break;
-                default:
-                    sb.append(collection.toString()).append(ENTER_KEY);
-                    break;
-            }
-            sb.append(command_class).append(STR_BLANK_SPACE).append(instruction)
-                    .append(STR_DOUBLE_DOT).append(STR_BLANK_SPACE).append(OK_STATUS);
-            return sb.toString();
-        }
-        else if (object instanceof String)
-            return (String) object;
-        return "Error processing ->" + command + " ->Object type not handled";
-    }*/
 
     /*Converts a Model object into a list of Key-Value pairs, ready for table drawing.
      *This method is the core of the delegation process WITH PRESENTABLE.*/
