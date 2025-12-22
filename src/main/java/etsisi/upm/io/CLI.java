@@ -239,6 +239,4 @@ public class CLI {
         lineDiscounts.append(Constants.STR_DOT);
         return lineCategories.toString() + lineDiscounts.toString();
     }
-
-
 }
