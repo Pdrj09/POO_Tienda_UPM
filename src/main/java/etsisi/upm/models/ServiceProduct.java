@@ -1,37 +1,53 @@
 package etsisi.upm.models;
 
-import etsisi.upm.Constants;
+import etsisi.upm.util.Constants;
+import etsisi.upm.io.KV;
 import etsisi.upm.util.Categories;
+import etsisi.upm.util.Utilities;
+
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.lang.Math;
+import java.util.List;
 
 public abstract class ServiceProduct extends Product {
     private final LocalDateTime expirationDate;
-
-    private static final String STR_PRICE_PERSON = ", pricePerPerson:";
-    private static final String STR_SERVICE_PRODUCT = "class:ServiceProduct";
-    private static final String STR_EXPIRATION = ", expiration:";
+    private int numPeople;
+    private double finalPrice;
 
     public ServiceProduct(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
         super(id,
                 name,
                 pricePerPerson,
-                Categories.EMPTY,
-                Math.min(maxPeople, Constants.TIME_MAX_PEOPLE_SERVICE));
+                Categories.EMPTY);
 
+        if (maxPeople <= Constants.SERVICE_PROD_MINPEOPLE)
+            throw new IllegalArgumentException(Constants.ERROR_TOOMANY_PEOPLE);
+        else if (maxPeople > Constants.TIME_MAX_PEOPLE_SERVICE)
+            this.numPeople = Constants.TIME_MAX_PEOPLE_SERVICE;
+        else
+            this.numPeople = maxPeople;
+
+        this.finalPrice = Constants.SERVICE_PROD_BASEPRICE; //inicialization of the finalPrice
         this.expirationDate = expirationDate;
 
+        // time validation
         if (!isFeasible(LocalDateTime.now())) {
-            String timeUnit = getMinimumTimeUnit() == ChronoUnit.HOURS ? "horas" : "días";
-            throw new IllegalArgumentException("Error: The date must be  " + getMinimumCreationTime() + " " + timeUnit + " in the future.");
+            String timeUnit = getMinimumTimeUnit() == ChronoUnit.HOURS ? Constants.HOURS : Constants.DAYS;
+            StringBuilder error = new StringBuilder();
+            error.append(Constants.ERROR_SERVICE_DATE_FEASIBILITY);
+            error.append(getMinimumCreationTime());
+            error.append(Constants.STR_BLANK_SPACE);
+            error.append(timeUnit);
+            error.append(Constants.IN_THE_FUTURE);
+            throw new IllegalArgumentException(String.valueOf(error));
         }
     }
 
     // Abstract methods
     public abstract int getMinimumCreationTime();
+
     public abstract ChronoUnit getMinimumTimeUnit();
-    public abstract double calculateTotalCost(int participants);
 
     // logic
     public boolean isFeasible(LocalDateTime creationTime) {
@@ -43,25 +59,55 @@ public abstract class ServiceProduct extends Product {
         return getPrice();
     }
 
+    @Override
+    public int getMaxPers() {
+        return this.numPeople;
+    }
+
+    public double getFinalPrice() {
+        return Utilities.round(finalPrice);
+    }
+
+    public void setFinalPrice(double finalPrice) {
+        this.finalPrice = finalPrice;
+    }
+
+    @Override
+    public List<KV> toViewKVList() {
+        List<KV> kvs = super.toViewKVList();
+        kvs.removeIf(kv -> kv.key.equals("Category"));
+        kvs.removeIf(kv -> kv.key.equals("Price"));
+        kvs.removeIf(kv -> kv.key.equals("Max Personalizations"));
+
+        kvs.add(new KV("Max Persons", String.valueOf(this.getMaxPers())));
+        kvs.add(new KV("Price ud.", String.valueOf(getPricePerPerson())));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = expirationDate.format(formatter);
+        kvs.add(new KV("Date of Event", formattedDate));
+
+        return kvs;
+    }
+
     // --- toString() ---
     @Override
     public String toString() {
-        String parentToString = super.toString();
+        StringBuilder builder = new StringBuilder();
 
-        String currentToString = parentToString.replace("class:Product", STR_SERVICE_PRODUCT);
-        StringBuilder builder = new StringBuilder(currentToString);
+        builder.append(Constants.OPEN_BRACE);
+        builder.append(Constants.STR_SERVICE_PRODUCT);
+        builder.append(Constants.STR_PROD_ID).append(getId());
+        builder.append(Constants.STR_PROD_NAME).append(getName()).append(Constants.QUOTE);
+        builder.append(Constants.STR_CATEGORY).append(getCategory());
 
-        // using constants inhered from Product:
-        int lastBrace = builder.lastIndexOf(CLOSE_BRACE);
-        int indexPrice = builder.lastIndexOf(STR_PRICE);
+        // use of the constant price per person
+        builder.append(Constants.STR_PRICE_PERSON).append(getPrice());
 
-        if (lastBrace != -1) {
-            if(indexPrice != -1) {
-                // The size of the label to be replaced is that of the inherited constant
-                builder.replace(indexPrice, indexPrice + STR_PRICE.length(), STR_PRICE_PERSON);
-            }
-            builder.insert(lastBrace, STR_EXPIRATION + expirationDate);
-        }
+        // add of the specific attribute for service product
+        builder.append(Constants.STR_EXPIRATION).append(expirationDate);
+        builder.append(Constants.STR_MAX_PEOPLE_ALLOWED).append(getMaxPers());
+        builder.append(Constants.STR_FINAL_PRICE).append(getFinalPrice());
+        builder.append(Constants.CLOSE_BRACE);
+
         return builder.toString();
     }
 }

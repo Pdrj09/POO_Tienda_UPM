@@ -1,32 +1,23 @@
 package etsisi.upm.models;
 
-import etsisi.upm.Constants;
+import etsisi.upm.util.Constants;
+import etsisi.upm.io.KV;
+import etsisi.upm.io.Presentable;
 import etsisi.upm.util.Categories;
+import etsisi.upm.util.Utilities;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 //We asign the variables
-public class Product implements Comparable<Product> {
-    private final int id; // It is a global variable as the id cant change once the object is created
-    private String name;
-    private double price;
-    private Categories category;
-    private boolean personalizable;
-    private int maxPers;
-    public static final int maxPeople = 100;
-
-//Variables to avoid magic numbers
-    private static final String OPEN_BRACE = "{";
-    private static final String STR_PRODUCT = "class:Product";
-    private static final String STR_NAME = ", name:'";
-    private static final String STR_ID = ", id:";
-    private static final String STR_CATEGORY = ", category:";
-    private static final String SINGLE_QUOTE = "'";
-    protected static final String STR_PRICE = ", price:";
-    protected static final String CLOSE_BRACE = "}";
-
-
+public class Product implements Comparable<Product>, Presentable {
+    protected final int id; // It is a global variable as the id cant change once the object is created
+    protected String name;
+    protected double price;
+    protected Categories category;
+    protected boolean personalizable;
+    protected int maxPers;
 
     //this is the constructor that creates a product
     public Product(int id, String name, double price, Categories category) {
@@ -54,24 +45,25 @@ public class Product implements Comparable<Product> {
         return id;
     }
 
-
-    //toString method
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append(OPEN_BRACE);
-        builder.append(STR_PRODUCT);
-        builder.append(STR_ID).append(id);
-        builder.append(STR_NAME).append(name).append(SINGLE_QUOTE);
-        builder.append(STR_CATEGORY).append(category);
-        builder.append(STR_PRICE).append(price);
-        builder.append(CLOSE_BRACE);
+        builder.append(Constants.OPEN_BRACE);
+        builder.append(Constants.STR_PRODUCT);
+        builder.append(Constants.STR_PROD_ID).append(id);
+        builder.append(Constants.STR_PROD_NAME).append(name).append(Constants.QUOTE);
+        builder.append(Constants.STR_CATEGORY).append(category);
+        builder.append(Constants.STR_PRICE).append(price);
+        builder.append(Constants.CLOSE_BRACE);
         return builder.toString();
     }
 
     @Override
-    public boolean equals(Object o) { //equals function to see if we are refering to the same object
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object o) {
+        if (o == null)
+            return false;
+        if (o.getClass() != Product.class)//critic error comprobation
+            return false;
         Product product = (Product) o;
         return id == product.id;
     }
@@ -81,11 +73,11 @@ public class Product implements Comparable<Product> {
         return Objects.hashCode(id);
     }
     //It returns the value of id characters
-
-
     public boolean isPersonalizable(){
        return  this.personalizable;
     }
+
+
     //getters and setters
     public int getId() {
         return id;
@@ -99,12 +91,20 @@ public class Product implements Comparable<Product> {
         this.price = price;
     }
 
+    public void setMaxPers(int maxPers) {
+        this.maxPers = maxPers;
+    }
+
     public double getPrice() {
-        return price;
+        return Utilities.round(price);
     }
 
     public int getMaxPers() {
         return maxPers;
+    }
+
+    public String getName(){
+        return name;
     }
 
     public Categories getCategory() {
@@ -115,13 +115,36 @@ public class Product implements Comparable<Product> {
         this.category = category;
     }
 
-    //Its used to compare alfabeticaly this name and the other products name (it is case insensitive)
-    //returns value < 0 if this name comes before other name alfabetically
+    public List<KV> getPresentableDetails() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<KV> toViewKVList() {
+        List<KV> kvs = new ArrayList<>();
+        kvs.add(new KV("ID_Product", String.valueOf(this.id)));
+        kvs.add(new KV("Name", this.name));
+        kvs.add(new KV("Category", String.valueOf(this.category)));
+        kvs.add(new KV("Price ud.", String.valueOf(this.getPrice())));
+        if (this.isPersonalizable())
+            kvs.add(new KV("Max Personalizations", String.valueOf(this.getMaxPers())));
+        return kvs;
+    }
+    //It's used to compare alphabetically this name and the other products name (it is case-insensitive)
+    //returns value < 0 if this name comes before other name alphabetically
     //        value = 0 if its equal this name and other name
-    //        value > 0 if this name comes after other name alfabetically
+    //        value > 0 if this name comes after other name alphabetically
 
     @Override
     public int compareTo(Product other) {
-        return this.name.compareToIgnoreCase(other.name);
+        //compare name
+        int comparison = this.name.compareToIgnoreCase(other.name);
+        if (comparison != 0)
+            return comparison;
+        //if the names are the same, we compare the name of the class
+        if (!this.getClass().equals(other.getClass()))
+            return this.getClass().getName().compareTo(other.getClass().getName());
+        //if not, compare the id
+        return Integer.compare(this.id, other.id);
     }
 }

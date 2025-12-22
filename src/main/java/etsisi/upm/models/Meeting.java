@@ -1,16 +1,13 @@
 package etsisi.upm.models;
 
-import etsisi.upm.Constants;
+import etsisi.upm.util.Constants;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 public class Meeting extends ServiceProduct {
 
-    private static final String STR_MEETING = "class:Meeting";
-    private static final String CLOSE_BRACE = "}";
-
-    public Meeting(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
-        super(id, name, pricePerPerson, maxPeople, expirationDate);
+    public Meeting(int id, String name, double pricePerPerson, int numPeople, LocalDateTime expirationDate) {
+        super(id, name, pricePerPerson, numPeople, expirationDate);
     }
 
     // --- Date rules ---
@@ -24,17 +21,12 @@ public class Meeting extends ServiceProduct {
         return ChronoUnit.HOURS;
     }
 
-    // cost
-    @Override
-    public double calculateTotalCost(int participants) {
-        return getPricePerPerson() * participants;
-    }
 
     // --- toString() ---
     @Override
     public String toString() {
         String parentToString = super.toString();
         // replace the name of the class
-        return parentToString.replace("class:ServiceProduct", STR_MEETING);
+        return parentToString.replace("class:ServiceProduct", Constants.STR_MEETING);
     }
 }

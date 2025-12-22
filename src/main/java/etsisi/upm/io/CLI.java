@@ -4,10 +4,10 @@ import etsisi.upm.controllers.CashierController;
 import etsisi.upm.controllers.ClientController;
 import etsisi.upm.controllers.ProductController;
 import etsisi.upm.controllers.TicketController;
-import etsisi.upm.Constants;
-import etsisi.upm.models.Product;
-import etsisi.upm.models.users.Cashier;
-import etsisi.upm.models.users.Client;
+import etsisi.upm.util.Constants;
+import etsisi.upm.util.Categories;
+
+import java.time.format.DateTimeParseException;
 
 public class CLI {
 
@@ -47,7 +47,7 @@ public class CLI {
                     ticket list
                     prod add <id> "<name>" <category> <price>
                     prod update <id> NAME|CATEGORY|PRICE <value>
-                    prod addMeal <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
+                    prod addFood <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
                     prod addMeeting <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
                     prod list
                     prod remove <id>
@@ -55,8 +55,41 @@ public class CLI {
                     echo “<text>”
                     exit
             
+            """ + getCategoriesHelp();
+
+    private static final String COMMANDS_LIST_CLIENT = """
+            Commands:
+                    client add "<nombre>" <DNI> <email> <cashId>
+                    client remove <DNI>
+                    client list
             """;
 
+    private static final String COMMANDS_LIST_CASH = """
+            Commands:
+                    cash add [<id>] "<nombre>"<email>
+                    cash remove <id>
+                    cash list
+                    cash tickets <id>
+            """;
+
+    private static final String COMMANDS_LIST_TICKET = """
+            Commands:
+                    ticket new [<id>] <cashId> <userId>
+                    ticket add <ticketId><cashId> <prodId> <amount> [--p<txt> --p<txt>]\s
+                    ticket remove <ticketId><cashId> <prodId>\s
+                    ticket print <ticketId> <cashId>\s
+                    ticket list
+            """;
+
+    private static final String COMMANDS_LIST_PROD = """
+            Commands:
+                    prod add <id> "<name>" <category> <price>
+                    prod update <id> NAME|CATEGORY|PRICE <value>
+                    prod addFood <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
+                    prod addMeeting <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
+                    prod list
+                    prod remove <id>
+            """;
 
 
     public CLI(ProductController productController, TicketController ticketController, ClientController clientController, CashierController cashierController) {
@@ -79,7 +112,7 @@ public class CLI {
             echoCommand(query);
             //if query starts with HELP, displays help information available
         } else if (query.startsWith(Constants.HELP)) {
-            printHelp();
+            printHelp(query);
             //if query starts with EXIT prints goodbye message
         } else if (query.startsWith(Constants.EXIT)) {
             printExit();
@@ -97,18 +130,11 @@ public class CLI {
     private void clientQuery(String query){
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         try {
-            if (query.contains(Constants.CLIENT_ADD)) {
-                System.out.println(clientController.clientAddControl(querySplit));
-            } else if (query.contains(Constants.CLIENT_REMOVE)) {
-                String id = querySplit[1];
-                clientController.removeClients(id);
-                System.out.println(Constants.okStatus(Constants.CLIENT, Constants.CLIENT_REMOVE));
-            } else if (query.contains(Constants.CLIENT_LIST)) {
-                View.print(clientController.listClients());
-                System.out.println(Constants.okStatus(Constants.CLIENT, Constants.CLIENT_LIST));
-            }
-        } catch (Exception e) {
-            System.out.println(Constants.errorStatus(Constants.CLIENT, "Error", e.getMessage()));
+            System.out.println(this.clientController.clientQuery(querySplit));
+        }catch (IndexOutOfBoundsException e){
+            System.out.println(Constants.errorStatus(Constants.CLIENT,Constants.ERROR_STATUS,Constants.ERROR_FEW_PARAMS));
+        }catch (Exception e) {
+            System.out.println(Constants.errorStatus(Constants.CLIENT, e.getMessage()));
         }
     }
 
@@ -116,18 +142,20 @@ public class CLI {
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         try {
             System.out.println(this.productController.decodeQuery(querySplit));
-        }catch (IndexOutOfBoundsException e){
+        }catch (DateTimeParseException e){
+            System.out.println(Constants.errorStatus(Constants.PROD, Constants.ERROR_DATE));
+        }
+        catch (IndexOutOfBoundsException e){
             System.out.println(Constants.errorStatus(Constants.PROD,Constants.ERROR_STATUS,Constants.ERROR_FEW_PARAMS));
         }catch (Exception e) {
-            System.out.println(Constants.errorStatus(Constants.PROD, Constants.PRODUCT_ADD, e.toString()));
+            System.out.println(Constants.errorStatus(Constants.PROD, e.getMessage()));
         }
     }
 
     private void ticketQuery(String query) {
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
-
         try {
-            this.ticketController.decodeQuery(querySplit);
+            System.out.println(this.ticketController.decodeQuery(querySplit));
         }catch (IndexOutOfBoundsException e){
             System.out.println(Constants.errorStatus(Constants.TICKET,Constants.ERROR_STATUS,Constants.ERROR_FEW_PARAMS));
         }catch (Exception e) {
@@ -139,33 +167,12 @@ public class CLI {
     private void cashQuery(String query){
         String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
         try {
-            if (query.contains(Constants.CASH_ADD)) {
-                //cash add [<id>] "<nombre>" <email>
-                //TODO pasarle los parámetros por cachitos hasta añadirlo
-                //String response = cashierController.addCashier(query);
-                //ViewCLI.print(response);
-                System.out.println(Constants.okStatus(Constants.CASH, Constants.CASH_ADD));
-
-            } else if (query.contains(Constants.CASH_REMOVE)) {
-                if (cashierController.removeCashier(querySplit[Constants.ONE]) != null)
-                    System.out.println(Constants.okStatus(Constants.CASH, Constants.CASH_REMOVE));
-                else
-                    System.out.println(Constants.errorStatus(Constants.CASH, Constants.CASH_REMOVE, "Cashier not found"));
-
-            } else if (query.contains(Constants.CASH_LIST)) {
-                //cash list
-                View.print(cashierController.listCashiers());
-                System.out.println(Constants.okStatus(Constants.CASH, Constants.CASH_LIST));
-
-            } else if (query.contains(Constants.CASH_TICKETS)) {
-                //cash tickets <id>
-                //TODO hacer que printeé los tickets asociados a un cajero, hay que modificar el método listTickets
-                String cashId = querySplit[1];
-                //ViewCLI.printTickets(cashierController.listTickets(cashId));
-                System.out.println(Constants.okStatus(Constants.CASH, Constants.CASH_TICKETS));
-            }
-        } catch (Exception e) {
-            System.out.println(Constants.errorStatus(Constants.CASH, "Error", e.getMessage()));
+            System.out.println(this.cashierController.cashierQuery(querySplit));
+        }catch (IndexOutOfBoundsException _){
+            System.out.println(Constants.errorStatus(Constants.CASH, Constants.ERROR_FEW_PARAMS));
+        }
+        catch (Exception e) {
+            System.out.println(Constants.errorStatus(Constants.CASH, e.getMessage()));
         }
     }
 
@@ -173,8 +180,27 @@ public class CLI {
         System.out.println(WELCOME_MESSAGE);
     }
 
-    private static void printHelp(){
-        System.out.println(COMMANDS_LIST);
+    private static void printHelp(String query){
+        String[] querySplit = query.split(Constants.REGEX_TO_SPLIT);
+        if (querySplit.length>Constants.QUERY_HELP_POS_INSTRUCTION){
+            switch (querySplit[Constants.QUERY_HELP_POS_INSTRUCTION]){
+                case Constants.CLIENT:
+                    System.out.println(COMMANDS_LIST_CLIENT);
+                    break;
+                case Constants.CASH:
+                    System.out.println(COMMANDS_LIST_CASH);
+                    break;
+                case Constants.TICKET:
+                    System.out.println(COMMANDS_LIST_TICKET);
+                    break;
+                case Constants.PROD:
+                    System.out.println(COMMANDS_LIST_PROD);
+                    break;
+                default:
+                    System.out.println(COMMANDS_LIST);
+            }
+
+        }else System.out.println(COMMANDS_LIST);
     }
 
     private static void printExit(){
@@ -182,7 +208,35 @@ public class CLI {
     }
 
     private static void echoCommand(String command) {
-        System.out.println(command);
+        String cleanedCommand = command;
+        if (command != null && command.startsWith("echo ")) {
+            cleanedCommand = command.substring(5);
+        }
+        StringBuilder sb = new StringBuilder(cleanedCommand).append(Constants.ENTER_KEY);
+        System.out.println(sb);
     }
 
+    //for getting the different categories for products
+    private static String getCategoriesHelp() {
+        StringBuilder lineCategories = new StringBuilder(Constants.CLI_CATEGORIES);
+        StringBuilder lineDiscounts = new StringBuilder(Constants.CLI_DISCOUNT);
+        boolean first = true;
+        for (Categories c : Categories.values()) {
+            if (c == Categories.EMPTY)
+                continue;
+            if (!first) {
+                lineCategories.append(Constants.COMMA_SPACE);
+                lineDiscounts.append(Constants.COMMA_SPACE);
+            }
+            lineCategories.append(c.name());
+            lineDiscounts.append(c.name())
+                    .append(Constants.STR_BLANK_SPACE)
+                    .append((int)(c.getDiscount() * Constants.TO_PORCENTAGE))
+                    .append(Constants.PERCENTAGE);
+            first = false;
+        }
+        lineCategories.append(Constants.ENTER_KEY);
+        lineDiscounts.append(Constants.STR_DOT);
+        return lineCategories.toString() + lineDiscounts.toString();
+    }
 }

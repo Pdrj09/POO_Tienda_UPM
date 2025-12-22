@@ -47,10 +47,10 @@ ticket list
 ticket print 212123 UW1234567
 ticket list
 echo "Trabajamos con productos de personas"
-prod addMeeting 23456 "Reunion Rotonda" 12 2025-11-21 100
-prod addMeeting 23457 "Graduacion ETSISI" 40 2025-11-21 30
-prod addFood 23458 "Cafeteria ETSISI" 5 2025-11-21 300
-prod addFood 23459 "Restaurante Asador" 50 2025-11-21 40
+prod addMeeting 23456 "Reunion Rotonda" 12 2026-12-08 120
+prod addMeeting 23457 "Graduacion ETSISI" 40 2026-12-08 30
+prod addFood 23458 "Cafeteria ETSISI" 5 2026-12-05 100
+prod addFood 23459 "Restaurante Asador" 50 2026-12-04 40
 prod list
 ticket new 212127 UW1234567 98948334B
 ticket add 212127 UW1234567 23456 20
@@ -64,5 +64,6 @@ ticket new 212128 UW1234567 98948334B
 ticket add 212128 UW1234567 5 1
 ticket add 212128 UW1234567 5 3 --pred --pblue --pgreen
 ticket add 212128 UW1234567 6 3 --pred --pblue
+ticket add 212128 UW1234567 23459 15
 ticket print 212128 UW1234567
 exit
