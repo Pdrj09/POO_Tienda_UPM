@@ -8,7 +8,7 @@ import java.util.*;
 
 //REPRESENTS DE CLIENT IN THE SYSTEM
 public class Client extends User {
-    private final String strIdCashier;
+    private String strIdCashier;
     private final Set<Ticket> associatedTickets;
 
 
@@ -25,6 +25,10 @@ public class Client extends User {
     //GETTERS, public methods
     public Set<Ticket> getAssociatedTickets() {
         return associatedTickets;
+    }
+
+    public void setStrIdCashier(String strIdCashier) {
+        this.strIdCashier = strIdCashier;
     }
 
     public void addAssociatedTicket(Ticket ticket){

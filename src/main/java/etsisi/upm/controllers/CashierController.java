@@ -1,5 +1,6 @@
 package etsisi.upm.controllers;
 
+import etsisi.upm.models.users.Client;
 import etsisi.upm.util.Constants;
 import etsisi.upm.io.View;
 import etsisi.upm.models.repositories.Repository;
@@ -11,9 +12,11 @@ import java.util.*;
 
 public class CashierController {
     private final Repository<String, Cashier> repository;
+    private final Repository<String, Client> clientRepository;
 
-    public CashierController(Repository<String, Cashier> repository) {
+    public CashierController(Repository<String, Cashier> repository, Repository<String, Client> clientRepository) {
         this.repository = repository;
+        this.clientRepository = clientRepository;
     }
 
     public String cashierQuery(String[] querySplit) {
@@ -72,7 +75,16 @@ public class CashierController {
     }
 
     private Cashier removeCashier(String id) {
-        return repository.removeById(id);
+        Cashier removed = repository.removeById(id);
+        if (removed != null){
+            //we search for all the clients and we clean their reference to that cashier
+            for (Client client : clientRepository.findAll()){
+                if (client.getStrIdCashier().equals(id))
+                    client.setStrIdCashier("NONE");
+            }
+        }else
+            throw new IllegalArgumentException(Constants.ERROR_NONEXISTEN_ID);
+        return removed;
     }
 
     private Collection<Cashier> listCashiers() {

@@ -29,7 +29,7 @@ public class FileReader {
         ProductController productController = new ProductController(productRepo,ticketRepo);
         TicketController ticketController = new TicketController(ticketRepo, clientRepo, cashierRepo, productRepo);
         ClientController clientController = new ClientController(clientRepo, cashierRepo);
-        CashierController cashierController = new CashierController(cashierRepo);
+        CashierController cashierController = new CashierController(cashierRepo, clientRepo);
 
         File file = new File("src/main/java/etsisi/upm/io/input.txt");
         int status = Constants.QUERY_SUCCESS;

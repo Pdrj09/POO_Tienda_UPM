@@ -29,7 +29,7 @@ public class Main {
         ProductController productController = new ProductController(productRepo,ticketRepo);
         TicketController ticketController = new TicketController(ticketRepo, clientRepo, cashierRepo, productRepo);
         ClientController clientController = new ClientController(clientRepo, cashierRepo);
-        CashierController cashierController = new CashierController(cashierRepo);
+        CashierController cashierController = new CashierController(cashierRepo, clientRepo);
 
         CLI cli = new CLI(productController, ticketController, clientController, cashierController);
 
