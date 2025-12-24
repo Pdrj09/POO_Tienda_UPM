@@ -1,0 +1,321 @@
+@startuml
+
+class Main {
+   - {static} {final} CURSOR: String
+   + {static} main(args: String[])
+}
+
+class View {
+   - View()
+   - {static} {final} RESET: String
+   - {static} {final} YELLOW: String
+   - {static} {final} CYAN: String
+   - {static} {final} MSG_NOTHING_TO_SHOW: String
+   + {static} getString(element: T, command: String): String
+   - {static} objectToKV(obj: Object, command: String): List<List<KV>>
+   - {static} buildTableFromKV(allLinesKV: List<List<KV>>, title: String)
+   - {static} wrapString(s: String, maxWidth): String
+   - {static} centerTitle(width: int, title: String): String
+   - {static} emptyMessage(type: Class<?>): String
+}
+
+class KV {
+   + key: String
+   + value: String
+}
+
+class CLI {
+    - {final} productController : ProductController
+    - {final} ticketController : TicketController
+    - {final} clientController : ClientController
+    - {final} cashierController : CashierController
+
+    - {static} {final} WELCOME_MESSAGE : String
+    - {static} {final} BYE : String
+    - {static} {final} COMMANDS_LIST : String
+    - {static} {final} COMMANDS_LIST_CLIENT : String
+    - {static} {final} COMMANDS_LIST_CASH : String
+    - {static} {final} COMMANDS_LIST_TICKET : String
+    - {static} {final} COMMANDS_LIST_PROD : String
+
+    + CLI(productController : ProductController, ticketController : TicketController, clientController : ClientController, cashierController : CashierController)
+
+    + newQuery(query : String) : int
+
+    - clientQuery(query : String)
+    - prodQuery(query : String)
+    - ticketQuery(query : String)
+    - cashQuery(query : String)
+
+    - {static} printWelcomeMessage()
+    - {static} printHelp(query : String)
+    - {static} printExit()
+    - {static} echoCommand(command : String)
+    - {static} getCategoriesHelp() : String
+}
+
+
+
+class ProductController {
+   + decodeQuery(querySplit: String[]): String
+   - addProduct(id: int, name: String, category: String, price: double, maxCustomTexts: int): Product
+   - addProduct(id: int, name: String, category: String, price: double): Product
+   - updateProduct(id: int, field: String, newContent: String): Product
+   - deleteProduct(prodId: int):Product
+   - prodList(): Collection<Product>
+   - addFood(id: String, name: String, pricePerPerson: double, maxPeople: int, expirationDate: LocalDate): Product
+   - addMeeting(id: String, name: String, pricePerPerson: double, maxPeople: int, expirationDate: LocalDate): Product
+   - generateAutomaticId(): int
+}
+
+class TicketController {
+   + decodeQuery(querySplit: String[]): String
+   - newTicket(ticketId: String, cashierId: String, clientId: String): Ticket
+   - getTicket(ticketId: String): Ticket
+   - getTicketList(): List<Ticket>
+   - closeTicket(ticket: Ticket)
+   - addProductToTicket(ticketId: String, cashierId: String, productId: String, amount: int, customizations: List<String>): Ticket
+   - removeProductFromTicket(ticketId: String, cashierId: String, productId: String): Ticket
+   - printTicket(ticketId: String, cashierId: String): Ticket
+}
+
+class ClientController {
+   + clientQuery(querySplit: String[]): String
+   - addClient(name: String, dni: String, email: String, UW: String): Client
+   - removeClient(id: String): Client
+   - listClients(): Collection<Clinet>
+}
+
+class CashierController {
+   + cashierQuery(querySplit: String[]): String
+   - addCashier(emailCompany: String, name: String): Cashier
+   - addCashier(id: String, emailCompany: String, name: String): Cashier
+   - removeCashier(id: String): Cashier
+   - listCashiers(): Collection<Cashier>
+   - listTickets(cashierId: String): Collection<String>
+   - generateCashierId(): String
+   + getTicketsSummaryList(): List<String>
+}
+
+
+
+enum Categories {
+   MERCH(0.0)
+   STATIONERY(0.05)
+   CLOTHES(0.07)
+   BOOK(0.1)
+   ELECTRONICS(0.03)
+   EMPTY(0.0) 
+   {final} discount: double
+   + getDiscount(): double
+   + existCategory(category: String): boolean
+}
+enum TicketStates {
+   EMPTY
+   ACTIVE
+   CLOSED
+}
+
+
+
+interface Presentable {
+   toViewKVList(): List<KV>
+}
+interface RepositoryInterface<K, T> {
+   add(key: K, object: T)
+   findByIdOrThrow(id: K): T
+   findById(id: K): T
+   removeById(id: K): T
+   findAll() Collection<T>
+   getMap(): Map<k, T>
+}
+
+
+
+class Product implements Presentable {
+   # {final} id: int
+   # name: String
+   # price: double
+   # category: Caregories
+   # personalizable: boolean
+   # maxPers: int
+   + update(name: String, category: Category, price: double): int
+   + {abstract} calculatePrice(amount: int): double
+   + equals(o: Object): boolean
+   + hasCode(): int
+   + toString(): String
+   + toViewKVList(): List<KV>
+   + compareTo(other: Product): int
+}
+
+class ProductPersolaized extends Product {
+   - customizations List<String>
+   + getCustomizations(): List<String>
+   + getCustomizationsAmount(): Integer
+   + equals(o: Object): boolean
+   + hasCode(): int
+   + toViewKVList(): List<KV>
+   + toString(): String
+}
+
+class ServiceProduct extends Product {
+   - expirationDate: LocalDateTime
+   - numPeople: int
+   - finalPrice: double
+   + {abstract} getMinimumCreationTime(): int
+   + {abstract} getMinimumTimeUnit(): ChronoUnit
+   + isFeasible(creationTime: LocalDateTime): boolean
+   + getPricePerPerson(): double
+   + toViewKVList(): List<KV>
+   + toString(): String
+   + serFinalPrice(finalPrice: double)
+}
+
+class Meeting extends ServiceProduct {
+   + getMinimumCreationTime(): int
+   + getMinimumTimeUnit(): ChronoUnit
+   + toString(): String
+}
+
+class Food extends ServiceProduct {
+   + getMinimumCreationTime(): int
+   + getMinimumTimeUnit(): ChronoUnit
+   + toString(): String
+}
+
+class Ticket implements Presentable {
+   - id: String
+   - creationDate: LocalDateTime
+   - state: TicketState
+   - {final} list: Map<Product, Integer>
+   - {final} categories: Map<Categories, Integer>
+   + clear(): boolean
+   + addProduct(prod: Product, amount: int): Ticket
+   - countProducts(): int
+   + remove(prod: Product): Ticket
+   + close(): String
+   + totalPrice(): double
+   + totalDiscount(): double
+   + calculateProductPrice(prod: Product): double
+   + getTotalDiscountForProduct(prod: Product): double
+   + getDiscountPerUnit(prod: Product): double
+   + toString(): String
+   + getTotalPriceView(): double
+   + getTotalDiscountView(): double
+   + getFinalPriceView(): double
+   + getList(): Map<Product, Integer>
+   + containsProduct(prod: Product): boolean
+   + isClosed(): boolean
+   + toViewKVList(): List<KV>
+   + toViewKVListSummary(): List<KV>
+}
+
+class Repository<K,T> implements RepositoryInterface{
+   - {final} repoMap: Map<K, T>
+   - {final} hasMaxSize: boolean
+   - {final} maxSize: int
+   + add(key: K, object: T)
+   + findByIdOrThrow(id: K): T
+   + findById(id: K): T
+   + removeById(id: K): T
+   + findAll() Collection<T>
+   + getMap(): Map<k, T>
+}
+
+abstract class User implements Presentable{
+   - {final} id: String
+   - nombre: String
+   - email: String
+   + equals(o: Object): boolean
+   + hasCode(): int
+   + toViewKVList(): List<KV>
+}
+
+class Client extends User {
+   - {final} strIdCashier: String
+   - {final} associatedTickets: Set<Ticket>
+   + addAssociatedTicket(ticket: Ticket)
+   + deleteTicket(ticket: Ticket)
+   + validateDni(dni: String)
+   + equals(o: Object): boolean
+   + hasCode(): int
+   + toViewKVList(): List<KV>
+   + compareTo(o: User): int
+   + toString(): String
+}
+
+class Cashier extends User {
+   - {final} createdTickets: Set<Ticket>
+   - {final} associatedClients: Set<Client>
+   + deleteTicket(ticket Ticket)
+   + {static} create(id: String, emailCompany: String, name: String): Cashier
+   + addTicket(ticket Ticket)
+   + equals(o: Object): boolean
+   + hasCode(): int
+   + compareTo(o: User): int
+   + toString(): String
+}
+
+
+class Utilities {
+   - Utilities()
+   + {static} round(value : double) : double
+   + {static} formatDate(date : LocalDateTime) : String
+   + {static} cleanName(rawName : String) : String
+   + {static} isInteger(s : String) : boolean
+}
+
+class Constants {
+    - Constants()
+    + {static} createGeneralRegex(query : String) : String
+    + {static} okStatus(type : String, comand : String) : String
+    + {static} errorStatus(type : String, comand : String) : String
+    + {static} errorStatus(type : String, comand : String, message : String) : String
+    + {static} deleteSubstring(query : String, regex : String) : String
+}
+
+
+
+CLI --> ProductController
+ProductController ..> Product
+ProductController --> Repository
+ProductController --> View
+View ..> Product 
+Repository o-- Product
+Product -> KV
+ServiceProduct --> KV
+
+CLI --> TicketController
+TicketController ..> Ticket
+TicketController --> Repository
+TicketController --> View
+View ..> Ticket 
+Repository o-- Ticket
+Ticket --> KV
+
+User --> KV
+
+CLI --> ClientController
+ClientController ..> Client
+ClientController --> Repository
+ClientController --> View
+View ..> Client 
+Repository o-- Client
+
+CLI --> CashierController
+CashierController ..> Cashier
+CashierController --> Repository
+CashierController --> View
+View ..> Cashier 
+Repository o-- Cashier
+
+Main ..> Repository
+Main ..> ProductController
+Main ..> TicketController
+Main ..> ClientController
+Main ..> CashierController
+Main *-- CLI
+
+View --> KV
+
+@enduml
