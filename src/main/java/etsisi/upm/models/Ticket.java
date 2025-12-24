@@ -6,14 +6,19 @@ import etsisi.upm.io.Presentable;
 import etsisi.upm.util.Categories;
 import etsisi.upm.util.TicketStates;
 import etsisi.upm.util.Utilities;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
+@Entity
+@Table(name = "tickets")
 public class Ticket implements Presentable {
 
-    //Stores the list of products and their quantities in the current transaction
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
+
     private LocalDateTime closeDate;
     private TicketStates state;
 

@@ -5,14 +5,20 @@ import etsisi.upm.io.KV;
 import etsisi.upm.io.Presentable;
 import etsisi.upm.util.Categories;
 import etsisi.upm.util.Utilities;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-//We asign the variables
+@Entity
+@Table(name = "products")
 public class Product implements Comparable<Product>, Presentable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected final int id; // It is a global variable as the id cant change once the object is created
+
     protected String name;
     protected double price;
     protected Categories category;

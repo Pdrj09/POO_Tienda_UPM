@@ -4,13 +4,20 @@ import etsisi.upm.util.Constants;
 import etsisi.upm.io.KV;
 import etsisi.upm.io.Presentable;
 import etsisi.upm.util.Utilities;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "users")
 public abstract class User implements Comparable<User>, Presentable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private final String id; //unique id
+
     private String name;
     private String email;
 

@@ -11,7 +11,9 @@ public class Constants {
     //messages
     public static final String MSG_NOTHING_TO_SHOW = YELLOW + "[!] No items to display." + RESET;
 
-
+    //Hibernate
+    public static final String ERROR_SESSION_CREATION = "Initial SessionFactory creation failed.";
+    public static final String ERROR_GET_ID = "Can't get entity ID";
 
     public static final int QUERY_SUCCESS = 1;
     public static final int QUERY_EXIT = 0;
