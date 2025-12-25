@@ -15,15 +15,29 @@ import java.util.*;
 @Table(name = "tickets")
 public abstract class Ticket <P extends Sellable> implements Presentable {
 
-    //Stores the list of products and their quantities in the current transaction
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long dbId;
+
+    @Column(unique = true)
     protected String id;
+
     protected LocalDateTime closeDate;
+
+    @Enumerated(EnumType.STRING)
     protected TicketStates state;
 
-    protected Map<P, Integer> list;
+    @ElementCollection
+    @MapKeyJoinColumn(name = "product_id")
+    @Column(name = "quantity")
+    protected Map<Product,Integer> list;
+
+    @ElementCollection
+    @MapKeyEnumerated(EnumType.STRING)
+    @Column(name = "quantity")
+    @MapKeyColumn(name = "category")
     protected Map<Categories,Integer> categories;
+
 
     public Ticket(String id){
         LocalDateTime now = LocalDateTime.now();

@@ -15,6 +15,11 @@ public class Constants {
     public static final String ERROR_SESSION_CREATION = "Initial SessionFactory creation failed.";
     public static final String ERROR_GET_ID = "Can't get entity ID";
 
+
+    public static final String BASE_CASHIER_EMAIL = "basecashier@upm.es";
+    public static final String BASE_CASHIER_NAME = "basecashier";
+    public static final String BASE_CASHIER_ID = "0000000UW";
+
     public static final int QUERY_SUCCESS = 1;
     public static final int QUERY_EXIT = 0;
 
