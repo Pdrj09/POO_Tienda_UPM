@@ -171,17 +171,6 @@ class ServiceProduct extends Product {
    + serFinalPrice(finalPrice: double)
 }
 
-class Meeting extends ServiceProduct {
-   + getMinimumCreationTime(): int
-   + getMinimumTimeUnit(): ChronoUnit
-   + toString(): String
-}
-
-class Food extends ServiceProduct {
-   + getMinimumCreationTime(): int
-   + getMinimumTimeUnit(): ChronoUnit
-   + toString(): String
-}
 
 class Ticket implements Presentable {
    - id: String
@@ -232,8 +221,6 @@ abstract class User implements Presentable{
 }
 
 class Client extends User {
-   - {final} strIdCashier: String
-   - {final} associatedTickets: Set<Ticket>
    + addAssociatedTicket(ticket: Ticket)
    + deleteTicket(ticket: Ticket)
    + validateDni(dni: String)
@@ -245,8 +232,6 @@ class Client extends User {
 }
 
 class Cashier extends User {
-   - {final} createdTickets: Set<Ticket>
-   - {final} associatedClients: Set<Client>
    + deleteTicket(ticket Ticket)
    + {static} create(id: String, emailCompany: String, name: String): Cashier
    + addTicket(ticket Ticket)
@@ -315,6 +300,11 @@ Main ..> TicketController
 Main ..> ClientController
 Main ..> CashierController
 Main *-- CLI
+
+Cashier *-- Ticket
+Cashier -- Client
+
+Client o-- Ticket
 
 View --> KV
 

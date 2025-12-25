@@ -7,8 +7,8 @@ import java.util.List;
 
 public class CompanyClient extends Client{
 
-    public CompanyClient(String dni, String name, String email, String idCashier) {
-        super(dni, name, email, idCashier);
+    public CompanyClient(String dni, String name, String email, Cashier cashier) {
+        super(dni, name, email, cashier);
     }
 
     @Override

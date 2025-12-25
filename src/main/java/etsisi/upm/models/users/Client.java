@@ -3,23 +3,34 @@ package etsisi.upm.models.users;
 import etsisi.upm.util.Constants;
 import etsisi.upm.io.KV;
 import etsisi.upm.models.Ticket;
+import jakarta.persistence.*;
+
 
 import java.util.*;
 
-//REPRESENTS DE CLIENT IN THE SYSTEM
+@Entity
+@Table(name = "clients")
 public class Client extends User {
-    private String strIdCashier;
-    private final Set<Ticket> associatedTickets;
 
+
+    @ManyToOne
+    @JoinColumn(name = "cashier_id", nullable = false)
+    private Cashier cashier;
+
+    @OneToMany
+    @JoinColumn(name = "client_id")
+    private Set<Ticket> associatedTickets;
+
+    public Client(){}
 
     //CONSTRUCTOR W/ ALL PARAMETERS
-    public Client(String dni, String name, String email, String idCashier) {
+    public Client(String dni, String name, String email, Cashier cashier) {
         super(dni, name, email);
         validateDniNif(dni);
         this.associatedTickets = new HashSet<>();
-        if (idCashier == null)
+        if (cashier == null)
             throw new IllegalArgumentException(Constants.ERROR_CASHIER_NULL);
-        this.strIdCashier = idCashier;
+        this.cashier = cashier;
     }
 
     //GETTERS, public methods
@@ -27,8 +38,8 @@ public class Client extends User {
         return associatedTickets;
     }
 
-    public void setStrIdCashier(String strIdCashier) {
-        this.strIdCashier = strIdCashier;
+    public void setCashier(Cashier cashier) {
+        this.cashier = cashier;
     }
 
     public void addAssociatedTicket(Ticket ticket){
@@ -39,8 +50,8 @@ public class Client extends User {
         this.associatedTickets.remove(ticket);
     }
 
-    public String getStrIdCashier() {
-        return strIdCashier;
+    public Cashier getCashier() {
+        return this.cashier;
     }
 
     public static void validateDniNif(String dniNif) {
@@ -98,7 +109,7 @@ public class Client extends User {
     public List<KV> toViewKVList() {
         List<KV> kvs = super.toViewKVList(); //id, name, email
         kvs.add(new KV(Constants.CLI_DNI, getId())); //Here we use de DNI as ID for the view
-        kvs.add(new KV(Constants.CASHIER_ID, getStrIdCashier()));
+        kvs.add(new KV(Constants.CASHIER_ID, getCashier().getId()));
         kvs.removeIf(kv -> kv.key.equals(Constants.ID));
         return kvs;
     }
@@ -124,7 +135,7 @@ public class Client extends User {
                 .append(Constants.STR_CLIENT).append(Constants.QUOTE).append(Constants.STR_DNI).append(getId()).append(Constants.QUOTE)
                 .append(Constants.STR_CLI_NAME).append(Constants.QUOTE).append(getName()).append(Constants.QUOTE)
                 .append(Constants.STR_CLIENT_EMAIL).append(Constants.QUOTE).append(getEmail()).append(Constants.QUOTE)
-                .append(Constants.STR_CASH).append(Constants.QUOTE).append(getStrIdCashier()).append(Constants.QUOTE)
+                .append(Constants.STR_CASH).append(Constants.QUOTE).append(getCashier().getId()).append(Constants.QUOTE)
                 .append(Constants.CLOSE_BRACE);
         return sb.toString();
     }

@@ -17,13 +17,26 @@ public class Ticket implements Presentable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long dbId;
+
+    @Column(unique = true)
     private String id;
 
     private LocalDateTime closeDate;
+
+    @Enumerated(EnumType.STRING)
     private TicketStates state;
 
-    private final Map<Product,Integer> list;
-    private final Map<Categories,Integer> categories;
+    @ElementCollection
+    @MapKeyJoinColumn(name = "product_id")
+    @Column(name = "quantity")
+    private Map<Product,Integer> list;
+
+    @ElementCollection
+    @MapKeyEnumerated(EnumType.STRING)
+    @Column(name = "quantity")
+    @MapKeyColumn(name = "category")
+    private Map<Categories,Integer> categories;
 
 
     public Ticket(String id){

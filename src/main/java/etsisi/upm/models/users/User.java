@@ -12,14 +12,20 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "users")
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class User implements Comparable<User>, Presentable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final String id; //unique id
+    private Long dbId;
+
+    @Column(unique = true)
+    private String id;
 
     private String name;
     private String email;
+
+    public User(){}
 
 
     public User(String id, String name, String email) {

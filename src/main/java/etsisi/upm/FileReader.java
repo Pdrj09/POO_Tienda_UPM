@@ -20,20 +20,11 @@ public class FileReader {
     private static final String CURSOR = "tUPM> ";
 
     public static void main(String [] args) {
-        //We create the repositories and the controllers with them
-        Repository<Integer, Product> productRepo = new Repository<>(Constants.MAX_SIZE);
-        Repository<String, Ticket> ticketRepo = new Repository<>();
-        Repository<String, Client> clientRepo = new Repository<>();
-        Repository<String, Cashier> cashierRepo = new Repository<>();
 
-        ProductController productController = new ProductController(productRepo,ticketRepo);
-        TicketController ticketController = new TicketController(ticketRepo, clientRepo, cashierRepo, productRepo);
-        ClientController clientController = new ClientController(clientRepo, cashierRepo);
-        CashierController cashierController = new CashierController(cashierRepo, clientRepo);
+        CLI cli = getCli();
 
         File file = new File("src/main/java/etsisi/upm/io/input.txt");
         int status = Constants.QUERY_SUCCESS;
-        CLI cli = new CLI(productController, ticketController, clientController, cashierController);// we create a menu
 
 
         try {
@@ -49,4 +40,19 @@ public class FileReader {
             System.out.println(Constants.ERROR_FILE_NOTFOUND);
         }
     }
+
+    private static CLI getCli() {
+        Repository<Integer, Product> productRepo = new Repository<>(Product.class,Constants.MAX_SIZE);
+        Repository<String, Ticket> ticketRepo = new Repository<>(Ticket.class);
+        Repository<String, Client> clientRepo = new Repository<>(Client.class);
+        Repository<String, Cashier> cashierRepo = new Repository<>(Cashier.class);
+
+        ProductController productController = new ProductController(productRepo,ticketRepo);
+        TicketController ticketController = new TicketController(ticketRepo, clientRepo, cashierRepo, productRepo);
+        ClientController clientController = new ClientController(clientRepo, cashierRepo);
+        CashierController cashierController = new CashierController(cashierRepo, clientRepo);
+
+        return new CLI(productController, ticketController, clientController, cashierController);
+    }
+
 }

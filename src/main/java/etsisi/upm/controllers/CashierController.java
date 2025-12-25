@@ -79,8 +79,10 @@ public class CashierController {
         if (removed != null){
             //we search for all the clients and we clean their reference to that cashier
             for (Client client : clientRepository.findAll()){
-                if (client.getStrIdCashier().equals(id))
-                    client.setStrIdCashier("NONE");
+                if (client.getCashier().equals(removed)){
+                    Cashier cashier = new Cashier(Constants.BASE_CASHIER_ID,Constants.BASE_CASHIER_EMAIL,Constants.BASE_CASHIER_NAME);
+                    client.setCashier(cashier);
+                }
             }
         }else
             throw new IllegalArgumentException(Constants.ERROR_NONEXISTEN_ID);

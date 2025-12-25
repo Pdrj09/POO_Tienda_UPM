@@ -2,16 +2,26 @@ package etsisi.upm.models.users;
 
 import etsisi.upm.util.Constants;
 import etsisi.upm.models.Ticket;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 import java.util.*;
 
-//REPRESENTS A CASHIER IN THE SYSTEM
+@Entity
+@Table(name = "cashiers")
 public class Cashier extends User {
-    private final Set<Ticket> createdTickets;
-    private final Set<Client> associatedClients;
+
+    @OneToMany
+    @JoinColumn(name = "cashier_id")
+    private Set<Ticket> createdTickets;
+
+    @OneToMany(mappedBy = "cashier")
+    private Set<Client> associatedClients;
 
     //CONSTRUCTOR W/ AUTOMATIC ID GENERATION
-    private Cashier(String id, String emailCompany, String name) {
+    public Cashier(String id, String emailCompany, String name) {
         super(id, name, emailCompany);
         this.createdTickets = new HashSet<>(); //for sorted it
         this.associatedClients = new TreeSet<>();

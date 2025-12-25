@@ -17,13 +17,15 @@ public class Product implements Comparable<Product>, Presentable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected final int id; // It is a global variable as the id cant change once the object is created
+    protected int id; // It is a global variable as the id cant change once the object is created
 
     protected String name;
     protected double price;
     protected Categories category;
     protected boolean personalizable;
     protected int maxPers;
+
+    public Product(){}
 
     //this is the constructor that creates a product
     public Product(int id, String name, double price, Categories category) {
