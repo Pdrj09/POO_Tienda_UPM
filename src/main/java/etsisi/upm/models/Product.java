@@ -17,7 +17,10 @@ public class Product implements Comparable<Product>, Presentable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected int id; // It is a global variable as the id cant change once the object is created
+    private Long dbId;
+
+    @Column(unique = true)
+    protected int id; //It is a global variable as the id cant change once the object is created
 
     protected String name;
     protected double price;

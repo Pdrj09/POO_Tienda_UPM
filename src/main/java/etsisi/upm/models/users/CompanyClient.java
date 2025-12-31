@@ -2,9 +2,13 @@ package etsisi.upm.models.users;
 
 import etsisi.upm.io.KV;
 import etsisi.upm.util.Constants;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 import java.util.List;
 
+@Entity
+@Table(name = "companies")
 public class CompanyClient extends Client{
 
     public CompanyClient(String dni, String name, String email, Cashier cashier) {

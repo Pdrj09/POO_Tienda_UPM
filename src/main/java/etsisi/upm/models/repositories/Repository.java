@@ -37,7 +37,7 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
 
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
-
+        //ACID ATOMIC OPERATION Atomic,Consistent, Isolated, Durable
         try {
             session.persist(object);
             tx.commit();
@@ -47,8 +47,6 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
         } finally {
             session.close();
         }
-
-
     }
 
     @Override
@@ -61,7 +59,7 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
     @Override
     public T findById(K id) {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        T entity = session.get(entityCLass, id);
+        T entity = session.createQuery("from " + entityCLass.getName() + " where id = :id", entityCLass).setParameter("id", id).uniqueResult();
         session.close();
         return entity;
     }
@@ -71,7 +69,7 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
 
-        T entity = session.get(entityCLass, id);
+        T entity = findById(id);
         if (entity != null) session.remove(entity);
 
         tx.commit();
@@ -81,15 +79,14 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
 
     @Override
     public Collection<T> findAll(){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-
-        List<T> result = session
-                .createQuery("FROM "+ entityCLass.getSimpleName(), entityCLass)
-                .getResultList();
-
-        session.close();
-
-        return result;
+        try(Session session = HibernateUtil.getSessionFactory().openSession()){
+            return session
+                    .createQuery("FROM "+ entityCLass.getName(), entityCLass)
+                    .getResultList();
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException(Constants.ERROR_HIBERNATE_LIST + entityCLass.getSimpleName(), e);
+        }
     }
 
     @Override
@@ -101,6 +98,7 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
             K id;
             try {
                 id = (K) entityCLass.getMethod("getId").invoke(entity);
+                map.put(id, entity);
             }catch (Exception e){
                 throw new RuntimeException(Constants.ERROR_GET_ID, e);
             }

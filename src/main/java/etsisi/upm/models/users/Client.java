@@ -14,11 +14,11 @@ public class Client extends User {
 
 
     @ManyToOne
-    @JoinColumn(name = "cashier_id", nullable = false)
+    @JoinColumn(name = "cashier_db_id", nullable = false)
     private Cashier cashier;
 
     @OneToMany
-    @JoinColumn(name = "client_id")
+    @JoinColumn(name = "ticket_db_id")
     private Set<Ticket> associatedTickets;
 
     public Client(){}
