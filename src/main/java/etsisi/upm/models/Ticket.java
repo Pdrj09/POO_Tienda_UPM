@@ -1,5 +1,7 @@
 package etsisi.upm.models;
 
+import etsisi.upm.models.users.Cashier;
+import etsisi.upm.models.users.Client;
 import etsisi.upm.util.Constants;
 import etsisi.upm.io.KV;
 import etsisi.upm.io.Presentable;
@@ -21,6 +23,13 @@ public abstract class Ticket <P extends Sellable> implements Presentable {
 
     @Column(unique = true)
     protected String id;
+
+    @ManyToOne
+    @JoinColumn(name = "cashier_db_id")
+    protected Cashier cashier;
+    @ManyToOne
+    @JoinColumn(name = "client_db_id")
+    protected Client client;
 
     protected LocalDateTime closeDate;
 

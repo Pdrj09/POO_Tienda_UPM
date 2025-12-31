@@ -18,7 +18,7 @@ public class Constants {
 
     public static final String BASE_CASHIER_EMAIL = "basecashier@upm.es";
     public static final String BASE_CASHIER_NAME = "basecashier";
-    public static final String BASE_CASHIER_ID = "0000000UW";
+    public static final String BASE_CASHIER_ID = "UW0000000";
 
     public static final int QUERY_SUCCESS = 1;
     public static final int QUERY_EXIT = 0;
@@ -293,6 +293,7 @@ public class Constants {
 
     public static final int TO_PORCENTAGE = 100;
     public static final String ARROW = "->";
+    public static final String ERROR_HIBERNATE_LIST = "Error getting the list of ";
 
     public static final String P_OPTION = "-p";
 

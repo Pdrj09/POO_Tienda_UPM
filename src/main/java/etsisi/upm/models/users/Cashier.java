@@ -2,10 +2,7 @@ package etsisi.upm.models.users;
 
 import etsisi.upm.util.Constants;
 import etsisi.upm.models.Ticket;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.*;
 
@@ -15,8 +12,7 @@ public class Cashier extends User {
     private final Set<Ticket<?>> createdTickets;
     private final Set<Client> associatedClients;
 
-    @OneToMany
-    @JoinColumn(name = "cashier_id")
+    @OneToMany (mappedBy = "cashier", fetch = FetchType.LAZY)
     private Set<Ticket> createdTickets;
 
     @OneToMany(mappedBy = "cashier")
@@ -27,6 +23,10 @@ public class Cashier extends User {
         super(id, name, emailCompany);
         this.createdTickets = new HashSet<>(); //for sorted it
         this.associatedClients = new TreeSet<>();
+    }
+
+    public Cashier(){
+        super();
     }
 
     //PUBLIC METHODS

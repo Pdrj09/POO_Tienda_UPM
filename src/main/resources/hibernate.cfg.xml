@@ -23,18 +23,18 @@
 
         <property name="hibernate.connection.username">sa</property>
         <property name="hibernate.connection.password"></property>
+        <property name="hibernate.connection.pool_size">5</property>
 
         <!-- Dialecto -->
         <property name="hibernate.dialect">
             org.hibernate.dialect.H2Dialect
         </property>
 
-        <!-- Opciones -->
-        <property name="hibernate.hbm2ddl.auto">update</property>
-        <property name="hibernate.show_sql">true</property>
-
         <!-- Entidades -->
         <mapping class="etsisi.upm.models.users.User"/>
+        <mapping class="etsisi.upm.models.users.Client"/>
+        <mapping class="etsisi.upm.models.users.CompanyClient"/>
+        <mapping class="etsisi.upm.models.users.Cashier"/>
         <mapping class="etsisi.upm.models.Product"/>
         <mapping class="etsisi.upm.models.Ticket"/>
 
