@@ -294,6 +294,7 @@ public class Constants {
     public static final int TO_PORCENTAGE = 100;
     public static final String ARROW = "->";
     public static final String ERROR_HIBERNATE_LIST = "Error getting the list of ";
+    public static final String ERROR_HIBERNATE_UPDATE = "Error updating the field of ";
 
     public static final String P_OPTION = "-p";
 

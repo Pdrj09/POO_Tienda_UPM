@@ -28,6 +28,9 @@ public class Product extends Sellable {
     protected boolean personalizable;
     protected int maxPers;
 
+    //for old tickets
+    protected boolean active;
+
     public Product(){}
 
     //this is the constructor that creates a product
@@ -35,12 +38,11 @@ public class Product extends Sellable {
         super(id, name, price, category);
         this.category = category;
         this.personalizable = false;
+        this.active = true;
     }
     //if it has maxpers we consider that the product can be personalized
     public Product(int id, String name, double price, Categories category, int maxPers ) {
         super(id, name, price, category);
-        this.category = category;
-        this.personalizable = false;
         this.maxPers = maxPers;
         this.personalizable = true;
     }
@@ -106,6 +108,16 @@ public class Product extends Sellable {
 
     public void setCategory(Categories category) {
         this.category = category;
+    }
+
+    public void archive() { this.active = false; }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public List<KV> getPresentableDetails() {

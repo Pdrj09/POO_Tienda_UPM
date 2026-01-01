@@ -10,7 +10,9 @@ import etsisi.upm.util.Utilities;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class ProductController {
     private final Repository<Integer, Sellable> productRepository;
@@ -56,7 +58,7 @@ public class ProductController {
                     } else maxPers = null;
 
                     return View.getString(this.addProduct(name, category, price, prodId, maxPers), command);
-                    ////////////////////////////////////////
+                //}~~~~~~~~~~~~~~~~~0~~~~~~~~~~~~~~~~~~~~~~~{
                 }else if(querySplit.length == Constants.QUERY_PRODUCT_LENGTH_SERVICE){
                     name = Utilities.cleanName(querySplit[Constants.QUERY_SERVICE_POS_NAME]);
                     category = querySplit[Constants.QUERY_SERVICE_POS_CATEGORY];
@@ -144,41 +146,55 @@ public class ProductController {
 
     private Sellable updateProduct(int id, String field, String newContent) {
         Sellable productToUpdate = this.productRepository.findByIdOrThrow(id);
+        Object newValue;
         if (productToUpdate == null) throw new IllegalArgumentException(Constants.ERROR_ID_NONEXISTENT);
         switch (field) {
             case Constants.NAME:
-                productToUpdate.setName(Utilities.cleanName(newContent));
+                newValue = Utilities.cleanName(newContent);
                 break;
             case Constants.CATEGORY:
                 if (Categories.existCategory(newContent)) {
-                    Categories cat = Categories.valueOf(newContent);
-                    productToUpdate.setCategory(cat);
+                    newValue = Categories.valueOf(newContent);
                 } else return null;
                 break;
             case Constants.PRICE:
-                productToUpdate.setPrice(Double.parseDouble(newContent));
+                newValue = Double.parseDouble(newContent);
                 break;
             default:
                 return null;
         }
-        return productToUpdate;
+        return this.productRepository.updateById(id, field, newValue);
     }
 
     private Sellable deleteProduct(int prodId) {
         Sellable productToDelete = this.productRepository.findByIdOrThrow(prodId);
         if (productToDelete != null){
             Collection<Ticket<? extends Sellable>> tickets = this.ticketRepository.findAll();
+            boolean toArchive = false;
             for (Ticket<? extends Sellable> ticket : tickets){
                 if(!ticket.isClosed() && ticket.containsProduct(productToDelete)){
                     ticket.remove(productToDelete);
                 }
+                else if (ticket.isClosed() && ticket.containsProduct(productToDelete)){
+                    toArchive = true;
+                }
             }
+            if (toArchive) {
+                this.productRepository.updateById(prodId, "active", false);
+                productToDelete.archive();
+            }else
+                this.productRepository.removeById(prodId);
             return productToDelete;
         }else throw new IllegalArgumentException(Constants.ERROR_ID_NONEXISTENT);
     }
 
     private Collection<Sellable> prodList() {
-        return this.productRepository.findAll();
+        List<Sellable> activeProducts = new ArrayList<>();
+        for (Sellable p : this.productRepository.findAll()){
+            if (p.isActive())
+                activeProducts.add(p);
+        }
+        return activeProducts;
     }
 
     private Sellable addFood(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
