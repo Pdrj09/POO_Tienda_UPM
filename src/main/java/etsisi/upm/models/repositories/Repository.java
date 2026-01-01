@@ -2,14 +2,11 @@ package etsisi.upm.models.repositories;
 
 import etsisi.upm.util.Constants;
 
-import java.util.Collection;
+import java.util.*;
+
 import etsisi.upm.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class Repository <K, T> implements RepositoryInterface<K, T>{
     private final Class<T> entityCLass;
@@ -62,6 +59,34 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
         T entity = session.createQuery("from " + entityCLass.getName() + " where id = :id", entityCLass).setParameter("id", id).uniqueResult();
         session.close();
         return entity;
+    }
+
+    @Override
+    public T updateById(K id, String fieldName, Object newValue){
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = session.beginTransaction();
+        try{
+            T entity = session.createQuery("from " + entityCLass.getName() + " where id = :id", entityCLass)
+                    .setParameter("id", id)
+                    .uniqueResult();
+            if (entity == null)
+                throw new IllegalArgumentException(Constants.ERROR_NONEXISTEN_ID);
+            String setterName = "set" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+
+            //we invoke the setter. MAGIC
+            java.lang.reflect.Method setter = entityCLass.getMethod(setterName, newValue.getClass());
+            setter.invoke(entity, newValue);
+
+            tx.commit();
+            session.close();
+            return entity;
+        }catch(Exception e){
+            if (tx!=null)
+                tx.rollback();
+            System.out.println(e.getMessage());
+            throw new RuntimeException(Constants.ERROR_HIBERNATE_UPDATE + fieldName, e);
+
+        }
     }
 
     @Override

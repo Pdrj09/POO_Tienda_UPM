@@ -13,7 +13,9 @@ import etsisi.upm.util.Utilities;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class ProductController {
     private final Repository<Integer, Product> productRepository;
@@ -107,41 +109,55 @@ public class ProductController {
 
     private Product updateProduct(int id, String field, String newContent) {
         Product productToUpdate = this.productRepository.findByIdOrThrow(id);
+        Object newValue;
         if (productToUpdate == null) throw new IllegalArgumentException(Constants.ERROR_ID_NONEXISTENT);
         switch (field) {
             case Constants.NAME:
-                productToUpdate.setName(Utilities.cleanName(newContent));
+                newValue = Utilities.cleanName(newContent);
                 break;
             case Constants.CATEGORY:
                 if (Categories.existCategory(newContent)) {
-                    Categories cat = Categories.valueOf(newContent);
-                    productToUpdate.setCategory(cat);
+                    newValue = Categories.valueOf(newContent);
                 } else return null;
                 break;
             case Constants.PRICE:
-                productToUpdate.setPrice(Double.parseDouble(newContent));
+                newValue = Double.parseDouble(newContent);
                 break;
             default:
                 return null;
         }
-        return productToUpdate;
+        return this.productRepository.updateById(id, field, newValue);
     }
 
     private Product deleteProduct(int prodId) {
         Product productToDelete = this.productRepository.findByIdOrThrow(prodId);
         if (productToDelete != null){
             Collection<Ticket> tickets = this.ticketRepository.findAll();
+            boolean toArchive = false;
             for (Ticket ticket : tickets){
                 if(!ticket.isClosed() && ticket.containsProduct(productToDelete)){
                     ticket.remove(productToDelete);
                 }
+                else if (ticket.isClosed() && ticket.containsProduct(productToDelete)){
+                    toArchive = true;
+                }
             }
+            if (toArchive) {
+                this.productRepository.updateById(prodId, "active", false);
+                productToDelete.archive();
+            }else
+                this.productRepository.removeById(prodId);
             return productToDelete;
         }else throw new IllegalArgumentException(Constants.ERROR_ID_NONEXISTENT);
     }
 
     private Collection<Product> prodList() {
-        return this.productRepository.findAll();
+        List<Product> activeProducts = new ArrayList<>();
+        for (Product p : this.productRepository.findAll()){
+            if (p.isActive())
+                activeProducts.add(p);
+        }
+        return activeProducts;
     }
 
     private Product addFood(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
