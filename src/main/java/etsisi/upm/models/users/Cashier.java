@@ -12,7 +12,7 @@ public class Cashier extends User {
     private final Set<Ticket<?>> createdTickets;
     private final Set<Client> associatedClients;
 
-    @OneToMany (mappedBy = "cashier", fetch = FetchType.LAZY)
+    @OneToMany (mappedBy = "cashier")
     private Set<Ticket> createdTickets;
 
     @OneToMany(mappedBy = "cashier")

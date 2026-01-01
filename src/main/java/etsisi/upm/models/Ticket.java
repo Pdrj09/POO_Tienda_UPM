@@ -37,7 +37,7 @@ public abstract class Ticket <P extends Sellable> implements Presentable {
     protected TicketStates state;
 
     @ElementCollection
-    @MapKeyJoinColumn(name = "product_id")
+    @MapKeyJoinColumn(name = "product_db_id")
     @Column(name = "quantity")
     protected Map<Product,Integer> list;
 
