@@ -37,4 +37,4 @@ build/
 ### Mac OS ###
 .DS_Stor0e
 
-*/data/*
+data/*
