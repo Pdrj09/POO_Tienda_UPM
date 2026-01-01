@@ -17,8 +17,10 @@ public class CashierController {
     public CashierController(Repository<String, Cashier> repository, Repository<String, Client> clientRepository) {
         this.repository = repository;
         this.clientRepository = clientRepository;
-        Cashier cashier = new Cashier(Constants.BASE_CASHIER_ID,Constants.BASE_CASHIER_EMAIL,Constants.BASE_CASHIER_NAME);
-        this.repository.add(cashier.getId(), cashier);
+        if (this.repository.findById(Constants.BASE_CASHIER_ID) == null){
+            Cashier cashier = new Cashier(Constants.BASE_CASHIER_ID,Constants.BASE_CASHIER_EMAIL,Constants.BASE_CASHIER_NAME);
+            this.repository.add(cashier.getId(), cashier);
+        }
     }
 
     public String cashierQuery(String[] querySplit) {

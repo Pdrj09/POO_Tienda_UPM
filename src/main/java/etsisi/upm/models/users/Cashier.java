@@ -10,7 +10,7 @@ import java.util.*;
 @Table(name = "cashiers")
 public class Cashier extends User {
 
-    @OneToMany (mappedBy = "cashier", fetch = FetchType.LAZY)
+    @OneToMany (mappedBy = "cashier")
     private Set<Ticket> createdTickets;
 
     @OneToMany(mappedBy = "cashier")

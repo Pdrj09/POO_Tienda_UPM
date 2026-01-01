@@ -37,7 +37,7 @@ public class Ticket implements Presentable {
     private TicketStates state;
 
     @ElementCollection
-    @MapKeyJoinColumn(name = "product_id")
+    @MapKeyJoinColumn(name = "product_db_id")
     @Column(name = "quantity")
     private Map<Product,Integer> list;
 
