@@ -18,23 +18,21 @@ import java.util.*;
 public abstract class Ticket <P extends Sellable> implements Presentable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Long dbId;
-
-    @Column(unique = true)
+    @Column(name = "id")
     protected String id;
 
-    private LocalDateTime closeDate;
+    protected LocalDateTime closeDate;
 
     @Enumerated(EnumType.STRING)
     protected TicketStates state;
 
     @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "ticket_products", joinColumns = @JoinColumn(name = "ticket_db_id"))
     @MapKeyJoinColumn(name = "product_db_id")
     @Column(name = "quantity")
     protected Map<Product,Integer> list;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyEnumerated(EnumType.STRING)
     @Column(name = "quantity")
     @MapKeyColumn(name = "category")

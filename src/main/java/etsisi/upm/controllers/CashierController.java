@@ -79,17 +79,22 @@ public class CashierController {
     }
 
     private Cashier removeCashier(String id) {
-        Cashier removed = repository.removeById(id);
-        if (removed != null){
+        Cashier toRemove = repository.findById(id);
+        if (toRemove != null){
+            if (id.equals(Constants.BASE_CASHIER_ID))
+                throw new IllegalArgumentException(Constants.ERROR_REMOVE_BASE_CASHIER);
+
             //we search for all the clients and we clean their reference to that cashier
             for (Client client : clientRepository.findAll()){
-                if (client.getCashier().equals(removed)){
+                if (client.getCashier().equals(toRemove)){
                     client.setCashier(this.repository.findById(Constants.BASE_CASHIER_ID));
+                    clientRepository.update(client);
                 }
             }
+            repository.removeById(id);
         }else
             throw new IllegalArgumentException(Constants.ERROR_NONEXISTEN_ID);
-        return removed;
+        return toRemove;
     }
 
     private Collection<Cashier> listCashiers() {

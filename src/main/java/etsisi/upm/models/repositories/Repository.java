@@ -62,6 +62,9 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
     public T findById(K id) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         T entity = session.createQuery("from " + entityCLass.getName() + " where id = :id", entityCLass).setParameter("id", id).uniqueResult();
+        if (entity == null && id instanceof String) {
+            entity = session.createQuery("from " + entityCLass.getName() + " where id LIKE :partialId", entityCLass).setParameter("partialId", "%" + id).uniqueResult();
+        }
         session.close();
         return entity;
     }
@@ -79,7 +82,12 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
             String setterName = "set" + fieldName.charAt(0) + fieldName.substring(1).toLowerCase();
 
             //we invoke the setter. MAGIC
-            java.lang.reflect.Method setter = entityCLass.getMethod(setterName, newValue.getClass());
+            Class<?> valueType = newValue.getClass();
+            if (valueType == Double.class)
+                valueType = double.class;
+            if (valueType == Integer.class)
+                valueType = int.class;
+            java.lang.reflect.Method setter = entityCLass.getMethod(setterName, valueType);
             setter.invoke(entity, newValue);
 
             tx.commit();
@@ -96,15 +104,23 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
 
     @Override
     public T removeById(K id) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = session.beginTransaction();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction tx = session.beginTransaction();
+            try {
+                T entity = session.createQuery("from " + entityCLass.getName() + " where id = :id", entityCLass)
+                        .setParameter("id", id)
+                        .uniqueResult();
 
-        T entity = findById(id);
-        if (entity != null) session.remove(entity);
-
-        tx.commit();
-        session.close();
-        return entity;
+                if (entity != null) {
+                    session.remove(entity);
+                    tx.commit();
+                }
+                return entity;
+            } catch (Exception e) {
+                if (tx != null) tx.rollback();
+                throw e;
+            }
+        }
     }
 
     @Override

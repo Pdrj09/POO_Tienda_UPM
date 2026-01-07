@@ -135,7 +135,7 @@ public class TicketController {
             throw new IllegalArgumentException(Constants.ERROR_TICKET_NONEXISTENT_TYPE);
         }
 
-        this.ticketRepository.add(ticketId, ticket);
+        this.ticketRepository.add(ticket.getId(), ticket);
         cashier.addTicket(ticket);
         client.addAssociatedTicket(ticket);  //    ticket new UW7258278 11100154D
 
@@ -179,7 +179,7 @@ public class TicketController {
         Sellable product = this.productRepository.findByIdOrThrow(productId);
         Cashier cashier = this.cashierRepository.findByIdOrThrow(cashierId);
 
-        if (!cashier.getTickets().contains(ticket)) throw new IllegalArgumentException(Constants.ERROR_INVALID_ID);
+        if (cashier.getTickets().stream().noneMatch(t -> t.getId().equals(ticket.getId()))) throw new IllegalArgumentException(Constants.ERROR_INVALID_ID);
 
         switch (product) {
             case null -> throw new IllegalArgumentException(Constants.ERROR_NO_PRODUCTS_FOUND);
@@ -217,7 +217,7 @@ public class TicketController {
         Sellable product = this.productRepository.findByIdOrThrow(productId);
         Cashier cashier = this.cashierRepository.findByIdOrThrow(cashierId);
 
-        if (!cashier.getTickets().contains(ticket)) throw new IllegalArgumentException(Constants.ERROR_INVALID_ID);
+        if (cashier.getTickets().stream().noneMatch(t -> t.getId().equals(ticket.getId()))) throw new IllegalArgumentException(Constants.ERROR_INVALID_ID);
 
         return ticket.remove(product);
     }
@@ -227,7 +227,7 @@ public class TicketController {
         Ticket<?> ticket = this.ticketRepository.findByIdOrThrow(ticketId);
         Cashier cashier = this.cashierRepository.findByIdOrThrow(cashierId);
 
-        if (!cashier.getTickets().contains(ticket)) throw new IllegalArgumentException(Constants.ERROR_INVALID_ID);
+        if (cashier.getTickets().stream().noneMatch(t -> t.getId().equals(ticket.getId()))) throw new IllegalArgumentException(Constants.ERROR_INVALID_ID);
 
         this.closeTicket(ticket);
         return ticket;
