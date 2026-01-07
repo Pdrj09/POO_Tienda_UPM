@@ -74,6 +74,14 @@ public class Ticket implements Presentable {
 
     public String close() {
         if (!list.isEmpty()) {
+            int quantity;
+            Set<Product> products = list.keySet();
+            for (Product prod : products) {
+                quantity = list.get(prod);
+
+                list.remove(prod);
+                list.put(prod.copy(), quantity);
+            }
             this.closeDate = LocalDateTime.now();
             String date = Utilities.formatDate(this.closeDate);
             this.id += Constants.HYPEN + date;
