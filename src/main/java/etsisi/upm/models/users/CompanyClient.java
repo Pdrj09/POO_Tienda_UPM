@@ -8,7 +8,7 @@ import jakarta.persistence.Table;
 import java.util.List;
 
 @Entity
-@Table(name = "companies")
+@Table(name = "companyClients")
 public class CompanyClient extends Client{
 
     public CompanyClient(String dni, String name, String email, Cashier cashier) {

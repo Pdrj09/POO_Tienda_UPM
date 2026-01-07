@@ -24,19 +24,12 @@ public abstract class Ticket <P extends Sellable> implements Presentable {
     @Column(unique = true)
     protected String id;
 
-    @ManyToOne
-    @JoinColumn(name = "cashier_db_id")
-    protected Cashier cashier;
-    @ManyToOne
-    @JoinColumn(name = "client_db_id")
-    protected Client client;
-
-    protected LocalDateTime closeDate;
+    private LocalDateTime closeDate;
 
     @Enumerated(EnumType.STRING)
     protected TicketStates state;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyJoinColumn(name = "product_db_id")
     @Column(name = "quantity")
     protected Map<Product,Integer> list;

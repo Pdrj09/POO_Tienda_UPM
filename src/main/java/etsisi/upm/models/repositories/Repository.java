@@ -76,7 +76,7 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
                     .uniqueResult();
             if (entity == null)
                 throw new IllegalArgumentException(Constants.ERROR_NONEXISTEN_ID);
-            String setterName = "set" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+            String setterName = "set" + fieldName.charAt(0) + fieldName.substring(1).toLowerCase();
 
             //we invoke the setter. MAGIC
             java.lang.reflect.Method setter = entityCLass.getMethod(setterName, newValue.getClass());
@@ -134,5 +134,21 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
             }
         }
         return map;
+    }
+
+    @Override
+    public T update(T object) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = session.beginTransaction();
+        try {
+            T updatedEntity = (T) session.merge(object);
+            tx.commit();
+            return updatedEntity;
+        } catch (Exception e) {
+            tx.rollback();
+            throw new RuntimeException(Constants.ERROR_HIBERNATE_UPDATE_ENTITY, e);
+        } finally {
+            session.close();
+        }
     }
 }

@@ -12,4 +12,5 @@ public interface RepositoryInterface<K, T> {
     boolean hasKey(K id);
     Collection<T> findAll();
     Map<K, T> getMap();
+    T update(T object);
 }
