@@ -18,10 +18,7 @@ import java.util.*;
 public class Ticket implements Presentable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long dbId;
-
-    @Column(unique = true)
+    @Column(name = "id")
     private String id;
 
     private LocalDateTime closeDate;
@@ -30,11 +27,12 @@ public class Ticket implements Presentable {
     private TicketStates state;
 
     @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "ticket_products", joinColumns = @JoinColumn(name = "ticket_db_id"))
     @MapKeyJoinColumn(name = "product_db_id")
     @Column(name = "quantity")
     private Map<Product,Integer> list;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyEnumerated(EnumType.STRING)
     @Column(name = "quantity")
     @MapKeyColumn(name = "category")

@@ -15,6 +15,10 @@ public class CompanyClient extends Client{
         super(dni, name, email, cashier);
     }
 
+    public CompanyClient() {
+        super();
+    }
+
     @Override
     public List<KV> toViewKVList() {
         List<KV> kvs = super.toViewKVList();

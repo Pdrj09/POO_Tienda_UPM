@@ -270,6 +270,7 @@ public class Constants {
     public static final String ERROR_HIBERNATE_LIST = "Error getting the list of ";
     public static final String ERROR_HIBERNATE_UPDATE = "Error updating the field of ";
     public static final String ERROR_HIBERNATE_UPDATE_ENTITY = "Error updating the entity";
+    public static final String ERROR_REMOVE_BASE_CASHIER = "Cannot remove the system default cashier.";
 
 
     private Constants(){}
