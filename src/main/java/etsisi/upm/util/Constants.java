@@ -257,6 +257,7 @@ public class Constants {
     public static final String ERROR_FEW_PARAMS = "more params required";
     public static final String ERROR_NONEXISTEN_ID = "id nonexistent";
     public static final String ERROR_FILE_NOTFOUND = "file not found";
+    public static final String ERROR_EMPTY_TICKET = "The ticket cannot be empty";
 
     public static final int TO_PORCENTAGE = 100;
     public static final String ARROW = "->";
