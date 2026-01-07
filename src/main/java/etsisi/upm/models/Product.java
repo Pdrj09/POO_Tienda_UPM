@@ -119,6 +119,10 @@ public class Product implements Comparable<Product>, Presentable {
         return new ArrayList<>();
     }
 
+    public Product copy() {
+        return new Product(id, name, price, category);
+    }
+
     @Override
     public List<KV> toViewKVList() {
         List<KV> kvs = new ArrayList<>();
