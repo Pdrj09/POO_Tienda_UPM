@@ -103,10 +103,14 @@ public class TicketController {
 
         this.ticketRepository.add(ticketId, ticket);
         cashier.addTicket(ticket);
-        client.addAssociatedTicket(ticket);
+        client.addAssociatedTicket(ticket);  //    ticket new UW7258278 11100154D
+
+        this.cashierRepository.update(cashier);
+        this.clientRepository.update(client);
 
         return ticket;
     }
+
 
     private Ticket getTicket(String ticketId){
         return this.ticketRepository.findByIdOrThrow(ticketId);

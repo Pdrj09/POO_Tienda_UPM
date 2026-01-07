@@ -10,7 +10,12 @@ import java.util.*;
 @Table(name = "cashiers")
 public class Cashier extends User {
 
-    @OneToMany (mappedBy = "cashier")
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "cashier_created_tickets",
+            joinColumns = @JoinColumn(name = "cashier_db_id"),
+            inverseJoinColumns = @JoinColumn(name = "ticket_db_id")
+    )
     private Set<Ticket> createdTickets;
 
     @OneToMany(mappedBy = "cashier")
@@ -31,6 +36,14 @@ public class Cashier extends User {
     //this two methods returns an IMMUTABLE copy for more protection
     public Set<Ticket> getTickets() {
         return this.createdTickets;
+    }
+
+    public void setCreatedTickets(Set<Ticket> createdTickets) {
+        this.createdTickets = createdTickets;
+    }
+
+    public void setAssociatedClients(Set<Client> associatedClients) {
+        this.associatedClients = associatedClients;
     }
 
     public Set<Client> getAssociatedClients() {

@@ -24,19 +24,12 @@ public class Ticket implements Presentable {
     @Column(unique = true)
     private String id;
 
-    @ManyToOne
-    @JoinColumn(name = "cashier_db_id")
-    private Cashier cashier;
-    @ManyToOne
-    @JoinColumn(name = "client_db_id")
-    private Client client;
-
     private LocalDateTime closeDate;
 
     @Enumerated(EnumType.STRING)
     private TicketStates state;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyJoinColumn(name = "product_db_id")
     @Column(name = "quantity")
     private Map<Product,Integer> list;

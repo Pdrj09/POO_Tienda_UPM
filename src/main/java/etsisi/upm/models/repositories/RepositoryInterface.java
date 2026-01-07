@@ -11,4 +11,5 @@ public interface RepositoryInterface<K, T> {
     T removeById(K id);
     Collection<T> findAll();
     Map<K, T> getMap();
+    T update(T object);
 }
