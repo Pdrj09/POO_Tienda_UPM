@@ -1,5 +1,7 @@
 package etsisi.upm.util;
 
+import etsisi.upm.models.repositories.Repository;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -50,5 +52,18 @@ public class Utilities {
 
         String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
         return email.matches(regex);
+    }
+    public static <T> int generateAutomaticId(Repository<Integer, T> repository) {
+        int id = Constants.BASE_PROD_ID;
+
+        while (repository.findById(id) != null) {
+            id++;
+        }
+
+        if (id < Constants.BASE_PROD_ID) {
+            throw new IllegalArgumentException("You have reached the max number of elements");
+        }
+
+        return id;
     }
 }

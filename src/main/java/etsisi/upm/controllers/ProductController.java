@@ -36,7 +36,7 @@ public class ProductController {
                     prodId = Integer.valueOf(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
                     index = Constants.PROD_WITH_ID_INDEX;
                 }else{
-                    prodId = generateAutomaticId();
+                    prodId = Utilities.generateAutomaticId(productRepository);
                     index = Constants.PROD_WITHOUT_ID_INDEX;
                 }
 
@@ -154,18 +154,6 @@ public class ProductController {
             Meeting meeting = new Meeting(id, name, pricePerPerson, maxPeople, expirationDate);
             this.productRepository.add(meeting.getId(), meeting);
             return meeting;
-    }
-
-    private int generateAutomaticId() {
-        int id ;
-            id = Constants.BASE_PROD_ID;
-            while ((productRepository.findById(id) != null)) {
-                id++;
-            }
-            if (id < Constants.BASE_PROD_ID){
-                throw new IllegalArgumentException("You have reached the max number of products");
-            }
-            return id;
     }
 
 }
