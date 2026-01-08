@@ -20,7 +20,6 @@ public class Ticket implements Presentable {
     private final Map<Product,Integer> list;
     private final Map<Categories,Integer> categories;
 
-
     public Ticket(String id){
         LocalDateTime now = LocalDateTime.now();
         String formatted = Utilities.formatDate(now);
@@ -73,12 +72,29 @@ public class Ticket implements Presentable {
         return this;
     }
 
-    public String close(){
-        this.closeDate = LocalDateTime.now();
-        String date = Utilities.formatDate(this.closeDate);
-        this.id+=Constants.HYPEN+date;
-        this.state = TicketStates.CLOSED;
-        return this.getId();
+    public String close() {
+        if (!list.isEmpty()) {
+            int quantity;
+            Set<Product> products = list.keySet();
+            for (Product prod : products) {
+                quantity = list.get(prod);
+
+                list.remove(prod);
+                list.put(prod.copy(), quantity);
+            }
+            this.closeDate = LocalDateTime.now();
+            String date = Utilities.formatDate(this.closeDate);
+            this.id += Constants.HYPEN + date;
+            this.state = TicketStates.CLOSED;
+
+            return this.getId();
+        } else {
+            throw new SecurityException(Constants.ERROR_EMPTY_TICKET);
+        }
+    }
+
+    public void deleteProd(Product prod) {
+        list.remove(prod);
     }
 
     private double totalPrice(){

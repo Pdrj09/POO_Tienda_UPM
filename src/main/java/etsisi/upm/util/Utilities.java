@@ -29,10 +29,15 @@ public class Utilities {
         return rawName;
     }
 
-    public static boolean isInteger(String s) {
+    public static boolean isPositiveInteger(String s) {
+
         try {
-            Integer.parseInt(s);
-            return true;
+            int value = Integer.parseInt(s);
+            if (value < Constants.BASE_PROD_ID) {
+                throw  new IllegalArgumentException(Constants.NOT_VALID_ID);
+            }else {
+                return true;
+            }
         } catch (NumberFormatException e) {
             return false;
         }

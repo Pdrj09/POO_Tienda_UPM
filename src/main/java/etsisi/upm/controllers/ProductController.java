@@ -32,7 +32,7 @@ public class ProductController {
         String command = Constants.PROD + Constants.STR_BLANK_SPACE + querySplit[Constants.QUERY_PRODUCT_POS_INSTRUCTION];
         switch (querySplit[Constants.QUERY_PRODUCT_POS_INSTRUCTION]){
             case Constants.PRODUCT_ADD:
-                if(Utilities.isInteger(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID])){
+                if(Utilities.isPositiveInteger(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID])){
                     prodId = Integer.valueOf(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
                     index = Constants.PROD_WITH_ID_INDEX;
                 }else{
@@ -157,10 +157,15 @@ public class ProductController {
     }
 
     private int generateAutomaticId() {
-        return productRepository.findAll().stream()
-                .mapToInt(Product::getId)
-                .max()
-                .orElse(Constants.BASE_PROD_ID) + Constants.PROD_ID_INCREMENT;
+        int id ;
+            id = Constants.BASE_PROD_ID;
+            while ((productRepository.findById(id) != null)) {
+                id++;
+            }
+            if (id < Constants.BASE_PROD_ID){
+                throw new IllegalArgumentException("You have reached the max number of products");
+            }
+            return id;
     }
 
 }

@@ -135,7 +135,7 @@ public class Constants {
     public static final int MAX_PERSONALIZATIONS_ALLOWED = 100;
     public static final String STR_PRODUCT_PERSONALIZED = "class:ProductPersonalized";
     public static final int BASE_PROD_ID = 0;
-    public static final int PROD_ID_INCREMENT = 1;
+    public static final String NOT_VALID_ID = "The id is not valid";
     public static final int PROD_WITHOUT_ID_INDEX = 1;
     public static final int PROD_WITH_ID_INDEX = 0;
     public static final int SERVICE_PROD_MINPEOPLE = 0;
@@ -257,6 +257,7 @@ public class Constants {
     public static final String ERROR_FEW_PARAMS = "more params required";
     public static final String ERROR_NONEXISTEN_ID = "id nonexistent";
     public static final String ERROR_FILE_NOTFOUND = "file not found";
+    public static final String ERROR_EMPTY_TICKET = "The ticket cannot be empty";
 
     public static final int TO_PORCENTAGE = 100;
     public static final String ARROW = "->";
