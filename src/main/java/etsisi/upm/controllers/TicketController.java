@@ -43,8 +43,8 @@ public class TicketController {
 
                 cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID-index];
                 clientId = querySplit[Constants.QUERY_TICKET_POS_USERID-index];
-
-                return View.getString(this.newTicket(ticketId, cashierId, clientId), command);
+                // it returns an ok status
+                return Constants.okStatus(command.split(" ")[0], command.split(" ")[1]);
 
             case Constants.TICKET_ADD:
 
