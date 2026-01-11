@@ -43,6 +43,7 @@ public class TicketController {
 
                 cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID-index];
                 clientId = querySplit[Constants.QUERY_TICKET_POS_USERID-index];
+                this.newTicket(ticketId, cashierId, clientId);
                 // it returns an ok status
                 return Constants.okStatus(command.split(" ")[0], command.split(" ")[1]);
 
@@ -145,6 +146,7 @@ public class TicketController {
 
         switch (product) {
             case null -> throw new IllegalArgumentException(Constants.ERROR_NO_PRODUCTS_FOUND);
+            //it doesnt allow empty tickets
 
 
             //cant exist 2 same serviceProduct
