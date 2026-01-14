@@ -21,6 +21,10 @@ public class Meeting extends ServiceProduct {
         return ChronoUnit.HOURS;
     }
 
+    @Override
+    public Meeting copy() {
+        return new Meeting(id, name, price, numPeople, expirationDate);
+    }
 
     // --- toString() ---
     @Override

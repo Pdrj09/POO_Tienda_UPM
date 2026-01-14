@@ -11,8 +11,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public abstract class ServiceProduct extends Sellable {
-    private final LocalDateTime expirationDate;
-    private int numPeople;
+    protected final LocalDateTime expirationDate;
+    protected int numPeople;
     private double finalPrice;
 
     public ServiceProduct(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
