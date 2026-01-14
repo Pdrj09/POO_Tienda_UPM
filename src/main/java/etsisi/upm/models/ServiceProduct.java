@@ -16,9 +16,7 @@ public abstract class ServiceProduct extends Sellable {
     private double finalPrice;
 
     public ServiceProduct(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
-        super(id,
-                name,
-                pricePerPerson);
+        super(id, name, pricePerPerson, Categories.EMPTY);
 
         if (maxPeople <= Constants.SERVICE_PROD_MINPEOPLE)
             throw new IllegalArgumentException(Constants.ERROR_TOOMANY_PEOPLE);
