@@ -216,15 +216,15 @@ public class TicketController {
             default -> {
             }
         }
-        Product finalProduct;
-        if (customizations != null && !customizations.isEmpty()){
-            if (product.isPersonalizable())
-                finalProduct = new ProductPersonalized(product, customizations);
+        Sellable finalProduct;
+        if (customizations != null && !customizations.isEmpty() && product instanceof Product personalized ) {
+            if (personalized.isPersonalizable())
+                finalProduct = new ProductPersonalized(personalized, customizations);
             else
                 throw new IllegalStateException(Constants.ERROR_NONPERSONALIZABLE);
         } else
             finalProduct = product;
-        return ticket.addProduct(finalProduct,amount);
+        return ticket.addProduct(finalProduct, amount);
     }
 
     private Ticket<?> removeProductFromTicket(String ticketId, String cashierId, Integer productId){
