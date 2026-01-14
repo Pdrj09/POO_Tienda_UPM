@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-public abstract class ServiceProduct extends Product {
+public abstract class ServiceProduct extends Sellable {
     private final LocalDateTime expirationDate;
     private int numPeople;
     private double finalPrice;
@@ -18,8 +18,7 @@ public abstract class ServiceProduct extends Product {
     public ServiceProduct(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
         super(id,
                 name,
-                pricePerPerson,
-                Categories.EMPTY);
+                pricePerPerson);
 
         if (maxPeople <= Constants.SERVICE_PROD_MINPEOPLE)
             throw new IllegalArgumentException(Constants.ERROR_TOOMANY_PEOPLE);
@@ -59,7 +58,6 @@ public abstract class ServiceProduct extends Product {
         return getPrice();
     }
 
-    @Override
     public int getMaxPers() {
         return this.numPeople;
     }
@@ -97,7 +95,7 @@ public abstract class ServiceProduct extends Product {
         builder.append(Constants.STR_SERVICE_PRODUCT);
         builder.append(Constants.STR_PROD_ID).append(getId());
         builder.append(Constants.STR_PROD_NAME).append(getName()).append(Constants.QUOTE);
-        builder.append(Constants.STR_CATEGORY).append(getCategory());
+        builder.append(Constants.STR_CATEGORY).append(Categories.EMPTY);
 
         // use of the constant price per person
         builder.append(Constants.STR_PRICE_PERSON).append(getPrice());
