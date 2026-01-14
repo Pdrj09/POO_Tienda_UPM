@@ -2,6 +2,7 @@ package etsisi.upm.models;
 
 import etsisi.upm.io.KV;
 import etsisi.upm.io.Presentable;
+import etsisi.upm.util.Utilities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,11 @@ public abstract class Sellable implements Comparable<Sellable>, Presentable {
     }
 
     public double getPrice() {
-        return price;
+        return Utilities.round(price);
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setPrice(double price) {
@@ -57,6 +62,10 @@ public abstract class Sellable implements Comparable<Sellable>, Presentable {
         return kvs;
     }
 
+    //It's used to compare alphabetically this name and the other products name (it is case-insensitive)
+    //returns value < 0 if this name comes before other name alphabetically
+    //        value = 0 if its equal this name and other name
+    //        value > 0 if this name comes after other name alphabetically
     @Override
     public int compareTo(Sellable other) {
         //compare name
