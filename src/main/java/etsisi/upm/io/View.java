@@ -63,7 +63,7 @@ public class View {
             return result;
         }
         //TICKETS (IS A SPECIAL CASE BECAUSE REQUIRES DETAILED SHOWN OF PRODUCTS)
-        if (obj instanceof Ticket ticket) {
+        if (obj instanceof Ticket<?> ticket) {
             //Check if we are viewing a list or printing a detailed ticket.
             boolean isFilteredList = command.startsWith("cash tickets") || command.startsWith("ticket list");
             if (isFilteredList) //we use the resume
@@ -72,8 +72,8 @@ public class View {
                 result.add(ticket.toViewKVList());
             if (!isFilteredList) {
                 //detailed breakdown of the products
-                for (Map.Entry<Product,Integer> entry : ticket.getList().entrySet()) {
-                    Product p = entry.getKey();
+                for (Map.Entry<? extends Product, Integer> entry : ticket.getList().entrySet()) {
+                    Product p = (Product) entry.getKey();
                     int quantity = entry.getValue();
                     List<KV> prodKV = ticket.getDetailedKVsForProductLine(p, quantity);
                     result.add(prodKV);

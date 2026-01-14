@@ -10,21 +10,21 @@ import etsisi.upm.util.Utilities;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class Ticket implements Presentable {
+public class Ticket <P extends Product> implements Presentable {
 
     //Stores the list of products and their quantities in the current transaction
     private String id;
     private LocalDateTime closeDate;
     private TicketStates state;
 
-    private final Map<Product,Integer> list;
+    private final Map<Product, Integer> list;
     private final Map<Categories,Integer> categories;
 
     public Ticket(String id){
         LocalDateTime now = LocalDateTime.now();
         String formatted = Utilities.formatDate(now);
         this.id = formatted + Constants.HYPEN +id;
-        this.list = new TreeMap<>();
+        this.list = new TreeMap<Product, Integer>();
         this.categories = new HashMap<>();
         this.state = TicketStates.EMPTY;
 
@@ -34,7 +34,7 @@ public class Ticket implements Presentable {
         this(String.format(Constants.ID_FORMAT, new Random().nextInt(Constants.MAX_RANDOM)));
     }
 
-    public Ticket addProduct(Product prod, int amount) {
+    public Ticket<P> addProduct(Product prod, int amount) {
         if (countProducts() + amount > Constants.MAX_SIZE_TICKET)  throw new IllegalStateException(Constants.ERROR_MAXSIZE_TICKET + Constants.MAX_SIZE_TICKET);
 
         if (amount < Constants.MIN_AMMOUNT) throw new IllegalStateException(Constants.ERROR_ZERO_AMOUNT);
@@ -66,7 +66,7 @@ public class Ticket implements Presentable {
     }
 
     // Remove a product from the ticket
-    public Ticket remove(Product prod){
+    public Ticket<P> remove(P prod){
         this.list.remove(prod);
         if(this.list.isEmpty()) this.state = TicketStates.EMPTY;
         return this;
@@ -93,7 +93,7 @@ public class Ticket implements Presentable {
         }
     }
 
-    public void deleteProd(Product prod) {
+    public void deleteProd(P prod) {
         list.remove(prod);
     }
 
@@ -110,7 +110,7 @@ public class Ticket implements Presentable {
 
     private double totalDiscount(){
         double sum=Constants.BASE_DISCOUNT;
-        for(Map.Entry<Product, Integer> entry : list.entrySet()){
+        for(Map.Entry< Product, Integer> entry : list.entrySet()){
             Product product = entry.getKey();
             int amount = entry.getValue();
 
@@ -154,7 +154,7 @@ public class Ticket implements Presentable {
     @Override
     public String toString() {
         StringBuilder res = new StringBuilder();
-        for (Map.Entry<Product, Integer> entry : list.entrySet()) {
+        for (Map.Entry< Product , Integer> entry : list.entrySet()) {
             Product product = entry.getKey();
             int amount = entry.getValue();
             boolean hasDiscount = categories.getOrDefault(product.getCategory(), 0) > Constants.MIN_FOR_DISCOUNT;
@@ -203,8 +203,7 @@ public class Ticket implements Presentable {
         return Utilities.round(getTotalPriceView() - getTotalDiscountView());
     }
 
-    public Map<Product, Integer> getList() {
-        //Return an unmodifiableMap to prevent external modifications
+    public Map<? extends Product, Integer> getList() {
         return Collections.unmodifiableMap(list);
     }
 

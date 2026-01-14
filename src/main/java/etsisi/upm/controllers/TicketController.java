@@ -99,8 +99,12 @@ public class TicketController {
         Client client = this.clientRepository.findByIdOrThrow(clientId);
 
         Ticket ticket;
-        if(ticketId != null) ticket = new Ticket(ticketId);
-        else ticket = new Ticket();
+        if(ticketId != null) {
+            ticket = new Ticket(ticketId);
+        } else {
+            ticket = new Ticket();
+            ticketId = ticket.getId();
+        }
 
         this.ticketRepository.add(ticketId, ticket);
         cashier.addTicket(ticket);
