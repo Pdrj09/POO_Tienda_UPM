@@ -52,6 +52,11 @@ public abstract class Sellable implements Comparable<Sellable>, Presentable {
         this.price = price;
     }
 
+    public List<KV> getPresentableDetails() {
+        return new ArrayList<>();
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
