@@ -39,18 +39,24 @@ public class TicketController {
                     ticketId = querySplit[Constants.QUERY_TICKET_POS_TICKETID];
                     index = Constants.TICKET_WITH_ID_INDEX;
                 } else{
-                    ticketId = null;
+                    do {
+                        ticketId = String.format(Constants.ID_FORMAT, new Random().nextInt(Constants.MAX_RANDOM));
+                    } while (ticketRepository.hasKey(ticketId));
                     index = Constants.TICKET_WITHOUT_ID_INDEX;
+
                 }
 
                 cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID-index];
                 clientId = querySplit[Constants.QUERY_TICKET_POS_USERID-index];
 
+
+
                 if(querySplit.length == Constants.QUERY_TICKET_POS_TICKET_TYPE){
                     this.newTicket(ticketId,cashierId,clientId,querySplit[Constants.QUERY_TICKET_POS_TICKET_TYPE]);
-                }else {
-                    this.newTicket(ticketId, cashierId, clientId);
+                } else if (querySplit.length == Constants.QUERY_TICKET_POS_PRODID){
+                    this.newTicket(ticketId, cashierId, clientId, Constants.P_OPTION);
                 }
+
                 // it returns an ok status
                 return Constants.okStatus(command.split(" ")[0], command.split(" ")[1]);
 
@@ -132,25 +138,6 @@ public class TicketController {
         }
         else{
             throw new IllegalArgumentException(Constants.ERROR_TICKET_NONEXISTENT_TYPE);
-        }
-
-        this.ticketRepository.add(ticketId, ticket);
-        cashier.addTicket(ticket);
-        client.addAssociatedTicket(ticket);
-
-        return ticket;
-    }
-
-    private Ticket<Product> newTicket(String ticketId, String cashierId, String clientId){
-        Cashier cashier = this.cashierRepository.findByIdOrThrow(cashierId);
-        Client client = this.clientRepository.findByIdOrThrow(clientId);
-
-        Ticket<Product> ticket;
-        if(ticketId != null) {
-            ticket = new TicketOfProducts(ticketId);
-        } else {
-            ticket = new TicketOfProducts();
-            ticketId = ticket.getId();
         }
 
         this.ticketRepository.add(ticketId, ticket);

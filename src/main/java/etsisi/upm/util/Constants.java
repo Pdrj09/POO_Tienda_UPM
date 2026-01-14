@@ -264,6 +264,7 @@ public class Constants {
     public static final int TO_PORCENTAGE = 100;
     public static final String ARROW = "->";
 
+    public static final String P_OPTION = "-p";
 
     private Constants(){}
 
