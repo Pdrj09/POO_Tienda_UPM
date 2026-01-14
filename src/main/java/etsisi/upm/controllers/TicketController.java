@@ -17,7 +17,9 @@ public class TicketController {
     private final Repository<Integer, Product> productRepository;
 
 
-    public TicketController(Repository<String, Ticket> ticketRepository, Repository<String, Client> clientRepository, Repository<String, Cashier> cashierRepository, Repository<Integer, Product> productRepository) {
+    public TicketController(Repository<String, Ticket> ticketRepository, Repository<String, Client> clientRepository,
+                            Repository<String, Cashier> cashierRepository,
+                            Repository<Integer, Product> productRepository) {
         this.ticketRepository = ticketRepository;
         this.clientRepository = clientRepository;
         this.cashierRepository = cashierRepository;
@@ -26,7 +28,8 @@ public class TicketController {
 
     public String decodeQuery(String[] querySplit) {
         String ticketId, cashierId, clientId;
-        String command = Constants.TICKET + Constants.STR_BLANK_SPACE + querySplit[Constants.QUERY_TICKET_POS_INSTRUCTION];
+        String command = Constants.TICKET + Constants.STR_BLANK_SPACE +
+                querySplit[Constants.QUERY_TICKET_POS_INSTRUCTION];
         int prodId, amount;
         switch (querySplit[Constants.QUERY_TICKET_POS_INSTRUCTION]){
             case Constants.TICKET_NEW:
@@ -73,7 +76,8 @@ public class TicketController {
                         }
                     }
                 }
-                return View.getString(this.addProductToTicket(ticketId, cashierId, prodId, amount, customizations), command);
+                return View.getString(this.addProductToTicket(ticketId, cashierId, prodId, amount, customizations),
+                        command);
 
             case Constants.TICKET_REMOVE:
 
@@ -184,7 +188,8 @@ public class TicketController {
     }
 
 
-    private Ticket addProductToTicket(String ticketId, String cashierId, Integer productId, int amount, List<String> customizations){
+    private Ticket addProductToTicket(String ticketId, String cashierId, Integer productId, int amount,
+                                      List<String> customizations){
         Ticket ticket = this.ticketRepository.findByIdOrThrow(ticketId);
         Product product = this.productRepository.findByIdOrThrow(productId);
         Cashier cashier = this.cashierRepository.findByIdOrThrow(cashierId);
@@ -204,7 +209,8 @@ public class TicketController {
             //limit participants validation.
             case ServiceProduct service -> {
                 if (amount <= 0 || amount > Constants.MAX_PERSONALIZATIONS_ALLOWED) {
-                    throw new IllegalArgumentException(Constants.ERROR_INVALID_SERVICE_PEOPLE_1 + amount + Constants.ERROR_INVALID_SERVICE_PEOPLE_2);
+                    throw new IllegalArgumentException(Constants.ERROR_INVALID_SERVICE_PEOPLE_1 + amount +
+                            Constants.ERROR_INVALID_SERVICE_PEOPLE_2);
                 }
             }
             default -> {
