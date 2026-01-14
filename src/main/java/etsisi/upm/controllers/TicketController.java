@@ -9,6 +9,7 @@ import etsisi.upm.models.repositories.*;
 import etsisi.upm.models.users.Cashier;
 import etsisi.upm.models.users.Client;
 import etsisi.upm.models.ServiceProduct;
+import etsisi.upm.util.Utilities;
 
 import java.util.*;
 
@@ -33,17 +34,31 @@ public class TicketController {
         switch (querySplit[Constants.QUERY_TICKET_POS_INSTRUCTION]){
             case Constants.TICKET_NEW:
                 int index;
-                if(querySplit.length == Constants.QUERY_TICKET_ADD_LENGHT_WITHID){
+
+                if(Utilities.isPositiveInteger(querySplit[Constants.QUERY_TICKET_POS_TICKETID])){
                     ticketId = querySplit[Constants.QUERY_TICKET_POS_TICKETID];
                     index = Constants.TICKET_WITH_ID_INDEX;
-                } else if (querySplit.length == Constants.QUERY_TICKET_ADD_LENGHT_WITHOUTID) {
+                } else{
                     ticketId = null;
                     index = Constants.TICKET_WITHOUT_ID_INDEX;
-                }else throw new IllegalArgumentException(Constants.ERROR_TOOMANY_ARGUMENTS);
+                }
 
                 cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID-index];
                 clientId = querySplit[Constants.QUERY_TICKET_POS_USERID-index];
-                this.newTicket(ticketId, cashierId, clientId);
+
+                if(querySplit.length == Constants.QUERY_TICKET_POS_TICKET_TYPE){
+                    if (querySplit[Constants.QUERY_TICKET_POS_TICKET_TYPE].contains("-p")){
+
+                    }else if(querySplit[Constants.QUERY_TICKET_POS_TICKET_TYPE].contains("-s")){
+
+                    }else if (querySplit[Constants.QUERY_TICKET_POS_TICKET_TYPE].contains("-c")){
+
+                    }else{
+                        throw new IllegalArgumentException(Constants.ERROR_TOOMANY_ARGUMENTS);
+                    }
+                }else {
+                    this.newTicket(ticketId, cashierId, clientId);
+                }
                 // it returns an ok status
                 return Constants.okStatus(command.split(" ")[0], command.split(" ")[1]);
 

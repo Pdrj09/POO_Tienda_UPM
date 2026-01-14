@@ -27,6 +27,7 @@ public class Constants {
     public static final int QUERY_TICKET_POS_USERID = 3;
     public static final int QUERY_TICKET_POS_AMOUNT = 4;
     public static final int QUERY_TICKET_POS_CUSTOMIZATIONS = 5;
+    public static final int QUERY_TICKET_POS_TICKET_TYPE = 4;
     public static final int TICKET_WITH_ID_INDEX = 0;
     public static final int TICKET_WITHOUT_ID_INDEX = 1;
 
