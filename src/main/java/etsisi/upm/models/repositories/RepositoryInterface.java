@@ -8,6 +8,7 @@ public interface RepositoryInterface<K, T> {
     T findByIdOrThrow(K id);
     T findById(K id);
     T removeById(K id);
+    boolean hasKey(K id);
     Collection<T> findAll();
     Map<K, T> getMap();
 }
