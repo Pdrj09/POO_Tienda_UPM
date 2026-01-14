@@ -17,7 +17,7 @@ public class ProductController {
     private final Repository<String, Ticket<?>> ticketRepository;
 
     public ProductController(Repository<Integer, Sellable> productRepository, Repository<String,
-            Ticket<? extends Sellable>> ticketRepository) {
+            Ticket<?>> ticketRepository) {
         this.productRepository = productRepository;
         this.ticketRepository = ticketRepository;
     }
