@@ -41,6 +41,8 @@ public abstract class ServiceProduct extends Sellable {
         }
     }
 
+    @
+
     // Abstract methods
     public abstract int getMinimumCreationTime();
 
