@@ -141,15 +141,15 @@ public class TicketController {
         return ticket;
     }
 
-    private Ticket<?> newTicket(String ticketId, String cashierId, String clientId){
+    private Ticket<Product> newTicket(String ticketId, String cashierId, String clientId){
         Cashier cashier = this.cashierRepository.findByIdOrThrow(cashierId);
         Client client = this.clientRepository.findByIdOrThrow(clientId);
 
-        Ticket ticket;
+        Ticket<Product> ticket;
         if(ticketId != null) {
-            ticket = new Ticket(ticketId);
+            ticket = new TicketOfProducts(ticketId);
         } else {
-            ticket = new Ticket();
+            ticket = new TicketOfProducts();
             ticketId = ticket.getId();
         }
 
@@ -160,12 +160,12 @@ public class TicketController {
         return ticket;
     }
 
-    private Ticket getTicket(String ticketId){
+    private Ticket<?> getTicket(String ticketId){
         return this.ticketRepository.findByIdOrThrow(ticketId);
     }
 
-    private List<Ticket> getTicketList(){
-        List<Ticket> ticketList = new ArrayList<Ticket>();
+    private List<Ticket<?>> getTicketList(){
+        List<Ticket<?>> ticketList = new ArrayList<Ticket<?>>();
         TreeMap<String, Cashier> sortedCashiers = new TreeMap<>(this.cashierRepository.getMap());
 
         for (Map.Entry<String, Cashier> entry : sortedCashiers.entrySet()){
@@ -174,12 +174,12 @@ public class TicketController {
         return ticketList;
     }
 
-    private void closeTicket(Ticket ticket){
+    private void closeTicket(Ticket<?> ticket){
         ticket.close();
     }
 
-    private Ticket removeTicket(String ticketId, String cashierId, String clientId){
-        Ticket ticket = this.ticketRepository.removeById(ticketId);
+    private Ticket<?> removeTicket(String ticketId, String cashierId, String clientId){
+        Ticket<?> ticket = this.ticketRepository.removeById(ticketId);
         Cashier cashier = this.cashierRepository.findByIdOrThrow(cashierId);
         Client client = this.clientRepository.findByIdOrThrow(clientId);
         cashier.deleteTicket(ticket);
@@ -188,10 +188,10 @@ public class TicketController {
     }
 
 
-    private Ticket addProductToTicket(String ticketId, String cashierId, Integer productId, int amount,
+    private Ticket<?> addProductToTicket(String ticketId, String cashierId, Integer productId, int amount,
                                       List<String> customizations){
-        Ticket ticket = this.ticketRepository.findByIdOrThrow(ticketId);
-        Product product = this.productRepository.findByIdOrThrow(productId);
+        Ticket<?> ticket = this.ticketRepository.findByIdOrThrow(ticketId);
+        Sellable product = this.productRepository.findByIdOrThrow(productId);
         Cashier cashier = this.cashierRepository.findByIdOrThrow(cashierId);
 
         if (!cashier.getTickets().contains(ticket)) throw new IllegalArgumentException(Constants.ERROR_INVALID_ID);
@@ -227,9 +227,9 @@ public class TicketController {
         return ticket.addProduct(finalProduct,amount);
     }
 
-    private Ticket removeProductFromTicket(String ticketId, String cashierId, Integer productId){
-        Ticket ticket = this.ticketRepository.findByIdOrThrow(ticketId);
-        Product product = this.productRepository.findByIdOrThrow(productId);
+    private Ticket<?> removeProductFromTicket(String ticketId, String cashierId, Integer productId){
+        Ticket<?> ticket = this.ticketRepository.findByIdOrThrow(ticketId);
+        Sellable product = this.productRepository.findByIdOrThrow(productId);
         Cashier cashier = this.cashierRepository.findByIdOrThrow(cashierId);
 
         if (!cashier.getTickets().contains(ticket)) throw new IllegalArgumentException(Constants.ERROR_INVALID_ID);
@@ -238,8 +238,8 @@ public class TicketController {
     }
 
     //method were the ticked is closed and prepared for printing it (the view manage that)
-    private Ticket printTicket(String ticketId, String cashierId){
-        Ticket ticket = this.ticketRepository.findByIdOrThrow(ticketId);
+    private Ticket<?> printTicket(String ticketId, String cashierId){
+        Ticket<?> ticket = this.ticketRepository.findByIdOrThrow(ticketId);
         Cashier cashier = this.cashierRepository.findByIdOrThrow(cashierId);
 
         if (!cashier.getTickets().contains(ticket)) throw new IllegalArgumentException(Constants.ERROR_INVALID_ID);
