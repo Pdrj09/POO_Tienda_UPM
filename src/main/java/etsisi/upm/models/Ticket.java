@@ -1,11 +1,8 @@
 package etsisi.upm.models;
 
-import etsisi.upm.util.Constants;
+import etsisi.upm.util.*;
 import etsisi.upm.io.KV;
 import etsisi.upm.io.Presentable;
-import etsisi.upm.util.Categories;
-import etsisi.upm.util.TicketStates;
-import etsisi.upm.util.Utilities;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -20,17 +17,16 @@ public abstract class Ticket <P extends Sellable> implements Presentable {
     protected Map<P, Integer> list;
     protected Map<Categories,Integer> categories;
 
-    public Ticket(String id){
+    public Ticket(String id) {
         LocalDateTime now = LocalDateTime.now();
         String formatted = Utilities.formatDate(now);
         this.id = formatted + Constants.HYPEN +id;
         this.list = new TreeMap<P, Integer>();
         this.categories = new HashMap<>();
         this.state = TicketStates.EMPTY;
-
     }
 
-    public Ticket(){
+    public Ticket() {
         this(String.format(Constants.ID_FORMAT, new Random().nextInt(Constants.MAX_RANDOM)));
     }
 
@@ -67,7 +63,7 @@ public abstract class Ticket <P extends Sellable> implements Presentable {
     }
 
     // Remove a product from the ticket
-    public Ticket<P> remove(P prod){
+    public Ticket<P> remove(Sellable prod){
         this.list.remove(prod);
         if(this.list.isEmpty()) this.state = TicketStates.EMPTY;
         return this;
@@ -190,7 +186,7 @@ public abstract class Ticket <P extends Sellable> implements Presentable {
     }
 
     //look if the product already exists
-    public boolean containsProduct(P prod) {
+    public boolean containsProduct(Sellable prod) {
         return this.list.containsKey(prod);
     }
 

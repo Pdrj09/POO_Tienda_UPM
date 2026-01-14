@@ -17,7 +17,7 @@ public class ProductController {
     private final Repository<String, Ticket<?>> ticketRepository;
 
     public ProductController(Repository<Integer, Sellable> productRepository, Repository<String,
-            Ticket<?>> ticketRepository) {
+            Ticket<? extends Sellable>> ticketRepository) {
         this.productRepository = productRepository;
         this.ticketRepository = ticketRepository;
     }
@@ -130,8 +130,8 @@ public class ProductController {
     private Sellable deleteProduct(int prodId) {
         Sellable productToDelete = this.productRepository.findByIdOrThrow(prodId);
         if (productToDelete != null){
-            Collection<Ticket<?>> tickets = this.ticketRepository.findAll();
-            for (Ticket<?> ticket : tickets){
+            Collection<Ticket<? extends Sellable>> tickets = this.ticketRepository.findAll();
+            for (Ticket<? extends Sellable> ticket : tickets){
                 if(!ticket.isClosed() && ticket.containsProduct(productToDelete)){
                     ticket.remove(productToDelete);
                 }
@@ -140,17 +140,17 @@ public class ProductController {
         }else throw new IllegalArgumentException(Constants.ERROR_ID_NONEXISTENT);
     }
 
-    private Collection<Product> prodList() {
+    private Collection<Sellable> prodList() {
         return this.productRepository.findAll();
     }
 
-    private Product addFood(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
+    private Sellable addFood(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
         Food food = new Food(id, name, pricePerPerson, maxPeople, expirationDate);
         this.productRepository.add(food.getId(), food);
         return food;
     }
 
-    private Product addMeeting(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
+    private Sellable addMeeting(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
             Meeting meeting = new Meeting(id, name, pricePerPerson, maxPeople, expirationDate);
             this.productRepository.add(meeting.getId(), meeting);
             return meeting;
