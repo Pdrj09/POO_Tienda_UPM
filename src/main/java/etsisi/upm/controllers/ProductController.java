@@ -1,14 +1,11 @@
 package etsisi.upm.controllers;
 
+import etsisi.upm.models.*;
 import etsisi.upm.util.Constants;
 import etsisi.upm.io.View;
-import etsisi.upm.models.Ticket;
 import etsisi.upm.models.repositories.Repository;
 import etsisi.upm.util.Categories;
-import etsisi.upm.models.Product;
 
-import etsisi.upm.models.Food;
-import etsisi.upm.models.Meeting;
 import etsisi.upm.util.Utilities;
 
 import java.time.LocalDate;
@@ -16,10 +13,11 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 
 public class ProductController {
-    private final Repository<Integer, Product> productRepository;
+    private final Repository<Integer, Sellable> productRepository;
     private final Repository<String, Ticket<?>> ticketRepository;
 
-    public ProductController(Repository<Integer, Product> productRepository, Repository<String, Ticket<?>> ticketRepository) {
+    public ProductController(Repository<Integer, Sellable> productRepository, Repository<String,
+            Ticket<?>> ticketRepository) {
         this.productRepository = productRepository;
         this.ticketRepository = ticketRepository;
     }
@@ -43,10 +41,12 @@ public class ProductController {
                 name = Utilities.cleanName(querySplit[Constants.QUERY_PRODUCT_POS_NAME-index]);
                 category = querySplit[Constants.QUERY_PRODUCT_POS_CATEGORY-index];
 
-                if ((querySplit[Constants.QUERY_PRODUCT_POS_PRICE-index].isEmpty()) || (querySplit[Constants.QUERY_PRODUCT_POS_PRICE-index].equals(Constants.STR_BLANK_SPACE))) {
+                if ((querySplit[Constants.QUERY_PRODUCT_POS_PRICE-index].isEmpty()) ||
+                        (querySplit[Constants.QUERY_PRODUCT_POS_PRICE-index].equals(Constants.STR_BLANK_SPACE))) {
                     throw new IllegalArgumentException(Constants.ERROR_PRICE);
                 }
-                price = Float.parseFloat(querySplit[Constants.QUERY_PRODUCT_POS_PRICE-index].replace(Constants.STR_COMMA, Constants.STR_DOT));
+                price = Float.parseFloat(querySplit[Constants.QUERY_PRODUCT_POS_PRICE-index].
+                        replace(Constants.STR_COMMA, Constants.STR_DOT));
 
                 if (querySplit.length == Constants.QUERY_PRODUCT_LENGTH_WITHCUTOMIZATIONS-index){
                     maxPers = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_MAXPERS-index]);
@@ -95,7 +95,7 @@ public class ProductController {
         }
     }
 
-    private Product addProduct(String name, String category, double price, int id, Integer maxPers) {
+    private Sellable addProduct(String name, String category, double price, int id, Integer maxPers) {
         Product product;
         if (Categories.existCategory(category)) {
             if (maxPers != null) product = new Product(id, name, price, Categories.valueOf(category),maxPers);
@@ -105,8 +105,8 @@ public class ProductController {
         } else throw new IllegalArgumentException(Constants.ERROR_CREATE_PRODUCT);
     }
 
-    private Product updateProduct(int id, String field, String newContent) {
-        Product productToUpdate = this.productRepository.findByIdOrThrow(id);
+    private Sellable updateProduct(int id, String field, String newContent) {
+        Sellable productToUpdate = this.productRepository.findByIdOrThrow(id);
         if (productToUpdate == null) throw new IllegalArgumentException(Constants.ERROR_ID_NONEXISTENT);
         switch (field) {
             case Constants.NAME:
@@ -127,11 +127,11 @@ public class ProductController {
         return productToUpdate;
     }
 
-    private Product deleteProduct(int prodId) {
-        Product productToDelete = this.productRepository.findByIdOrThrow(prodId);
+    private Sellable deleteProduct(int prodId) {
+        Sellable productToDelete = this.productRepository.findByIdOrThrow(prodId);
         if (productToDelete != null){
-            Collection<Ticket> tickets = this.ticketRepository.findAll();
-            for (Ticket ticket : tickets){
+            Collection<Ticket<?>> tickets = this.ticketRepository.findAll();
+            for (Ticket<?> ticket : tickets){
                 if(!ticket.isClosed() && ticket.containsProduct(productToDelete)){
                     ticket.remove(productToDelete);
                 }

@@ -6,6 +6,7 @@ import etsisi.upm.controllers.ProductController;
 import etsisi.upm.controllers.TicketController;
 import etsisi.upm.io.CLI;
 import etsisi.upm.models.Product;
+import etsisi.upm.models.Sellable;
 import etsisi.upm.models.Ticket;
 import etsisi.upm.models.repositories.Repository;
 import etsisi.upm.models.users.Cashier;
@@ -21,7 +22,7 @@ public class Main {
 
     public static void main(String [] args) {
         //We create the repositories and the controllers with them
-        Repository<Integer, Product> productRepo = new Repository<>(Constants.MAX_SIZE);
+        Repository<Integer, Sellable> productRepo = new Repository<>(Constants.MAX_SIZE);
         Repository<String, Ticket<?>> ticketRepo = new Repository<>();
         Repository<String, Client> clientRepo = new Repository<>();
         Repository<String, Cashier> cashierRepo = new Repository<>();
