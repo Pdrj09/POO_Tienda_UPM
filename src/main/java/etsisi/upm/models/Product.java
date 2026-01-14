@@ -2,13 +2,10 @@ package etsisi.upm.models;
 
 import etsisi.upm.util.Constants;
 import etsisi.upm.io.KV;
-import etsisi.upm.io.Presentable;
 import etsisi.upm.util.Categories;
-import etsisi.upm.util.Utilities;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 //We asign the variables
 public class Product extends Sellable {
@@ -58,17 +55,8 @@ public class Product extends Sellable {
 
 
     //getters and setters
-
-    public void setMaxPers(int maxPers) {
-        this.maxPers = maxPers;
-    }
-
     public int getMaxPers() {
         return maxPers;
-    }
-
-    public List<KV> getPresentableDetails() {
-        return new ArrayList<>();
     }
 
     @Override
