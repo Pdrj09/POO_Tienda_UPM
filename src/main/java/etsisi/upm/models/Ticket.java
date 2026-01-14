@@ -13,12 +13,12 @@ import java.util.*;
 public class Ticket <P extends Product> implements Presentable {
 
     //Stores the list of products and their quantities in the current transaction
-    private String id;
-    private LocalDateTime closeDate;
-    private TicketStates state;
+    protected String id;
+    protected LocalDateTime closeDate;
+    protected TicketStates state;
 
-    private final Map<Product, Integer> list;
-    private final Map<Categories,Integer> categories;
+    protected Map<Product, Integer> list;
+    protected Map<Categories,Integer> categories;
 
     public Ticket(String id){
         LocalDateTime now = LocalDateTime.now();
@@ -57,7 +57,7 @@ public class Ticket <P extends Product> implements Presentable {
         return this;
     }
 
-    private int countProducts(){
+    protected int countProducts(){
         int total = Constants.BASE_AMOUNT_OF_PRODUCT;
         for(Integer amount : this.list.values()){
             total += amount;
@@ -97,7 +97,7 @@ public class Ticket <P extends Product> implements Presentable {
         list.remove(prod);
     }
 
-    private double totalPrice(){
+    protected double totalPrice(){
         double sum=Constants.BASE_PRICE;
         for(Map.Entry<Product, Integer> entry : list.entrySet()){
             double price = calculateProductPrice(entry.getKey());
@@ -108,7 +108,7 @@ public class Ticket <P extends Product> implements Presentable {
         return Utilities.round(sum);
     }
 
-    private double totalDiscount(){
+    protected double totalDiscount(){
         double sum=Constants.BASE_DISCOUNT;
         for(Map.Entry< Product, Integer> entry : list.entrySet()){
             Product product = entry.getKey();

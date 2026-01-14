@@ -257,6 +257,7 @@ public class Constants {
     public static final String ERROR_INVALID_OPTION = "invalid option";
     public static final String ERROR_FEW_PARAMS = "more params required";
     public static final String ERROR_NONEXISTEN_ID = "id nonexistent";
+    public static final String ERROR_TICKET_NONEXISTENT_TYPE = "wrong ticket type or too many arguments";
     public static final String ERROR_FILE_NOTFOUND = "file not found";
     public static final String ERROR_EMPTY_TICKET = "The ticket cannot be empty";
 

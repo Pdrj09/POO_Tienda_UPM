@@ -1,14 +1,11 @@
 package etsisi.upm.controllers;
 
+import etsisi.upm.models.*;
 import etsisi.upm.util.Constants;
 import etsisi.upm.io.View;
-import etsisi.upm.models.Product;
-import etsisi.upm.models.ProductPersonalized;
-import etsisi.upm.models.Ticket;
 import etsisi.upm.models.repositories.*;
 import etsisi.upm.models.users.Cashier;
 import etsisi.upm.models.users.Client;
-import etsisi.upm.models.ServiceProduct;
 import etsisi.upm.util.Utilities;
 
 import java.util.*;
@@ -47,15 +44,7 @@ public class TicketController {
                 clientId = querySplit[Constants.QUERY_TICKET_POS_USERID-index];
 
                 if(querySplit.length == Constants.QUERY_TICKET_POS_TICKET_TYPE){
-                    if (querySplit[Constants.QUERY_TICKET_POS_TICKET_TYPE].contains("-p")){
-
-                    }else if(querySplit[Constants.QUERY_TICKET_POS_TICKET_TYPE].contains("-s")){
-
-                    }else if (querySplit[Constants.QUERY_TICKET_POS_TICKET_TYPE].contains("-c")){
-
-                    }else{
-                        throw new IllegalArgumentException(Constants.ERROR_TOOMANY_ARGUMENTS);
-                    }
+                    this.newTicket(ticketId,cashierId,clientId,querySplit[Constants.QUERY_TICKET_POS_TICKET_TYPE]);
                 }else {
                     this.newTicket(ticketId, cashierId, clientId);
                 }
@@ -107,6 +96,45 @@ public class TicketController {
             default:
                 throw new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
         }
+    }
+    private Ticket newTicket(String ticketId, String cashierId, String clientId, String ticketType){
+        // NEW ticket function that is going to work with the ticket types
+        Cashier cashier = this.cashierRepository.findByIdOrThrow(cashierId);
+        Client client = this.clientRepository.findByIdOrThrow(clientId);
+
+        Ticket ticket;
+
+        if(ticketType.equals("-s")) {
+            if (ticketId != null) {
+                ticket = new TicketOfServices(ticketId);
+            } else {
+                ticket = new TicketOfServices();
+                ticketId = ticket.getId();
+            }
+        }else if (ticketType.equals("-p")){
+            if (ticketId != null) {
+                ticket = new TicketOfProducts(ticketId);
+            } else {
+                ticket = new TicketOfProducts();
+                ticketId = ticket.getId();
+            }
+        }else if (ticketType.equals("-c")) {
+            if (ticketId != null) {
+                ticket = new TicketOfMixed(ticketId);
+            } else {
+                ticket = new TicketOfMixed();
+                ticketId = ticket.getId();
+            }
+        }
+        else{
+            throw new IllegalArgumentException(Constants.ERROR_TICKET_NONEXISTENT_TYPE);
+        }
+
+        this.ticketRepository.add(ticketId, ticket);
+        cashier.addTicket(ticket);
+        client.addAssociatedTicket(ticket);
+
+        return ticket;
     }
 
     private Ticket newTicket(String ticketId, String cashierId, String clientId){
