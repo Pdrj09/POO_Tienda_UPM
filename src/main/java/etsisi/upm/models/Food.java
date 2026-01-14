@@ -21,6 +21,10 @@ public class Food extends ServiceProduct {
         return ChronoUnit.DAYS;
     }
 
+    @Override
+    public Food copy() {
+        return new Food(id, name, price, numPeople, expirationDate);
+    }
 
     // --- toString() ---
     @Override
