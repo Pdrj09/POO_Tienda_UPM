@@ -22,11 +22,11 @@ public class Main {
     public static void main(String [] args) {
         //We create the repositories and the controllers with them
         Repository<Integer, Product> productRepo = new Repository<>(Constants.MAX_SIZE);
-        Repository<String, Ticket> ticketRepo = new Repository<>();
+        Repository<String, Ticket<?>> ticketRepo = new Repository<>();
         Repository<String, Client> clientRepo = new Repository<>();
         Repository<String, Cashier> cashierRepo = new Repository<>();
 
-        ProductController productController = new ProductController(productRepo,ticketRepo);
+        ProductController productController = new ProductController(productRepo, ticketRepo);
         TicketController ticketController = new TicketController(ticketRepo, clientRepo, cashierRepo, productRepo);
         ClientController clientController = new ClientController(clientRepo, cashierRepo);
         CashierController cashierController = new CashierController(cashierRepo, clientRepo);

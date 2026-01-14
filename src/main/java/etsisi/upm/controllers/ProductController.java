@@ -17,9 +17,9 @@ import java.util.Collection;
 
 public class ProductController {
     private final Repository<Integer, Product> productRepository;
-    private final Repository<String, Ticket> ticketRepository;
+    private final Repository<String, Ticket<?>> ticketRepository;
 
-    public ProductController(Repository<Integer, Product> productRepository, Repository<String, Ticket> ticketRepository) {
+    public ProductController(Repository<Integer, Product> productRepository, Repository<String, Ticket<?>> ticketRepository) {
         this.productRepository = productRepository;
         this.ticketRepository = ticketRepository;
     }
