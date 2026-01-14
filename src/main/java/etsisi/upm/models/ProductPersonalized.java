@@ -67,7 +67,7 @@ public class ProductPersonalized extends Product {
 
     // Archivo: etsisi.upm.models/ProductPersonalized.java
     @Override
-    public int compareTo(Product other) {
+    public int compareTo(Sellable other) {
         //compareto of the father
         int comparison = super.compareTo(other);
         if (comparison != 0)
