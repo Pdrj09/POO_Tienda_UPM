@@ -41,7 +41,8 @@ public abstract class ServiceProduct extends Sellable {
         }
     }
 
-    @
+    @Override
+    public abstract ServiceProduct copy();
 
     // Abstract methods
     public abstract int getMinimumCreationTime();
