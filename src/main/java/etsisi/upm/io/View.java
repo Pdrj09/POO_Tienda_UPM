@@ -1,5 +1,6 @@
 package etsisi.upm.io;
 
+import etsisi.upm.models.Sellable;
 import etsisi.upm.util.Constants;
 import etsisi.upm.models.Product;
 import etsisi.upm.models.Ticket;
@@ -72,8 +73,8 @@ public class View {
                 result.add(ticket.toViewKVList());
             if (!isFilteredList) {
                 //detailed breakdown of the products
-                for (Map.Entry<? extends Product, Integer> entry : ticket.getList().entrySet()) {
-                    Product p = (Product) entry.getKey();
+                for (Map.Entry<? extends Sellable, Integer> entry : ticket.getList().entrySet()) {
+                    Sellable p = (Sellable) entry.getKey();
                     int quantity = entry.getValue();
                     List<KV> prodKV = ticket.getDetailedKVsForProductLine(p, quantity);
                     result.add(prodKV);

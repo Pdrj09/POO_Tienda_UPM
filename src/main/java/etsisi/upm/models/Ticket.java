@@ -104,7 +104,7 @@ public abstract class Ticket <P extends Sellable> implements Presentable {
         return Utilities.round(sum);
     }
 
-    public double calculateProductPrice(P product){
+    public double calculateProductPrice(Sellable product){
         double price = product.getPrice();
 
         if (product instanceof ProductPersonalized){
@@ -114,14 +114,14 @@ public abstract class Ticket <P extends Sellable> implements Presentable {
         return price;
     }
 
-    public double getTotalDiscountForProduct(P prod) {
+    public double getTotalDiscountForProduct(Sellable prod) {
         Integer amount = this.list.get(prod);
         double discountPerUnit = getDiscountPerUnit(prod);
         double rawTotalDiscount = discountPerUnit * amount;
         return Utilities.round(rawTotalDiscount);
     }
 
-    public double getDiscountPerUnit(P prod) {
+    public double getDiscountPerUnit(Sellable prod) {
         if (categories.get(prod.getCategory()) > Constants.MIN_FOR_DISCOUNT){
             double priceToUseForDiscount = this.calculateProductPrice(prod);
             double discount = priceToUseForDiscount * prod.getCategory().getDiscount();
@@ -190,7 +190,7 @@ public abstract class Ticket <P extends Sellable> implements Presentable {
     }
 
     //look if the product already exists
-    public boolean containsProduct(Product prod) {
+    public boolean containsProduct(P prod) {
         return this.list.containsKey(prod);
     }
 
@@ -216,7 +216,7 @@ public abstract class Ticket <P extends Sellable> implements Presentable {
     }
 
     //for personalized products
-    public List<KV> getDetailedKVsForProductLine(P p, int quantity) {
+    public List<KV> getDetailedKVsForProductLine(Sellable p, int quantity) {
 
         List<KV> prodKV = new ArrayList<>(p.toViewKVList());
         if (p instanceof ProductPersonalized) {
