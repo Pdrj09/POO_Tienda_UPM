@@ -7,7 +7,7 @@ import java.util.*;
 
 //REPRESENTS A CASHIER IN THE SYSTEM
 public class Cashier extends User {
-    private final Set<Ticket> createdTickets;
+    private final Set<Ticket<?>> createdTickets;
     private final Set<Client> associatedClients;
 
     //CONSTRUCTOR W/ AUTOMATIC ID GENERATION
@@ -19,7 +19,7 @@ public class Cashier extends User {
 
     //PUBLIC METHODS
     //this two methods returns an IMMUTABLE copy for more protection
-    public Set<Ticket> getTickets() {
+    public Set<Ticket<?>> getTickets() {
         return this.createdTickets;
     }
 
