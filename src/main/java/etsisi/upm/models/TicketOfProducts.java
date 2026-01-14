@@ -7,9 +7,10 @@ import etsisi.upm.util.Utilities;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Set;
 import java.util.TreeMap;
 
-public class TicketOfProducts extends Ticket {
+public class TicketOfProducts extends Ticket<Product> {
     public TicketOfProducts(String id){
         LocalDateTime now = LocalDateTime.now();
         String formatted = Utilities.formatDate(now);
@@ -21,4 +22,27 @@ public class TicketOfProducts extends Ticket {
     public TicketOfProducts(){
         super(String.format(Constants.ID_FORMAT, new Random().nextInt(Constants.MAX_RANDOM)));
     }
+
+    @Override
+    public String close() {
+        if (!list.isEmpty()) {
+            int quantity;
+            Set<Product> products = list.keySet();
+            for (Product prod : products) {
+                quantity = list.get(prod);
+
+                list.remove(prod);
+                list.put(prod.copy(), quantity);
+            }
+            this.closeDate = LocalDateTime.now();
+            String date = Utilities.formatDate(this.closeDate);
+            this.id += Constants.HYPEN + date;
+            this.state = TicketStates.CLOSED;
+
+            return this.getId();
+        } else {
+            throw new SecurityException(Constants.ERROR_EMPTY_TICKET);
+        }
+    }
+
 }
