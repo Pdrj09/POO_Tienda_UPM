@@ -3,6 +3,7 @@ package etsisi.upm.models;
 import etsisi.upm.io.KV;
 import etsisi.upm.io.Presentable;
 import etsisi.upm.util.Utilities;
+import etsisi.upm.util.Categories;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,13 +13,15 @@ public abstract class Sellable implements Comparable<Sellable>, Presentable {
     protected final int id; // It is a global variable as the id cant change once the object is created
     protected String name;
     protected double price;
+    protected Categories category;
 
     public abstract Sellable copy();
 
-    public Sellable(int id, String name, double price) {
+    public Sellable(int id, String name, double price, Categories category) {
         this.id = id;
         this.name = name;
         this.price = price;
+        this.category = category;
     }
 
     public int getId() {
@@ -31,6 +34,14 @@ public abstract class Sellable implements Comparable<Sellable>, Presentable {
 
     public double getPrice() {
         return Utilities.round(price);
+    }
+
+    public Categories getCategory() {
+        return category;
+    }
+
+    public void setCategory(Categories category) {
+        this.category = category;
     }
 
     public void setName(String name) {

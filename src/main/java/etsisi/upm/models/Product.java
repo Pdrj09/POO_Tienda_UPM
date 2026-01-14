@@ -13,19 +13,18 @@ import java.util.Objects;
 //We asign the variables
 public class Product extends Sellable {
 
-    protected Categories category;
     protected boolean personalizable;
     protected int maxPers;
 
     //this is the constructor that creates a product
     public Product(int id, String name, double price, Categories category) {
-        super(id, name, price);
+        super(id, name, price, category);
         this.category = category;
         this.personalizable = false;
     }
     //if it has maxpers we consider that the product can be personalized
     public Product(int id, String name, double price, Categories category, int maxPers ) {
-        super(id, name, price);
+        super(id, name, price, category);
         this.category = category;
         this.personalizable = false;
         this.maxPers = maxPers;
@@ -66,14 +65,6 @@ public class Product extends Sellable {
 
     public int getMaxPers() {
         return maxPers;
-    }
-
-    public Categories getCategory() {
-        return category;
-    }
-
-    public void setCategory(Categories category) {
-        this.category = category;
     }
 
     public List<KV> getPresentableDetails() {
