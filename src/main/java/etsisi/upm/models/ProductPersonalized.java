@@ -73,8 +73,7 @@ public class ProductPersonalized extends Product {
         if (comparison != 0)
             return comparison;
         //we compare the personalizations
-        if (other instanceof ProductPersonalized) {
-            ProductPersonalized otherPersonalized = (ProductPersonalized) other;
+        if (other instanceof ProductPersonalized otherPersonalized) {
             //we sort the lists
             List<String> thisCustoms = new ArrayList<>(this.customizations);
             List<String> otherCustoms = new ArrayList<>(otherPersonalized.getCustomizations());
