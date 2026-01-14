@@ -1,5 +1,6 @@
 package etsisi.upm.models;
 
+import etsisi.upm.util.Categories;
 import etsisi.upm.util.Constants;
 import etsisi.upm.util.TicketStates;
 import etsisi.upm.util.Utilities;
@@ -11,7 +12,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 public class TicketOfMixed extends Ticket<Sellable> {
-    public TicketOfMixed(String id){
+    public TicketOfMixed(String id) {
         LocalDateTime now = LocalDateTime.now();
         String formatted = Utilities.formatDate(now);
         super.id = formatted + Constants.HYPEN + id;
@@ -21,6 +22,31 @@ public class TicketOfMixed extends Ticket<Sellable> {
     }
     public TicketOfMixed(){
         super(String.format(Constants.ID_FORMAT, new Random().nextInt(Constants.MAX_RANDOM)));
+    }
+
+    @Override
+    public Ticket<Sellable> addProduct(Sellable prod, int amount) {
+        if (countProducts() + amount > Constants.MAX_SIZE_TICKET)
+            throw new IllegalStateException(Constants.ERROR_MAXSIZE_TICKET + Constants.MAX_SIZE_TICKET);
+
+        if (amount < Constants.MIN_AMMOUNT) throw new IllegalStateException(Constants.ERROR_ZERO_AMOUNT);
+
+        if (this.list.containsKey(prod)) {
+            this.list.compute(prod, (k, currentAmount) -> currentAmount + amount);
+        }else
+            this.list.put(prod, amount);
+
+        if (prod instanceof ServiceProduct service) {
+            double calculatedTotal = service.getPricePerPerson() * amount;
+            service.setFinalPrice(calculatedTotal);
+        }
+
+        Categories category = prod.getCategory();
+
+        this.categories.put(category, this.categories.getOrDefault(category, Constants.BASE_AMOUNT_OF_CATEGORY) + amount);
+        this.state = TicketStates.ACTIVE;
+
+        return this;
     }
 
     @Override

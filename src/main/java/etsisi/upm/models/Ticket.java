@@ -30,29 +30,7 @@ public abstract class Ticket <P extends Sellable> implements Presentable {
         this(String.format(Constants.ID_FORMAT, new Random().nextInt(Constants.MAX_RANDOM)));
     }
 
-    public Ticket<P> addProduct(P prod, int amount) {
-        if (countProducts() + amount > Constants.MAX_SIZE_TICKET)  throw new IllegalStateException(Constants.ERROR_MAXSIZE_TICKET + Constants.MAX_SIZE_TICKET);
-
-        if (amount < Constants.MIN_AMMOUNT) throw new IllegalStateException(Constants.ERROR_ZERO_AMOUNT);
-
-        if (this.list.containsKey(prod)) {
-            int currentAmount = this.list.get(prod);
-            this.list.put(prod, currentAmount + amount);
-        }else
-            this.list.put(prod, amount);
-
-        if (prod instanceof ServiceProduct service) {
-            double calculatedTotal = service.getPricePerPerson() * amount;
-            service.setFinalPrice(calculatedTotal);
-        }
-
-        Categories category = prod.getCategory();
-
-        this.categories.put(category, this.categories.getOrDefault(category, Constants.BASE_AMOUNT_OF_CATEGORY) + amount);
-        this.state = TicketStates.ACTIVE;
-
-        return this;
-    }
+    public abstract Ticket<P> addProduct(Sellable prod, int amount);
 
     protected int countProducts(){
         int total = Constants.BASE_AMOUNT_OF_PRODUCT;
