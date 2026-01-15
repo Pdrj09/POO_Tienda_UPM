@@ -47,6 +47,24 @@ public class TicketOfMixed extends Ticket<Sellable> {
             int quantity;
             Set<Sellable> p = list.keySet();
             Set<Sellable> products = new HashSet<>(p);
+
+            boolean hasProduct = false;
+            boolean hasService = false;
+
+            for (Sellable s : products) {
+                if (s instanceof Product) {
+                    hasProduct = true;
+                } else if (s instanceof ServiceProduct) {
+                    hasService = true;
+                }
+
+                if (hasProduct && hasService) break;
+            }
+
+            if (!(hasProduct && hasService)) {
+                throw new IllegalArgumentException(Constants.ERROR_INVALID_PRINT_MIXED_TICKET);
+            }
+
             for (Sellable prod : products) {
                 quantity = list.get(prod);
 
