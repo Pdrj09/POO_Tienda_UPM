@@ -6,10 +6,7 @@ import etsisi.upm.util.TicketStates;
 import etsisi.upm.util.Utilities;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Random;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 public class TicketOfMixed extends Ticket<Sellable> {
     public TicketOfMixed(String id) {
@@ -53,7 +50,8 @@ public class TicketOfMixed extends Ticket<Sellable> {
     public String close() {
         if (!list.isEmpty()) {
             int quantity;
-            Set<Sellable> products = list.keySet();
+            Set<Sellable> p = list.keySet();
+            Set<Sellable> products = new HashSet<>(p);
             for (Sellable prod : products) {
                 quantity = list.get(prod);
 

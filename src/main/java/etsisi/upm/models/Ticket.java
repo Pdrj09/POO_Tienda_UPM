@@ -49,10 +49,6 @@ public abstract class Ticket <P extends Sellable> implements Presentable {
 
     public abstract String close();
 
-    public void deleteProd(P prod) {
-        list.remove(prod);
-    }
-
     protected double totalPrice(){
         double sum=Constants.BASE_PRICE;
         for(Map.Entry<P, Integer> entry : list.entrySet()){
