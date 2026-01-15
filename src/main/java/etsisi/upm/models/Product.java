@@ -61,6 +61,8 @@ public class Product extends Sellable {
 
     @Override
     public Product copy() {
+        if (this.personalizable)
+            return new Product(id, name, price, category, maxPers);
         return new Product(id, name, price, category);
     }
 
