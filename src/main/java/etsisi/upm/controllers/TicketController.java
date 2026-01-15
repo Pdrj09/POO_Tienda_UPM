@@ -35,7 +35,7 @@ public class TicketController {
             case Constants.TICKET_NEW:
                 int index;
 
-                if(Utilities.isPositiveInteger(querySplit[Constants.QUERY_TICKET_POS_TICKETID])){
+                if(Utilities.isPositiveInteger(querySplit[Constants.QUERY_TICKET_POS_TICKETID])) {
                     ticketId = querySplit[Constants.QUERY_TICKET_POS_TICKETID];
                     index = Constants.TICKET_WITH_ID_INDEX;
                 } else{
@@ -49,16 +49,22 @@ public class TicketController {
                 cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID-index];
                 clientId = querySplit[Constants.QUERY_TICKET_POS_USERID-index];
 
-
-
-                if(querySplit.length == Constants.QUERY_TICKET_POS_TICKET_TYPE){
-                    this.newTicket(ticketId,cashierId,clientId,querySplit[Constants.QUERY_TICKET_POS_TICKET_TYPE]);
-                } else if (querySplit.length == Constants.QUERY_TICKET_POS_PRODID){
-                    this.newTicket(ticketId, cashierId, clientId, Constants.P_OPTION);
+                String ticketType;
+                if (querySplit[querySplit.length - 1].matches(Constants.REGEX_TICKET_OPT)) {
+                    ticketType = querySplit[querySplit.length - 1];
+                } else if (querySplit[querySplit.length - 1].matches(Constants.REGEX_IS_DNI)) {
+                    ticketType = Constants.P_OPTION;
+                } else {
+                    throw new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
                 }
 
-                // it returns an ok status
-                return Constants.okStatus(command.split(" ")[0], command.split(" ")[1]);
+                if(querySplit.length <= Constants.QUERY_TICKET_MAX_LENGTH){
+                    System.out.println("ale si se ve esto no tiene sentido nada");
+                    this.newTicket(ticketId, cashierId, clientId, ticketType);
+                    return Constants.okStatus(command.split(" ")[0], command.split(" ")[1]);
+                }
+
+                throw new IllegalArgumentException(Constants.ERROR_TOOMANY_ARGUMENTS);
 
             case Constants.TICKET_ADD:
 

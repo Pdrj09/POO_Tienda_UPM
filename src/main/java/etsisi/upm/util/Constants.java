@@ -30,6 +30,7 @@ public class Constants {
     public static final int QUERY_TICKET_POS_TICKET_TYPE = 4;
     public static final int TICKET_WITH_ID_INDEX = 0;
     public static final int TICKET_WITHOUT_ID_INDEX = 1;
+    public static final int QUERY_TICKET_MAX_LENGTH = 5;
 
     public static final int QUERY_PRODUCT_POS_INSTRUCTION = 0;
     public static final int QUERY_PRODUCT_POS_PRODUCTID = 1;
@@ -113,10 +114,10 @@ public class Constants {
     // regex const
     public static final String REGEX_INIT = "^";
     public static final String REGEX_BLANK_SPACE = "\\s*";
-    public static final String REGEX_DOUBLE_QUOTE = "\"";
     public static final String REGEX_TO_SPLIT = " (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
-    public static final String REGEX_PERSONALIZED = "(?<=--p)";
     public static final String REGEX_CASH_ID = "^UW\\d{7}$";
+    public static final String REGEX_IS_DNI = "^[0-9]{8}[a-zA-Z]$";
+    public static final String REGEX_TICKET_OPT = "^-[psc]$";
 
     // products const
     public static final String PRODUCT = "prod";
