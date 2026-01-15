@@ -1,9 +1,6 @@
 package etsisi.upm.models;
 
-import etsisi.upm.util.Categories;
-import etsisi.upm.util.Constants;
-import etsisi.upm.util.TicketStates;
-import etsisi.upm.util.Utilities;
+import etsisi.upm.util.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -12,13 +9,8 @@ public class TicketOfServices extends Ticket<ServiceProduct> {
     public TicketOfServices(String id){
         LocalDateTime now = LocalDateTime.now();
         String formatted = Utilities.formatDate(now);
-        super.id = formatted + Constants.HYPEN +id;
-        super.list = new TreeMap<ServiceProduct, Integer>();
-        super.categories = new HashMap<>();
-        super.state = TicketStates.EMPTY;
-    }
-    public TicketOfServices(){
-        super(String.format(Constants.ID_FORMAT, new Random().nextInt(Constants.MAX_RANDOM)));
+        id = formatted + Constants.HYPEN +id;
+        super(id);
     }
 
     @Override

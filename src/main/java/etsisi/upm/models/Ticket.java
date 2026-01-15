@@ -21,13 +21,9 @@ public abstract class Ticket <P extends Sellable> implements Presentable {
         LocalDateTime now = LocalDateTime.now();
         String formatted = Utilities.formatDate(now);
         this.id = formatted + Constants.HYPEN +id;
-        this.list = new TreeMap<P, Integer>();
+        this.list = new TreeMap<>();
         this.categories = new HashMap<>();
         this.state = TicketStates.EMPTY;
-    }
-
-    public Ticket() {
-        this(String.format(Constants.ID_FORMAT, new Random().nextInt(Constants.MAX_RANDOM)));
     }
 
     public abstract Ticket<P> addProduct(Sellable prod, int amount);

@@ -12,13 +12,8 @@ public class TicketOfMixed extends Ticket<Sellable> {
     public TicketOfMixed(String id) {
         LocalDateTime now = LocalDateTime.now();
         String formatted = Utilities.formatDate(now);
-        super.id = formatted + Constants.HYPEN + id;
-        super.list = new TreeMap<Sellable, Integer>();
-        super.categories = new HashMap<>();
-        super.state = TicketStates.EMPTY;
-    }
-    public TicketOfMixed(){
-        super(String.format(Constants.ID_FORMAT, new Random().nextInt(Constants.MAX_RANDOM)));
+        id = formatted + Constants.HYPEN +id;
+        super(id);
     }
 
     @Override
