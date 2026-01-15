@@ -59,7 +59,6 @@ public class TicketController {
                 }
 
                 if(querySplit.length <= Constants.QUERY_TICKET_MAX_LENGTH){
-                    System.out.println("ale si se ve esto no tiene sentido nada");
                     this.newTicket(ticketId, cashierId, clientId, ticketType);
                     return Constants.okStatus(command.split(" ")[0], command.split(" ")[1]);
                 }
