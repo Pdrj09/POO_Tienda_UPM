@@ -29,13 +29,13 @@ public class Cashier extends User {
 
     public List<String> getTicketsSummaryList() {
         List<String> summary = new ArrayList<>();
-        for (Ticket ticket : this.createdTickets) {
+        for (Ticket<?> ticket : this.createdTickets) {
             summary.add(ticket.getId() + Constants.ARROW + ticket.getState().name());
         }
         return summary;
     }
 
-    public void deleteTicket(Ticket ticket){
+    public void deleteTicket(Ticket<?> ticket){
         this.createdTickets.remove(ticket);
     }
 
@@ -50,7 +50,7 @@ public class Cashier extends User {
         return new Cashier(id, emailCompany, name);
     }
 
-    public void addTicket(Ticket ticket){
+    public void addTicket(Ticket<?> ticket){
         this.createdTickets.add(ticket);
     }
 
