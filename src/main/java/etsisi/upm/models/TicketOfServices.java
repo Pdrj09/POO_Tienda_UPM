@@ -33,6 +33,8 @@ public class TicketOfServices extends Ticket<ServiceProduct> {
 
             this.categories.put(category, this.categories.getOrDefault(category, Constants.BASE_AMOUNT_OF_CATEGORY) + amount);
             this.state = TicketStates.ACTIVE;
+        } else {
+            throw new IllegalArgumentException(Constants.ERROR_INVALID_TICKET_PROD_TYPE);
         }
         return this;
     }

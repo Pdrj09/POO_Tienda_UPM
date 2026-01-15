@@ -15,6 +15,9 @@ public class TicketOfProducts extends Ticket<Product> {
 
     @Override
     public Ticket<Product> addProduct(Sellable prod, int amount) {
+        if (!(prod instanceof Product))
+            throw new IllegalArgumentException(Constants.ERROR_INVALID_TICKET_PROD_TYPE);
+
         if (countProducts() + amount > Constants.MAX_SIZE_TICKET)
             throw new IllegalStateException(Constants.ERROR_MAXSIZE_TICKET + Constants.MAX_SIZE_TICKET);
 

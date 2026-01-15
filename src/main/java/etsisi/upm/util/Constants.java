@@ -262,6 +262,8 @@ public class Constants {
     public static final String ERROR_FILE_NOTFOUND = "file not found";
     public static final String ERROR_EMPTY_TICKET = "The ticket cannot be empty";
 
+    public static final String ERROR_INVALID_TICKET_PROD_TYPE = "Invalid product type at ticket";
+
     public static final int TO_PORCENTAGE = 100;
     public static final String ARROW = "->";
 
