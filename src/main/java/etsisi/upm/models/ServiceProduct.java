@@ -10,17 +10,25 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-public abstract class ServiceProduct extends Product {
+public class ServiceProduct extends Product {
     private final LocalDateTime expirationDate;
     private int numPeople;
     private double finalPrice;
 
-    public ServiceProduct(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
-        super(id,
-                name,
-                pricePerPerson,
-                Categories.EMPTY);
+    private final int minimumCreationTime;
+    private final ChronoUnit minimumTimeUnit;
+    private final String serviceType;
 
+    public ServiceProduct(int id, String name, double pricePerPerson, int maxPeople,
+                          LocalDateTime expirationDate, int minimumCreationTime,
+                          ChronoUnit minimumTimeUnit, String serviceType) {
+        super(id, name, pricePerPerson, Categories.EMPTY);
+
+        this.minimumCreationTime = minimumCreationTime;
+        this.minimumTimeUnit = minimumTimeUnit;
+        this.serviceType = serviceType;
+
+        //validation people logic
         if (maxPeople <= Constants.SERVICE_PROD_MINPEOPLE)
             throw new IllegalArgumentException(Constants.ERROR_TOOMANY_PEOPLE);
         else if (maxPeople > Constants.TIME_MAX_PEOPLE_SERVICE)
@@ -33,21 +41,32 @@ public abstract class ServiceProduct extends Product {
 
         // time validation
         if (!isFeasible(LocalDateTime.now())) {
-            String timeUnit = getMinimumTimeUnit() == ChronoUnit.HOURS ? Constants.HOURS : Constants.DAYS;
+            String timeUnitStr = this.minimumTimeUnit == ChronoUnit.HOURS ? Constants.HOURS : Constants.DAYS;
             StringBuilder error = new StringBuilder();
             error.append(Constants.ERROR_SERVICE_DATE_FEASIBILITY);
             error.append(getMinimumCreationTime());
             error.append(Constants.STR_BLANK_SPACE);
-            error.append(timeUnit);
+            error.append(timeUnitStr);
             error.append(Constants.IN_THE_FUTURE);
             throw new IllegalArgumentException(String.valueOf(error));
         }
     }
 
-    // Abstract methods
-    public abstract int getMinimumCreationTime();
+    // creation methods
 
-    public abstract ChronoUnit getMinimumTimeUnit();
+    public static ServiceProduct createMeeting(int id, String name, double price, int people, LocalDateTime date) {
+        return new ServiceProduct(id, name, price, people, date,
+                Constants.TIME_MEETING_PLANNING_HOURS, ChronoUnit.HOURS, Constants.STR_MEETING);
+    }
+
+    public static ServiceProduct createFood(int id, String name, double price, int people, LocalDateTime date) {
+        return new ServiceProduct(id, name, price, people, date,
+                Constants.TIME_FOOD_PLANNING_DAYS, ChronoUnit.DAYS, Constants.STR_FOOD);
+    }
+
+    // Abstract methods
+    public int getMinimumCreationTime() {return this.minimumCreationTime;}
+    public ChronoUnit getMinimumTimeUnit(){return this.minimumTimeUnit;}
 
     // logic
     public boolean isFeasible(LocalDateTime creationTime) {
@@ -94,7 +113,7 @@ public abstract class ServiceProduct extends Product {
         StringBuilder builder = new StringBuilder();
 
         builder.append(Constants.OPEN_BRACE);
-        builder.append(Constants.STR_SERVICE_PRODUCT);
+        builder.append(serviceType);
         builder.append(Constants.STR_PROD_ID).append(getId());
         builder.append(Constants.STR_PROD_NAME).append(getName()).append(Constants.QUOTE);
         builder.append(Constants.STR_CATEGORY).append(getCategory());

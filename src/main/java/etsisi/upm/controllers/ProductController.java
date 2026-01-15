@@ -1,5 +1,6 @@
 package etsisi.upm.controllers;
 
+import etsisi.upm.models.ServiceProduct;
 import etsisi.upm.util.Constants;
 import etsisi.upm.io.View;
 import etsisi.upm.models.Ticket;
@@ -7,8 +8,6 @@ import etsisi.upm.models.repositories.Repository;
 import etsisi.upm.util.Categories;
 import etsisi.upm.models.Product;
 
-import etsisi.upm.models.Food;
-import etsisi.upm.models.Meeting;
 import etsisi.upm.util.Utilities;
 
 import java.time.LocalDate;
@@ -145,13 +144,13 @@ public class ProductController {
     }
 
     private Product addFood(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
-        Food food = new Food(id, name, pricePerPerson, maxPeople, expirationDate);
+        ServiceProduct food = ServiceProduct.createFood(id, name, pricePerPerson, maxPeople, expirationDate);
         this.productRepository.add(food.getId(), food);
         return food;
     }
 
     private Product addMeeting(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
-            Meeting meeting = new Meeting(id, name, pricePerPerson, maxPeople, expirationDate);
+            ServiceProduct meeting = ServiceProduct.createMeeting(id, name, pricePerPerson, maxPeople, expirationDate);
             this.productRepository.add(meeting.getId(), meeting);
             return meeting;
     }
