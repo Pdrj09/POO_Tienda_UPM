@@ -9,7 +9,7 @@ import java.util.*;
 //REPRESENTS DE CLIENT IN THE SYSTEM
 public class Client extends User {
     private String strIdCashier;
-    private final Set<Ticket> associatedTickets;
+    private final Set<Ticket<?>> associatedTickets;
 
 
     //CONSTRUCTOR W/ ALL PARAMETERS
@@ -23,7 +23,7 @@ public class Client extends User {
     }
 
     //GETTERS, public methods
-    public Set<Ticket> getAssociatedTickets() {
+    public Set<Ticket<?>> getAssociatedTickets() {
         return associatedTickets;
     }
 
@@ -31,11 +31,11 @@ public class Client extends User {
         this.strIdCashier = strIdCashier;
     }
 
-    public void addAssociatedTicket(Ticket ticket){
+    public void addAssociatedTicket(Ticket<?> ticket){
         this.associatedTickets.add(ticket);
     }
 
-    public void deleteTicket(Ticket ticket){
+    public void deleteTicket(Ticket<?> ticket){
         this.associatedTickets.remove(ticket);
     }
 
