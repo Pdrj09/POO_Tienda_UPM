@@ -121,26 +121,16 @@ public class TicketController {
         Ticket<?> ticket;
 
         if(ticketType.equals("-s")) {
-            if (ticketId != null) {
-                ticket = new TicketOfServices(ticketId);
-            } else {
-                ticket = new TicketOfServices();
-                ticketId = ticket.getId();
-            }
-        }else if (ticketType.equals("-p")){
-            if (ticketId != null) {
+
+            ticket = new TicketOfServices(ticketId);
+
+        } else if (ticketType.equals("-p")){
+
                 ticket = new TicketOfProducts(ticketId);
-            } else {
-                ticket = new TicketOfProducts();
-                ticketId = ticket.getId();
-            }
-        }else if (ticketType.equals("-c")) {
-            if (ticketId != null) {
+
+        } else if (ticketType.equals("-c")) {
+
                 ticket = new TicketOfMixed(ticketId);
-            } else {
-                ticket = new TicketOfMixed();
-                ticketId = ticket.getId();
-            }
         }
         else{
             throw new IllegalArgumentException(Constants.ERROR_TICKET_NONEXISTENT_TYPE);
