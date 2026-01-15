@@ -116,7 +116,8 @@ public class Constants {
     public static final String REGEX_BLANK_SPACE = "\\s*";
     public static final String REGEX_TO_SPLIT = " (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
     public static final String REGEX_CASH_ID = "^UW\\d{7}$";
-    public static final String REGEX_IS_DNI = "^[0-9]{8}[a-zA-Z]$";
+    public static final String REGEX_IS_DNI =
+            "^([0-9]{8}[A-Z]|[XYZ][0-9]{7}[A-Z]|[ABCDEFGHJKLMNPQRSUVW][0-9]{7}[0-9A-J])$";
     public static final String REGEX_TICKET_OPT = "^-[psc]$";
 
     // products const
