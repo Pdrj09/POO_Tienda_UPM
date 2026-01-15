@@ -34,6 +34,12 @@ public class ProductPersonalized extends Product {
     }
 
     @Override
+    public ProductPersonalized copy() {
+        return new ProductPersonalized(new Product(id, name, price, category, maxPers),
+                customizations);
+    }
+
+    @Override
     public int hashCode() {
         int result = Integer.hashCode(this.getId());
         result = 31 * result + new HashSet<>(this.customizations).hashCode();
