@@ -7,9 +7,6 @@ import java.util.*;
 
 public class TicketOfServices extends Ticket<ServiceProduct> {
     public TicketOfServices(String id){
-        LocalDateTime now = LocalDateTime.now();
-        String formatted = Utilities.formatDate(now);
-        id = formatted + Constants.HYPEN +id;
         super(id);
     }
 

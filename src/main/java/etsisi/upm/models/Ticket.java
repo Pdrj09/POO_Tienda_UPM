@@ -26,6 +26,8 @@ public abstract class Ticket <P extends Sellable> implements Presentable {
         this.state = TicketStates.EMPTY;
     }
 
+    public Ticket(){}
+
     public abstract Ticket<P> addProduct(Sellable prod, int amount);
 
     protected int countProducts(){
@@ -153,6 +155,34 @@ public abstract class Ticket <P extends Sellable> implements Presentable {
 
     public Map<? extends P, Integer> getList() {
         return Collections.unmodifiableMap(list);
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public LocalDateTime getCloseDate() {
+        return closeDate;
+    }
+
+    public void setCloseDate(LocalDateTime closeDate) {
+        this.closeDate = closeDate;
+    }
+
+    public void setState(TicketStates state) {
+        this.state = state;
+    }
+
+    public void setList(Map<P, Integer> list) {
+        this.list = list;
+    }
+
+    public Map<Categories, Integer> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Map<Categories, Integer> categories) {
+        this.categories = categories;
     }
 
     //look if the product already exists

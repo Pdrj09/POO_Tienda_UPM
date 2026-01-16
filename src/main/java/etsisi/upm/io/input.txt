@@ -3,6 +3,7 @@ echo "Agrego Libro"
 prod add 1 "Libro POO" BOOK 25
 echo "Agrego Camiseta"
 prod add 2 "Camiseta talla:M UPM" CLOTHES 15
+prod add "Camiseta talla:M UPM" CLOTHES 15
 echo "Listo Productos"
 prod list
 echo "Actualizo Nombre y Precio del Libro"
@@ -15,17 +16,9 @@ echo "Creo un Trabajador"
 cash add UW1234567 "pepecurro3" pepe0@upm.es
 cash add "pepecurro2" pepe0@upm.es
 echo "Creo tres cliente listo borro uno y listo"
-client add "Tech S.A." A08123456 tech@email.com C1
-client add "Tech S.A." A08123456 tech@email.com UW1234567
 client add "Pepe3" 55630667S pepe1@upm.es UW1234567
 client add "Pepe2" 98948334B pepe2@upm.es UW1234567
 client add "Pepe1" Y8682724P pepe3@upm.es UW1234567
-
-cash remove UW1234567
-cash tickets UW1234567
-cash add UW1234567 "Cajero Nuevo" nuevo@upm.es
-cash tickets UW1234567
-
 client list
 client remove Y8682724P
 client list
@@ -55,10 +48,10 @@ ticket list
 ticket print 212123 UW1234567
 ticket list
 echo "Trabajamos con productos de personas"
-prod addMeeting 23456 "Reunion Rotonda" 12 2026-12-08 120
-prod addMeeting 23457 "Graduacion ETSISI" 40 2026-12-08 30
-prod addFood 23458 "Cafeteria ETSISI" 5 2026-12-05 100
-prod addFood 23459 "Restaurante Asador" 50 2026-12-04 40
+prod addMeeting 23456 "Reunion Rotonda" 12 2025-12-21 100
+prod addMeeting 23457 "Graduacion ETSISI" 40 2025-12-21 30
+prod addFood 23458 "Cafeteria ETSISI" 5 2025-12-21 300
+prod addFood 23459 "Restaurante Asador" 50 2025-12-21 40
 prod list
 ticket new 212127 UW1234567 98948334B
 ticket add 212127 UW1234567 23456 20
@@ -72,6 +65,19 @@ ticket new 212128 UW1234567 98948334B
 ticket add 212128 UW1234567 5 1
 ticket add 212128 UW1234567 5 3 --pred --pblue --pgreen
 ticket add 212128 UW1234567 6 3 --pred --pblue
-ticket add 212128 UW1234567 23459 15
 ticket print 212128 UW1234567
+echo "Iniciamos productos servicio"
+prod add 2025-12-21 INSURANCE
+prod add 2025-12-24 TRANSPORT
+echo "Iniciamos empresas"
+client add "pepe2" B12345674 pepe5@upm.es UW1234567
+ticket new 212129 UW1234567 B12345674 -s
+ticket add 212129 UW1234567 1S
+ticket add 212129 UW1234567 2S
+ticket print 212129 UW1234567
+ticket new 212130 UW1234567 B12345674 -c
+ticket add 212130 UW1234567 1S
+ticket add 212130 UW1234567 2S
+ticket add 212130 UW1234567 23456 20
+ticket print 212130 UW1234567
 exit

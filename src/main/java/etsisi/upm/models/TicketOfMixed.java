@@ -10,9 +10,6 @@ import java.util.*;
 
 public class TicketOfMixed extends Ticket<Sellable> {
     public TicketOfMixed(String id) {
-        LocalDateTime now = LocalDateTime.now();
-        String formatted = Utilities.formatDate(now);
-        id = formatted + Constants.HYPEN +id;
         super(id);
     }
 
