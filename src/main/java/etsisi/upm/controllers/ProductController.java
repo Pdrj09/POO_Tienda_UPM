@@ -53,6 +53,7 @@ public class ProductController {
 
                 return View.getString(this.addProduct(name,category,price,prodId,maxPers),command);
 
+
             case Constants.PRODUCT_UPDATE:
 
                 prodId = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
@@ -72,6 +73,7 @@ public class ProductController {
                 expirationDate = LocalDate.parse(querySplit[Constants.QUERY_PRODUCT_POS_EXPIRATION]).atStartOfDay();
 
                 return View.getString(this.addFood(prodId, name, price, maxPeople, expirationDate), command);
+
             case Constants.PRODUCT_ADD_MEETING:
 
                 prodId = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
@@ -81,6 +83,7 @@ public class ProductController {
                 expirationDate = LocalDate.parse(querySplit[Constants.QUERY_PRODUCT_POS_EXPIRATION]).atStartOfDay();
 
                 return View.getString(this.addMeeting(prodId, name, price, maxPeople, expirationDate), command);
+
             case Constants.PRODUCT_LIST:
 
                 return View.getString(this.prodList(), command);
@@ -150,9 +153,9 @@ public class ProductController {
     }
 
     private Product addMeeting(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
-            ServiceProduct meeting = ServiceProduct.createMeeting(id, name, pricePerPerson, maxPeople, expirationDate);
-            this.productRepository.add(meeting.getId(), meeting);
-            return meeting;
+        ServiceProduct meeting = ServiceProduct.createMeeting(id, name, pricePerPerson, maxPeople, expirationDate);
+        this.productRepository.add(meeting.getId(), meeting);
+        return meeting;
     }
 
     private int generateAutomaticId() {

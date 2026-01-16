@@ -8,7 +8,10 @@ public enum Categories {
     CLOTHES(0.07),//7%
     BOOK(0.1),//10%
     ELECTRONICS(0.03),//3%
-    EMPTY(0.0);
+    EMPTY(0.0),
+    TRANSPORT(0.0),
+    SHOW(0.0),
+    INSURANCE(0.0);
     private final double discount;
 
     Categories(double discount) {

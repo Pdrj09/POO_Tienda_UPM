@@ -125,6 +125,9 @@ public class Constants {
     public static final String PRODUCT_REMOVE = "remove";
     public static final String PRODUCT_ADD_FOOD = "addFood";
     public static final String PRODUCT_ADD_MEETING = "addMeeting";
+    public static final String PRODUCT_ADD_TRANSPORT = "addTransport";
+    public static final String PRODUCT_ADD_SHOW = "addShow";
+    public static final String PRODUCT_ADD_INSURANCE = "addInsurance";
     public static final String STR_PRODUCT = "class:Product";
     public static final String STR_PROD_NAME = ", name:'";
     public static final String STR_PROD_ID = ", id:";
