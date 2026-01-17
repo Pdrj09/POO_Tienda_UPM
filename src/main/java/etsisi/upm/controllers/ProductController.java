@@ -136,6 +136,7 @@ public class ProductController {
                     categoryName.equals(Constants.STR_SERVICE_INSURANCE))
             {
                 ServiceProduct genericService = new ServiceProduct(nextId, expiration, cat);
+                this.productRepository.add(genericService.getId(), genericService);
                 return genericService;
             }else throw new IllegalArgumentException(Constants.ERROR_SERVICE_CATEGORY);
         }

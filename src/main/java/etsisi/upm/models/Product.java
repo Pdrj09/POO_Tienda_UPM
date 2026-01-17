@@ -1,32 +1,30 @@
 package etsisi.upm.models;
 
+import etsisi.upm.io.Presentable;
 import etsisi.upm.util.Constants;
 import etsisi.upm.io.KV;
 import etsisi.upm.util.Categories;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 //We asign the variables
-public class Product extends Sellable {
+public class Product implements Comparable<Product>, Presentable {
 
-    protected boolean personalizable;
-    protected int maxPers;
+    protected final int id; // It is a global variable as the id cant change once the object is created
+    protected String name;
+    protected double price;
+    protected Categories category;
+
 
     //this is the constructor that creates a product
     public Product(int id, String name, double price, Categories category) {
-        super(id, name, price, category);
+        this.id = id;
         this.category = category;
         this.personalizable = false;
     }
-    //if it has maxpers we consider that the product can be personalized
-    public Product(int id, String name, double price, Categories category, int maxPers ) {
-        super(id, name, price, category);
-        this.category = category;
-        this.personalizable = false;
-        this.maxPers = maxPers;
-        this.personalizable = true;
-    }
+
     // update certain characteristics of product
     public int update(String name, Categories category, double price) {
         this.name = name;
@@ -70,5 +68,30 @@ public class Product extends Sellable {
         if (this.isPersonalizable())
             kvs.add(new KV("Max Personalizations", String.valueOf(this.getMaxPers())));
         return kvs;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return id == product.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    @Override
+    public int compareTo(Product other) {
+        int comparison = this.name.compareToIgnoreCase(other.name);
+        if (comparison != 0)
+            return comparison;
+        //if the names are the same, we compare the name of the class
+        if (!this.getClass().equals(other.getClass()))
+            return this.getClass().getName().compareTo(other.getClass().getName());
+        //if not, compare the id
+        return Integer.compare(this.id, other.id);
     }
 }

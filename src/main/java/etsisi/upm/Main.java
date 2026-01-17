@@ -5,8 +5,6 @@ import etsisi.upm.controllers.ClientController;
 import etsisi.upm.controllers.ProductController;
 import etsisi.upm.controllers.TicketController;
 import etsisi.upm.io.CLI;
-import etsisi.upm.models.Product;
-import etsisi.upm.models.Sellable;
 import etsisi.upm.models.Ticket;
 import etsisi.upm.models.repositories.Repository;
 import etsisi.upm.models.users.Cashier;

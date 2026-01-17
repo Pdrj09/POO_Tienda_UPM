@@ -9,6 +9,9 @@ import java.util.HashSet;
 import java.util.List;
 
 public class ProductPersonalized extends Product {
+    protected boolean personalizable;
+    protected int maxPers;
+
     private List<String> customizations;
 
     public ProductPersonalized(Product prod, List<String> customizations) {

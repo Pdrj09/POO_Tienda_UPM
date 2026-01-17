@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-public class ServiceProduct extends Sellable {
+public class ServiceProduct extends Product {
     protected final LocalDateTime expirationDate;
     protected int numPeople;
     private double finalPrice;

@@ -1,8 +1,6 @@
 package etsisi.upm.io;
 
-import etsisi.upm.models.Sellable;
 import etsisi.upm.util.Constants;
-import etsisi.upm.models.Product;
 import etsisi.upm.models.Ticket;
 import java.util.*;
 import static etsisi.upm.util.Constants.*;
