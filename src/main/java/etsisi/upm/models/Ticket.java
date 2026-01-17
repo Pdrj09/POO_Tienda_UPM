@@ -7,7 +7,7 @@ import etsisi.upm.io.Presentable;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public abstract class Ticket <P extends Sellable> implements Presentable {
+public abstract class Ticket <P extends Product> implements Presentable {
 
     //Stores the list of products and their quantities in the current transaction
     protected String id;
@@ -28,7 +28,7 @@ public abstract class Ticket <P extends Sellable> implements Presentable {
 
     public Ticket(){}
 
-    public abstract Ticket<P> addProduct(Sellable prod, int amount);
+    public abstract Ticket<P> addProduct(Product prod, int amount);
 
     protected int countProducts(){
         int total = Constants.BASE_AMOUNT_OF_PRODUCT;
@@ -39,7 +39,7 @@ public abstract class Ticket <P extends Sellable> implements Presentable {
     }
 
     // Remove a product from the ticket
-    public Ticket<P> remove(Sellable prod){
+    public Ticket<P> remove(Product prod){
         this.list.remove(prod);
         if(this.list.isEmpty()) this.state = TicketStates.EMPTY;
         return this;
@@ -72,7 +72,7 @@ public abstract class Ticket <P extends Sellable> implements Presentable {
         return Utilities.round(sum);
     }
 
-    public double calculateProductPrice(Sellable product){
+    public double calculateProductPrice(Product product){
         double price = product.getPrice();
 
         if (product instanceof ProductPersonalized){
@@ -82,14 +82,14 @@ public abstract class Ticket <P extends Sellable> implements Presentable {
         return price;
     }
 
-    public double getTotalDiscountForProduct(Sellable prod) {
+    public double getTotalDiscountForProduct(Product prod) {
         Integer amount = this.list.get(prod);
         double discountPerUnit = getDiscountPerUnit(prod);
         double rawTotalDiscount = discountPerUnit * amount;
         return Utilities.round(rawTotalDiscount);
     }
 
-    public double getDiscountPerUnit(Sellable prod) {
+    public double getDiscountPerUnit(Product prod) {
         if (categories.get(prod.getCategory()) > Constants.MIN_FOR_DISCOUNT){
             double priceToUseForDiscount = this.calculateProductPrice(prod);
             double discount = priceToUseForDiscount * prod.getCategory().getDiscount();
@@ -186,7 +186,7 @@ public abstract class Ticket <P extends Sellable> implements Presentable {
     }
 
     //look if the product already exists
-    public boolean containsProduct(Sellable prod) {
+    public boolean containsProduct(Product prod) {
         return this.list.containsKey(prod);
     }
 
@@ -212,7 +212,7 @@ public abstract class Ticket <P extends Sellable> implements Presentable {
     }
 
     //for personalized products
-    public List<KV> getDetailedKVsForProductLine(Sellable p, int quantity) {
+    public List<KV> getDetailedKVsForProductLine(Product p, int quantity) {
 
         List<KV> prodKV = new ArrayList<>(p.toViewKVList());
         if (p instanceof ProductPersonalized) {

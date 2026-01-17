@@ -17,6 +17,9 @@ public class Product implements Comparable<Product>, Presentable {
     protected double price;
     protected Categories category;
 
+    protected boolean personalizable;
+    protected int maxPers;
+
 
     //this is the constructor that creates a product
     public Product(int id, String name, double price, Categories category) {
@@ -93,5 +96,41 @@ public class Product implements Comparable<Product>, Presentable {
             return this.getClass().getName().compareTo(other.getClass().getName());
         //if not, compare the id
         return Integer.compare(this.id, other.id);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public Categories getCategory() {
+        return category;
+    }
+
+    public void setCategory(Categories category) {
+        this.category = category;
+    }
+
+    public void setPersonalizable(boolean personalizable) {
+        this.personalizable = personalizable;
+    }
+
+    public void setMaxPers(int maxPers) {
+        this.maxPers = maxPers;
     }
 }

@@ -9,8 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 
 public class ProductPersonalized extends Product {
-    protected boolean personalizable;
-    protected int maxPers;
 
     private List<String> customizations;
 
@@ -44,7 +42,6 @@ public class ProductPersonalized extends Product {
         return result;
     }
 
-    @Override
     public List<KV> getPresentableDetails() {
         List<KV> kvs = new ArrayList<>();
         //for personalized titles
@@ -71,7 +68,7 @@ public class ProductPersonalized extends Product {
 
     // Archivo: etsisi.upm.models/ProductPersonalized.java
     @Override
-    public int compareTo(Sellable other) {
+    public int compareTo(Product other) {
         //compareto of the father
         int comparison = super.compareTo(other);
         if (comparison != 0)

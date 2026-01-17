@@ -14,12 +14,12 @@ public class TicketController {
     private final Repository<String, Ticket<?>> ticketRepository;
     private final Repository<String, Client> clientRepository;
     private final Repository<String, Cashier> cashierRepository;
-    private final Repository<Integer, Sellable> productRepository;
+    private final Repository<Integer, Product> productRepository;
 
 
     public TicketController(Repository<String, Ticket<?>> ticketRepository, Repository<String, Client> clientRepository,
                             Repository<String, Cashier> cashierRepository,
-                            Repository<Integer, Sellable> productRepository) {
+                            Repository<Integer, Product> productRepository) {
         this.ticketRepository = ticketRepository;
         this.clientRepository = clientRepository;
         this.cashierRepository = cashierRepository;
@@ -173,7 +173,7 @@ public class TicketController {
     private Ticket<?> addProductToTicket(String ticketId, String cashierId, Integer productId, int amount,
                                       List<String> customizations){
         Ticket<?> ticket = this.ticketRepository.findByIdOrThrow(ticketId);
-        Sellable product = this.productRepository.findByIdOrThrow(productId);
+        Product product = this.productRepository.findByIdOrThrow(productId);
         Cashier cashier = this.cashierRepository.findByIdOrThrow(cashierId);
 
         if (!cashier.getTickets().contains(ticket)) throw new IllegalArgumentException(Constants.ERROR_INVALID_ID);
@@ -198,7 +198,7 @@ public class TicketController {
             default -> {
             }
         }
-        Sellable finalProduct;
+        Product finalProduct;
         if (customizations != null && !customizations.isEmpty() && product instanceof Product personalized ) {
             if (personalized.isPersonalizable())
                 finalProduct = new ProductPersonalized(personalized, customizations);
@@ -211,7 +211,7 @@ public class TicketController {
 
     private Ticket<?> removeProductFromTicket(String ticketId, String cashierId, Integer productId){
         Ticket<?> ticket = this.ticketRepository.findByIdOrThrow(ticketId);
-        Sellable product = this.productRepository.findByIdOrThrow(productId);
+        Product product = this.productRepository.findByIdOrThrow(productId);
         Cashier cashier = this.cashierRepository.findByIdOrThrow(cashierId);
 
         if (!cashier.getTickets().contains(ticket)) throw new IllegalArgumentException(Constants.ERROR_INVALID_ID);

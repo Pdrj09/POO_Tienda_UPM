@@ -13,10 +13,10 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 
 public class ProductController {
-    private final Repository<Integer, Sellable> productRepository;
+    private final Repository<Integer, Product> productRepository;
     private final Repository<String, Ticket<?>> ticketRepository;
 
-    public ProductController(Repository<Integer, Sellable> productRepository, Repository<String,
+    public ProductController(Repository<Integer, Product> productRepository, Repository<String,
             Ticket<?>> ticketRepository) {
         this.productRepository = productRepository;
         this.ticketRepository = ticketRepository;
