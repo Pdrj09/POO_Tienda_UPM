@@ -28,7 +28,7 @@ public class Product extends Sellable {
     protected boolean personalizable;
     protected int maxPers;
 
-    public Product(){}
+//    public Product(){}
 
     //this is the constructor that creates a product
     public Product(int id, String name, double price, Categories category) {

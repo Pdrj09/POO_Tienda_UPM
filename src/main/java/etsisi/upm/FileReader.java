@@ -21,11 +21,6 @@ public class FileReader {
     private static final String CURSOR = "tUPM> ";
 
     public static void main(String [] args) {
-        //We create the repositories and the controllers with them
-        Repository<Integer, Sellable> productRepo = new Repository<>(Constants.MAX_SIZE);
-        Repository<String, Ticket<?>> ticketRepo = new Repository<>();
-        Repository<String, Client> clientRepo = new Repository<>();
-        Repository<String, Cashier> cashierRepo = new Repository<>();
 
         CLI cli = getCli();
 
@@ -48,8 +43,8 @@ public class FileReader {
     }
 
     private static CLI getCli() {
-        Repository<Integer, Product> productRepo = new Repository<>(Product.class,Constants.MAX_SIZE);
-        Repository<String, Ticket> ticketRepo = new Repository<>(Ticket.class);
+        Repository<Integer, Sellable> productRepo = new Repository<>(Sellable.class,Constants.MAX_SIZE);
+        Repository<String, Ticket<?>> ticketRepo = new Repository<>((Class) Ticket.class);
         Repository<String, Client> clientRepo = new Repository<>(Client.class);
         Repository<String, Cashier> cashierRepo = new Repository<>(Cashier.class);
 

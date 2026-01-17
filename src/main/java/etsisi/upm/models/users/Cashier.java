@@ -9,8 +9,6 @@ import java.util.*;
 @Entity
 @Table(name = "cashiers")
 public class Cashier extends User {
-    private final Set<Ticket<?>> createdTickets;
-    private final Set<Client> associatedClients;
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -18,7 +16,7 @@ public class Cashier extends User {
             joinColumns = @JoinColumn(name = "cashier_db_id"),
             inverseJoinColumns = @JoinColumn(name = "ticket_db_id")
     )
-    private Set<Ticket> createdTickets;
+    private Set<Ticket<?>> createdTickets;
 
     @OneToMany(mappedBy = "cashier")
     private Set<Client> associatedClients;
@@ -40,7 +38,7 @@ public class Cashier extends User {
         return this.createdTickets;
     }
 
-    public void setCreatedTickets(Set<Ticket> createdTickets) {
+    public void setCreatedTickets(Set<Ticket<?>> createdTickets) {
         this.createdTickets = createdTickets;
     }
 

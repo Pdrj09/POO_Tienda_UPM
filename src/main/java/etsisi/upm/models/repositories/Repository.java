@@ -55,7 +55,7 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
 
     @Override
     public boolean hasKey(K id) {
-        return repoMap.containsKey(id);
+        return findById(id)!=null;
     }
 
     @Override
