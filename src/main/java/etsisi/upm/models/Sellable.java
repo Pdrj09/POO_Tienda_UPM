@@ -15,11 +15,25 @@ public abstract class Sellable implements Comparable<Sellable>, Presentable {
     protected double price;
     protected Categories category;
 
+    //for old tickets
+    protected boolean active;
+
+
     public Sellable(int id, String name, double price, Categories category) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.category = category;
+    }
+
+    public void archive() { this.active = false; }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public int getId() {
