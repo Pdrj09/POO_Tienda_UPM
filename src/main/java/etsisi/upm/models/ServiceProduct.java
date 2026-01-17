@@ -12,7 +12,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Entity
-@Table(name = "service_products")
+@DiscriminatorValue("SERVICE")
 public class ServiceProduct extends Sellable {
     @Column(name = "expiration_date")
     protected final LocalDateTime expirationDate;

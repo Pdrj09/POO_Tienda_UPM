@@ -63,8 +63,20 @@ public class TicketController {
 
                 ticketId = querySplit[Constants.QUERY_TICKET_POS_TICKETID];
                 cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID];
-                prodId = Integer.parseInt(querySplit[Constants.QUERY_TICKET_POS_PRODID]);
-                amount = Integer.parseInt(querySplit[Constants.QUERY_TICKET_POS_AMOUNT]);
+
+                String rawId = querySplit[Constants.QUERY_TICKET_POS_PRODID];
+
+                boolean isService = rawId.endsWith("S");
+
+                if (isService) {
+                    rawId = rawId.substring(0, rawId.length() - 1);
+
+                }
+
+                prodId = Integer.parseInt(rawId);
+
+                if (!isService) amount = Integer.parseInt(querySplit[Constants.QUERY_TICKET_POS_AMOUNT]);
+                else amount = 1;
                 List<String> customizations = null;
 
                 if (querySplit.length > Constants.QUERY_TICKET_POS_CUSTOMIZATIONS) {
@@ -81,7 +93,7 @@ public class TicketController {
                         }
                     }
                 }
-                return View.getString(this.addProductToTicket(ticketId, cashierId, prodId, amount, customizations),
+                return View.getString(this.addProductToTicket(ticketId, cashierId, prodId, amount, customizations,isService),
                         command);
 
             case Constants.TICKET_REMOVE:
@@ -168,7 +180,7 @@ public class TicketController {
 
 
     private Ticket<?> addProductToTicket(String ticketId, String cashierId, Integer productId, int amount,
-                                      List<String> customizations){
+                                      List<String> customizations, Boolean isService){
         Ticket<?> ticket = this.ticketRepository.findByIdOrThrow(ticketId);
         Sellable product = this.productRepository.findByIdOrThrow(productId);
         Cashier cashier = this.cashierRepository.findByIdOrThrow(cashierId);

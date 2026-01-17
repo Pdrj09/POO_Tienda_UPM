@@ -11,7 +11,9 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "sellables")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "sellable_type")
 public abstract class Sellable implements Comparable<Sellable>, Presentable {
 
     @Id

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "products")
+@DiscriminatorValue("PRODUCT")
 public class Product extends Sellable {
     protected boolean personalizable;
     protected int maxPers;
