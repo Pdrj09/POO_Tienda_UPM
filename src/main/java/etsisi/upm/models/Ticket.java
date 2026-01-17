@@ -30,7 +30,7 @@ public abstract class Ticket <P extends Sellable> implements Presentable {
     @CollectionTable(name = "ticket_products", joinColumns = @JoinColumn(name = "ticket_db_id"))
     @MapKeyJoinColumn(name = "product_db_id")
     @Column(name = "quantity")
-    protected Map<Product,Integer> list;
+    protected Map<P, Integer> list;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyEnumerated(EnumType.STRING)
