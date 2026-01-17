@@ -48,7 +48,7 @@ public abstract class Ticket <P extends Sellable> implements Presentable {
         LocalDateTime now = LocalDateTime.now();
         String formatted = Utilities.formatDate(now);
         this.id = formatted + Constants.HYPEN +id;
-        this.list = new TreeMap<>();
+        this.list = new TreeMap<>(Comparator.comparing(Sellable::getId));
         this.categories = new HashMap<>();
         this.state = TicketStates.EMPTY;
 

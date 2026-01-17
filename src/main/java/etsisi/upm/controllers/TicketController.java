@@ -56,8 +56,8 @@ public class TicketController {
                     }
                 }
 
-                this.newTicket(ticketId, cashierId, clientId, ticketType);
-                return Constants.okStatus(command.split(" ")[0], command.split(" ")[1]);
+                Ticket<?> ticketCreated = this.newTicket(ticketId, cashierId, clientId, ticketType);
+                return View.getString(ticketCreated, command);
 
             case Constants.TICKET_ADD:
 
@@ -144,12 +144,12 @@ public class TicketController {
     }
 
     private List<Ticket<?>> getTicketList(){
-        List<Ticket<?>> ticketList = new ArrayList<Ticket<?>>();
-        TreeMap<String, Cashier> sortedCashiers = new TreeMap<>(this.cashierRepository.getMap());
+        List<Ticket<?>> ticketList = new ArrayList<>();
+        Collection<Cashier> cashiers = this.cashierRepository.findAll();
 
-        for (Map.Entry<String, Cashier> entry : sortedCashiers.entrySet()){
-            ticketList.addAll(entry.getValue().getTickets());
-        }
+        for (Cashier cashier : cashiers)
+            ticketList.addAll(cashier.getTickets());
+        ticketList.sort(Comparator.comparing(Ticket::getId));
         return ticketList;
     }
 

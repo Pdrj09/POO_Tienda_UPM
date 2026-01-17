@@ -19,7 +19,6 @@ public class View {
     public static <T> String getString(T element, String command) {
         if (element == null)
             return MSG_NOTHING_TO_SHOW + "\n";
-
         List<List<KV>> allKV = new ArrayList<>();
         String tableTitle = "Items";
         //handle Collections
