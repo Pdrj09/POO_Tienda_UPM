@@ -32,7 +32,6 @@ public class Utilities {
     }
 
     public static boolean isPositiveInteger(String s) {
-
         try {
             int value = Integer.parseInt(s);
             if (value < Constants.BASE_PROD_ID) {

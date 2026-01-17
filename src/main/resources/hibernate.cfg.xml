@@ -37,6 +37,9 @@
         <mapping class="etsisi.upm.models.users.Cashier"/>
         <mapping class="etsisi.upm.models.Product"/>
         <mapping class="etsisi.upm.models.Ticket"/>
+        <mapping class="etsisi.upm.models.TicketOfProducts"/>
+        <mapping class="etsisi.upm.models.TicketOfServices"/>
+        <mapping class="etsisi.upm.models.TicketOfMixed"/>
 
     </session-factory>
 </hibernate-configuration>

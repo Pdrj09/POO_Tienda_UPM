@@ -15,6 +15,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "tickets")
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Ticket <P extends Sellable> implements Presentable {
 
     @Id

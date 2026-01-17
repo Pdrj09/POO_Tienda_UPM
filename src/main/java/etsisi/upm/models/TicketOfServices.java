@@ -1,13 +1,19 @@
 package etsisi.upm.models;
 
 import etsisi.upm.util.*;
+import jakarta.persistence.Entity;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
+@Entity
 public class TicketOfServices extends Ticket<ServiceProduct> {
     public TicketOfServices(String id){
         super(id);
+    }
+
+    public TicketOfServices() {
+        super();
     }
 
     @Override

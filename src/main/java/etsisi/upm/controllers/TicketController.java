@@ -33,37 +33,31 @@ public class TicketController {
         int prodId, amount;
         switch (querySplit[Constants.QUERY_TICKET_POS_INSTRUCTION]){
             case Constants.TICKET_NEW:
-                int index;
+                int index = Constants.QUERY_TICKET_POS_TICKETID;
 
-                if(Utilities.isPositiveInteger(querySplit[Constants.QUERY_TICKET_POS_TICKETID])) {
-                    ticketId = querySplit[Constants.QUERY_TICKET_POS_TICKETID];
-                    index = Constants.TICKET_WITH_ID_INDEX;
+                if(Utilities.isPositiveInteger(querySplit[index])) {
+                    ticketId = querySplit[index];
+                    index++;
                 } else{
+                    //AUTOMATIC GENERATION
                     do {
                         ticketId = String.format(Constants.ID_FORMAT, new Random().nextInt(Constants.MAX_RANDOM));
                     } while (ticketRepository.hasKey(ticketId));
-                    index = Constants.TICKET_WITHOUT_ID_INDEX;
+                }
+                cashierId = querySplit[index];
+                clientId = querySplit[index + 1];
 
+                //WE DETERMINE WHAT KINF OF TICKET IT IS (-c -p -s)
+                String ticketType = Constants.P_OPTION;
+                if (querySplit.length > index + 2) {
+                    String lastPart = querySplit[querySplit.length - 1];
+                    if (lastPart.startsWith("-")) {
+                        ticketType = lastPart;
+                    }
                 }
 
-                cashierId = querySplit[Constants.QUERY_TICKET_POS_CASHID-index];
-                clientId = querySplit[Constants.QUERY_TICKET_POS_USERID-index];
-
-                String ticketType;
-                if (querySplit[querySplit.length - 1].matches(Constants.REGEX_TICKET_OPT)) {
-                    ticketType = querySplit[querySplit.length - 1];
-                } else if (querySplit[querySplit.length - 1].matches(Constants.REGEX_IS_DNI)) {
-                    ticketType = Constants.P_OPTION;
-                } else {
-                    throw new IllegalArgumentException(Constants.ERROR_INVALID_OPTION);
-                }
-
-                if(querySplit.length <= Constants.QUERY_TICKET_MAX_LENGTH){
-                    this.newTicket(ticketId, cashierId, clientId, ticketType);
-                    return Constants.okStatus(command.split(" ")[0], command.split(" ")[1]);
-                }
-
-                throw new IllegalArgumentException(Constants.ERROR_TOOMANY_ARGUMENTS);
+                this.newTicket(ticketId, cashierId, clientId, ticketType);
+                return Constants.okStatus(command.split(" ")[0], command.split(" ")[1]);
 
             case Constants.TICKET_ADD:
 
@@ -135,7 +129,7 @@ public class TicketController {
             throw new IllegalArgumentException(Constants.ERROR_TICKET_NONEXISTENT_TYPE);
         }
 
-        this.ticketRepository.add(ticket.getId(), ticket);
+        this.ticketRepository.add((String) ticket.getId(), ticket);
         cashier.addTicket(ticket);
         client.addAssociatedTicket(ticket);  //    ticket new UW7258278 11100154D
 

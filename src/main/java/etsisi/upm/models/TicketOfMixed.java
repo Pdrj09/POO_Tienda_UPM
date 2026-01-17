@@ -4,13 +4,19 @@ import etsisi.upm.util.Categories;
 import etsisi.upm.util.Constants;
 import etsisi.upm.util.TicketStates;
 import etsisi.upm.util.Utilities;
+import jakarta.persistence.Entity;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
+@Entity
 public class TicketOfMixed extends Ticket<Sellable> {
     public TicketOfMixed(String id) {
         super(id);
+    }
+
+    public TicketOfMixed() {
+        super();
     }
 
     @Override
@@ -79,5 +85,19 @@ public class TicketOfMixed extends Ticket<Sellable> {
         }
     }
 
+    @Override
+    protected double totalDiscount() {
+        double baseDiscount= super.totalDiscount();
+        long numServices = list.keySet().stream()
+                .filter(item -> item instanceof ServiceProduct)
+                .count();
+        if (numServices >0) {
+            double productTotal = list.entrySet().stream()
+                    .filter(entry ->entry.getKey() instanceof Product)
+                    .mapToDouble(entry-> calculateProductPrice(entry.getKey()) *entry.getValue())
+                    .sum();
+            baseDiscount += productTotal * (0.15 *numServices);
+        }
+        return Utilities.round(baseDiscount);
+    }
 }
-

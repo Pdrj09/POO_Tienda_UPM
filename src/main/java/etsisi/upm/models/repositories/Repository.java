@@ -28,19 +28,20 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
 
     @Override
     public void add(K key, T object) {
-        if (this.hasMaxSize && findAll().size() >= this.maxSize) {
+        if (this.hasMaxSize && findAll().size() >= this.maxSize)
             throw new IllegalStateException(Constants.ERROR_MAXSIZE + this.maxSize);
+        if (hasKey(key)) {
+            throw new IllegalArgumentException(Constants.DUPLICATED_ID_ERROR);
         }
-
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
-        //ACID ATOMIC OPERATION Atomic,Consistent, Isolated, Durable
         try {
             session.persist(object);
             tx.commit();
-        }catch (Exception e){
-            tx.rollback();
-            throw new IllegalArgumentException(Constants.DUPLICATED_ID_ERROR);
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            throw new RuntimeException("Error de persistencia: " + e.getMessage());
         } finally {
             session.close();
         }
@@ -63,7 +64,7 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
         Session session = HibernateUtil.getSessionFactory().openSession();
         T entity = session.createQuery("from " + entityCLass.getName() + " where id = :id", entityCLass).setParameter("id", id).uniqueResult();
         if (entity == null && id instanceof String) {
-            entity = session.createQuery("from " + entityCLass.getName() + " where id LIKE :partialId", entityCLass).setParameter("partialId", "%" + id).uniqueResult();
+            entity = session.createQuery("from " + entityCLass.getName() + " where id LIKE :partialId", entityCLass).setParameter("partialId", "%-" + id).uniqueResult();
         }
         session.close();
         return entity;
