@@ -2,14 +2,16 @@ package etsisi.upm.models.users;
 
 import etsisi.upm.io.KV;
 import etsisi.upm.util.Constants;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 import java.util.List;
 
 @Entity
-@Table(name = "companyClients")
-public class CompanyClient extends Client{
+@Table(name = "company_clients")
+@DiscriminatorValue("COMPANY_CLIENT")
+public class CompanyClient extends Client {
 
     public CompanyClient(String dni, String name, String email, Cashier cashier) {
         super(dni, name, email, cashier);

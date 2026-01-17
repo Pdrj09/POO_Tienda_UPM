@@ -18,7 +18,7 @@
 
         <!-- Base de datos en archivo -->
         <property name="hibernate.connection.url">
-            jdbc:sqlite:./data/tienda.db?journal_mode=WAL
+            jdbc:sqlite:./data/tienda.db
         </property>
 
         <property name="hibernate.connection.pool_size">1</property>

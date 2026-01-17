@@ -13,6 +13,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class User implements Comparable<User>, Presentable {
 
     @Id

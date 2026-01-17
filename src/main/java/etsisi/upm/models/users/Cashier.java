@@ -8,6 +8,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "cashiers")
+@DiscriminatorValue("CASHIER")
 public class Cashier extends User {
 
     @OneToMany(targetEntity = Ticket.class, fetch = FetchType.EAGER)

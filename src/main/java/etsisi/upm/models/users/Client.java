@@ -10,6 +10,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "clients")
+@DiscriminatorValue("CLIENT")
 public class Client extends User {
 
     @ManyToOne
