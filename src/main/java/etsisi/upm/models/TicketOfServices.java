@@ -44,27 +44,12 @@ public class TicketOfServices extends Ticket<ServiceProduct> {
 
     @Override
     public String close() {
-        if (!list.isEmpty()) {
-            int quantity;
-            Set<ServiceProduct> p = list.keySet();
-            Set<ServiceProduct> products = new HashSet<>(p);
-            for (ServiceProduct prod : products) {
-                quantity = list.get(prod);
-
-                list.remove(prod);
-                list.put(prod, quantity);
-            }
-            this.closeDate = LocalDateTime.now();
-            String date = Utilities.formatDate(this.closeDate);
-            this.id += Constants.HYPEN + date;
-            this.state = TicketStates.CLOSED;
-
-            return this.getId();
-        } else {
+        if (this.list.isEmpty())
             throw new SecurityException(Constants.ERROR_EMPTY_TICKET);
-        }
+        this.closeDate = LocalDateTime.now();
+        this.state = TicketStates.CLOSED;
+        return this.getId();
     }
-
 }
 
 

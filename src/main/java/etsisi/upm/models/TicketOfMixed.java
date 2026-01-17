@@ -46,43 +46,20 @@ public class TicketOfMixed extends Ticket<Sellable> {
 
     @Override
     public String close() {
-        if (!list.isEmpty()) {
-            int quantity;
-            Set<Sellable> p = list.keySet();
-            Set<Sellable> products = new HashSet<>(p);
+        if (list.isEmpty()) throw new SecurityException(Constants.ERROR_EMPTY_TICKET);
 
-            boolean hasProduct = false;
-            boolean hasService = false;
+        // Validación simplificada con Stream
+        boolean hasProduct = list.keySet().stream().anyMatch(s -> s instanceof Product);
+        boolean hasService = list.keySet().stream().anyMatch(s -> s instanceof ServiceProduct);
 
-            for (Sellable s : products) {
-                if (s instanceof Product) {
-                    hasProduct = true;
-                } else if (s instanceof ServiceProduct) {
-                    hasService = true;
-                }
-
-                if (hasProduct && hasService) break;
-            }
-
-            if (!(hasProduct && hasService)) {
-                throw new IllegalArgumentException(Constants.ERROR_INVALID_PRINT_MIXED_TICKET);
-            }
-
-            for (Sellable prod : products) {
-                quantity = list.get(prod);
-
-                list.remove(prod);
-                list.put(prod, quantity);
-            }
-            this.closeDate = LocalDateTime.now();
-            String date = Utilities.formatDate(this.closeDate);
-            this.id += Constants.HYPEN + date;
-            this.state = TicketStates.CLOSED;
-
-            return this.getId();
-        } else {
-            throw new SecurityException(Constants.ERROR_EMPTY_TICKET);
+        if (!(hasProduct && hasService)) {
+            throw new IllegalArgumentException(Constants.ERROR_INVALID_PRINT_MIXED_TICKET);
         }
+
+        // NO MODIFICAR EL ID AQUÍ. Solo el estado y la fecha.
+        this.closeDate = LocalDateTime.now();
+        this.state = TicketStates.CLOSED;
+        return this.getId();
     }
 
     @Override

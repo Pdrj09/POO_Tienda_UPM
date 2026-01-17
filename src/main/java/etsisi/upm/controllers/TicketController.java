@@ -149,6 +149,7 @@ public class TicketController {
         this.clientRepository.update(client);
 
         return ticket;
+
     }
 
     private Ticket<?> getTicket(String ticketId){
@@ -215,7 +216,9 @@ public class TicketController {
                 throw new IllegalStateException(Constants.ERROR_NONPERSONALIZABLE);
         } else
             finalProduct = product;
-        return ticket.addProduct(finalProduct, amount);
+        ticket.addProduct(finalProduct, amount);
+        this.ticketRepository.update(ticket);
+        return ticket;
     }
 
     private Ticket<?> removeProductFromTicket(String ticketId, String cashierId, Integer productId){
