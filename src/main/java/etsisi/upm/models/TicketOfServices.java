@@ -46,7 +46,7 @@ public class TicketOfServices extends Ticket<ServiceProduct> {
                 quantity = list.get(prod);
 
                 list.remove(prod);
-                list.put(prod.copy(), quantity);
+                list.put(prod, quantity);
             }
             this.closeDate = LocalDateTime.now();
             String date = Utilities.formatDate(this.closeDate);

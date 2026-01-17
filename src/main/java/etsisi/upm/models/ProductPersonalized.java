@@ -33,11 +33,6 @@ public class ProductPersonalized extends Product {
         }else return false;
     }
 
-    @Override
-    public ProductPersonalized copy() {
-        return new ProductPersonalized(new Product(id, name, price, category, maxPers),
-                customizations);
-    }
 
     @Override
     public int hashCode() {

@@ -59,12 +59,6 @@ public class Product extends Sellable {
         return maxPers;
     }
 
-    @Override
-    public Product copy() {
-        if (this.personalizable)
-            return new Product(id, name, price, category, maxPers);
-        return new Product(id, name, price, category);
-    }
 
     @Override
     public List<KV> toViewKVList() {

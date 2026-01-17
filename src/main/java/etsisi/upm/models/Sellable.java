@@ -15,8 +15,6 @@ public abstract class Sellable implements Comparable<Sellable>, Presentable {
     protected double price;
     protected Categories category;
 
-    public abstract Sellable copy();
-
     public Sellable(int id, String name, double price, Categories category) {
         this.id = id;
         this.name = name;

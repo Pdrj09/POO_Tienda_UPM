@@ -44,6 +44,9 @@ public class Constants {
     public static final int QUERY_PRODUCT_POS_EXPIRATION = 4;
     public static final int QUERY_PRODUCT_POS_MAXPEOPLE = 5;
     public static final int QUERY_PRODUCT_LENGTH_WITHCUTOMIZATIONS = 6;
+    public static final int QUERY_PRODUCT_LENGTH_WITHOUTCUTOMIZATIONS = 5;
+    public static final int QUERY_PRODUCT_LENGTH_WITHOUTID = 4;
+    public static final int QUERY_PRODUCT_LENGTH_SERVICE = 3;
 
     public static final int QUERY_CASH_LIST_LENGTH = 2;
     public static final int QUERY_CASH_POS_INSTRUCTION = 1;
@@ -52,6 +55,9 @@ public class Constants {
     public static final int QUERY_CASH_POS_EMAIL = 4;
     public static final int QUERY_CASH_LENGTH_WITHID = 5;
     public static final int QUERY_CASH_LENGTH_WITHOUTID = 4;
+
+    public static final int QUERY_SERVICE_POS_NAME = 1;
+    public static final int QUERY_SERVICE_POS_CATEGORY = 2;
 
     // numbers
     public static final int MAX_RANDOM_CASH_ID = 10_000_000;
@@ -99,12 +105,14 @@ public class Constants {
     public static final String DATETIME_FORMAT= "dd-MM-yy HH:mm";
 
     public static final String STR_FOOD = "class:Food";
+    public static final String STR_CLASS = "class:";
     public static final String STR_MEETING = "class:Meeting";
     public static final String STR_PRICE_PERSON = ", pricePerPerson:";
     public static final String STR_EXPIRATION = ", expiration:";
     public static final String STR_SERVICE_PRODUCT = "class:ServiceProduct";
     public static final String STR_MAX_PEOPLE_ALLOWED = ", maxPeopleAllowed:";
     public static final String STR_FINAL_PRICE = ", finalPrice:";
+    public static final String STR_PRODUCT_SERVICE = "ProductService";
 
     public static final String NAME = "NAME";
     public static final String CATEGORY = "CATEGORY";
@@ -141,8 +149,13 @@ public class Constants {
     public static final String NOT_VALID_ID = "The id is not valid";
     public static final int PROD_WITHOUT_ID_INDEX = 1;
     public static final int PROD_WITH_ID_INDEX = 0;
+
+    // service product
     public static final int SERVICE_PROD_MINPEOPLE = 0;
     public static final int SERVICE_PROD_BASEPRICE = 0;
+    public static final String STR_SERVICE_TRANSPORT = "TRANSPORT";
+    public static final String STR_SERVICE_SHOW = "SHOW";
+    public static final String STR_SERVICE_INSURANCE = "INSURANCE";
 
     // ticket const
     public static final String TICKET_ADD = "add";
@@ -262,10 +275,14 @@ public class Constants {
     public static final String ERROR_TICKET_NONEXISTENT_TYPE = "wrong ticket type or too many arguments";
     public static final String ERROR_FILE_NOTFOUND = "file not found";
     public static final String ERROR_EMPTY_TICKET = "The ticket cannot be empty";
+    public static final String ERROR_INVALID_NUMBER_ARGUMENTS = "Invalid number of arguments";
 
     public static final String ERROR_INVALID_TICKET_PROD_TYPE = "Invalid product type at ticket";
     public static final String ERROR_INVALID_PRINT_MIXED_TICKET =
             "Cannot close a mix ticket without one element of each type";
+
+    public static final String ERROR_SERVICE_CATEGORY = "Invalid Service Category";
+    public static final String ERROR_SERVICE_DATE = "Please introduce a valid date";
 
     public static final int TO_PORCENTAGE = 100;
     public static final String ARROW = "->";

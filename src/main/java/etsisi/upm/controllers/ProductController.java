@@ -30,30 +30,40 @@ public class ProductController {
         String command = Constants.PROD + Constants.STR_BLANK_SPACE + querySplit[Constants.QUERY_PRODUCT_POS_INSTRUCTION];
         switch (querySplit[Constants.QUERY_PRODUCT_POS_INSTRUCTION]){
             case Constants.PRODUCT_ADD:
-                if(Utilities.isPositiveInteger(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID])){
-                    prodId = Integer.valueOf(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
-                    index = Constants.PROD_WITH_ID_INDEX;
-                }else{
-                    prodId = Utilities.generateAutomaticId(productRepository);
-                    index = Constants.PROD_WITHOUT_ID_INDEX;
+                if(querySplit.length==Constants.QUERY_PRODUCT_LENGTH_WITHCUTOMIZATIONS || querySplit.length==Constants.QUERY_PRODUCT_LENGTH_WITHOUTCUTOMIZATIONS ||
+                querySplit.length==Constants.QUERY_PRODUCT_LENGTH_WITHOUTID) {
+
+                    if (Utilities.isPositiveInteger(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID])) {
+                        prodId = Integer.valueOf(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
+                        index = Constants.PROD_WITH_ID_INDEX;
+                    } else {
+                        prodId = Utilities.generateAutomaticId(productRepository);
+                        index = Constants.PROD_WITHOUT_ID_INDEX;
+                    }
+
+                    name = Utilities.cleanName(querySplit[Constants.QUERY_PRODUCT_POS_NAME - index]);
+                    category = querySplit[Constants.QUERY_PRODUCT_POS_CATEGORY - index];
+
+                    if ((querySplit[Constants.QUERY_PRODUCT_POS_PRICE - index].isEmpty()) ||
+                            (querySplit[Constants.QUERY_PRODUCT_POS_PRICE - index].equals(Constants.STR_BLANK_SPACE))) {
+                        throw new IllegalArgumentException(Constants.ERROR_PRICE);
+                    }
+                    price = Float.parseFloat(querySplit[Constants.QUERY_PRODUCT_POS_PRICE - index].
+                            replace(Constants.STR_COMMA, Constants.STR_DOT));
+
+                    if (querySplit.length == Constants.QUERY_PRODUCT_LENGTH_WITHCUTOMIZATIONS - index) {
+                        maxPers = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_MAXPERS - index]);
+                    } else maxPers = null;
+
+                    return View.getString(this.addProduct(name, category, price, prodId, maxPers), command);
+                    ////////////////////////////////////////
+                }else if(querySplit.length == Constants.QUERY_PRODUCT_LENGTH_SERVICE){
+                    name = Utilities.cleanName(querySplit[Constants.QUERY_SERVICE_POS_NAME]);
+                    category = querySplit[Constants.QUERY_SERVICE_POS_CATEGORY];
+                    return View.getString(this.addService(name, category), command);
+                }else {
+                    throw new IllegalArgumentException(Constants.ERROR_INVALID_NUMBER_ARGUMENTS);
                 }
-
-                name = Utilities.cleanName(querySplit[Constants.QUERY_PRODUCT_POS_NAME-index]);
-                category = querySplit[Constants.QUERY_PRODUCT_POS_CATEGORY-index];
-
-                if ((querySplit[Constants.QUERY_PRODUCT_POS_PRICE-index].isEmpty()) ||
-                        (querySplit[Constants.QUERY_PRODUCT_POS_PRICE-index].equals(Constants.STR_BLANK_SPACE))) {
-                    throw new IllegalArgumentException(Constants.ERROR_PRICE);
-                }
-                price = Float.parseFloat(querySplit[Constants.QUERY_PRODUCT_POS_PRICE-index].
-                        replace(Constants.STR_COMMA, Constants.STR_DOT));
-
-                if (querySplit.length == Constants.QUERY_PRODUCT_LENGTH_WITHCUTOMIZATIONS-index){
-                    maxPers = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_MAXPERS-index]);
-                }else maxPers = null;
-
-                return View.getString(this.addProduct(name,category,price,prodId,maxPers),command);
-
             case Constants.PRODUCT_UPDATE:
 
                 prodId = Integer.parseInt(querySplit[Constants.QUERY_PRODUCT_POS_PRODUCTID]);
@@ -105,6 +115,33 @@ public class ProductController {
         } else throw new IllegalArgumentException(Constants.ERROR_CREATE_PRODUCT);
     }
 
+    private Sellable addService(String dateSTR, String categoryName) {
+        //parseo yyyy-mm-dd
+        LocalDateTime expiration = java.time.LocalDate.parse(dateSTR).atStartOfDay();
+        if(expiration.isBefore(LocalDateTime.now())){
+            throw new IllegalArgumentException(Constants.ERROR_SERVICE_DATE);
+        }else{
+            //ID starting with 1
+            Collection<Sellable> allProducts = productRepository.findAll();
+            int nextId = 1;
+            for (Sellable product : allProducts) {
+                if( product instanceof ServiceProduct){
+                    nextId ++;
+                }
+            }
+            //categoria del enum
+            Categories cat = Categories.valueOf(categoryName.toUpperCase()); //in upper case
+            if(categoryName.equals(Constants.STR_SERVICE_TRANSPORT) ||
+                    categoryName.equals(Constants.STR_SERVICE_SHOW) ||
+                    categoryName.equals(Constants.STR_SERVICE_INSURANCE))
+            {
+                ServiceProduct genericService = new ServiceProduct(nextId, expiration, cat);
+                return genericService;
+            }else throw new IllegalArgumentException(Constants.ERROR_SERVICE_CATEGORY);
+        }
+
+    }
+
     private Sellable updateProduct(int id, String field, String newContent) {
         Sellable productToUpdate = this.productRepository.findByIdOrThrow(id);
         if (productToUpdate == null) throw new IllegalArgumentException(Constants.ERROR_ID_NONEXISTENT);
@@ -145,13 +182,13 @@ public class ProductController {
     }
 
     private Sellable addFood(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
-        Food food = new Food(id, name, pricePerPerson, maxPeople, expirationDate);
+        ServiceProduct food = ServiceProduct.createFood(id, name, pricePerPerson, maxPeople, expirationDate);
         this.productRepository.add(food.getId(), food);
         return food;
     }
 
     private Sellable addMeeting(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
-            Meeting meeting = new Meeting(id, name, pricePerPerson, maxPeople, expirationDate);
+            ServiceProduct meeting = ServiceProduct.createMeeting(id, name, pricePerPerson, maxPeople, expirationDate);
             this.productRepository.add(meeting.getId(), meeting);
             return meeting;
     }

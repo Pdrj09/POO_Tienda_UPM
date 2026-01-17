@@ -10,23 +10,32 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-public abstract class ServiceProduct extends Sellable {
+public class ServiceProduct extends Sellable {
     protected final LocalDateTime expirationDate;
     protected int numPeople;
     private double finalPrice;
 
-    public ServiceProduct(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
-        super(id, name, pricePerPerson, Categories.EMPTY);
+    private final int minimumCreationTime;
+    private final ChronoUnit minimumTimeUnit;
+    private String serviceType;
 
+
+    public ServiceProduct(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate,
+                          int minimumCreationTime, ChronoUnit minimumTimeUnit, String serviceType) {
+        super(id, name, pricePerPerson, Categories.EMPTY);
+        this.minimumCreationTime = minimumCreationTime;
+        this.minimumTimeUnit = minimumTimeUnit;
+        this.serviceType = serviceType;
+        this.finalPrice = Constants.SERVICE_PROD_BASEPRICE; //inicialization of the finalPrice
+        this.expirationDate = expirationDate;
+
+        //validation people logic
         if (maxPeople <= Constants.SERVICE_PROD_MINPEOPLE)
             throw new IllegalArgumentException(Constants.ERROR_TOOMANY_PEOPLE);
         else if (maxPeople > Constants.TIME_MAX_PEOPLE_SERVICE)
             this.numPeople = Constants.TIME_MAX_PEOPLE_SERVICE;
         else
             this.numPeople = maxPeople;
-
-        this.finalPrice = Constants.SERVICE_PROD_BASEPRICE; //inicialization of the finalPrice
-        this.expirationDate = expirationDate;
 
         // time validation
         if (!isFeasible(LocalDateTime.now())) {
@@ -41,13 +50,28 @@ public abstract class ServiceProduct extends Sellable {
         }
     }
 
-    @Override
-    public abstract ServiceProduct copy();
+    public ServiceProduct(int id, LocalDateTime expirationDate, Categories category) {
+
+        super(id, "", 0.0, category);
+        this.expirationDate = expirationDate;
+        this.serviceType = Constants.STR_PRODUCT_SERVICE;
+        this.minimumCreationTime = 0; // NO TIME RESTRICTION
+        this.minimumTimeUnit = ChronoUnit.DAYS;
+        this.numPeople = 1;
+    }
+
+    public static ServiceProduct createMeeting(int id, String name, double price, int people, LocalDateTime date){
+        return new ServiceProduct(id, name, price, people, date, Constants.TIME_MEETING_PLANNING_HOURS, ChronoUnit.HOURS, Constants.STR_MEETING);
+    }
+
+    public static ServiceProduct createFood(int id, String name, double price, int people, LocalDateTime date){
+        return new ServiceProduct(id, name, price, people, date, Constants.TIME_FOOD_PLANNING_DAYS, ChronoUnit.DAYS, Constants.STR_FOOD);
+    }
+
 
     // Abstract methods
-    public abstract int getMinimumCreationTime();
-
-    public abstract ChronoUnit getMinimumTimeUnit();
+    public int getMinimumCreationTime(){return this.minimumCreationTime;}
+    public ChronoUnit getMinimumTimeUnit(){return this.minimumTimeUnit;}
 
     // logic
     public boolean isFeasible(LocalDateTime creationTime) {
@@ -71,6 +95,8 @@ public abstract class ServiceProduct extends Sellable {
         this.finalPrice = finalPrice;
     }
 
+    public String getServiceType() { return this.serviceType; }
+
     @Override
     public List<KV> toViewKVList() {
         List<KV> kvs = super.toViewKVList();
@@ -93,7 +119,7 @@ public abstract class ServiceProduct extends Sellable {
         StringBuilder builder = new StringBuilder();
 
         builder.append(Constants.OPEN_BRACE);
-        builder.append(Constants.STR_SERVICE_PRODUCT);
+        builder.append(Constants.STR_CLASS).append(getServiceType());
         builder.append(Constants.STR_PROD_ID).append(getId());
         builder.append(Constants.STR_PROD_NAME).append(getName()).append(Constants.QUOTE);
         builder.append(Constants.STR_CATEGORY).append(Categories.EMPTY);
