@@ -186,18 +186,30 @@ public class TicketController {
             //it doesnt allow empty tickets
 
 
-            //cant exist 2 same serviceProduct
+            //cant exist 2 same serviceProduct or food/meeting product
             case ServiceProduct serviceProduct when ticket.containsProduct(product) ->
+                    throw new IllegalStateException(Constants.ERROR_SERVICE_ALREADY_EXIST);
+            
+            case Product prod when prod.isFoodOrMeeting() && ticket.containsProduct(product) ->
                     throw new IllegalStateException(Constants.ERROR_SERVICE_ALREADY_EXIST);
 
 
-            //limit participants validation.
+            //limit participants validation for ServiceProduct
             case ServiceProduct service -> {
                 if (amount <= 0 || amount > Constants.MAX_PERSONALIZATIONS_ALLOWED) {
                     throw new IllegalArgumentException(Constants.ERROR_INVALID_SERVICE_PEOPLE_1 + amount +
                             Constants.ERROR_INVALID_SERVICE_PEOPLE_2);
                 }
             }
+            
+            //limit participants validation for Food and Meeting
+            case Product prod when prod.isFoodOrMeeting() -> {
+                if (amount <= 0 || amount > Constants.MAX_PERSONALIZATIONS_ALLOWED) {
+                    throw new IllegalArgumentException(Constants.ERROR_INVALID_SERVICE_PEOPLE_1 + amount +
+                            Constants.ERROR_INVALID_SERVICE_PEOPLE_2);
+                }
+            }
+            
             default -> {
             }
         }

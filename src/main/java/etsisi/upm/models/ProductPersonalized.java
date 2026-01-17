@@ -24,6 +24,7 @@ public class ProductPersonalized extends Product {
     public ProductPersonalized(Product prod, List<String> customizations) {
         super(prod.getId(), prod.getName(), prod.getPrice(), prod.getCategory(), prod.getMaxPers());
         this.customizations = customizations;
+        this.personalizable = true; // Ensure personalizable flag is set
     }
 
     public List<String> getCustomizations() {
