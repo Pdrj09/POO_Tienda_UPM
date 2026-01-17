@@ -1,15 +1,23 @@
 package etsisi.upm.models;
 
-import etsisi.upm.util.*;
+import etsisi.upm.util.Constants;
 import etsisi.upm.io.KV;
 import etsisi.upm.io.Presentable;
+import etsisi.upm.util.Categories;
+import etsisi.upm.util.TicketStates;
+import etsisi.upm.util.Utilities;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
+@Entity
+@Table(name = "tickets")
 public abstract class Ticket <P extends Sellable> implements Presentable {
 
     //Stores the list of products and their quantities in the current transaction
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected String id;
     protected LocalDateTime closeDate;
     protected TicketStates state;
@@ -17,16 +25,19 @@ public abstract class Ticket <P extends Sellable> implements Presentable {
     protected Map<P, Integer> list;
     protected Map<Categories,Integer> categories;
 
-    public Ticket(String id) {
+    public Ticket(String id){
         LocalDateTime now = LocalDateTime.now();
         String formatted = Utilities.formatDate(now);
         this.id = formatted + Constants.HYPEN +id;
         this.list = new TreeMap<>();
         this.categories = new HashMap<>();
         this.state = TicketStates.EMPTY;
+
     }
 
-    public Ticket(){}
+    public Ticket(){
+        this(String.format(Constants.ID_FORMAT, new Random().nextInt(Constants.MAX_RANDOM)));
+    }
 
     public abstract Ticket<P> addProduct(Sellable prod, int amount);
 

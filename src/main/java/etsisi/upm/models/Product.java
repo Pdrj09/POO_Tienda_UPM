@@ -2,12 +2,17 @@ package etsisi.upm.models;
 
 import etsisi.upm.util.Constants;
 import etsisi.upm.io.KV;
+import etsisi.upm.io.Presentable;
 import etsisi.upm.util.Categories;
+import etsisi.upm.util.Utilities;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-//We asign the variables
+@Entity
+@Table(name = "products")
 public class Product extends Sellable {
 
     protected boolean personalizable;
@@ -55,10 +60,45 @@ public class Product extends Sellable {
 
 
     //getters and setters
+    public int getId() {
+        return id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setMaxPers(int maxPers) {
+        this.maxPers = maxPers;
+    }
+
+    public double getPrice() {
+        return Utilities.round(price);
+    }
+
     public int getMaxPers() {
         return maxPers;
     }
 
+    public String getName(){
+        return name;
+    }
+
+    public Categories getCategory() {
+        return category;
+    }
+
+    public void setCategory(Categories category) {
+        this.category = category;
+    }
+
+    public List<KV> getPresentableDetails() {
+        return new ArrayList<>();
+    }
 
     @Override
     public List<KV> toViewKVList() {
