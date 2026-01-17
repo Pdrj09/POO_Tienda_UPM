@@ -4,21 +4,40 @@ import etsisi.upm.util.Constants;
 import etsisi.upm.io.KV;
 import etsisi.upm.util.Categories;
 import etsisi.upm.util.Utilities;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+@Entity
+@Table(name = "service_products")
 public class ServiceProduct extends Sellable {
+    @Column(name = "expiration_date")
     protected final LocalDateTime expirationDate;
+    @Column(name = "num_people")
     protected int numPeople;
+
+    @Column(name = "final_price")
     private double finalPrice;
 
-    private final int minimumCreationTime;
+    @Column(name = "min_creation_time")
+    private int minimumCreationTime;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "min_time_unit")
     private final ChronoUnit minimumTimeUnit;
+
+    @Column(name = "service_type")
     private String serviceType;
 
+    public ServiceProduct() {
+        super();
+        this.expirationDate = LocalDateTime.now();
+        this.minimumCreationTime = 0;
+        this.minimumTimeUnit = ChronoUnit.DAYS;
+    }
 
     public ServiceProduct(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate,
                           int minimumCreationTime, ChronoUnit minimumTimeUnit, String serviceType) {

@@ -40,6 +40,8 @@
         <mapping class="etsisi.upm.models.TicketOfProducts"/>
         <mapping class="etsisi.upm.models.TicketOfServices"/>
         <mapping class="etsisi.upm.models.TicketOfMixed"/>
+        <mapping class="etsisi.upm.models.ServiceProduct"/>
+        <mapping class="etsisi.upm.models.Sellable"/>
 
     </session-factory>
 </hibernate-configuration>
