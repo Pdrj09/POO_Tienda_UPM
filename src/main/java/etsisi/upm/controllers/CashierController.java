@@ -98,7 +98,7 @@ public class CashierController {
     }
 
     private Collection<Cashier> listCashiers() {
-        return repository.findAll();
+        return repository.findAllOrderBy("name");
     }
 
     private Collection<String> listTickets(String cashierId) {

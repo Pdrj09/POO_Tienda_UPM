@@ -64,6 +64,6 @@ public class ClientController {
     }
 
     private Collection<Client> listClients() {
-        return clientRepository.findAll();
+        return clientRepository.findAllOrderBy("name");
     }
 }

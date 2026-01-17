@@ -128,7 +128,19 @@ public class Repository <K, T> implements RepositoryInterface<K, T>{
     public Collection<T> findAll(){
         try(Session session = HibernateUtil.getSessionFactory().openSession()){
             return session
-                    .createQuery("FROM "+ entityCLass.getName(), entityCLass)
+                    .createQuery("FROM "+ entityCLass.getName() + " ORDER BY id", entityCLass)
+                    .getResultList();
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException(Constants.ERROR_HIBERNATE_LIST + entityCLass.getSimpleName(), e);
+        }
+    }
+
+    @Override
+    public Collection<T> findAllOrderBy(String fieldName){
+        try(Session session = HibernateUtil.getSessionFactory().openSession()){
+            return session
+                    .createQuery("FROM "+ entityCLass.getName() + " ORDER BY "+fieldName, entityCLass)
                     .getResultList();
         }catch (Exception e){
             e.printStackTrace();

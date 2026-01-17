@@ -11,6 +11,9 @@ public interface RepositoryInterface<K, T> {
     T removeById(K id);
     boolean hasKey(K id);
     Collection<T> findAll();
+
+    Collection<T> findAllOrderBy(String fieldName);
+
     Map<K, T> getMap();
     T update(T object);
 }
