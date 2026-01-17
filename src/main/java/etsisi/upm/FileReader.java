@@ -43,7 +43,7 @@ public class FileReader {
     }
 
     private static CLI getCli() {
-        Repository<Integer, Sellable> productRepo = new Repository<>(Sellable.class,Constants.MAX_SIZE);
+        Repository<String, Sellable> productRepo = new Repository<>(Sellable.class,Constants.MAX_SIZE);
         Repository<String, Ticket<?>> ticketRepo = new Repository<>((Class) Ticket.class);
         Repository<String, Client> clientRepo = new Repository<>(Client.class);
         Repository<String, Cashier> cashierRepo = new Repository<>(Cashier.class);

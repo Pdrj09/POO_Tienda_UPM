@@ -52,10 +52,10 @@ public class Utilities {
         String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
         return email.matches(regex);
     }
-    public static <T> int generateAutomaticId(Repository<Integer, T> repository) {
+    public static <T> int generateAutomaticId(Repository<String, T> repository) {
         int id = Constants.BASE_PROD_ID;
 
-        while (repository.findById(id) != null) {
+        while (repository.findById(String.valueOf(id)) != null) {
             id++;
         }
 

@@ -22,20 +22,20 @@ public class Product extends Sellable {
     }
 
     //this is the constructor that creates a product
-    public Product(int id, String name, double price, Categories category) {
+    public Product(String id, String name, double price, Categories category) {
         super(id, name, price, category);
         this.category = category;
         this.personalizable = false;
         this.active = true;
     }
     //if it has maxpers we consider that the product can be personalized
-    public Product(int id, String name, double price, Categories category, int maxPers ) {
+    public Product(String id, String name, double price, Categories category, int maxPers ) {
         super(id, name, price, category);
         this.maxPers = maxPers;
         this.personalizable = true;
     }
     // update certain characteristics of product
-    public int update(String name, Categories category, double price) {
+    public String update(String name, Categories category, double price) {
         this.name = name;
         this.category = category;
         this.price = price;
@@ -62,7 +62,7 @@ public class Product extends Sellable {
 
 
     //getters and setters
-    public int getId() {
+    public String getId() {
         return id;
     }
 

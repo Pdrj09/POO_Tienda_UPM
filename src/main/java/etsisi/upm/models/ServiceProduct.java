@@ -39,7 +39,7 @@ public class ServiceProduct extends Sellable {
         this.minimumTimeUnit = ChronoUnit.DAYS;
     }
 
-    public ServiceProduct(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate,
+    public ServiceProduct(String id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate,
                           int minimumCreationTime, ChronoUnit minimumTimeUnit, String serviceType) {
         super(id, name, pricePerPerson, Categories.EMPTY);
         this.minimumCreationTime = minimumCreationTime;
@@ -69,7 +69,7 @@ public class ServiceProduct extends Sellable {
         }
     }
 
-    public ServiceProduct(int id, LocalDateTime expirationDate, Categories category) {
+    public ServiceProduct(String id, LocalDateTime expirationDate, Categories category) {
 
         super(id, "", 0.0, category);
         this.expirationDate = expirationDate;
@@ -79,11 +79,11 @@ public class ServiceProduct extends Sellable {
         this.numPeople = 1;
     }
 
-    public static ServiceProduct createMeeting(int id, String name, double price, int people, LocalDateTime date){
+    public static ServiceProduct createMeeting(String id, String name, double price, int people, LocalDateTime date){
         return new ServiceProduct(id, name, price, people, date, Constants.TIME_MEETING_PLANNING_HOURS, ChronoUnit.HOURS, Constants.STR_MEETING);
     }
 
-    public static ServiceProduct createFood(int id, String name, double price, int people, LocalDateTime date){
+    public static ServiceProduct createFood(String id, String name, double price, int people, LocalDateTime date){
         return new ServiceProduct(id, name, price, people, date, Constants.TIME_FOOD_PLANNING_DAYS, ChronoUnit.DAYS, Constants.STR_FOOD);
     }
 

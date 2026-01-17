@@ -13,14 +13,14 @@ import java.util.Objects;
 @Entity
 @Table(name = "sellables")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "sellable_type")
+@DiscriminatorColumn(name = "sellable_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class Sellable implements Comparable<Sellable>, Presentable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long dbId; //for the database
 
-    protected int id; // It is a global variable as the id cant change once the object is created
+    protected String id; // It is a global variable as the id cant change once the object is created
     protected String name;
     protected double price;
     @Enumerated(EnumType.STRING)
@@ -30,13 +30,15 @@ public abstract class Sellable implements Comparable<Sellable>, Presentable {
     protected boolean active;
 
     public Sellable() {
+        this.active = true;
     }
 
-    public Sellable(int id, String name, double price, Categories category) {
+    public Sellable(String id, String name, double price, Categories category) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.category = category;
+        this.active = true;
     }
 
     public void archive() { this.active = false; }
@@ -49,7 +51,7 @@ public abstract class Sellable implements Comparable<Sellable>, Presentable {
         this.active = active;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -117,6 +119,6 @@ public abstract class Sellable implements Comparable<Sellable>, Presentable {
         if (!this.getClass().equals(other.getClass()))
             return this.getClass().getName().compareTo(other.getClass().getName());
         //if not, compare the id
-        return Integer.compare(this.id, other.id);
+        return this.id.compareTo(other.id);
     }
 }

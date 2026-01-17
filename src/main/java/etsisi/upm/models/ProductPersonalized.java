@@ -3,10 +3,7 @@ package etsisi.upm.models;
 import etsisi.upm.util.Constants;
 import etsisi.upm.io.KV;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class ProductPersonalized extends Product {
     private List<String> customizations;
@@ -36,9 +33,7 @@ public class ProductPersonalized extends Product {
 
     @Override
     public int hashCode() {
-        int result = Integer.hashCode(this.getId());
-        result = 31 * result + new HashSet<>(this.customizations).hashCode();
-        return result;
+        return Objects.hash(super.hashCode(), customizations);
     }
 
     @Override
