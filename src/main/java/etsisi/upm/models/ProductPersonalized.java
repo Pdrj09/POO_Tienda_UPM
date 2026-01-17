@@ -2,9 +2,13 @@ package etsisi.upm.models;
 
 import etsisi.upm.util.Constants;
 import etsisi.upm.io.KV;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 
 import java.util.*;
 
+@Entity
+@DiscriminatorValue("PRODUCT_PERSONALIZED")
 public class ProductPersonalized extends Product {
     private List<String> customizations;
 
