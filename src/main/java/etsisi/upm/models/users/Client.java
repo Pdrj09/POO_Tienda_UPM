@@ -16,7 +16,7 @@ public class Client extends User {
     @JoinColumn(name = "cashier_db_id", nullable = false)
     private Cashier cashier;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = Ticket.class, fetch = FetchType.EAGER)
     @JoinTable(
             name = "client_associated_tickets",
             joinColumns = @JoinColumn(name = "client_db_id"),

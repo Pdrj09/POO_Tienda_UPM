@@ -10,7 +10,7 @@ import java.util.*;
 @Table(name = "cashiers")
 public class Cashier extends User {
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = Ticket.class, fetch = FetchType.EAGER)
     @JoinTable(
             name = "cashier_created_tickets",
             joinColumns = @JoinColumn(name = "cashier_db_id"),

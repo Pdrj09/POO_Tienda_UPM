@@ -26,9 +26,13 @@ public abstract class Ticket <P extends Sellable> implements Presentable {
     @Enumerated(EnumType.STRING)
     protected TicketStates state;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "ticket_products", joinColumns = @JoinColumn(name = "ticket_db_id"))
-    @MapKeyJoinColumn(name = "product_db_id")
+    @ManyToMany(targetEntity = Sellable.class, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "ticket_contents",
+            joinColumns = @JoinColumn(name = "ticket_db_id"),
+            inverseJoinColumns = @JoinColumn(name = "sellable_id")
+    )
+    @MapKeyJoinColumn(name = "map_key_sellable_id")
     @Column(name = "quantity")
     protected Map<P, Integer> list;
 
