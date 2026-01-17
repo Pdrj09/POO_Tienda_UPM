@@ -60,15 +60,6 @@ public class ServiceProduct extends Sellable {
         this.numPeople = 1;
     }
 
-    public static ServiceProduct createMeeting(int id, String name, double price, int people, LocalDateTime date){
-        return new ServiceProduct(id, name, price, people, date, Constants.TIME_MEETING_PLANNING_HOURS, ChronoUnit.HOURS, Constants.STR_MEETING);
-    }
-
-    public static ServiceProduct createFood(int id, String name, double price, int people, LocalDateTime date){
-        return new ServiceProduct(id, name, price, people, date, Constants.TIME_FOOD_PLANNING_DAYS, ChronoUnit.DAYS, Constants.STR_FOOD);
-    }
-
-
     // Abstract methods
     public int getMinimumCreationTime(){return this.minimumCreationTime;}
     public ChronoUnit getMinimumTimeUnit(){return this.minimumTimeUnit;}

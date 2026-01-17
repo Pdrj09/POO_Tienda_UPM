@@ -4,6 +4,8 @@ import etsisi.upm.util.Constants;
 import etsisi.upm.io.KV;
 import etsisi.upm.util.Categories;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,5 +72,50 @@ public class Product extends Sellable {
         if (this.isPersonalizable())
             kvs.add(new KV("Max Personalizations", String.valueOf(this.getMaxPers())));
         return kvs;
+    }
+
+    // Factory methods for Food and Meeting products
+    public static Product createFood(int id, String name, double price, int maxPeople, LocalDateTime expirationDate) {
+        // Validate time feasibility (3 days in the future)
+        validateFeasibility(expirationDate, Constants.TIME_FOOD_PLANNING_DAYS, ChronoUnit.DAYS, Constants.DAYS);
+        
+        // Validate people count
+        validatePeopleCount(maxPeople);
+        
+        // Create a regular product with EMPTY category (no category for food/meeting)
+        return new Product(id, name, price, Categories.EMPTY);
+    }
+
+    public static Product createMeeting(int id, String name, double price, int maxPeople, LocalDateTime expirationDate) {
+        // Validate time feasibility (12 hours in the future)
+        validateFeasibility(expirationDate, Constants.TIME_MEETING_PLANNING_HOURS, ChronoUnit.HOURS, Constants.HOURS);
+        
+        // Validate people count
+        validatePeopleCount(maxPeople);
+        
+        // Create a regular product with EMPTY category (no category for food/meeting)
+        return new Product(id, name, price, Categories.EMPTY);
+    }
+
+    private static void validateFeasibility(LocalDateTime expirationDate, int minimumTime, ChronoUnit timeUnit, String timeUnitStr) {
+        LocalDateTime now = LocalDateTime.now();
+        long timeDifference = now.until(expirationDate, timeUnit);
+        
+        if (timeDifference < minimumTime) {
+            StringBuilder error = new StringBuilder();
+            error.append(Constants.ERROR_SERVICE_DATE_FEASIBILITY);
+            error.append(minimumTime);
+            error.append(Constants.STR_BLANK_SPACE);
+            error.append(timeUnitStr);
+            error.append(Constants.IN_THE_FUTURE);
+            throw new IllegalArgumentException(error.toString());
+        }
+    }
+
+    private static void validatePeopleCount(int maxPeople) {
+        if (maxPeople <= Constants.SERVICE_PROD_MINPEOPLE) {
+            throw new IllegalArgumentException(Constants.ERROR_TOOMANY_PEOPLE);
+        }
+        // Note: We don't enforce the max limit here since we're not storing numPeople
     }
 }

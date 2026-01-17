@@ -182,15 +182,15 @@ public class ProductController {
     }
 
     private Sellable addFood(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
-        ServiceProduct food = ServiceProduct.createFood(id, name, pricePerPerson, maxPeople, expirationDate);
+        Product food = Product.createFood(id, name, pricePerPerson, maxPeople, expirationDate);
         this.productRepository.add(food.getId(), food);
         return food;
     }
 
     private Sellable addMeeting(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
-            ServiceProduct meeting = ServiceProduct.createMeeting(id, name, pricePerPerson, maxPeople, expirationDate);
-            this.productRepository.add(meeting.getId(), meeting);
-            return meeting;
+        Product meeting = Product.createMeeting(id, name, pricePerPerson, maxPeople, expirationDate);
+        this.productRepository.add(meeting.getId(), meeting);
+        return meeting;
     }
 
 }
