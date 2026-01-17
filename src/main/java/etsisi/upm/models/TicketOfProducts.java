@@ -2,11 +2,13 @@ package etsisi.upm.models;
 
 import etsisi.upm.util.*;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
+@Table(name = "tickets_of_products")
 public class TicketOfProducts extends Ticket<Product> {
     public TicketOfProducts(String id){
         super(id);
@@ -18,7 +20,7 @@ public class TicketOfProducts extends Ticket<Product> {
 
     @Override
     public Ticket<Product> addProduct(Sellable prod, int amount) {
-        if (!(prod instanceof Product))
+        if (!(prod instanceof Product product))
             throw new IllegalArgumentException(Constants.ERROR_INVALID_TICKET_PROD_TYPE);
 
         if (countProducts() + amount > Constants.MAX_SIZE_TICKET)
@@ -26,10 +28,7 @@ public class TicketOfProducts extends Ticket<Product> {
 
         if (amount < Constants.MIN_AMMOUNT) throw new IllegalStateException(Constants.ERROR_ZERO_AMOUNT);
 
-        if (this.list.containsKey(prod)) {
-            this.list.compute((Product) prod, (k, currentAmount) -> currentAmount + amount);
-        }else
-            this.list.put((Product) prod, amount);
+        addToItem(product, amount);
 
         Categories category = prod.getCategory();
 
@@ -41,7 +40,7 @@ public class TicketOfProducts extends Ticket<Product> {
 
     @Override
     public String close() {
-        if (this.list.isEmpty())
+        if (this.items.isEmpty())
             throw new SecurityException(Constants.ERROR_EMPTY_TICKET);
         this.closeDate = LocalDateTime.now();
         this.state = TicketStates.CLOSED;

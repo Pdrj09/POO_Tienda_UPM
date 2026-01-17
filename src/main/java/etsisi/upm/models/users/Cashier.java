@@ -14,7 +14,7 @@ public class Cashier extends User {
     @JoinTable(
             name = "cashier_created_tickets",
             joinColumns = @JoinColumn(name = "cashier_db_id"),
-            inverseJoinColumns = @JoinColumn(name = "ticket_db_id")
+            inverseJoinColumns = @JoinColumn(name = "ticket_id")
     )
     private Set<Ticket<?>> createdTickets;
 

@@ -20,7 +20,7 @@ public class Client extends User {
     @JoinTable(
             name = "client_associated_tickets",
             joinColumns = @JoinColumn(name = "client_db_id"),
-            inverseJoinColumns = @JoinColumn(name = "ticket_db_id")
+            inverseJoinColumns = @JoinColumn(name = "ticket_id")
     )
     private Set<Ticket<?>> associatedTickets;
 

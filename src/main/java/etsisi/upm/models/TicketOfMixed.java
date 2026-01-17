@@ -5,11 +5,13 @@ import etsisi.upm.util.Constants;
 import etsisi.upm.util.TicketStates;
 import etsisi.upm.util.Utilities;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
+@Table(name = "tickets_of_mixed")
 public class TicketOfMixed extends Ticket<Sellable> {
     public TicketOfMixed(String id) {
         super(id);
@@ -26,10 +28,7 @@ public class TicketOfMixed extends Ticket<Sellable> {
 
         if (amount < Constants.MIN_AMMOUNT) throw new IllegalStateException(Constants.ERROR_ZERO_AMOUNT);
 
-        if (this.list.containsKey(prod)) {
-            this.list.compute(prod, (k, currentAmount) -> currentAmount + amount);
-        }else
-            this.list.put(prod, amount);
+        addToItem(prod, amount);
 
         if (prod instanceof ServiceProduct service) {
             double calculatedTotal = service.getPricePerPerson() * amount;
@@ -46,17 +45,17 @@ public class TicketOfMixed extends Ticket<Sellable> {
 
     @Override
     public String close() {
-        if (list.isEmpty()) throw new SecurityException(Constants.ERROR_EMPTY_TICKET);
+        if (items.isEmpty()) throw new SecurityException(Constants.ERROR_EMPTY_TICKET);
 
-        // Validación simplificada con Stream
-        boolean hasProduct = list.keySet().stream().anyMatch(s -> s instanceof Product);
-        boolean hasService = list.keySet().stream().anyMatch(s -> s instanceof ServiceProduct);
+        // Validacion simplificada con Stream
+        boolean hasProduct = items.stream().anyMatch(item -> item.getSellable() instanceof Product);
+        boolean hasService = items.stream().anyMatch(item -> item.getSellable() instanceof ServiceProduct);
 
         if (!(hasProduct && hasService)) {
             throw new IllegalArgumentException(Constants.ERROR_INVALID_PRINT_MIXED_TICKET);
         }
 
-        // NO MODIFICAR EL ID AQUÍ. Solo el estado y la fecha.
+        // NO MODIFICAR EL ID AQUI. Solo el estado y la fecha.
         this.closeDate = LocalDateTime.now();
         this.state = TicketStates.CLOSED;
         return this.getId();
@@ -65,15 +64,15 @@ public class TicketOfMixed extends Ticket<Sellable> {
     @Override
     protected double totalDiscount() {
         double baseDiscount= super.totalDiscount();
-        long numServices = list.keySet().stream()
-                .filter(item -> item instanceof ServiceProduct)
+        long numServices = items.stream()
+                .filter(item -> item.getSellable() instanceof ServiceProduct)
                 .count();
-        if (numServices >0) {
-            double productTotal = list.entrySet().stream()
-                    .filter(entry ->entry.getKey() instanceof Product)
-                    .mapToDouble(entry-> calculateProductPrice(entry.getKey()) *entry.getValue())
+        if (numServices > 0) {
+            double productTotal = items.stream()
+                    .filter(item -> item.getSellable() instanceof Product)
+                    .mapToDouble(item -> calculateProductPrice(item.getSellable()) * item.getQuantity())
                     .sum();
-            baseDiscount += productTotal * (0.15 *numServices);
+            baseDiscount += productTotal * (0.15 * numServices);
         }
         return Utilities.round(baseDiscount);
     }

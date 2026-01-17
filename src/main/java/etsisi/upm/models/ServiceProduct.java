@@ -15,7 +15,7 @@ import java.util.List;
 @DiscriminatorValue("SERVICE")
 public class ServiceProduct extends Sellable {
     @Column(name = "expiration_date")
-    protected final LocalDateTime expirationDate;
+    protected LocalDateTime expirationDate;
     @Column(name = "num_people")
     protected int numPeople;
 
@@ -27,7 +27,7 @@ public class ServiceProduct extends Sellable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "min_time_unit")
-    private final ChronoUnit minimumTimeUnit;
+    private ChronoUnit minimumTimeUnit;
 
     @Column(name = "service_type")
     private String serviceType;

@@ -23,11 +23,18 @@
             <version>6.4.4.Final</version>
         </dependency>
 
-        <!-- H2 Database -->
+        <!-- SQLite Database -->
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>2.2.224</version>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.45.1.0</version>
+        </dependency>
+
+        <!-- Hibernate Community Dialects (incluye SQLite) -->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-community-dialects</artifactId>
+            <version>6.4.4.Final</version>
         </dependency>
 
         <!-- JPA -->

@@ -2,11 +2,13 @@ package etsisi.upm.models;
 
 import etsisi.upm.util.*;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
+@Table(name = "tickets_of_services")
 public class TicketOfServices extends Ticket<ServiceProduct> {
     public TicketOfServices(String id){
         super(id);
@@ -24,10 +26,7 @@ public class TicketOfServices extends Ticket<ServiceProduct> {
 
             if (amount < Constants.MIN_AMMOUNT) throw new IllegalStateException(Constants.ERROR_ZERO_AMOUNT);
 
-            if (this.list.containsKey(prod)) {
-                this.list.compute(product, (k, currentAmount) -> currentAmount + amount);
-            } else
-                this.list.put(product, amount);
+            addToItem(product, amount);
 
             double calculatedTotal = product.getPricePerPerson() * amount;
             product.setFinalPrice(calculatedTotal);
@@ -44,7 +43,7 @@ public class TicketOfServices extends Ticket<ServiceProduct> {
 
     @Override
     public String close() {
-        if (this.list.isEmpty())
+        if (this.items.isEmpty())
             throw new SecurityException(Constants.ERROR_EMPTY_TICKET);
         this.closeDate = LocalDateTime.now();
         this.state = TicketStates.CLOSED;

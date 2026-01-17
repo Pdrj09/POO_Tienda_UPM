@@ -232,6 +232,7 @@ public class TicketController {
         if (cashier.getTickets().stream().noneMatch(t -> t.getId().equals(ticket.getId()))) throw new IllegalArgumentException(Constants.ERROR_INVALID_ID);
 
         this.closeTicket(ticket);
+        this.ticketRepository.update(ticket);
         return ticket;
     }
 }

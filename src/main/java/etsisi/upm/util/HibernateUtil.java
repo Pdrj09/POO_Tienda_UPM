@@ -3,7 +3,15 @@ package etsisi.upm.util;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class HibernateUtil {
+
+    static {
+        // Silenciar logs de Hibernate
+        Logger.getLogger("org.hibernate").setLevel(Level.OFF);
+    }
 
     private static final SessionFactory sessionFactory = buildSessionFactory();
 
@@ -11,7 +19,7 @@ public class HibernateUtil {
         try {
             return new Configuration().configure().buildSessionFactory();
         } catch (Throwable ex) {
-            System.err.println( Constants.ERROR_SESSION_CREATION + ex);
+            System.err.println(Constants.ERROR_SESSION_CREATION + ex);
             throw new ExceptionInInitializerError(ex);
         }
     }

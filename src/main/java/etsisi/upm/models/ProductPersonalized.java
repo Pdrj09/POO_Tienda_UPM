@@ -3,14 +3,23 @@ package etsisi.upm.models;
 import etsisi.upm.util.Constants;
 import etsisi.upm.io.KV;
 import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 
 import java.util.*;
 
 @Entity
 @DiscriminatorValue("PRODUCT_PERSONALIZED")
 public class ProductPersonalized extends Product {
+
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> customizations;
+
+    public ProductPersonalized() {
+        super();
+        this.customizations = new ArrayList<>();
+    }
 
     public ProductPersonalized(Product prod, List<String> customizations) {
         super(prod.getId(), prod.getName(), prod.getPrice(), prod.getCategory(), prod.getMaxPers());
