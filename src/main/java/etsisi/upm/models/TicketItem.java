@@ -12,7 +12,7 @@ public class TicketItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "sellable_db_id", referencedColumnName = "dbId")
     private Sellable sellable;
 

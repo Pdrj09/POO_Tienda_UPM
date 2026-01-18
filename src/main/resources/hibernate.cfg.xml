@@ -18,7 +18,7 @@
 
         <!-- Base de datos en archivo -->
         <property name="hibernate.connection.url">
-            jdbc:sqlite:./data/tienda.db
+            jdbc:sqlite:./data/tienda.sqlite
         </property>
 
         <property name="hibernate.connection.pool_size">1</property>
