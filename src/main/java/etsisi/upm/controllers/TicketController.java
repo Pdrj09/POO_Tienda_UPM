@@ -120,15 +120,18 @@ public class TicketController {
 
         if(ticketType.equals("-s")) {
 
+            if (!Utilities.isCompanyClient(clientId)) throw new IllegalArgumentException(Constants.ERROR_TICKET_INVALID_USER_CLIENT);
             ticket = new TicketOfServices(ticketId);
 
         } else if (ticketType.equals("-p")){
 
-                ticket = new TicketOfProducts(ticketId);
+            if (Utilities.isCompanyClient(clientId)) throw new IllegalArgumentException(Constants.ERROR_TICKET_INVALID_USER_COMPANY);
+            ticket = new TicketOfProducts(ticketId);
 
         } else if (ticketType.equals("-c")) {
 
-                ticket = new TicketOfMixed(ticketId);
+            if (!Utilities.isCompanyClient(clientId)) throw new IllegalArgumentException(Constants.ERROR_TICKET_INVALID_USER_CLIENT);
+            ticket = new TicketOfMixed(ticketId);
         }
         else{
             throw new IllegalArgumentException(Constants.ERROR_TICKET_NONEXISTENT_TYPE);

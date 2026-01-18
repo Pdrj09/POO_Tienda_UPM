@@ -65,4 +65,8 @@ public class Utilities {
 
         return id;
     }
+
+    public static boolean isCompanyClient(String clientId){
+        return Character.isDigit(clientId.charAt(clientId.length()-1));
+    }
 }

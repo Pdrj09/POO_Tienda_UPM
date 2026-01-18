@@ -299,6 +299,8 @@ public class Constants {
     public static final String ERROR_REMOVE_BASE_CASHIER = "Cannot remove the system default cashier.";
 
     public static final String P_OPTION = "-p";
+    public static final String ERROR_TICKET_INVALID_USER_CLIENT = "A client can not create this type of ticket, must be a company";
+    public static final String ERROR_TICKET_INVALID_USER_COMPANY = "A company can not create this type of ticket, must be a client";
 
     private Constants(){}
 
