@@ -83,7 +83,7 @@ class ClientController {
    + clientQuery(querySplit: String[]): String
    - addClient(name: String, dni: String, email: String, UW: String): Client
    - removeClient(id: String): Client
-   - listClients(): Collection<Clinet>
+   - listClients(): Collection<Client>
 }
 
 class CashierController {
@@ -132,71 +132,128 @@ interface RepositoryInterface<K, T> {
 
 
 
-class Product implements Presentable {
+abstract class Sellable implements Comparable, Presentable {
    # {final} id: int
    # name: String
    # price: double
-   # category: Caregories
-   # personalizable: boolean
-   # maxPers: int
-   + update(name: String, category: Category, price: double): int
-   + {abstract} calculatePrice(amount: int): double
+   # category: Categories
+   + {abstract} copy(): Sellable
+   + getId(): int
+   + getName(): String
+   + getPrice(): double
+   + getCategory(): Categories
+   + setCategory(category: Categories)
+   + setName(name: String)
+   + setPrice(price: double)
+   + getPresentableDetails(): List<KV>
    + equals(o: Object): boolean
-   + hasCode(): int
-   + toString(): String
+   + hashCode(): int
    + toViewKVList(): List<KV>
-   + compareTo(other: Product): int
+   + compareTo(other: Sellable): int
 }
 
-class ProductPersolaized extends Product {
-   - customizations List<String>
+class Product extends Sellable {
+   # personalizable: boolean
+   # maxPers: int
+   + update(name: String, category: Categories, price: double): int
+   + isPersonalizable(): boolean
+   + getMaxPers(): int
+   + copy(): Product
+   + toViewKVList(): List<KV>
+   + toString(): String
+}
+
+class ProductPersonalized extends Product {
+   - customizations: List<String>
    + getCustomizations(): List<String>
    + getCustomizationsAmount(): Integer
    + equals(o: Object): boolean
-   + hasCode(): int
-   + toViewKVList(): List<KV>
+   + hashCode(): int
+   + copy(): ProductPersonalized
+   + getPresentableDetails(): List<KV>
    + toString(): String
+   + compareTo(other: Sellable): int
 }
 
-class ServiceProduct extends Product {
-   - expirationDate: LocalDateTime
-   - numPeople: int
+abstract class ServiceProduct extends Sellable {
+   # {final} expirationDate: LocalDateTime
+   # numPeople: int
    - finalPrice: double
+   + {abstract} copy(): ServiceProduct
    + {abstract} getMinimumCreationTime(): int
    + {abstract} getMinimumTimeUnit(): ChronoUnit
    + isFeasible(creationTime: LocalDateTime): boolean
    + getPricePerPerson(): double
+   + getMaxPers(): int
+   + getFinalPrice(): double
+   + setFinalPrice(finalPrice: double)
    + toViewKVList(): List<KV>
    + toString(): String
-   + serFinalPrice(finalPrice: double)
 }
 
-
-class Ticket implements Presentable {
-   - id: String
-   - creationDate: LocalDateTime
-   - state: TicketState
-   - {final} list: Map<Product, Integer>
-   - {final} categories: Map<Categories, Integer>
-   + clear(): boolean
-   + addProduct(prod: Product, amount: int): Ticket
-   - countProducts(): int
-   + remove(prod: Product): Ticket
-   + close(): String
-   + totalPrice(): double
-   + totalDiscount(): double
-   + calculateProductPrice(prod: Product): double
-   + getTotalDiscountForProduct(prod: Product): double
-   + getDiscountPerUnit(prod: Product): double
+class Meeting extends ServiceProduct {
+   + copy(): ServiceProduct
+   + getMinimumCreationTime(): int
+   + getMinimumTimeUnit(): ChronoUnit
    + toString(): String
+}
+
+class Food extends ServiceProduct {
+   + copy(): ServiceProduct
+   + getMinimumCreationTime(): int
+   + getMinimumTimeUnit(): ChronoUnit
+   + toString(): String
+}
+
+abstract class Ticket<P extends Sellable> implements Presentable {
+   # id: String
+   # closeDate: LocalDateTime
+   # state: TicketStates
+   # list: Map<P, Integer>
+   # categories: Map<Categories, Integer>
+   + {abstract} addProduct(prod: Sellable, amount: int): Ticket<P>
+   # countProducts(): int
+   + remove(prod: Sellable): Ticket<P>
+   + {abstract} close(): String
+   # totalPrice(): double
+   # totalDiscount(): double
+   + calculateProductPrice(product: Sellable): double
+   + getTotalDiscountForProduct(prod: Sellable): double
+   + getDiscountPerUnit(prod: Sellable): double
+   + toString(): String
+   + getId(): String
+   + getState(): TicketStates
    + getTotalPriceView(): double
    + getTotalDiscountView(): double
    + getFinalPriceView(): double
-   + getList(): Map<Product, Integer>
-   + containsProduct(prod: Product): boolean
+   + getList(): Map<P, Integer>
+   + setId(id: String)
+   + getCloseDate(): LocalDateTime
+   + setCloseDate(closeDate: LocalDateTime)
+   + setState(state: TicketStates)
+   + setList(list: Map<P, Integer>)
+   + getCategories(): Map<Categories, Integer>
+   + setCategories(categories: Map<Categories, Integer>)
+   + containsProduct(prod: Sellable): boolean
    + isClosed(): boolean
    + toViewKVList(): List<KV>
    + toViewKVListSummary(): List<KV>
+   + getDetailedKVsForProductLine(p: Sellable, quantity: int): List<KV>
+}
+
+class TicketOfProducts extends Ticket {
+   + addProduct(prod: Sellable, amount: int): Ticket<Product>
+   + close(): String
+}
+
+class TicketOfServices extends Ticket {
+   + addProduct(prod: Sellable, amount: int): Ticket<ServiceProduct>
+   + close(): String
+}
+
+class TicketOfMixed extends Ticket {
+   + addProduct(prod: Sellable, amount: int): Ticket<Sellable>
+   + close(): String
 }
 
 class Repository<K,T> implements RepositoryInterface{
@@ -221,22 +278,31 @@ abstract class User implements Presentable{
 }
 
 class Client extends User {
+   - {final} strIdCashier: String
+   - {final} associatedTickets: Set<Ticket>
    + addAssociatedTicket(ticket: Ticket)
    + deleteTicket(ticket: Ticket)
    + validateDni(dni: String)
    + equals(o: Object): boolean
-   + hasCode(): int
+   + hashCode(): int
    + toViewKVList(): List<KV>
    + compareTo(o: User): int
    + toString(): String
 }
 
+class CompanyClient extends Client {
+   + toViewKVList(): List<KV>
+   + toString(): String
+}
+
 class Cashier extends User {
-   + deleteTicket(ticket Ticket)
+   - {final} createdTickets: Set<Ticket>
+   - {final} associatedClients: Set<Client>
+   + deleteTicket(ticket: Ticket)
    + {static} create(id: String, emailCompany: String, name: String): Cashier
-   + addTicket(ticket Ticket)
+   + addTicket(ticket: Ticket)
    + equals(o: Object): boolean
-   + hasCode(): int
+   + hashCode(): int
    + compareTo(o: User): int
    + toString(): String
 }
@@ -259,24 +325,50 @@ class Constants {
     + {static} deleteSubstring(query : String, regex : String) : String
 }
 
+class FileReader {
+   - {static} {final} CURSOR: String
+   + {static} main(args: String[])
+}
 
 
+
+' Inheritance relationships
+Sellable <|-- Product
+Product <|-- ProductPersonalized
+Sellable <|-- ServiceProduct
+ServiceProduct <|-- Food
+ServiceProduct <|-- Meeting
+Ticket <|-- TicketOfProducts
+Ticket <|-- TicketOfServices
+Ticket <|-- TicketOfMixed
+User <|-- Client
+Client <|-- CompanyClient
+User <|-- Cashier
+
+' Interface implementations
+Sellable ..|> Presentable
+Sellable ..|> Comparable
+Ticket ..|> Presentable
+User ..|> Presentable
+Repository ..|> RepositoryInterface
+
+' CLI relationships
 CLI --> ProductController
-ProductController ..> Product
+ProductController ..> Sellable
 ProductController --> Repository
 ProductController --> View
-View ..> Product 
-Repository o-- Product
-Product -> KV
-ServiceProduct --> KV
+View ..> Sellable
+Repository o-- Sellable
+Sellable --> KV
 
 CLI --> TicketController
 TicketController ..> Ticket
 TicketController --> Repository
 TicketController --> View
-View ..> Ticket 
+View ..> Ticket
 Repository o-- Ticket
 Ticket --> KV
+Ticket o-- Sellable
 
 User --> KV
 
@@ -284,16 +376,17 @@ CLI --> ClientController
 ClientController ..> Client
 ClientController --> Repository
 ClientController --> View
-View ..> Client 
+View ..> Client
 Repository o-- Client
 
 CLI --> CashierController
 CashierController ..> Cashier
 CashierController --> Repository
 CashierController --> View
-View ..> Cashier 
+View ..> Cashier
 Repository o-- Cashier
 
+' Initialization relationships
 Main ..> Repository
 Main ..> ProductController
 Main ..> TicketController
@@ -301,11 +394,17 @@ Main ..> ClientController
 Main ..> CashierController
 Main *-- CLI
 
-Cashier *-- Ticket
-Cashier -- Client
-
-Client o-- Ticket
+FileReader ..> Repository
+FileReader ..> ProductController
+FileReader ..> TicketController
+FileReader ..> ClientController
+FileReader ..> CashierController
+FileReader *-- CLI
 
 View --> KV
+
+' Utility relationships
+CLI ..> Utilities
+CLI ..> Constants
 
 @enduml
