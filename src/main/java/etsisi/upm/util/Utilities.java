@@ -49,9 +49,10 @@ public class Utilities {
             return false;
         }
 
-        String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+        String regex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
         return email.matches(regex);
     }
+
     public static <T> int generateAutomaticId(Repository<String, T> repository) {
         int id = Constants.BASE_PROD_ID;
 
