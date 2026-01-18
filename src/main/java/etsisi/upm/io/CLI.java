@@ -33,33 +33,33 @@ public class CLI {
     //this is printed when you call 'help'
     private static final String COMMANDS_LIST = """
             Commands:
-                      client add "<nombre>" (<DNI>|<NIF>) <email> <cashId>
-                      client remove <DNI>
-                      client list
-                      cash add [<id>] "<nombre>"<email>
-                      cash remove <id>
-                      cash list
-                      cash tickets <id>
-                      ticket new [<id>] <cashId> <userId> -[c|p|s] (default -p option)
-                      ticket add <ticketId><cashId> <prodId> <amount> [--p<txt> --p<txt>]\s
-                      ticket remove <ticketId><cashId> <prodId>\s
-                      ticket print <ticketId> <cashId>\s
-                      ticket list
-                      prod add ([<id>] "<name>" <category> <price> [<maxPers>]) || ("<name>" <category> )
-                      prod update <id> NAME|CATEGORY|PRICE <value>
-                      prod addFood [<id>] "<name>" <price> <expiration:yyyy-MM-dd> <max_people>
-                      prod addMeeting [<id>] "<name>" <price> <expiration:yyyy-MM-dd> <max_people>
-                      prod list
-                      prod remove <id>
-                      help
-                      echo “<text>”\s
-                      exit
+                        client add "<nombre>" (<DNI>|<NIF>) <email> <cashId>
+                        client remove <DNI>
+                        client list
+                        cash add [<id>] "<nombre>"<email>
+                        cash remove <id>
+                        cash list
+                        cash tickets <id>
+                        ticket new [<id>] <cashId> <userId> -[c|p|s] (default -p option)
+                        ticket add <ticketId><cashId> <prodId> <amount> [--p<txt> --p<txt>]\s
+                        ticket remove <ticketId><cashId> <prodId>\s
+                        ticket print <ticketId> <cashId>\s
+                        ticket list
+                        prod add ([<id>] "<name>" <category> <price> [<maxPers>]) || ("<name>" <category> )
+                        prod update <id> NAME|CATEGORY|PRICE <value>
+                        prod addFood [<id>] "<name>" <price> <expiration:yyyy-MM-dd> <max_people>
+                        prod addMeeting [<id>] "<name>" <price> <expiration:yyyy-MM-dd> <max_people>
+                        prod list
+                        prod remove <id>
+                        help
+                        echo “<text>”\s
+                        exit
             
             """ + getCategoriesHelp();
 
     private static final String COMMANDS_LIST_CLIENT = """
             Commands:
-                    client add "<nombre>" <DNI> <email> <cashId>
+                    client add "<nombre>" (<DNI>|<NIF>) <email> <cashId>
                     client remove <DNI>
                     client list
             """;
@@ -74,7 +74,7 @@ public class CLI {
 
     private static final String COMMANDS_LIST_TICKET = """
             Commands:
-                    ticket new [<id>] <cashId> <userId>
+                    ticket new [<id>] <cashId> <userId> -[c|p|s] (default -p option)
                     ticket add <ticketId><cashId> <prodId> <amount> [--p<txt> --p<txt>]\s
                     ticket remove <ticketId><cashId> <prodId>\s
                     ticket print <ticketId> <cashId>\s
@@ -83,10 +83,10 @@ public class CLI {
 
     private static final String COMMANDS_LIST_PROD = """
             Commands:
-                    prod add <id> "<name>" <category> <price>
+                    prod add ([<id>] "<name>" <category> <price> [<maxPers>]) || ("<name>" <category> )
                     prod update <id> NAME|CATEGORY|PRICE <value>
-                    prod addFood <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
-                    prod addMeeting <id> "<name>" <price/p> <expiration:yyyy-MM-dd HH:mm> <max_people>
+                    prod addFood [<id>] "<name>" <price> <expiration:yyyy-MM-dd> <max_people>
+                    prod addMeeting [<id>] "<name>" <price> <expiration:yyyy-MM-dd> <max_people>
                     prod list
                     prod remove <id>
             """;

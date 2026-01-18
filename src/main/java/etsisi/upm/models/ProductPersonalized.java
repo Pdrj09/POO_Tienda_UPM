@@ -2,18 +2,34 @@ package etsisi.upm.models;
 
 import etsisi.upm.util.Constants;
 import etsisi.upm.io.KV;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
+@Entity
+@DiscriminatorValue("PRODUCT_PERSONALIZED")
 public class ProductPersonalized extends Product {
+
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> customizations;
+
+    public ProductPersonalized() {
+        super();
+        this.customizations = new ArrayList<>();
+    }
 
     public ProductPersonalized(Product prod, List<String> customizations) {
         super(prod.getId(), prod.getName(), prod.getPrice(), prod.getCategory(), prod.getMaxPers());
         this.customizations = customizations;
+        this.personalizable = true; // Ensure personalizable flag is set
+        // Copy the database ID to ensure we reference the same database row
+        this.dbId = prod.dbId;
+        // Copy additional fields from Product that were added for Food/Meeting support
+        this.expirationDate = prod.getExpirationDate();
+        this.numPeople = prod.getNumPeople();
     }
 
     public List<String> getCustomizations() {
@@ -33,11 +49,10 @@ public class ProductPersonalized extends Product {
         }else return false;
     }
 
+
     @Override
     public int hashCode() {
-        int result = Integer.hashCode(this.getId());
-        result = 31 * result + new HashSet<>(this.customizations).hashCode();
-        return result;
+        return Objects.hash(super.hashCode(), customizations);
     }
 
     @Override
@@ -67,14 +82,13 @@ public class ProductPersonalized extends Product {
 
     // Archivo: etsisi.upm.models/ProductPersonalized.java
     @Override
-    public int compareTo(Product other) {
+    public int compareTo(Sellable other) {
         //compareto of the father
         int comparison = super.compareTo(other);
         if (comparison != 0)
             return comparison;
         //we compare the personalizations
-        if (other instanceof ProductPersonalized) {
-            ProductPersonalized otherPersonalized = (ProductPersonalized) other;
+        if (other instanceof ProductPersonalized otherPersonalized) {
             //we sort the lists
             List<String> thisCustoms = new ArrayList<>(this.customizations);
             List<String> otherCustoms = new ArrayList<>(otherPersonalized.getCustomizations());

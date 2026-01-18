@@ -11,7 +11,14 @@ public class Constants {
     //messages
     public static final String MSG_NOTHING_TO_SHOW = YELLOW + "[!] No items to display." + RESET;
 
+    //Hibernate
+    public static final String ERROR_SESSION_CREATION = "Initial SessionFactory creation failed.";
+    public static final String ERROR_GET_ID = "Can't get entity ID";
 
+
+    public static final String BASE_CASHIER_EMAIL = "basecashier@upm.es";
+    public static final String BASE_CASHIER_NAME = "basecashier";
+    public static final String BASE_CASHIER_ID = "UW0000000";
 
     public static final int QUERY_SUCCESS = 1;
     public static final int QUERY_EXIT = 0;
@@ -27,8 +34,10 @@ public class Constants {
     public static final int QUERY_TICKET_POS_USERID = 3;
     public static final int QUERY_TICKET_POS_AMOUNT = 4;
     public static final int QUERY_TICKET_POS_CUSTOMIZATIONS = 5;
+    public static final int QUERY_TICKET_POS_TICKET_TYPE = 4;
     public static final int TICKET_WITH_ID_INDEX = 0;
     public static final int TICKET_WITHOUT_ID_INDEX = 1;
+    public static final int QUERY_TICKET_MAX_LENGTH = 5;
 
     public static final int QUERY_PRODUCT_POS_INSTRUCTION = 0;
     public static final int QUERY_PRODUCT_POS_PRODUCTID = 1;
@@ -42,6 +51,9 @@ public class Constants {
     public static final int QUERY_PRODUCT_POS_EXPIRATION = 4;
     public static final int QUERY_PRODUCT_POS_MAXPEOPLE = 5;
     public static final int QUERY_PRODUCT_LENGTH_WITHCUTOMIZATIONS = 6;
+    public static final int QUERY_PRODUCT_LENGTH_WITHOUTCUTOMIZATIONS = 5;
+    public static final int QUERY_PRODUCT_LENGTH_WITHOUTID = 4;
+    public static final int QUERY_PRODUCT_LENGTH_SERVICE = 3;
 
     public static final int QUERY_CASH_LIST_LENGTH = 2;
     public static final int QUERY_CASH_POS_INSTRUCTION = 1;
@@ -50,6 +62,9 @@ public class Constants {
     public static final int QUERY_CASH_POS_EMAIL = 4;
     public static final int QUERY_CASH_LENGTH_WITHID = 5;
     public static final int QUERY_CASH_LENGTH_WITHOUTID = 4;
+
+    public static final int QUERY_SERVICE_POS_NAME = 1;
+    public static final int QUERY_SERVICE_POS_CATEGORY = 2;
 
     // numbers
     public static final int MAX_RANDOM_CASH_ID = 10_000_000;
@@ -97,12 +112,14 @@ public class Constants {
     public static final String DATETIME_FORMAT= "dd-MM-yy HH:mm";
 
     public static final String STR_FOOD = "class:Food";
+    public static final String STR_CLASS = "class:";
     public static final String STR_MEETING = "class:Meeting";
     public static final String STR_PRICE_PERSON = ", pricePerPerson:";
     public static final String STR_EXPIRATION = ", expiration:";
     public static final String STR_SERVICE_PRODUCT = "class:ServiceProduct";
     public static final String STR_MAX_PEOPLE_ALLOWED = ", maxPeopleAllowed:";
     public static final String STR_FINAL_PRICE = ", finalPrice:";
+    public static final String STR_PRODUCT_SERVICE = "ProductService";
 
     public static final String NAME = "NAME";
     public static final String CATEGORY = "CATEGORY";
@@ -112,10 +129,11 @@ public class Constants {
     // regex const
     public static final String REGEX_INIT = "^";
     public static final String REGEX_BLANK_SPACE = "\\s*";
-    public static final String REGEX_DOUBLE_QUOTE = "\"";
     public static final String REGEX_TO_SPLIT = " (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
-    public static final String REGEX_PERSONALIZED = "(?<=--p)";
     public static final String REGEX_CASH_ID = "^UW\\d{7}$";
+    public static final String REGEX_IS_DNI =
+            "^([0-9]{8}[A-Z]|[XYZ][0-9]{7}[A-Z]|[ABCDEFGHJKLMNPQRSUVW][0-9]{7}[0-9A-J])$";
+    public static final String REGEX_TICKET_OPT = "^-[psc]$";
 
     // products const
     public static final String PRODUCT = "prod";
@@ -135,11 +153,16 @@ public class Constants {
     public static final int MAX_PERSONALIZATIONS_ALLOWED = 100;
     public static final String STR_PRODUCT_PERSONALIZED = "class:ProductPersonalized";
     public static final int BASE_PROD_ID = 0;
-    public static final int PROD_ID_INCREMENT = 1;
+    public static final String NOT_VALID_ID = "The id is not valid";
     public static final int PROD_WITHOUT_ID_INDEX = 1;
     public static final int PROD_WITH_ID_INDEX = 0;
+
+    // service product
     public static final int SERVICE_PROD_MINPEOPLE = 0;
     public static final int SERVICE_PROD_BASEPRICE = 0;
+    public static final String STR_SERVICE_TRANSPORT = "TRANSPORT";
+    public static final String STR_SERVICE_SHOW = "SHOW";
+    public static final String STR_SERVICE_INSURANCE = "INSURANCE";
 
     // ticket const
     public static final String TICKET_ADD = "add";
@@ -256,11 +279,29 @@ public class Constants {
     public static final String ERROR_INVALID_OPTION = "invalid option";
     public static final String ERROR_FEW_PARAMS = "more params required";
     public static final String ERROR_NONEXISTEN_ID = "id nonexistent";
+    public static final String ERROR_TICKET_NONEXISTENT_TYPE = "wrong ticket type or too many arguments";
     public static final String ERROR_FILE_NOTFOUND = "file not found";
+    public static final String ERROR_EMPTY_TICKET = "The ticket cannot be empty";
+    public static final String ERROR_INVALID_NUMBER_ARGUMENTS = "Invalid number of arguments";
+
+    public static final String ERROR_INVALID_TICKET_PROD_TYPE = "Invalid product type at ticket";
+    public static final String ERROR_INVALID_PRINT_MIXED_TICKET =
+            "Cannot close a mix ticket without one element of each type";
+
+    public static final String ERROR_SERVICE_CATEGORY = "Invalid Service Category";
+    public static final String ERROR_SERVICE_DATE = "Please introduce a valid date";
 
     public static final int TO_PORCENTAGE = 100;
     public static final String ARROW = "->";
+    public static final String ERROR_HIBERNATE_LIST = "Error getting the list of ";
+    public static final String ERROR_HIBERNATE_UPDATE = "Error updating the field of ";
+    public static final String ERROR_HIBERNATE_UPDATE_ENTITY = "Error updating the entity";
+    public static final String ERROR_REMOVE_BASE_CASHIER = "Cannot remove the system default cashier.";
 
+    public static final String P_OPTION = "-p";
+    public static final String ERROR_TICKET_INVALID_USER_CLIENT = "A client can not create this type of ticket, must be a company";
+    public static final String ERROR_TICKET_INVALID_USER_COMPANY = "A company can not create this type of ticket, must be a client";
+    public static final String ERROR_INVALID_DNI_NIF_FORMAT = "Invalid ID format. Must be a valid DNI or NIF.";
 
     private Constants(){}
 

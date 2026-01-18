@@ -2,13 +2,23 @@ package etsisi.upm.models.users;
 
 import etsisi.upm.io.KV;
 import etsisi.upm.util.Constants;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 import java.util.List;
 
-public class CompanyClient extends Client{
+@Entity
+@Table(name = "company_clients")
+@DiscriminatorValue("COMPANY_CLIENT")
+public class CompanyClient extends Client {
 
-    public CompanyClient(String dni, String name, String email, String idCashier) {
-        super(dni, name, email, idCashier);
+    public CompanyClient(String dni, String name, String email, Cashier cashier) {
+        super(dni, name, email, cashier);
+    }
+
+    public CompanyClient() {
+        super();
     }
 
     @Override

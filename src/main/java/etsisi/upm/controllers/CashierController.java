@@ -17,6 +17,10 @@ public class CashierController {
     public CashierController(Repository<String, Cashier> repository, Repository<String, Client> clientRepository) {
         this.repository = repository;
         this.clientRepository = clientRepository;
+        if (this.repository.findById(Constants.BASE_CASHIER_ID) == null){
+            Cashier cashier = new Cashier(Constants.BASE_CASHIER_ID,Constants.BASE_CASHIER_EMAIL,Constants.BASE_CASHIER_NAME);
+            this.repository.add(cashier.getId(), cashier);
+        }
     }
 
     public String cashierQuery(String[] querySplit) {
@@ -75,20 +79,26 @@ public class CashierController {
     }
 
     private Cashier removeCashier(String id) {
-        Cashier removed = repository.removeById(id);
-        if (removed != null){
+        Cashier toRemove = repository.findById(id);
+        if (toRemove != null){
+            if (id.equals(Constants.BASE_CASHIER_ID))
+                throw new IllegalArgumentException(Constants.ERROR_REMOVE_BASE_CASHIER);
+
             //we search for all the clients and we clean their reference to that cashier
             for (Client client : clientRepository.findAll()){
-                if (client.getStrIdCashier().equals(id))
-                    client.setStrIdCashier("NONE");
+                if (client.getCashier().equals(toRemove)){
+                    client.setCashier(this.repository.findById(Constants.BASE_CASHIER_ID));
+                    clientRepository.update(client);
+                }
             }
+            repository.removeById(id);
         }else
             throw new IllegalArgumentException(Constants.ERROR_NONEXISTEN_ID);
-        return removed;
+        return toRemove;
     }
 
     private Collection<Cashier> listCashiers() {
-        return repository.findAll();
+        return repository.findAllOrderBy("name");
     }
 
     private Collection<String> listTickets(String cashierId) {

@@ -1,31 +1,49 @@
 package etsisi.upm.models;
 
+import etsisi.upm.models.users.Cashier;
+import etsisi.upm.models.users.Client;
 import etsisi.upm.util.Constants;
 import etsisi.upm.io.KV;
 import etsisi.upm.io.Presentable;
 import etsisi.upm.util.Categories;
 import etsisi.upm.util.TicketStates;
 import etsisi.upm.util.Utilities;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class Ticket implements Presentable {
+@Entity
+@Table(name = "tickets")
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Ticket <P extends Sellable> implements Presentable {
 
-    //Stores the list of products and their quantities in the current transaction
-    private String id;
-    private LocalDateTime closeDate;
-    private TicketStates state;
+    @Id
+    @Column(name = "id")
+    protected String id;
 
-    private final Map<Product,Integer> list;
-    private final Map<Categories,Integer> categories;
+    protected LocalDateTime closeDate;
+
+    @Enumerated(EnumType.STRING)
+    protected TicketStates state;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumn(name = "ticket_id")
+    protected Set<TicketItem> items;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "ticket_categories", joinColumns = @JoinColumn(name = "ticket_id"))
+    @MapKeyEnumerated(EnumType.STRING)
+    @Column(name = "quantity")
+    @MapKeyColumn(name = "category")
+    protected Map<Categories,Integer> categories;
 
 
     public Ticket(String id){
         LocalDateTime now = LocalDateTime.now();
         String formatted = Utilities.formatDate(now);
         this.id = formatted + Constants.HYPEN +id;
-        this.list = new TreeMap<>();
+        this.items = new HashSet<>();
         this.categories = new HashMap<>();
         this.state = TicketStates.EMPTY;
 
@@ -35,68 +53,90 @@ public class Ticket implements Presentable {
         this(String.format(Constants.ID_FORMAT, new Random().nextInt(Constants.MAX_RANDOM)));
     }
 
-    public Ticket addProduct(Product prod, int amount) {
-        if (countProducts() + amount > Constants.MAX_SIZE_TICKET)  throw new IllegalStateException(Constants.ERROR_MAXSIZE_TICKET + Constants.MAX_SIZE_TICKET);
-
-        if (amount < Constants.MIN_AMMOUNT) throw new IllegalStateException(Constants.ERROR_ZERO_AMOUNT);
-
-        if (this.list.containsKey(prod)) {
-            int currentAmount = this.list.get(prod);
-            this.list.put(prod, currentAmount + amount);
-        }else
-            this.list.put(prod, amount);
-
-        if (prod instanceof ServiceProduct service) {
-            double calculatedTotal = service.getPricePerPerson() * amount;
-            service.setFinalPrice(calculatedTotal);
+    // Metodos auxiliares para trabajar con items como si fuera un Map
+    protected Map<P, Integer> getListAsMap() {
+        Map<P, Integer> map = new TreeMap<>(Comparator.comparing(Sellable::getId));
+        for (TicketItem item : items) {
+            map.put((P) item.getSellable(), item.getQuantity());
         }
-
-        Categories category = prod.getCategory();
-        this.categories.put(category, this.categories.getOrDefault(category, Constants.BASE_AMOUNT_OF_CATEGORY) + amount);
-        this.state = TicketStates.ACTIVE;
-
-        return this;
+        return map;
     }
 
-    private int countProducts(){
+    protected TicketItem findItem(Sellable sellable) {
+        for (TicketItem item : items) {
+            if (item.getSellable().equals(sellable)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    protected void putItem(P sellable, int quantity) {
+        TicketItem existing = findItem(sellable);
+        if (existing != null) {
+            existing.setQuantity(quantity);
+        } else {
+            items.add(new TicketItem(sellable, quantity));
+        }
+    }
+
+    protected void addToItem(P sellable, int amount) {
+        TicketItem existing = findItem(sellable);
+        if (existing != null) {
+            existing.addQuantity(amount);
+        } else {
+            items.add(new TicketItem(sellable, amount));
+        }
+    }
+
+    protected Integer getItemQuantity(Sellable sellable) {
+        TicketItem item = findItem(sellable);
+        return item != null ? item.getQuantity() : null;
+    }
+
+    protected boolean containsItem(Sellable sellable) {
+        return findItem(sellable) != null;
+    }
+
+    protected void removeItem(Sellable sellable) {
+        items.removeIf(item -> item.getSellable().equals(sellable));
+    }
+
+    public abstract Ticket<P> addProduct(Sellable prod, int amount);
+
+    protected int countProducts(){
         int total = Constants.BASE_AMOUNT_OF_PRODUCT;
-        for(Integer amount : this.list.values()){
-            total += amount;
+        for(TicketItem item : this.items){
+            total += item.getQuantity();
         }
         return total;
     }
 
     // Remove a product from the ticket
-    public Ticket remove(Product prod){
-        this.list.remove(prod);
-        if(this.list.isEmpty()) this.state = TicketStates.EMPTY;
+    public Ticket<P> remove(Sellable prod){
+        removeItem(prod);
+        if(this.items.isEmpty()) this.state = TicketStates.EMPTY;
         return this;
     }
 
-    public String close(){
-        this.closeDate = LocalDateTime.now();
-        String date = Utilities.formatDate(this.closeDate);
-        this.id+=Constants.HYPEN+date;
-        this.state = TicketStates.CLOSED;
-        return this.getId();
-    }
+    public abstract String close();
 
-    private double totalPrice(){
+    protected double totalPrice(){
         double sum=Constants.BASE_PRICE;
-        for(Map.Entry<Product, Integer> entry : list.entrySet()){
-            double price = calculateProductPrice(entry.getKey());
-            int amount = entry.getValue();
+        for(TicketItem item : items){
+            double price = calculateProductPrice(item.getSellable());
+            int amount = item.getQuantity();
 
             sum += price * amount;
         }
         return Utilities.round(sum);
     }
 
-    private double totalDiscount(){
+    protected double totalDiscount(){
         double sum=Constants.BASE_DISCOUNT;
-        for(Map.Entry<Product, Integer> entry : list.entrySet()){
-            Product product = entry.getKey();
-            int amount = entry.getValue();
+        for(TicketItem item : items){
+            Sellable product = item.getSellable();
+            int amount = item.getQuantity();
 
             if (categories.get(product.getCategory()) > Constants.MIN_FOR_DISCOUNT){
                 double productBasePrice = calculateProductPrice(product) * amount;
@@ -106,7 +146,7 @@ public class Ticket implements Presentable {
         return Utilities.round(sum);
     }
 
-    public double calculateProductPrice(Product product){
+    public double calculateProductPrice(Sellable product){
         double price = product.getPrice();
 
         if (product instanceof ProductPersonalized){
@@ -116,14 +156,14 @@ public class Ticket implements Presentable {
         return price;
     }
 
-    public double getTotalDiscountForProduct(Product prod) {
-        Integer amount = this.list.get(prod);
+    public double getTotalDiscountForProduct(Sellable prod) {
+        Integer amount = getItemQuantity(prod);
         double discountPerUnit = getDiscountPerUnit(prod);
         double rawTotalDiscount = discountPerUnit * amount;
         return Utilities.round(rawTotalDiscount);
     }
 
-    public double getDiscountPerUnit(Product prod) {
+    public double getDiscountPerUnit(Sellable prod) {
         if (categories.get(prod.getCategory()) > Constants.MIN_FOR_DISCOUNT){
             double priceToUseForDiscount = this.calculateProductPrice(prod);
             double discount = priceToUseForDiscount * prod.getCategory().getDiscount();
@@ -138,9 +178,9 @@ public class Ticket implements Presentable {
     @Override
     public String toString() {
         StringBuilder res = new StringBuilder();
-        for (Map.Entry<Product, Integer> entry : list.entrySet()) {
-            Product product = entry.getKey();
-            int amount = entry.getValue();
+        for (TicketItem item : items) {
+            Sellable product = item.getSellable();
+            int amount = item.getQuantity();
             boolean hasDiscount = categories.getOrDefault(product.getCategory(), 0) > Constants.MIN_FOR_DISCOUNT;
             double discountPerUnit = 0;
             if (hasDiscount)
@@ -187,18 +227,53 @@ public class Ticket implements Presentable {
         return Utilities.round(getTotalPriceView() - getTotalDiscountView());
     }
 
-    public Map<Product, Integer> getList() {
-        //Return an unmodifiableMap to prevent external modifications
-        return Collections.unmodifiableMap(list);
+    public Map<P, Integer> getList() {
+        return Collections.unmodifiableMap(getListAsMap());
+    }
+
+    public Set<TicketItem> getItems() {
+        return items;
+    }
+
+    public void setItems(Set<TicketItem> items) {
+        this.items = items;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public LocalDateTime getCloseDate() {
+        return closeDate;
+    }
+
+    public void setCloseDate(LocalDateTime closeDate) {
+        this.closeDate = closeDate;
+    }
+
+    public void setState(TicketStates state) {
+        this.state = state;
+    }
+
+    public Map<Categories, Integer> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Map<Categories, Integer> categories) {
+        this.categories = categories;
     }
 
     //look if the product already exists
-    public boolean containsProduct(Product prod) {
-        return this.list.containsKey(prod);
+    public boolean containsProduct(Sellable prod) {
+        return containsItem(prod);
     }
 
     public boolean isClosed(){
         return this.state == TicketStates.CLOSED;
+    }
+
+    public boolean isEmpty() {
+        return this.items.isEmpty();
     }
 
     @Override
@@ -219,7 +294,8 @@ public class Ticket implements Presentable {
     }
 
     //for personalized products
-    public List<KV> getDetailedKVsForProductLine(Product p, int quantity) {
+    public List<KV> getDetailedKVsForProductLine(Sellable p, int quantity) {
+
         List<KV> prodKV = new ArrayList<>(p.toViewKVList());
         if (p instanceof ProductPersonalized) {
             double calculatedPrice = this.calculateProductPrice(p);

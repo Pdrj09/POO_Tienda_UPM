@@ -4,15 +4,29 @@ import etsisi.upm.util.Constants;
 import etsisi.upm.io.KV;
 import etsisi.upm.io.Presentable;
 import etsisi.upm.util.Utilities;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "users")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class User implements Comparable<User>, Presentable {
-    private final String id; //unique id
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long dbId;
+
+    @Column(unique = true)
+    private String id;
+
     private String name;
     private String email;
+
+    public User(){}
 
 
     public User(String id, String name, String email) {

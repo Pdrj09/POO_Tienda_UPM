@@ -7,7 +7,13 @@ public interface RepositoryInterface<K, T> {
     void add(K key, T object);
     T findByIdOrThrow(K id);
     T findById(K id);
+    T updateById(K id, String fieldName, Object newValue);
     T removeById(K id);
+    boolean hasKey(K id);
     Collection<T> findAll();
+
+    Collection<T> findAllOrderBy(String fieldName);
+
     Map<K, T> getMap();
+    T update(T object);
 }

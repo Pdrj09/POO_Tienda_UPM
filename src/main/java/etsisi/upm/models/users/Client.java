@@ -3,44 +3,59 @@ package etsisi.upm.models.users;
 import etsisi.upm.util.Constants;
 import etsisi.upm.io.KV;
 import etsisi.upm.models.Ticket;
+import jakarta.persistence.*;
+
 
 import java.util.*;
 
-//REPRESENTS DE CLIENT IN THE SYSTEM
+@Entity
+@Table(name = "clients")
+@DiscriminatorValue("CLIENT")
 public class Client extends User {
-    private String strIdCashier;
-    private final Set<Ticket> associatedTickets;
 
+    @ManyToOne
+    @JoinColumn(name = "cashier_db_id", nullable = false)
+    private Cashier cashier;
+
+    @OneToMany(targetEntity = Ticket.class, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "client_associated_tickets",
+            joinColumns = @JoinColumn(name = "client_db_id"),
+            inverseJoinColumns = @JoinColumn(name = "ticket_id")
+    )
+    private Set<Ticket<?>> associatedTickets;
+
+    public Client(){}
 
     //CONSTRUCTOR W/ ALL PARAMETERS
-    public Client(String dni, String name, String email, String idCashier) {
+    public Client(String dni, String name, String email, Cashier cashier) {
         super(dni, name, email);
         validateDniNif(dni);
         this.associatedTickets = new HashSet<>();
-        if (idCashier == null)
+        if (cashier == null)
             throw new IllegalArgumentException(Constants.ERROR_CASHIER_NULL);
-        this.strIdCashier = idCashier;
+        this.cashier = cashier;
     }
 
     //GETTERS, public methods
-    public Set<Ticket> getAssociatedTickets() {
+    public Set<Ticket<?>> getAssociatedTickets() {
         return associatedTickets;
     }
 
-    public void setStrIdCashier(String strIdCashier) {
-        this.strIdCashier = strIdCashier;
+    public void setCashier(Cashier cashier) {
+        this.cashier = cashier;
     }
 
-    public void addAssociatedTicket(Ticket ticket){
+    public void addAssociatedTicket(Ticket<?> ticket){
         this.associatedTickets.add(ticket);
     }
 
-    public void deleteTicket(Ticket ticket){
+    public void deleteTicket(Ticket<?> ticket){
         this.associatedTickets.remove(ticket);
     }
 
-    public String getStrIdCashier() {
-        return strIdCashier;
+    public Cashier getCashier() {
+        return this.cashier;
     }
 
     public static void validateDniNif(String dniNif) {
@@ -48,12 +63,14 @@ public class Client extends User {
             throw new IllegalArgumentException(Constants.ERROR_DNI_LENGTH);
 
         String normalizedId = dniNif.toUpperCase();
-        //PERSON: the last character is a letter (DNI/NIF)
-        //COMPANY: the first and last character is a number
-        boolean endsWithLetter= Character.isLetter(normalizedId.charAt(Constants.DNINIF_POS_END));
-        boolean startsWithLetter= Character.isLetter(normalizedId.charAt(Constants.DNINIF_POS_START));
 
-        //COMPANY CASE
+        boolean startsWithLetter = Character.isLetter(normalizedId.charAt(Constants.DNINIF_POS_START));
+        boolean endsWithLetter   = Character.isLetter(normalizedId.charAt(Constants.DNINIF_POS_END));
+
+        if (startsWithLetter == endsWithLetter) {
+                throw new IllegalArgumentException(Constants.ERROR_INVALID_DNI_NIF_FORMAT);
+        }
+
         if (startsWithLetter && !endsWithLetter) {
             String nifNumbers = normalizedId.substring(1);
             if (!nifNumbers.matches(Constants.DNI_REGEX)) {
@@ -62,7 +79,6 @@ public class Client extends User {
             return;
         }
 
-        //PERSON CASE
         String core = normalizedId.substring(Constants.DNINIF_POS_START, Constants.DNINIF_POS_END);
         char finalLetter = normalizedId.charAt(Constants.DNINIF_POS_END);
 
@@ -75,9 +91,10 @@ public class Client extends User {
             calculationPart = core.replaceFirst("Z", "2");
         }
 
-        String numbers = calculationPart.substring(Constants.DNINIF_POS_START, Constants.DNINIF_POS_END);
+        String numbers = calculationPart.substring(0, calculationPart.length());
         if (!numbers.matches(Constants.DNI_REGEX))
             throw new IllegalArgumentException(Constants.ERROR_DNI_DIGITS);
+
         int num = Integer.parseInt(numbers);
         char expected = Constants.DNI_LETTERS.charAt(num % Constants.ALPHABET_NUM);
 
@@ -86,6 +103,7 @@ public class Client extends User {
                     Constants.ERROR_INVALID_DNI_1 + expected + Constants.ERROR_INVALID_DNI_2 + numbers
             );
     }
+
 
 
     //COMPARABLE BY NAME
@@ -98,7 +116,7 @@ public class Client extends User {
     public List<KV> toViewKVList() {
         List<KV> kvs = super.toViewKVList(); //id, name, email
         kvs.add(new KV(Constants.CLI_DNI, getId())); //Here we use de DNI as ID for the view
-        kvs.add(new KV(Constants.CASHIER_ID, getStrIdCashier()));
+        kvs.add(new KV(Constants.CASHIER_ID, getCashier().getId()));
         kvs.removeIf(kv -> kv.key.equals(Constants.ID));
         return kvs;
     }
@@ -124,7 +142,7 @@ public class Client extends User {
                 .append(Constants.STR_CLIENT).append(Constants.QUOTE).append(Constants.STR_DNI).append(getId()).append(Constants.QUOTE)
                 .append(Constants.STR_CLI_NAME).append(Constants.QUOTE).append(getName()).append(Constants.QUOTE)
                 .append(Constants.STR_CLIENT_EMAIL).append(Constants.QUOTE).append(getEmail()).append(Constants.QUOTE)
-                .append(Constants.STR_CASH).append(Constants.QUOTE).append(getStrIdCashier()).append(Constants.QUOTE)
+                .append(Constants.STR_CASH).append(Constants.QUOTE).append(getCashier().getId()).append(Constants.QUOTE)
                 .append(Constants.CLOSE_BRACE);
         return sb.toString();
     }

@@ -2,25 +2,49 @@ package etsisi.upm.models.users;
 
 import etsisi.upm.util.Constants;
 import etsisi.upm.models.Ticket;
+import jakarta.persistence.*;
 
 import java.util.*;
 
-//REPRESENTS A CASHIER IN THE SYSTEM
+@Entity
+@Table(name = "cashiers")
+@DiscriminatorValue("CASHIER")
 public class Cashier extends User {
-    private final Set<Ticket> createdTickets;
-    private final Set<Client> associatedClients;
+
+    @OneToMany(targetEntity = Ticket.class, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "cashier_created_tickets",
+            joinColumns = @JoinColumn(name = "cashier_db_id"),
+            inverseJoinColumns = @JoinColumn(name = "ticket_id")
+    )
+    private Set<Ticket<?>> createdTickets;
+
+    @OneToMany(mappedBy = "cashier")
+    private Set<Client> associatedClients;
 
     //CONSTRUCTOR W/ AUTOMATIC ID GENERATION
-    private Cashier(String id, String emailCompany, String name) {
+    public Cashier(String id, String emailCompany, String name) {
         super(id, name, emailCompany);
         this.createdTickets = new HashSet<>(); //for sorted it
         this.associatedClients = new TreeSet<>();
     }
 
+    public Cashier(){
+        super();
+    }
+
     //PUBLIC METHODS
     //this two methods returns an IMMUTABLE copy for more protection
-    public Set<Ticket> getTickets() {
+    public Set<Ticket<?>> getTickets() {
         return this.createdTickets;
+    }
+
+    public void setCreatedTickets(Set<Ticket<?>> createdTickets) {
+        this.createdTickets = createdTickets;
+    }
+
+    public void setAssociatedClients(Set<Client> associatedClients) {
+        this.associatedClients = associatedClients;
     }
 
     public Set<Client> getAssociatedClients() {
@@ -29,13 +53,13 @@ public class Cashier extends User {
 
     public List<String> getTicketsSummaryList() {
         List<String> summary = new ArrayList<>();
-        for (Ticket ticket : this.createdTickets) {
+        for (Ticket<?> ticket : this.createdTickets) {
             summary.add(ticket.getId() + Constants.ARROW + ticket.getState().name());
         }
         return summary;
     }
 
-    public void deleteTicket(Ticket ticket){
+    public void deleteTicket(Ticket<?> ticket){
         this.createdTickets.remove(ticket);
     }
 
@@ -50,7 +74,7 @@ public class Cashier extends User {
         return new Cashier(id, emailCompany, name);
     }
 
-    public void addTicket(Ticket ticket){
+    public void addTicket(Ticket<?> ticket){
         this.createdTickets.add(ticket);
     }
 

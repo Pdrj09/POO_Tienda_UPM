@@ -4,32 +4,57 @@ import etsisi.upm.util.Constants;
 import etsisi.upm.io.KV;
 import etsisi.upm.util.Categories;
 import etsisi.upm.util.Utilities;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-public abstract class ServiceProduct extends Product {
-    private final LocalDateTime expirationDate;
-    private int numPeople;
+@Entity
+@DiscriminatorValue("SERVICE")
+public class ServiceProduct extends Sellable {
+    @Column(name = "expiration_date")
+    protected LocalDateTime expirationDate;
+    @Column(name = "num_people")
+    protected int numPeople;
+
+    @Column(name = "final_price")
     private double finalPrice;
 
-    public ServiceProduct(int id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate) {
-        super(id,
-                name,
-                pricePerPerson,
-                Categories.EMPTY);
+    @Column(name = "min_creation_time")
+    private int minimumCreationTime;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "min_time_unit")
+    private ChronoUnit minimumTimeUnit;
+
+    @Column(name = "service_type")
+    private String serviceType;
+
+    public ServiceProduct() {
+        super();
+        this.expirationDate = LocalDateTime.now();
+        this.minimumCreationTime = 0;
+        this.minimumTimeUnit = ChronoUnit.DAYS;
+    }
+
+    public ServiceProduct(String id, String name, double pricePerPerson, int maxPeople, LocalDateTime expirationDate,
+                          int minimumCreationTime, ChronoUnit minimumTimeUnit, String serviceType) {
+        super(id, name, pricePerPerson, Categories.EMPTY);
+        this.minimumCreationTime = minimumCreationTime;
+        this.minimumTimeUnit = minimumTimeUnit;
+        this.serviceType = serviceType;
+        this.finalPrice = Constants.SERVICE_PROD_BASEPRICE; //inicialization of the finalPrice
+        this.expirationDate = expirationDate;
+
+        //validation people logic
         if (maxPeople <= Constants.SERVICE_PROD_MINPEOPLE)
             throw new IllegalArgumentException(Constants.ERROR_TOOMANY_PEOPLE);
         else if (maxPeople > Constants.TIME_MAX_PEOPLE_SERVICE)
             this.numPeople = Constants.TIME_MAX_PEOPLE_SERVICE;
         else
             this.numPeople = maxPeople;
-
-        this.finalPrice = Constants.SERVICE_PROD_BASEPRICE; //inicialization of the finalPrice
-        this.expirationDate = expirationDate;
 
         // time validation
         if (!isFeasible(LocalDateTime.now())) {
@@ -44,10 +69,28 @@ public abstract class ServiceProduct extends Product {
         }
     }
 
-    // Abstract methods
-    public abstract int getMinimumCreationTime();
+    public ServiceProduct(String id, LocalDateTime expirationDate, Categories category) {
 
-    public abstract ChronoUnit getMinimumTimeUnit();
+        super(id, "", 0.0, category);
+        this.expirationDate = expirationDate;
+        this.serviceType = Constants.STR_PRODUCT_SERVICE;
+        this.minimumCreationTime = 0; // NO TIME RESTRICTION
+        this.minimumTimeUnit = ChronoUnit.DAYS;
+        this.numPeople = 1;
+    }
+
+    public static ServiceProduct createMeeting(String id, String name, double price, int people, LocalDateTime date){
+        return new ServiceProduct(id, name, price, people, date, Constants.TIME_MEETING_PLANNING_HOURS, ChronoUnit.HOURS, Constants.STR_MEETING);
+    }
+
+    public static ServiceProduct createFood(String id, String name, double price, int people, LocalDateTime date){
+        return new ServiceProduct(id, name, price, people, date, Constants.TIME_FOOD_PLANNING_DAYS, ChronoUnit.DAYS, Constants.STR_FOOD);
+    }
+
+
+    // Abstract methods
+    public int getMinimumCreationTime(){return this.minimumCreationTime;}
+    public ChronoUnit getMinimumTimeUnit(){return this.minimumTimeUnit;}
 
     // logic
     public boolean isFeasible(LocalDateTime creationTime) {
@@ -59,7 +102,6 @@ public abstract class ServiceProduct extends Product {
         return getPrice();
     }
 
-    @Override
     public int getMaxPers() {
         return this.numPeople;
     }
@@ -71,6 +113,8 @@ public abstract class ServiceProduct extends Product {
     public void setFinalPrice(double finalPrice) {
         this.finalPrice = finalPrice;
     }
+
+    public String getServiceType() { return this.serviceType; }
 
     @Override
     public List<KV> toViewKVList() {
@@ -94,10 +138,10 @@ public abstract class ServiceProduct extends Product {
         StringBuilder builder = new StringBuilder();
 
         builder.append(Constants.OPEN_BRACE);
-        builder.append(Constants.STR_SERVICE_PRODUCT);
+        builder.append(Constants.STR_CLASS).append(getServiceType());
         builder.append(Constants.STR_PROD_ID).append(getId());
         builder.append(Constants.STR_PROD_NAME).append(getName()).append(Constants.QUOTE);
-        builder.append(Constants.STR_CATEGORY).append(getCategory());
+        builder.append(Constants.STR_CATEGORY).append(Categories.EMPTY);
 
         // use of the constant price per person
         builder.append(Constants.STR_PRICE_PERSON).append(getPrice());

@@ -1,5 +1,7 @@
 package etsisi.upm.util;
 
+import etsisi.upm.models.repositories.Repository;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -29,10 +31,14 @@ public class Utilities {
         return rawName;
     }
 
-    public static boolean isInteger(String s) {
+    public static boolean isPositiveInteger(String s) {
         try {
-            Integer.parseInt(s);
-            return true;
+            int value = Integer.parseInt(s);
+            if (value < Constants.BASE_PROD_ID) {
+                throw  new IllegalArgumentException(Constants.NOT_VALID_ID);
+            }else {
+                return true;
+            }
         } catch (NumberFormatException e) {
             return false;
         }
@@ -43,7 +49,25 @@ public class Utilities {
             return false;
         }
 
-        String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+        String regex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
         return email.matches(regex);
+    }
+
+    public static <T> int generateAutomaticId(Repository<String, T> repository) {
+        int id = Constants.BASE_PROD_ID;
+
+        while (repository.findById(String.valueOf(id)) != null) {
+            id++;
+        }
+
+        if (id < Constants.BASE_PROD_ID) {
+            throw new IllegalArgumentException("You have reached the max number of elements");
+        }
+
+        return id;
+    }
+
+    public static boolean isCompanyClient(String clientId){
+        return Character.isDigit(clientId.charAt(clientId.length()-1));
     }
 }
