@@ -63,12 +63,14 @@ public class Client extends User {
             throw new IllegalArgumentException(Constants.ERROR_DNI_LENGTH);
 
         String normalizedId = dniNif.toUpperCase();
-        //PERSON: the last character is a letter (DNI/NIF)
-        //COMPANY: the first and last character is a number
-        boolean endsWithLetter= Character.isLetter(normalizedId.charAt(Constants.DNINIF_POS_END));
-        boolean startsWithLetter= Character.isLetter(normalizedId.charAt(Constants.DNINIF_POS_START));
 
-        //COMPANY CASE
+        boolean startsWithLetter = Character.isLetter(normalizedId.charAt(Constants.DNINIF_POS_START));
+        boolean endsWithLetter   = Character.isLetter(normalizedId.charAt(Constants.DNINIF_POS_END));
+
+        if (startsWithLetter == endsWithLetter) {
+                throw new IllegalArgumentException(Constants.ERROR_INVALID_DNI_NIF_FORMAT);
+        }
+
         if (startsWithLetter && !endsWithLetter) {
             String nifNumbers = normalizedId.substring(1);
             if (!nifNumbers.matches(Constants.DNI_REGEX)) {
@@ -77,7 +79,6 @@ public class Client extends User {
             return;
         }
 
-        //PERSON CASE
         String core = normalizedId.substring(Constants.DNINIF_POS_START, Constants.DNINIF_POS_END);
         char finalLetter = normalizedId.charAt(Constants.DNINIF_POS_END);
 
@@ -90,9 +91,10 @@ public class Client extends User {
             calculationPart = core.replaceFirst("Z", "2");
         }
 
-        String numbers = calculationPart.substring(Constants.DNINIF_POS_START, Constants.DNINIF_POS_END);
+        String numbers = calculationPart.substring(0, calculationPart.length());
         if (!numbers.matches(Constants.DNI_REGEX))
             throw new IllegalArgumentException(Constants.ERROR_DNI_DIGITS);
+
         int num = Integer.parseInt(numbers);
         char expected = Constants.DNI_LETTERS.charAt(num % Constants.ALPHABET_NUM);
 
@@ -101,6 +103,7 @@ public class Client extends User {
                     Constants.ERROR_INVALID_DNI_1 + expected + Constants.ERROR_INVALID_DNI_2 + numbers
             );
     }
+
 
 
     //COMPARABLE BY NAME
