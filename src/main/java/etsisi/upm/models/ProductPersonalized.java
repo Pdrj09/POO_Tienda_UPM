@@ -25,6 +25,11 @@ public class ProductPersonalized extends Product {
         super(prod.getId(), prod.getName(), prod.getPrice(), prod.getCategory(), prod.getMaxPers());
         this.customizations = customizations;
         this.personalizable = true; // Ensure personalizable flag is set
+        // Copy the database ID to ensure we reference the same database row
+        this.dbId = prod.dbId;
+        // Copy additional fields from Product that were added for Food/Meeting support
+        this.expirationDate = prod.getExpirationDate();
+        this.numPeople = prod.getNumPeople();
     }
 
     public List<String> getCustomizations() {
